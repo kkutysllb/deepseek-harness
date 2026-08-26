@@ -1,0 +1,20 @@
+diff --git a/dist/api/openai-codex-responses.js b/dist/api/openai-codex-responses.js
+index 2a8aca4b2e91c111c221f204ac37ad1956045826..1b98797ca197896758703b38181e6709cf100d5a 100644
+--- a/dist/api/openai-codex-responses.js
++++ b/dist/api/openai-codex-responses.js
+@@ -1253,7 +1253,14 @@ function extractAccountId(token) {
+         return accountId;
+     }
+     catch {
+-        throw new Error("Failed to extract accountId from token");
++        // KCoder patch: relay/proxy keys are plain API keys, not OpenAI OAuth
++        // JWTs. Fall back to a stable token-derived id so relay setups work;
++        // the value only feeds the chatgpt-account-id header and the WebSocket
++        // session cache key, both irrelevant to relays.
++        let h = 0;
++        for (let i = 0; i < token.length; i++)
++            h = (h * 31 + token.charCodeAt(i)) | 0;
++        return `relay-${(h >>> 0).toString(16)}`;
+     }
+ }
+ function buildBaseCodexHeaders(initHeaders, additionalHeaders, accountId, token) {
