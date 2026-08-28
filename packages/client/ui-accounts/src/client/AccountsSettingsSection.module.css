@@ -1,0 +1,77 @@
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+  max-width: 760px;
+  color: var(--dsw-alias-label-primary);
+}
+
+.status {
+  font-size: 13px;
+  line-height: 20px;
+  color: var(--dsw-alias-label-tertiary);
+}
+
+.error {
+  margin: 0;
+  font-size: 13px;
+  line-height: 20px;
+  color: var(--dsw-alias-label-danger, #d33);
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+  line-height: 20px;
+}
+
+.table th,
+.table td {
+  padding: 8px 10px;
+  border-bottom: 1px solid var(--dsw-alias-border-subtle);
+  text-align: left;
+}
+
+.table th {
+  color: var(--dsw-alias-label-secondary);
+  font-weight: 500;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.actions button {
+  height: 26px;
+  padding: 0 10px;
+  border: 1px solid var(--dsw-alias-border-subtle);
+  border-radius: 6px;
+  background: var(--dsw-alias-surface-base);
+  color: inherit;
+  cursor: pointer;
+}
+
+.actions button:disabled {
+  opacity: 0.55;
+  cursor: default;
+}
+
+.resetRow {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  align-items: center;
+}
+
+.resetInput {
+  height: 26px;
+  padding: 0 8px;
+  border: 1px solid var(--dsw-alias-border-subtle);
+  border-radius: 6px;
+  background: var(--dsw-alias-surface-base);
+  color: inherit;
+}

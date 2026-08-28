@@ -1,0 +1,2402 @@
+$ vitest run
+The plugin "vite-tsconfig-paths" is detected. Vite now supports tsconfig paths resolution natively via the resolve.tsconfigPaths option. You can remove the plugin and set resolve.tsconfigPaths: true in your Vite config instead.
+The plugin "vite-tsconfig-paths" is detected. Vite now supports tsconfig paths resolution natively via the resolve.tsconfigPaths option. You can remove the plugin and set resolve.tsconfigPaths: true in your Vite config instead.
+The plugin "vite-tsconfig-paths" is detected. Vite now supports tsconfig paths resolution natively via the resolve.tsconfigPaths option. You can remove the plugin and set resolve.tsconfigPaths: true in your Vite config instead.
+
+ RUN  v4.1.8 /Users/libing/kk_Projects/qilin-engine
+
+ ✓ |process-bound| packages/boot/app-boot/tests/app-boot.spec.ts (52 tests) 251ms
+stderr | packages/context/time-context/tests/time-context.spec.ts > configuration and lifecycle > fails loud for an invalid explicit zone or an unavailable process zone
+[vitest] The DateTimeFormat mock did not use 'function' or 'class' in its implementation, see https://vitest.dev/api/vi#vi-spyon for examples.
+
+ ✓ |process-bound| packages/context/time-context/tests/time-context.spec.ts (19 tests) 104ms
+ ✓ |process-bound| packages/llm/llm-pi-ai/tests/adapter.spec.ts (47 tests) 289ms
+ ✓ |process-bound| packages/workflow/workflow-worker-thread/tests/session.spec.ts (27 tests) 575ms
+Switched to a new branch 'current'
+Switched to branch 'master'
+Switched to branch 'current'
+ ✓ |process-bound| packages/subprocess/subprocess-local/tests/process-exit.spec.ts (5 tests) 1686ms
+     ✓ removes an ordinary managed tree after 'direct'  309ms
+     ✓ removes an ordinary managed tree after 'uncaught-exception'  310ms
+     ✓ removes a terminal root and descendant after direct exit  373ms
+     ✓ preserves normal terminate-and-join disposal and removes the exit listener  411ms
+2026-08-27T20:24:27.162005Z ERROR codex_core::tools::router: error=approval policy is Never; reject command — you cannot ask for escalated permissions if the approval policy is Never
+to-parent
+to-parent
+(node:23060) MaxListenersExceededWarning: Possible EventEmitter memory leak detected. 11 exit listeners added to [process]. MaxListeners is 10. Use emitter.setMaxListeners() to increase limit
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ |process-bound| packages/subprocess/subprocess-local/tests/spawn.spec.ts (78 tests) 2457ms
+     ✓ terminate() SIGKILLs a TERM-trapping descendant after the direct child settles  335ms
+     ✓ a bounded waitForExit reports false while a survivor lives, true after escalation  339ms
+ ✓ |process-bound| packages/session/session-persistence-jsonl/tests/jsonl.spec.ts (151 tests) 3375ms
+     ✓ rejects malformed persisted message events before returning them  401ms
+Switched to a new branch 'current'
+Switched to branch 'master'
+Switched to branch 'current'
+Switched to a new branch 'current'
+Switched to branch 'master'
+Switched to branch 'current'
+Switched to a new branch 'current'
+Switched to branch 'master'
+Switched to branch 'current'
+Switched to a new branch 'current'
+Switched to branch 'master'
+Switched to branch 'current'
+Switched to a new branch 'current'
+Switched to branch 'master'
+Switched to branch 'current'
+ ✓ |process-bound| packages/subagent/subagent-acp/tests/subagent-acp.spec.ts (47 tests) 5944ms
+     ✓ tier 3: a TERM-trapping child reaches the host force-termination outcome  321ms
+     ✓ drives child processes with parent-unique run ids and returns streamed output  322ms
+     ✓ dispose escalates SIGTERM → SIGKILL for a child that traps SIGTERM (bounded quiescence)  465ms
+     ✓ dispose gives the child an EOF window that outlasts the SIGTERM grace (graceful flush)  575ms
+     ✓ terminates a child that ignores EOF using the host platform semantics  311ms
+     ✓ plugin-config dispose graces reach the run (SIGKILL escalation through the provider)  470ms
+Switched to a new branch 'current'
+Switched to branch 'master'
+Switched to branch 'current'
+ ✓ |thread-safe| packages/session/session-persistence-sqlite/tests/differential.spec.ts (3 tests) 4930ms
+     ✓ matches JSONL/Zstandard for every packed kind, scalar fallback, suffix, partition, and reopen  335ms
+     ✓ matches JSONL/Zstandard across randomized logical logs and append partitions  4576ms
+Switched to a new branch 'current'
+Switched to branch 'master'
+Switched to branch 'current'
+Switched to a new branch 'current'
+Switched to branch 'master'
+Switched to branch 'current'
+(node:23418) MaxListenersExceededWarning: Possible EventEmitter memory leak detected. 11 exit listeners added to [process]. MaxListeners is 10. Use emitter.setMaxListeners() to increase limit
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ |thread-safe| packages/workflow/workflow-worker-thread/tests/workflow-worker-thread.spec.ts (54 tests) 9291ms
+       ✓ post-cancel narration is suppressed host-side, and completion racing a cancel reports cancelled  1134ms
+       ✓ a grace-terminated worker reaps its child on exit without waiting for consumer dispose()  307ms
+       ✓ dispose() on a wedged worker host-drives child disposal inside the grace: it returns with the children DISPOSED, not with their teardown still in flight  557ms
+       ✓ the grace force-settle pairs every stranded start: a host-synthesized cancelled agent-end lands before workflow/end  458ms
+       ✓ an uncaught exception inside the worker surfaces as an error result and reaps the in-flight child  337ms
+       ✓ a dispose ack racing the worker death is dropped, not crashed (post after exit)  466ms
+Switched to a new branch 'current'
+Switched to branch 'master'
+Switched to branch 'current'
+Switched to a new branch 'current'
+Switched to branch 'master'
+Switched to branch 'current'
+Switched to a new branch 'current'
+Switched to branch 'master'
+Switched to branch 'current'
+Switched to a new branch 'current'
+Switched to branch 'master'
+Switched to branch 'current'
+(node:23223) MaxListenersExceededWarning: Possible EventEmitter memory leak detected. 11 exit listeners added to [process]. MaxListeners is 10. Use emitter.setMaxListeners() to increase limit
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ |thread-safe| scripts/translation-pairing-merge.spec.ts (23 tests) 22141ms
+     ✓ merges the owner blobs named by three valid records  639ms
+     ✓ accepts locale-specific paths to the same paired document  332ms
+     ✓ merges a generated source without an English language switcher  315ms
+     ✓ runs as Git's custom driver and commits a clean composed record  580ms
+     ✓ sees a paired link target added by the other branch  616ms
+     ✓ leaves an ordinary recoverable conflict when the configured runtime is unavailable  3609ms
+     ✓ falls back before a broken driver entrypoint can replace the launcher  4685ms
+     ✓ keeps a clean text fallback unresolved until the explicit resolver confirms it  3234ms
+     ✓ leaves a staged merge when the pre-merge-commit hook rejects it  4183ms
+     ✓ resolves an already-stopped generated-only conflict from index stages  460ms
+     ✓ refuses to confirm unstaged owner bytes after a stopped merge  438ms
+     ✓ resolves safe records while leaving an owner-conflicted pair untouched  673ms
+ ✓ |thread-safe| packages/hooks/hooks-claude-code/tests/coverage-edge-paths.spec.ts (9 tests) 20263ms
+     ✓ UserPromptSubmit deny with EMPTY stderr uses the default block reason  2732ms
+     ✓ a PreToolUse ask with NO reason omits the reason (false arm)  4006ms
+     ✓ a recorded clean exit-0 hook with no stderr omits exitCode-extra/stderrSummary fields  3969ms
+     ✓ a direct apply() (schema bypass) with only configPath runs  3224ms
+     ✓ a PostToolUse deny with empty stderr + no context uses the default feedback (no context arm)  3449ms
+     ✓ a throwing SessionStart inject is contained (logged, agent still runs)  2865ms
+ ✓ |thread-safe| packages/typert/generator/tests/type-model.spec.ts (43 tests) 24471ms
+     ✓ builds independent face models with an explicit cross-face type graph  875ms
+     ✓ merges bounded package programs into the same face model  1147ms
+     ✓ rejects an explicit service implementation without one valid key  490ms
+     ✓ covers every modeled discriminant with source-authored fixture syntax  539ms
+     ✓ retains an omitted mapped value when the owning project permits implicit any  580ms
+     ✓ fails in check mode and writes inferred public annotations in write mode  1072ms
+     ✓ rejects relative imports across face boundaries  531ms
+     ✓ rejects package subpaths absent from package.json exports  533ms
+     ✓ rejects cross-face re-exports outside package.json exports  544ms
+     ✓ rejects cross-face namespace re-exports until the model has a namespace target  527ms
+     ✓ ignores cross-face namespace exports that are not package exports  536ms
+     ✓ records public symbols from explicit cross-face star re-exports  526ms
+     ✓ expands explicit same-face package exports through declaration targets  707ms
+     ✓ resolves explicit same-face package re-exports to their declaration owner  844ms
+     ✓ rejects same-face package imports outside package.json exports  408ms
+     ✓ rejects relative imports across same-face package boundaries  415ms
+     ✓ retains every authored part of a merged interface  542ms
+     ✓ keeps unscoped global npm declarations as true external targets  654ms
+     ✓ skips ambient imports without physical module files while walking exported sources  539ms
+     ✓ ignores aggregate references that are not named workspace packages  531ms
+     ✓ accepts package export forms while skipping artifact-only rows and unexported packages  3133ms
+     ✓ recognizes all supported typert annotation spellings  524ms
+     ✓ retains merged generic interfaces without constraints or defaults  528ms
+     ✓ retains every source-authored SyntaxZoo property type through rendering  516ms
+     ✓ renders every analyzed declaration as compilable TypeScript  1103ms
+     ✓ emits host and client faces through their exact root-level public artifacts  520ms
+     ✓ rejects a public Typert subpath that points outside the root-level face artifact  539ms
+     ✓ rejects absent Typert exports and package file entries  1614ms
+     ✓ emits runnable Zod JavaScript, precise declarations, and runtime package metadata  1168ms
+ ✓ |thread-safe| packages/hooks/hooks-claude-code/tests/coverage-stop.spec.ts (9 tests) 23309ms
+     ✓ a Stop hook that blocks (exit 2) forces the turn to continue (CC dialect)  3079ms
+     ✓ a Stop hook that blocks with EMPTY stderr still forces continuation (no reason required)  3425ms
+     ✓ SubagentStart additionalContext is injected into a REGISTERED live child  4146ms
+     ✓ a throwing SubagentStart/SubagentStop hook run is contained (logged)  3253ms
+     ✓ PreToolUse deny with EMPTY stderr uses the default reason  3234ms
+     ✓ PostToolUse deny with EMPTY stderr + no context uses the default feedback  2663ms
+     ✓ SubagentStop with no registered child runs the hook cleanly (fire-and-forget)  3485ms
+ ✓ |thread-safe| packages/sandbox/sandbox-local/tests/local.spec.ts (38 tests) 24490ms
+     ✓ a multi-rung chain probes a seatbelt rung like any other (the walk, not the platform table, decides)  2895ms
+     ✓ parses a fully-enforced probe report as full enforcement  2896ms
+     ✓ parses a partially-enforced (older-ABI) probe report as partial enforcement  4262ms
+     ✓ reads a failing launcher as unusable: the chain ends and fails closed  3733ms
+     ✓ bounds the default probes: a launcher slower than the configured timeout reads as unusable  4506ms
+     ✓ selects the rung when the executable applies the read-only profile and exits 0  2707ms
+     ✓ reads a failing executable as unusable: the chain ends and fails closed  3337ms
+ ✓ |thread-safe| packages/hooks/hooks-codex/tests/coverage-result-shape.spec.ts (9 tests) 25493ms
+     ✓ PreToolUse for a tool call WITHOUT a command arg passes an empty command (commandOf non-object/missing arm)  2396ms
+     ✓ a clean exit-0 hook records exitCode 0 and omits stderrSummary  2949ms
+     ✓ a long stderr is truncated in the hook/result summary  3679ms
+     ✓ the stderr summary cap is plugin config (stderrSummaryMaxChars)  4269ms
+     ✓ warns on a skipped async hook and a direct apply() (schema bypass) runs  3005ms
+     ✓ a no-op clean hook proceeds (contextFrom empty → next)  3078ms
+     ✓ SessionStart with no additionalContext is a no-op (contextFrom empty)  2989ms
+     ✓ a throwing SessionStart inject is contained (logged)  3112ms
+ ✓ |thread-safe| packages/subagent/subagent-codex/tests/real-product.spec.ts (7 tests) 26294ms
+     ✓ starts approve-for-me through the real app-server and returns exact text  684ms
+     ✓ runs two named instances concurrently and unloads one without revoking its run  300ms
+     ✓ reports a real service failure and an early app-server exit safely  24640ms
+(node:23072) MaxListenersExceededWarning: Possible EventEmitter memory leak detected. 11 exit listeners added to [process]. MaxListeners is 10. Use emitter.setMaxListeners() to increase limit
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:23074) MaxListenersExceededWarning: Possible EventEmitter memory leak detected. 11 exit listeners added to [process]. MaxListeners is 10. Use emitter.setMaxListeners() to increase limit
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ |thread-safe| packages/hooks/hooks-claude-code/tests/bridge.spec.ts (15 tests) 26963ms
+     ✓ a UserPromptSubmit hook that exits 2 closes a blocked turn without a step  1179ms
+     ✓ a UserPromptSubmit hook printing additionalContext injects it for the model  2917ms
+     ✓ a matching PreToolUse hook that exits 2 denies the tool (isError result), tool never runs  2664ms
+     ✓ a PostToolUse hook that blocks (exit 2) turns the result into an isError with feedback  4090ms
+     ✓ a PostToolUse hook printing additionalContext attaches it after the tool result  3905ms
+     ✓ a PreToolUse permissionDecision:ask fails closed without an approval service  3245ms
+     ✓ a SessionStart hook injects additionalContext the first request sees  3217ms
+     ✓ runs SubagentStart and SubagentStop hooks when the subagent lifecycle events fire  3245ms
+     ✓ disposing the bridge aborts a still-running hook and drains to quiescence  2471ms
+ ✓ |thread-safe| packages/hooks/hooks-claude-code/tests/coverage-context.spec.ts (9 tests) 27451ms
+     ✓ a {"continue":false} hook is RECORDED as decision "stop" but does not halt the run (TODO(hook-continue-false))  1933ms
+     ✓ a PostToolUse hook that BOTH blocks AND attaches additionalContext  2845ms
+     ✓ a PreToolUse hook whose hookSpecificOutput names a DIFFERENT event does NOT deny the tool  2998ms
+     ✓ defaults CLAUDE_PROJECT_DIR to the session workspace when no projectDir is configured  4495ms
+     ✓ a context-only UserPromptSubmit hook DELEGATES so a later listener can still block  3330ms
+     ✓ preserves separate bridge and downstream prompt contexts with framing and metadata  3323ms
+     ✓ folds the bridge PostToolUse context onto a downstream canonical value replacement  2815ms
+     ✓ keeps bridge and downstream PostToolUse contexts as separate sourced events  3250ms
+     ✓ folds the bridge PostToolUse context onto a downstream listener BLOCK  2461ms
+ ✓ |thread-safe| packages/hooks/hooks-claude-code/tests/coverage-config.spec.ts (9 tests) 27776ms
+     ✓ uses the persistence locator for transcript_path and an empty string without one  5503ms
+     ✓ honors pluginRoot + projectDir substitution and warns on a skipped non-command hook  3446ms
+     ✓ warns and honors updatedInput as a no-op (input rewrite deferred)  4516ms
+     ✓ a clean exit-0 hook with no output is a no-op (contextFrom empty → next())  2779ms
+     ✓ a PreToolUse hook fires for a no-agent direct tool call (no session/turn to record into)  3303ms
+     ✓ a long stderr is truncated in the hook/result summary  2596ms
+     ✓ the stderr summary cap is plugin config (stderrSummaryMaxChars)  3321ms
+     ✓ a hook emitting a systemMessage is logged as not-yet-surfaced  2297ms
+(node:23071) MaxListenersExceededWarning: Possible EventEmitter memory leak detected. 11 exit listeners added to [process]. MaxListeners is 10. Use emitter.setMaxListeners() to increase limit
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ |thread-safe| packages/test-support/acp-snapshot/tests/harness.spec.ts (62 tests) 8714ms
+     ✓ rejects promptly when fallback termination is refused  506ms
+     ✓ waitForTurnStart rejects missing, earlier, and malformed durable turns  1103ms
+     ✓ waitForGoalPhase requires the requested durable goal phase  308ms
+     ✓ waitForSubagentTurnEnd requires a closed child work turn  473ms
+ ✓ |thread-safe| scripts/change-scope.spec.ts (8 tests) 3127ms
+     ✓ uses an explicit base on a fresh branch without a same-name remote and after its first push  528ms
+     ✓ reports an exact head above a non-master stacked base while dirty paths remain worktree-local  424ms
+     ✓ keeps committed, staged, unstaged, and untracked paths independent and does not mutate state  481ms
+     ✓ rejects distinct non-UTF-8 Git paths  315ms
+     ✓ rejects missing, ambiguous, and non-commit refs  376ms
+     ✓ renders deterministic versioned JSON  463ms
+ ✓ |thread-safe| scripts/oxlint-contract.spec.ts (13 tests) 8747ms
+     ✓ discovers the owning TypeScript project for every file class  996ms
+     ✓ runs JavaScript compatibility and nursery rules  759ms
+     ✓ checks preserved TypeGraph syntax without type-aware analysis  450ms
+     ✓ reports an unused suppression  851ms
+     ✓ accepts an ignored-only staged selection  427ms
+     ✓ keeps staged validation project-free while preserving source rules  439ms
+     ✓ preserves successful fix output channels  594ms
+     ✓ prints only the final diagnostics when a fix retry still fails  1069ms
+     ✓ converges overlapping staged stylistic fixes through Oxlint under --fix  1057ms
+     ✓ converges overlapping staged stylistic fixes through Oxlint under --fix-suggestions  1036ms
+     ✓ converges overlapping staged stylistic fixes through Oxlint under --fix-dangerously  1062ms
+ ✓ |thread-safe| packages/shell/bash-sandbox/tests/partial-landlock.spec.ts (19 tests) 32163ms
+     ✓ keeps child exit 0 ordinary when the partial-enforcement notice is the only runner line  431ms
+     ✓ keeps child exit 1 ordinary when the partial-enforcement notice is the only runner line  2511ms
+     ✓ keeps child exit 2 ordinary when the partial-enforcement notice is the only runner line  2952ms
+     ✓ keeps child exit 125 ordinary when the partial-enforcement notice is the only runner line  3682ms
+     ✓ keeps a successfully launched Landlock child exit 126 as an ordinary outcome  4280ms
+     ✓ keeps a successfully launched Landlock child exit 127 as an ordinary outcome  3005ms
+     ✓ keeps a Landlock fatal line at exit 1 as insufficient runner-failure evidence  3312ms
+     ✓ keeps a Landlock fatal line at exit 2 as insufficient runner-failure evidence  2993ms
+     ✓ reports the fatal line after the notice as SANDBOX_UNAVAILABLE detail  3087ms
+     ✓ classifies a notice plus child Permission denied as a denial, not runner failure  1770ms
+     ✓ applies the same evidence rule to notice-only background exits  1471ms
+     ✓ classifies a background notice plus child Permission denied as denial  1475ms
+     ✓ makes a background fatal line outrank denial text after the notice  1142ms
+ ✓ |thread-safe| packages/hooks/hooks-codex/tests/coverage-prompt.spec.ts (14 tests) 32492ms
+     ✓ uses the persistence locator for transcript_path and null without one  3691ms
+     ✓ UserPromptSubmit block (exit 2) closes a blocked turn without a step  2492ms
+     ✓ UserPromptSubmit additionalContext is injected; a no-op hook proceeds  4248ms
+     ✓ a context-only UserPromptSubmit hook DELEGATES so a later listener can still block  3948ms
+     ✓ preserves separate bridge and downstream prompt contexts with framing and metadata  3236ms
+     ✓ a clean PreToolUse with no decision allows the tool (no deny)  3225ms
+     ✓ a {"continue":false} hook is RECORDED as "stop" but does not halt the run (TODO(hook-continue-false))  2868ms
+     ✓ PreToolUse deny with EMPTY stderr uses the default reason (?? right arm)  2677ms
+     ✓ PostToolUse block AND additionalContext are surfaced together  1995ms
+     ✓ commandOf reads a non-string command arg as an empty command  1474ms
+     ✓ a no-agent direct PreToolUse run uses process.cwd() and turn 0 (no session to record)  1250ms
+     ✓ a no-agent direct PostToolUse run attaches context with no session to record  1360ms
+ ✓ |thread-safe| packages/code-runtime/code-runtime-worker-thread/tests/runtime.spec.ts (58 tests) 8918ms
+     ✓ ends a hot loop at the compute budget — including behind a pending decoy dispatch  320ms
+     ✓ does not charge time spent awaiting a slow binding against the compute budget  1539ms
+     ✓ ends an idle-forever run at the wall-clock ceiling  402ms
+     ✓ drops a binding resolution that lands after the run settled  438ms
+     ✓ returns an exact completion at the default 64 MiB combined boundary  2921ms
+     ✓ fails one byte over the default 64 MiB combined boundary  866ms
+ ✓ |thread-safe| packages/hooks/hooks-codex/tests/bridge.spec.ts (9 tests) 5860ms
+     ✓ a PreToolUse hook (exit 2) denies a tool the regex matcher matches as a substring  1671ms
+     ✓ a Stop hook (exit 2) forces the turn to continue with the reason as steering  1496ms
+     ✓ turn cancellation aborts and reaps a running UserPromptSubmit hook before idle  1142ms
+     ✓ disposing the bridge aborts a still-running SessionStart hook and drains to quiescence  1501ms
+ ✓ |thread-safe| packages/terminal/terminal-bash/tests/local.spec.ts (8 tests | 2 skipped) 7810ms
+     ✓ persists cwd and environment across sends, scrubs secrets, and closes  768ms
+     ✓ restores the controlled prompt after an in-shell PS1 override  758ms
+     ✓ wraps the exact shell argv under confined policy and unregisters on reload  674ms
+     ✓ signals a foreground command and kills a TERM-ignoring background descendant  1591ms
+     ✓ quiesces a disowned same-session descendant after the shell exits naturally  1023ms
+     ✓ cancels a slow-starting raw-mode foreground process with a real SIGINT  2996ms
+ ✓ |thread-safe| packages/hooks/hooks-codex/tests/coverage-post-tool.spec.ts (16 tests) 33877ms
+     ✓ folds the bridge PostToolUse context onto a downstream canonical value replacement  1561ms
+     ✓ keeps bridge and downstream PostToolUse contexts as separate sourced events  2845ms
+     ✓ folds the bridge PostToolUse context onto a downstream listener BLOCK  2902ms
+     ✓ SessionStart additionalContext is injected for the first request  4586ms
+     ✓ PostToolUse block (exit 2) → isError feedback; default reason  3565ms
+     ✓ PostToolUse additionalContext (clean exit) is attached after the result  3326ms
+     ✓ a blocking Stop hook with EMPTY stderr still forces continuation (no reason required)  2820ms
+     ✓ a clean UserPromptSubmit hook that prints PLAIN stdout injects it as context  3243ms
+     ✓ a NON-clean SessionStart hook (exit 2) does NOT inject its stdout as context  2463ms
+     ✓ a UserPromptSubmit hook with a non-blocking error exit (1) + stdout does NOT inject it  1624ms
+     ✓ a clean SessionStart hook that prints PLAIN stdout injects it (not JSON)  1315ms
+     ✓ a clean hook that prints JSON is NOT injected as prose (plain-stdout gate)  1297ms
+     ✓ the PreToolUse payload carries the REAL tool name (matches the matcher subject)  1345ms
+     ✓ a Codex matcher on the REAL tool name fires (matcher subject === payload tool_name)  757ms
+ ✓ |thread-safe| packages/client/ui-directory-picker-browse/tests/directory-browser.client.spec.tsx (81 tests) 8845ms
+     ✓ prefix-filters the listed level from the draft tail, dot revealing hidden matches  816ms
+     ✓ filters the child pane in two-pane mode and follows the draft back up a level  674ms
+     ✓ follows the draft into a directory no pane lists, landing the two-pane Miller view  668ms
+     ✓ keeps the typed level in the last pane, its parent beside it, as the draft walks  518ms
+     ✓ holds a stale pane still until its landing, instead of narrowing it first  521ms
+     ✓ waits both legs out for a walk: one keystroke never flashes a single pane  678ms
+     ✓ walks the panes back up when erased segments leave the listed levels  516ms
+     ✓ re-arms the draft-following scan after a keystroke superseded one in flight  521ms
+     ✓ holds the draft-following scan while a submitted path is in flight  410ms
+     ✓ discards draft-following scans that a newer edit superseded  524ms
+     ✓ seeds and filters with backslashes on a Windows-rooted listing  671ms
+     ✓ keeps path entry available when the home listing fails  410ms
+ ✓ |thread-safe| packages/typert/generator/tests/cordis-catalog.spec.ts (3 tests) 8270ms
+     ✓ reproduces every committed catalog artifact byte for byte  8268ms
+ ✓ |thread-safe| packages/session/session-persistence-jsonl/tests/zstd.spec.ts (80 tests) 4604ms
+     ✓ rejects malformed persisted message events before returning them  663ms
+ ✓ |thread-safe| packages/typert/generator/tests/remote-model.spec.ts (38 tests) 6375ms
+     ✓ discovers a Remote-only package and emits strict direct and Context descriptors  1252ms
+     ✓ imports public type arguments nested under a named generic boundary  823ms
+     ✓ quotes aliased methods in generated namespace interfaces  876ms
+ ✓ |thread-safe| packages/subagent/subagent-claude-code/tests/real-product.spec.ts (8 tests) 7305ms
+     ✓ inherits host settings and sends the exact task and fake key to local Messages  369ms
+     ✓ maps a real SDK max-turns result to safe query-run facts  317ms
+     ✓ runs two named instances concurrently and unloads one without revoking its run  2369ms
+     ✓ maps a real CLI process failure to its exit outcome  387ms
+     ✓ overrides interactive settings, denies a write, and returns a safe diagnostic  501ms
+     ✓ runs an explicitly selected bypass write in the isolated workspace  499ms
+     ✓ returns the completed plan without approving execution  463ms
+     ✓ settles cancellation and leaves the real SDK-spawned CLI tree quiescent  2400ms
+ ✓ |thread-safe| packages/llm/llm-deepseek/tests/adapter.spec.ts (143 tests) 2345ms
+ ✓ |thread-safe| packages/subagent/subagent/tests/list-children.spec.ts (59 tests) 5259ms
+     ✓ walks a deeply nested ordinary-session chain without consuming the call stack  389ms
+     ✓ discovers continuable descendants below ordinary and one-shot intermediates  340ms
+ ✓ |thread-safe| packages/lsp/lsp-stdio/tests/instance.spec.ts (23 tests) 4977ms
+     ✓ cancels an in-flight request on abort and rejects  523ms
+     ✓ terminates the instance when the server ignores $/cancelRequest past the grace  419ms
+     ✓ resolves the cancel grace when the server honors $/cancelRequest  314ms
+     ✓ observes abort while awaiting a slow initialize handshake  358ms
+     ✓ terminates when abort interrupts a backpressured didOpen write  356ms
+     ✓ carries a non-Error abort reason as a generic aborted error  417ms
+ ✓ |thread-safe| packages/sdk/client/tests/sdk-client.spec.ts (31 tests) 4426ms
+     ✓ applies the client-wide request timeout when no per-call bound is given  404ms
+     ✓ escalates to SIGKILL when the runtime traps SIGTERM too  504ms
+ ✓ |thread-safe| packages/settings/settings-file/tests/concurrency.spec.ts (4 tests) 2594ms
+     ✓ does not steal an old writer lock  2136ms
+ ✓ |thread-safe| packages/experimental/agent-team/tests/persistence.spec.ts (10 tests) 2126ms
+     ✓ reconciles a persisted child to active and a missing child to durable failed  338ms
+     ✓ reconciles a persisted child to active and a missing child to durable failed  394ms
+ ✓ |thread-safe| packages/attachment/attachment-local/tests/request-image.spec.ts (19 tests) 2427ms
+     ✓ derives stable square and wide previews and separates route budgets in the cache key  335ms
+ ✓ |thread-safe| packages/credentials/credentials-local/tests/review-fixes.spec.ts (9 tests) 2899ms
+     ✓ holds every writer of the document to the record-mutation lock wait  2571ms
+(node:32771) MaxListenersExceededWarning: Possible EventEmitter memory leak detected. 11 exit listeners added to [process]. MaxListeners is 10. Use emitter.setMaxListeners() to increase limit
+(Use `node --trace-warnings ...` to show where the warning was created)
+stderr | packages/e2b/subprocess-e2b/tests/subprocess.spec.ts > E2BSubprocessHandle > rejects an unrepresentable graceMs before any remote work
+Promise returned by `expect(actual).rejects.toThrow(expected)` was not awaited. Vitest currently auto-awaits hanging assertions at the end of the test, but this will cause the test to fail in the next Vitest major. Please remember to await the assertion.
+    at /Users/libing/kk_Projects/qilin-engine/packages/e2b/subprocess-e2b/tests/subprocess.spec.ts:472:9
+
+stderr | packages/e2b/subprocess-e2b/tests/subprocess.spec.ts > E2BSubprocessHandle > rejects an unrepresentable graceMs before any remote work
+Promise returned by `expect(actual).rejects.toThrow(expected)` was not awaited. Vitest currently auto-awaits hanging assertions at the end of the test, but this will cause the test to fail in the next Vitest major. Please remember to await the assertion.
+    at /Users/libing/kk_Projects/qilin-engine/packages/e2b/subprocess-e2b/tests/subprocess.spec.ts:472:9
+
+stderr | packages/e2b/subprocess-e2b/tests/subprocess.spec.ts > E2BSubprocessHandle > rejects an unrepresentable graceMs before any remote work
+Promise returned by `expect(actual).rejects.toThrow(expected)` was not awaited. Vitest currently auto-awaits hanging assertions at the end of the test, but this will cause the test to fail in the next Vitest major. Please remember to await the assertion.
+    at /Users/libing/kk_Projects/qilin-engine/packages/e2b/subprocess-e2b/tests/subprocess.spec.ts:472:9
+
+stderr | packages/e2b/subprocess-e2b/tests/subprocess.spec.ts > E2BSubprocessHandle > rejects an unrepresentable graceMs before any remote work
+Promise returned by `expect(actual).rejects.toThrow(expected)` was not awaited. Vitest currently auto-awaits hanging assertions at the end of the test, but this will cause the test to fail in the next Vitest major. Please remember to await the assertion.
+    at /Users/libing/kk_Projects/qilin-engine/packages/e2b/subprocess-e2b/tests/subprocess.spec.ts:472:9
+
+ ✓ |thread-safe| packages/client/connection/tests/fixture.client.spec.ts (36 tests) 2462ms
+     ✓ serves grouped models and keeps a selection for later history and fixture requests  605ms
+     ✓ steer during a replay lands a user/message inside the current turn and the replay continues  663ms
+     ✓ steer with no replay in flight falls through to a fresh queued turn; non-text blocks stringify empty  664ms
+ ✓ |thread-safe| packages/goal/goal-round-driver/tests/goal-round-driver.spec.ts (49 tests) 2369ms
+ ✓ |thread-safe| packages/session/session-persistence-sqlite/tests/sqlite.spec.ts (83 tests) 3860ms
+     ✓ bounds paced-stream WAL extent without rewriting committed rows  408ms
+ ✓ |thread-safe| packages/context/agent-instructions/tests/agent-instructions.spec.ts (152 tests) 3217ms
+ ✓ |thread-safe| packages/subagent/subagent/tests/continuation.spec.ts (103 tests) 11895ms
+ ✓ |thread-safe| scripts/project-doc-site.spec.ts (58 tests) 3896ms
+     ✓ resolves every relative link inside the emitted tree  959ms
+ ✓ |thread-safe| packages/lsp/lsp-stdio/tests/lifecycle.spec.ts (29 tests) 4304ms
+     ✓ reads a queued query source only when its lifecycle starts  763ms
+     ✓ fails the active query when the server crashes on open, and replaces it next query  415ms
+ ✓ |thread-safe| packages/experimental/agent-team/tests/team.spec.ts (43 tests) 5774ms
+     ✓ enforces CAS, ownership, dependencies, transitions, and write-scope warnings  340ms
+     ✓ covers partial edits, Lead ownership, unassignment, and blocked reassignment  377ms
+     ✓ deduplicates live target history and contains inspection and delivery failures  338ms
+ ✓ |thread-safe| scripts/publint-all.spec.ts (5 tests) 2179ms
+     ✓ lints recursively declared files from an in-memory publication view  457ms
+     ✓ rejects an export that exists in the workspace but is not published  433ms
+     ✓ rejects a public export whose built file is missing  409ms
+     ✓ accepts published relative JavaScript and CSS targets  448ms
+     ✓ rejects unpublished relative JavaScript and CSS targets  431ms
+ ✓ |thread-safe| packages/shell/bash-local/tests/executor.spec.ts (28 tests) 2015ms
+     ✓ readOutput is consuming: increments are never re-delivered, and reads stay valid after exit  1011ms
+ ✓ |thread-safe| packages/subagent/tool-subagent-report/tests/tool-subagent-report.spec.ts (23 tests) 1605ms
+ ✓ |thread-safe| packages/experimental/tool-agent-team/tests/tool-team.spec.ts (11 tests) 1622ms
+     ✓ returns actionable no-progress output and renders structured wait cancellation  322ms
+ ✓ |thread-safe| packages/lsp/lsp-stdio/tests/connection.spec.ts (21 tests) 1648ms
+ ✓ |thread-safe| packages/workflow/tool-ralph/tests/tool-ralph.spec.ts (15 tests) 1573ms
+     ✓ turns malformed fixed-workflow terminal values and reports into errors  957ms
+ ✓ |thread-safe| packages/subagent/subagent-dsh-sdk/tests/subagent-dsh-sdk.spec.ts (32 tests) 1930ms
+ ✓ |thread-safe| packages/e2b/subprocess-e2b/tests/subprocess.spec.ts (71 tests) 2033ms
+ ✓ |thread-safe| packages/typert/generator/tests/tools-catalog.spec.ts (1 test) 1890ms
+     ✓ round-trips the complete service and event structure through the runtime registry  1889ms
+ ✓ |thread-safe| packages/settings/settings-file/tests/local.spec.ts (30 tests) 1381ms
+     ✓ keeps the last good document over an invalid edit, then recovers  373ms
+     ✓ does not republish its own persisted write  321ms
+stdout | scripts/dev-web.spec.ts > rebuilds a client-plugin bundle after its source changes
+ℹ config file: /var/folders/f5/wwjgctq529v381m5rw2lrfr00000gn/T/dsh-dev-web-watch-E0v1gS/tsdown.config.ts
+
+stdout | scripts/dev-web.spec.ts > rebuilds a client-plugin bundle after its source changes
+ℹ config file: /var/folders/f5/wwjgctq529v381m5rw2lrfr00000gn/T/dsh-dev-web-watch-E0v1gS/tsdown.config.ts
+
+stdout | scripts/dev-web.spec.ts > rebuilds a client-plugin bundle after its source changes
+ℹ [@dsh-test/dev-web-watch] entry: src.ts
+
+stdout | scripts/dev-web.spec.ts > rebuilds a client-plugin bundle after its source changes
+ℹ Build start
+
+stdout | scripts/dev-web.spec.ts > rebuilds a client-plugin bundle after its source changes
+ℹ [@dsh-test/dev-web-watch] lib/client.js  0.26 kB │ gzip: 0.21 kB
+ℹ [@dsh-test/dev-web-watch] 1 files, total: 0.26 kB
+
+stdout | scripts/dev-web.spec.ts > rebuilds a client-plugin bundle after its source changes
+✔ [@dsh-test/dev-web-watch] Rebuilt in 3ms.
+
+ ✓ |thread-safe| packages/examples/agent-spine-demo/tests/agent-core.spec.ts (30 tests) 1853ms
+ ✓ |thread-safe| packages/session/session-persistence/tests/persistence.spec.ts (108 tests) 1383ms
+(node:33552) MaxListenersExceededWarning: Possible EventEmitter memory leak detected. 11 exit listeners added to [process]. MaxListeners is 10. Use emitter.setMaxListeners() to increase limit
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ |thread-safe| packages/llm/llm-retry/tests/transport-recovery.spec.ts (7 tests) 1358ms
+     ✓ turns a stalled body into TIMEOUT and succeeds on the next request  1021ms
+ ✓ |thread-safe| packages/sdk/server/tests/server.spec.ts (25 tests) 1348ms
+ ✓ |thread-safe| packages/core/agent-loop/tests/resume.spec.ts (28 tests) 918ms
+ ✓ |thread-safe| packages/shell/tool-bash-persistent/tests/loader-composition.spec.ts (1 test) 1366ms
+     ✓ preserves cwd and environment across calls  1365ms
+ ✓ |thread-safe| packages/boot/app-boot/tests/hmr-config.spec.ts (6 tests) 1003ms
+stdout | scripts/dev-web.spec.ts > rebuilds a client-plugin bundle after its source changes
+ℹ Found /private/var/folders/f5/wwjgctq529v381m5rw2lrfr00000gn/T/dsh-dev-web-watch-E0v1gS/src.ts changed, rebuilding...
+
+stdout | scripts/dev-web.spec.ts > rebuilds a client-plugin bundle after its source changes
+ℹ [@dsh-test/dev-web-watch] lib/client.js  0.36 kB │ gzip: 0.22 kB
+ℹ [@dsh-test/dev-web-watch] 1 files, total: 0.36 kB
+
+stdout | scripts/dev-web.spec.ts > rebuilds a client-plugin bundle after its source changes
+✔ [@dsh-test/dev-web-watch] Rebuilt in 3ms.
+
+ ✓ |thread-safe| scripts/dev-web.spec.ts (3 tests) 1239ms
+   ✓ rebuilds a client-plugin bundle after its source changes  1226ms
+ ✓ |thread-safe| packages/shell/bash-sandbox/tests/sandbox.spec.ts (59 tests) 1020ms
+     ✓ overlapping background jobs settle with their OWN modes (an escalated task next to a default one)  316ms
+     ✓ overlapping background jobs keep their OWN wrap facts (per-task, not latest-wrap)  415ms
+ ✓ |thread-safe| packages/core/tools/tests/code-mode.spec.ts (91 tests) 1096ms
+ ✓ |thread-safe| packages/core/agent-loop/tests/config-session-id.spec.ts (16 tests) 926ms
+ ✓ |thread-safe| packages/mcp/mcp-client/tests/reconnect.spec.ts (25 tests) 1213ms
+ ✓ |thread-safe| packages/test-support/acp-snapshot/tests/suite.spec.ts (109 tests | 1 skipped) 1082ms
+ ✓ |thread-safe| packages/client/connection/tests/connection.client.spec.ts (14 tests) 1182ms
+ ✓ |thread-safe| packages/workflow/tool-ralph/tests/integration.spec.ts (8 tests) 1241ms
+ ✓ |thread-safe| packages/workflow/tool-workflow/tests/tool-workflow.spec.ts (24 tests) 980ms
+ ✓ |thread-safe| packages/subagent/tool-subagent-control/tests/tool-subagent-control.spec.ts (14 tests) 956ms
+ ✓ |thread-safe| packages/client/ui-primitives/tests/markdown-incremental.client.spec.tsx (26 tests) 974ms
+     ✓ matches a fresh render at every prefix (chunk=1)  523ms
+ ✓ |thread-safe| scripts/gen-client-catalog.spec.ts (18 tests) 920ms
+     ✓ collects every declared slot with a teachable contract  907ms
+ ✓ |thread-safe| packages/credentials/credentials-local/tests/watcher.spec.ts (10 tests) 797ms
+ ✓ |thread-safe| packages/lsp/tool-lsp/tests/integration.spec.ts (2 tests) 625ms
+     ✓ enforces the TOOL_TIMEOUT budget when the server hangs  511ms
+ ✓ |thread-safe| packages/sdk/server/tests/plugin-apply.spec.ts (6 tests) 706ms
+ ✓ |thread-safe| packages/core/agent-loop/tests/cancel.spec.ts (37 tests) 865ms
+ ✓ |thread-safe| packages/terminal/tool-terminal/tests/loader-composition.spec.ts (1 test) 826ms
+     ✓ boots cordis.yml and preserves shell state across real tool calls  826ms
+ ✓ |thread-safe| packages/subagent/subagent/tests/continuation-inheritance.spec.ts (7 tests) 1020ms
+ ✓ |thread-safe| packages/attachment/attachment-local/tests/store.spec.ts (11 tests) 1171ms
+ ✓ |thread-safe| packages/client/ui-primitives/tests/code-block.client.spec.tsx (15 tests) 844ms
+     ✓ lazily loads every read-card grammar: plain first, highlighted after load  740ms
+ ✓ |thread-safe| packages/fs/fs-local/tests/filesystem.spec.ts (69 tests) 1286ms
+ ✓ |thread-safe| packages/test-support/loader-smoke/tests/loader-smoke.spec.ts (5 tests) 603ms
+ ✓ |thread-safe| packages/typert/loader/tests/loader.spec.ts (16 tests) 582ms
+ ✓ |thread-safe| packages/client/ui-workspace/tests/workspace-browser.client.spec.tsx (44 tests) 679ms
+ ✓ |thread-safe| packages/core/tools/tests/py-types.spec.ts (53 tests) 649ms
+     ✓ renders a deeply nested oneOf chain in linear time (no per-level re-materialization)  317ms
+ ✓ |thread-safe| packages/client/ui-conversation/tests/input-matrix.client.spec.tsx (15 tests) 643ms
+ ✓ |thread-safe| packages/fs/tool-fs/tests/integration.spec.ts (33 tests) 584ms
+ ✓ |thread-safe| packages/client/hmr/tests/node-half.client.spec.ts (5 tests) 600ms
+ ✓ |thread-safe| packages/fs/tool-fs/tests/read-image.spec.ts (29 tests) 616ms
+ ✓ |thread-safe| packages/skill/skill-filesystem/tests/skill-filesystem.spec.ts (21 tests) 784ms
+ ✓ |thread-safe| packages/settings/settings/tests/settings.spec.ts (89 tests) 555ms
+ ✓ |thread-safe| packages/boot/app-boot/tests/user-patches.spec.ts (16 tests) 591ms
+     ✓ watches add, failure, recovery, and removal through transactional HMR  495ms
+(node:34426) MaxListenersExceededWarning: Possible EventEmitter memory leak detected. 11 exit listeners added to [process]. MaxListeners is 10. Use emitter.setMaxListeners() to increase limit
+(Use `node --trace-warnings ...` to show where the warning was created)
+stderr | packages/acp/acp/tests/dispose.spec.ts > ACP connection ownership > an ACP-only reload rejects new sessions before creating an orphan
+Error handling request {
+  jsonrpc: '2.0',
+  id: 1,
+  method: 'session/new',
+  params: { cwd: '/Users/libing/kk_Projects/qilin-engine', mcpServers: [] }
+} {
+  code: -32603,
+  message: 'Internal error: the ACP bridge has been disposed',
+  data: undefined
+}
+
+ ✓ |thread-safe| packages/shell/tool-bash/tests/tools.spec.ts (86 tests) 569ms
+ ✓ |thread-safe| packages/acp/acp/tests/dispose.spec.ts (11 tests) 534ms
+stderr | packages/acp/acp/tests/turns.spec.ts > ACP prompt lifecycle > fails prompt delivery when a committed image attachment is missing
+Error handling request {
+  jsonrpc: '2.0',
+  id: 2,
+  method: 'session/prompt',
+  params: {
+    sessionId: 'a4c1e8b2-1129-443c-b8a6-3d187123196c',
+    prompt: [ [Object] ]
+  }
+} {
+  code: -32603,
+  message: 'Internal error: assistant output delivery failed: cannot deliver assistant image: the attachment is unavailable or corrupt',
+  data: undefined
+}
+
+stderr | packages/acp/acp/tests/turns.spec.ts > ACP prompt lifecycle > rejects a failed turn and never publishes its partial chunks
+Error handling request {
+  jsonrpc: '2.0',
+  id: 2,
+  method: 'session/prompt',
+  params: {
+    sessionId: '0be8c315-3960-4812-9cf7-cd7dfe29861d',
+    prompt: [ [Object] ]
+  }
+} {
+  code: -32603,
+  message: 'Internal error: turn failed: provider boom',
+  data: undefined
+}
+
+stderr | packages/acp/acp/tests/turns.spec.ts > ACP prompt lifecycle > rejects an ordinary plugin failure through the same prompt boundary
+Error handling request {
+  jsonrpc: '2.0',
+  id: 2,
+  method: 'session/prompt',
+  params: {
+    sessionId: '65506ee4-fb48-4b50-9529-fb61cc9836d2',
+    prompt: [ [Object] ]
+  }
+} {
+  code: -32603,
+  message: 'Internal error: turn failed: plugin pre-step failed',
+  data: undefined
+}
+
+stderr | packages/acp/acp/tests/turns.spec.ts > ACP prompt lifecycle > rejects a turn-start failure before the prompt is claimed
+Error handling request {
+  jsonrpc: '2.0',
+  id: 2,
+  method: 'session/prompt',
+  params: {
+    sessionId: 'fd851400-d615-4a95-b251-0941cd5ee06b',
+    prompt: [ [Object] ]
+  }
+} {
+  code: -32603,
+  message: 'Internal error: turn failed: turn start unavailable',
+  data: undefined
+}
+
+stderr | packages/acp/acp/tests/turns.spec.ts > ACP prompt lifecycle > frees the prompt slot when the agent rejects the send synchronously
+Error handling request {
+  jsonrpc: '2.0',
+  id: 2,
+  method: 'session/prompt',
+  params: {
+    sessionId: '9921976c-d1ac-4a76-be2d-5bdfa88f0693',
+    prompt: [ [Object] ]
+  }
+} {
+  code: -32603,
+  message: 'Internal error: prompt was not queued: the agent was disposed outside the bridge',
+  data: undefined
+}
+
+stderr | packages/acp/acp/tests/turns.spec.ts > ACP prompt lifecycle > frees the prompt slot when the agent rejects the send synchronously
+Error handling request {
+  jsonrpc: '2.0',
+  id: 3,
+  method: 'session/prompt',
+  params: {
+    sessionId: '9921976c-d1ac-4a76-be2d-5bdfa88f0693',
+    prompt: [ [Object] ]
+  }
+} {
+  code: -32603,
+  message: 'Internal error: prompt was not queued: the agent was disposed outside the bridge',
+  data: undefined
+}
+
+ ✓ |thread-safe| packages/typert/generator/tests/schema-emitter.spec.ts (64 tests) 460ms
+stderr | packages/acp/acp/tests/turns.spec.ts > ACP prompt lifecycle > permits only one in-flight prompt per session
+Error handling request {
+  jsonrpc: '2.0',
+  id: 3,
+  method: 'session/prompt',
+  params: {
+    sessionId: '8425cfb6-ae25-424e-a5e9-aa8068935aa7',
+    prompt: [ [Object] ]
+  }
+} {
+  code: -32602,
+  message: 'Invalid params: a prompt is already in flight for this session',
+  data: undefined
+}
+
+stderr | packages/acp/acp/tests/turns.spec.ts > ACP prompt lifecycle > reserves the prompt slot during image admission and cancels without a late followup
+Error handling request {
+  jsonrpc: '2.0',
+  id: 3,
+  method: 'session/prompt',
+  params: {
+    sessionId: '5dc3a3f2-7e65-4ca0-8a3b-40a698df0778',
+    prompt: [ [Object] ]
+  }
+} {
+  code: -32602,
+  message: 'Invalid params: a prompt is already in flight for this session',
+  data: undefined
+}
+
+ ✓ |thread-safe| packages/feedback/message-feedback/tests/message-feedback.spec.ts (18 tests) 426ms
+ ✓ |thread-safe| packages/core/agent-loop/tests/contract-regressions.spec.ts (37 tests) 473ms
+stderr | packages/acp/acp/tests/turns.spec.ts > ACP prompt lifecycle > does not queue admitted content into an agent retired during storage
+Error handling request {
+  jsonrpc: '2.0',
+  id: 2,
+  method: 'session/prompt',
+  params: {
+    sessionId: 'd6816d5b-e61c-41e0-9af7-fa33c8a8ab76',
+    prompt: [ [Object] ]
+  }
+} {
+  code: -32603,
+  message: 'Internal error: prompt was not queued: the agent was disposed outside the bridge',
+  data: undefined
+}
+
+stderr | packages/acp/acp/tests/turns.spec.ts > ACP prompt lifecycle > wraps an unexpected same-process followup failure and frees the prompt slot
+Error handling request {
+  jsonrpc: '2.0',
+  id: 2,
+  method: 'session/prompt',
+  params: {
+    sessionId: '6a052095-573d-49e1-9ec5-47a64b2c3979',
+    prompt: [ [Object] ]
+  }
+} {
+  code: -32603,
+  message: 'Internal error: prompt was not queued: synthetic followup failure',
+  data: undefined
+}
+
+ ✓ |thread-safe| apps/cli/tests/memory-mcp-configs.spec.ts (6 tests) 540ms
+ ✓ |thread-safe| packages/credentials/credentials-local/tests/local.spec.ts (55 tests) 626ms
+     ✓ publishes external edits, replaces the snapshot wholesale, and suppresses self-writes  322ms
+ ✓ |thread-safe| packages/subagent/tool-subagent-control/tests/list-agents.spec.ts (12 tests) 461ms
+ ✓ |thread-safe| packages/client/ui-settings-models/tests/components.client.spec.tsx (77 tests) 601ms
+ ✓ |thread-safe| packages/session-query/session-query-sqlite/tests/sqlite.spec.ts (60 tests) 364ms
+stderr | packages/acp/acp/tests/turns.spec.ts > ACP prompt lifecycle > a failed turn with no retry still rejects
+Error handling request {
+  jsonrpc: '2.0',
+  id: 2,
+  method: 'session/prompt',
+  params: {
+    sessionId: '4c7e22a2-f741-44c2-aa59-9a644e12e860',
+    prompt: [ [Object] ]
+  }
+} {
+  code: -32603,
+  message: 'Internal error: turn failed: terminal boom',
+  data: undefined
+}
+
+stderr | packages/acp/acp/tests/turns.spec.ts > ACP prompt lifecycle > rejects a prompt when pre-step fails inside its open turn
+Error handling request {
+  jsonrpc: '2.0',
+  id: 2,
+  method: 'session/prompt',
+  params: {
+    sessionId: 'a68bcefe-9dde-4b6b-9ce8-027057e9840a',
+    prompt: [ [Object] ]
+  }
+} {
+  code: -32603,
+  message: 'Internal error: turn failed: pre-step exploded',
+  data: undefined
+}
+
+ ✓ |thread-safe| packages/acp/acp/tests/turns.spec.ts (30 tests) 457ms
+ ✓ |thread-safe| packages/settings/settings-file/tests/watcher.spec.ts (9 tests) 535ms
+ ✓ |thread-safe| packages/spill/spill-policy/tests/spill-policy.spec.ts (26 tests) 445ms
+ ✓ |thread-safe| packages/preset/agent-presets/tests/mount.spec.ts (47 tests) 570ms
+ ✓ |thread-safe| packages/client/ui-conversation/tests/input-scenarios.client.spec.tsx (10 tests) 552ms
+ ✓ |thread-safe| packages/llm/llm-retry/tests/retry.spec.ts (31 tests) 454ms
+ ✓ |thread-safe| packages/attachment/attachment-local/tests/index.spec.ts (8 tests) 404ms
+ ✓ |thread-safe| packages/client/ui-settings-models/tests/provider-form.client.spec.tsx (82 tests) 523ms
+ ✓ |thread-safe| packages/e2b/subprocess-e2b/tests/terminal.spec.ts (35 tests) 400ms
+ ✓ |thread-safe| packages/attachment/attachment-local/tests/normalization.spec.ts (23 tests) 402ms
+ ✓ |thread-safe| packages/workflow/workflow-worker-thread/tests/integration.spec.ts (2 tests) 360ms
+(node:34859) MaxListenersExceededWarning: Possible EventEmitter memory leak detected. 11 exit listeners added to [process]. MaxListeners is 10. Use emitter.setMaxListeners() to increase limit
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ |thread-safe| packages/host/apiproxy/tests/api-proxy-search.spec.ts (24 tests) 413ms
+ ✓ |thread-safe| packages/fs/tool-fs-search/tests/integration.spec.ts (15 tests) 218ms
+ ✓ |thread-safe| packages/client/ui-trajectory/tests/client-bundle.client.spec.ts (3 tests) 449ms
+     ✓ hands off with the manifest id and a DI-require factory  401ms
+ ✓ |thread-safe| packages/client/ui-conversation/tests/apply-inject.client.spec.tsx (11 tests) 486ms
+ ✓ |thread-safe| packages/fs/fs-local/tests/fsio.spec.ts (71 tests | 1 skipped) 398ms
+ ✓ |thread-safe| packages/skill/skill-filesystem/tests/skill-filesystem-watcher.spec.ts (10 tests) 346ms
+ ✓ |thread-safe| scripts/translation-pairing.spec.ts (61 tests) 355ms
+ ✓ |thread-safe| scripts/test-invariants.spec.ts (13 tests) 368ms
+ ✓ |thread-safe| packages/client/ui-conversation/tests/input-bar.client.spec.tsx (76 tests) 337ms
+ ✓ |thread-safe| packages/extensions/ui-cordis/tests/inventory.client.spec.ts (7 tests) 366ms
+ ✓ |thread-safe| packages/session-query/tool-session-query/tests/tool-session-query.spec.ts (100 tests) 341ms
+ ✓ |thread-safe| packages/subagent/tool-subagent/tests/tool-subagent.spec.ts (64 tests) 402ms
+ ✓ |thread-safe| packages/core/agent-loop/tests/properties.spec.ts (3 tests) 277ms
+ ✓ |thread-safe| packages/jobs/tool-jobs/tests/tool-jobs.spec.ts (42 tests) 321ms
+ ✓ |thread-safe| packages/schedule/schedule/tests/tools.spec.ts (22 tests) 302ms
+ ✓ |thread-safe| packages/mcp/mcp-client/tests/apply.spec.ts (20 tests) 304ms
+ ✓ |thread-safe| packages/host/apiproxy/tests/session-export.spec.ts (35 tests) 281ms
+ ✓ |thread-safe| packages/llm/llm-pi-ai/tests/dynamic-config.spec.ts (9 tests) 215ms
+ ✓ |thread-safe| packages/core/tools/tests/gen-tool-catalog.spec.ts (10 tests) 331ms
+ ✓ |thread-safe| packages/fs/tool-str-replace-editor/tests/tools.spec.ts (14 tests) 336ms
+ ✓ |thread-safe| packages/host/directory-picker-auto/tests/loader-composition.spec.ts (6 tests) 301ms
+ ✓ |thread-safe| packages/client/ui-trajectory/tests/table.client.spec.tsx (29 tests) 366ms
+ ✓ |thread-safe| scripts/verify-built-package-invariants.spec.ts (3 tests) 303ms
+ ✓ |thread-safe| packages/web/tool-web/tests/tool-web.spec.ts (75 tests) 297ms
+ ✓ |thread-safe| packages/client/ui-workflow-run/tests/workflow-run.client.spec.tsx (32 tests) 324ms
+ ✓ |thread-safe| packages/llm/llm-deepseek/tests/file-store.spec.ts (20 tests) 307ms
+ ✓ |thread-safe| packages/client/ui-trajectory/tests/views.client.spec.tsx (31 tests) 369ms
+ ✓ |thread-safe| packages/fs/fs-sandbox/tests/fs-sandbox.spec.ts (20 tests) 166ms
+ ✓ |thread-safe| packages/fs/tool-fs-search/tests/tools.spec.ts (107 tests) 273ms
+ ✓ |thread-safe| packages/llm/llm-deepseek/tests/dynamic-config.spec.ts (9 tests) 183ms
+ ✓ |thread-safe| packages/credentials/credentials-local/tests/records.spec.ts (22 tests) 143ms
+ ✓ |thread-safe| packages/sdk/client/tests/dispose.spec.ts (16 tests) 257ms
+ ✓ |thread-safe| packages/preset/agent-presets/tests/authoring.spec.ts (19 tests) 144ms
+ ✓ |thread-safe| packages/client/ui-conversation/tests/input-reference-submit.client.spec.ts (8 tests) 269ms
+ ✓ |thread-safe| packages/llm/llm-pi-ai/tests/loader-composition.spec.ts (3 tests) 276ms
+ ✓ |thread-safe| packages/core/agent-loop/tests/loop.spec.ts (54 tests) 220ms
+ ✓ |thread-safe| packages/client/ui-settings-plugins/tests/stores.client.spec.ts (41 tests) 267ms
+stderr | packages/client/ui-primitives/tests/markdown.client.spec.tsx > MarkdownText > keeps the CJK strong extension out of escaped, code, math, and ASCII contexts
+LaTeX-incompatible input and strict mode is set to 'warn': Unicode text character "注" used in math mode [unicodeTextInMathMode]
+LaTeX-incompatible input and strict mode is set to 'warn': Unicode text character "意" used in math mode [unicodeTextInMathMode]
+LaTeX-incompatible input and strict mode is set to 'warn': Unicode text character "：" used in math mode [unicodeTextInMathMode]
+LaTeX-incompatible input and strict mode is set to 'warn': Unicode text character "内" used in math mode [unicodeTextInMathMode]
+LaTeX-incompatible input and strict mode is set to 'warn': Unicode text character "容" used in math mode [unicodeTextInMathMode]
+
+(node:35407) MaxListenersExceededWarning: Possible EventEmitter memory leak detected. 11 end listeners added to [Socket]. MaxListeners is 10. Use emitter.setMaxListeners() to increase limit
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:35407) MaxListenersExceededWarning: Possible EventEmitter memory leak detected. 11 end listeners added to [Socket]. MaxListeners is 10. Use emitter.setMaxListeners() to increase limit
+ ✓ |thread-safe| packages/examples/acp-demo/tests/acp-agent.spec.ts (12 tests) 200ms
+stderr | packages/client/ui-primitives/tests/markdown.client.spec.tsx > MarkdownText > keeps backslash delimiters correct across Markdown boundaries and malformed candidates
+LaTeX-incompatible input and strict mode is set to 'warn': In LaTeX, \\ or \newline does nothing in display mode [newLineInDisplayMode]
+
+stderr | packages/client/ui-primitives/tests/markdown.client.spec.tsx > MarkdownText > renders escaped dollars and even backslash pairs before closing fences
+LaTeX-incompatible input and strict mode is set to 'warn': In LaTeX, \\ or \newline does nothing in display mode [newLineInDisplayMode]
+
+ ✓ |thread-safe| packages/host/directory-picker-native/tests/win32-dialog.spec.ts (10 tests | 1 skipped) 249ms
+ ✓ |thread-safe| apps/cli/tests/source-launch.compat.spec.ts (2 tests) 223ms
+ ✓ |thread-safe| packages/client/connection/tests/client-apply.client.spec.ts (13 tests) 247ms
+ ✓ |thread-safe| packages/session/session-telemetry-otel/tests/otel.spec.ts (25 tests) 254ms
+ ✓ |thread-safe| packages/client/ui-primitives/tests/markdown.client.spec.tsx (30 tests) 269ms
+ ✓ |thread-safe| packages/client/ui-conversation/tests/chat-view.client.spec.tsx (52 tests) 282ms
+ ✓ |thread-safe| packages/session-query/session-query/tests/session-query.spec.ts (41 tests) 237ms
+ ✓ |thread-safe| packages/client/ui-sidebar/tests/sidebar-snapshot.client.spec.tsx (4 tests) 295ms
+ ✓ |thread-safe| packages/session-query/tool-session-query/tests/sqlite-integration.spec.ts (2 tests) 238ms
+ ✓ |thread-safe| packages/code-runtime/code-runtime-python/tests/protocol.spec.ts (23 tests) 199ms
+ ✓ |thread-safe| packages/web/web-fetch-http/tests/fetch-http.spec.ts (46 tests) 216ms
+ ✓ |thread-safe| packages/subagent/subagent-spawn-in-process/tests/subagent-spawn-in-process.spec.ts (27 tests) 221ms
+ ✓ |thread-safe| packages/llm/llm-pi-ai/tests/catalog.spec.ts (67 tests) 210ms
+ ✓ |thread-safe| packages/client/ui-primitives/tests/markdown-dom-parity.client.spec.tsx (48 tests) 180ms
+ ✓ |thread-safe| packages/storage/storage-json/tests/json-backend.spec.ts (19 tests) 281ms
+ ✓ |thread-safe| packages/core/agent-loop/tests/scope-lifecycle.spec.ts (37 tests) 202ms
+ ✓ |thread-safe| packages/client/ui-theme/tests/apply.client.spec.ts (8 tests) 287ms
+ ✓ |thread-safe| packages/llm/llm-deepseek/tests/loader-composition.spec.ts (3 tests) 247ms
+ ✓ |thread-safe| packages/test-support/llm-mock-server/tests/server.spec.ts (46 tests) 225ms
+stderr | packages/client/ui-subagent/tests/conversation-ui.client.spec.tsx > SubagentHeaderLineage > combines the current subagent title and chevron into the parent-catalog trigger
+Warning: Encountered two children with the same key, `child`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version.
+    at SubagentHeaderLineage (/Users/libing/kk_Projects/qilin-engine/packages/client/ui-subagent/src/client/SubagentHeaderLineage.tsx:836:34)
+
+stderr | packages/client/ui-subagent/tests/conversation-ui.client.spec.tsx > SubagentHeaderLineage > falls back to the catalog session id when the selected row has no label
+Warning: Encountered two children with the same key, `child`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version.
+    at SubagentHeaderLineage (/Users/libing/kk_Projects/qilin-engine/packages/client/ui-subagent/src/client/SubagentHeaderLineage.tsx:836:34)
+
+stderr | packages/client/ui-subagent/tests/conversation-ui.client.spec.tsx > SubagentHeaderLineage > refreshes an absent current switcher catalog without waiting for hover
+Warning: Encountered two children with the same key, `child`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version.
+    at SubagentHeaderLineage (/Users/libing/kk_Projects/qilin-engine/packages/client/ui-subagent/src/client/SubagentHeaderLineage.tsx:836:34)
+
+stderr | packages/client/ui-subagent/tests/conversation-ui.client.spec.tsx > SubagentHeaderLineage > keeps a nested title switcher scoped to its direct-parent catalog
+Warning: Encountered two children with the same key, `grandchild`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version.
+    at SubagentHeaderLineage (/Users/libing/kk_Projects/qilin-engine/packages/client/ui-subagent/src/client/SubagentHeaderLineage.tsx:836:34)
+
+ ✓ |thread-safe| packages/client/ui-subagent/tests/conversation-ui.client.spec.tsx (28 tests) 239ms
+ ✓ |thread-safe| packages/workspace/workspace/tests/workspace.spec.ts (43 tests) 294ms
+ ✓ |thread-safe| packages/host/apiproxy/tests/api-proxy-cold.spec.ts (16 tests) 217ms
+ ✓ |thread-safe| packages/workflow/workflow-worker-thread/tests/source-worker.compat.spec.ts (1 test) 191ms
+ ✓ |thread-safe| packages/client/ui-user-questions/tests/user-questions-composer.client.spec.tsx (16 tests) 223ms
+ ✓ |thread-safe| packages/shell/tool-bash-persistent/tests/tools.spec.ts (18 tests) 218ms
+ ✓ |thread-safe| packages/shell/tool-pwsh-persistent/tests/tools.spec.ts (20 tests) 228ms
+ ✓ |thread-safe| packages/client/ui-agent-preset/tests/section.client.spec.tsx (38 tests) 235ms
+ ✓ |thread-safe| packages/client/ui-primitives/tests/json-tree.client.spec.tsx (10 tests) 260ms
+stderr | packages/acp/acp/tests/multi-session.spec.ts > ACP multi-session isolation > enforces one in-flight prompt independently for each session
+Error handling request {
+  jsonrpc: '2.0',
+  id: 5,
+  method: 'session/prompt',
+  params: {
+    sessionId: '280d06e7-57df-4f19-ba10-9925a01affd9',
+    prompt: [ [Object] ]
+  }
+} {
+  code: -32602,
+  message: 'Invalid params: a prompt is already in flight for this session',
+  data: undefined
+}
+
+ ✓ |thread-safe| packages/acp/acp/tests/multi-session.spec.ts (4 tests) 198ms
+ ✓ |thread-safe| packages/test-support/llm-replay/tests/llm-replay.spec.ts (86 tests) 190ms
+ ✓ |thread-safe| packages/jobs/jobs-local/tests/jobs.spec.ts (64 tests) 155ms
+ ✓ |thread-safe| packages/skill/tool-skill/tests/tool-skill.spec.ts (31 tests) 277ms
+ ✓ |thread-safe| packages/client/ui-conversation/tests/assembly-surfaces.client.spec.tsx (5 tests) 232ms
+ ✓ |thread-safe| packages/client/ui-conversation/tests/chat-branch-tails.client.spec.tsx (43 tests) 251ms
+ ✓ |thread-safe| packages/session/session-persistence/tests/write-behind.spec.ts (10 tests) 197ms
+ ✓ |thread-safe| packages/client/ui-message-feedback/tests/message-feedback-actions.client.spec.tsx (36 tests) 222ms
+ ✓ |thread-safe| packages/client/ui-tool/tests/toolview-slot.client.spec.tsx (8 tests) 187ms
+ ✓ |thread-safe| packages/client/ui-goal/tests/goalbar.client.spec.tsx (14 tests) 164ms
+stderr | packages/client/ui-commands/tests/popup-view.client.spec.tsx > PopupSelectView > a failed options load shows the error with a retry button that reloads
+[ui-commands] popupSelect options failed for /theme: Error: directory down
+    at Object.options (/Users/libing/kk_Projects/qilin-engine/packages/client/ui-commands/tests/popup-view.client.spec.tsx:218:48)
+    at PopupSelectController.load (/Users/libing/kk_Projects/qilin-engine/packages/client/ui-commands/src/client/popup.ts:145:18)
+    at PopupSelectController.open (/Users/libing/kk_Projects/qilin-engine/packages/client/ui-commands/src/client/popup.ts:140:10)
+    at /Users/libing/kk_Projects/qilin-engine/packages/client/ui-commands/tests/popup-view.client.spec.tsx:69:11
+    at /Users/libing/kk_Projects/qilin-engine/node_modules/.pnpm/@testing-library+react@16.3.2_@testing-library+dom@10.4.1_@types+react-dom@18.3.7_@type_b0bbe147884ef4cbbf95e64a97c782e8/node_modules/@testing-library/react/dist/act-compat.js:47:24
+    at act (/Users/libing/kk_Projects/qilin-engine/node_modules/.pnpm/react@18.3.1/node_modules/react/cjs/react.development.js:2512:16)
+    at /Users/libing/kk_Projects/qilin-engine/node_modules/.pnpm/@testing-library+react@16.3.2_@testing-library+dom@10.4.1_@types+react-dom@18.3.7_@type_b0bbe147884ef4cbbf95e64a97c782e8/node_modules/@testing-library/react/dist/act-compat.js:46:25
+    at mountOpen (/Users/libing/kk_Projects/qilin-engine/packages/client/ui-commands/tests/popup-view.client.spec.tsx:68:9)
+    at /Users/libing/kk_Projects/qilin-engine/packages/client/ui-commands/tests/popup-view.client.spec.tsx:215:11
+    at file:///Users/libing/kk_Projects/qilin-engine/node_modules/.pnpm/@vitest+runner@4.1.8/node_modules/@vitest/runner/dist/chunk-artifact.js:302:11
+
+stderr | packages/client/ui-commands/tests/popup-view.client.spec.tsx > PopupSelectView > an onSelect failure keeps the shell open with the error strip and no retry button (re-select is the retry)
+[ui-commands] popupSelect onSelect failed for /theme: Error: host rejected
+    at Object.onSelect (/Users/libing/kk_Projects/qilin-engine/packages/client/ui-commands/tests/popup-view.client.spec.tsx:231:82)
+    at PopupSelectController.settle (/Users/libing/kk_Projects/qilin-engine/packages/client/ui-commands/src/client/popup.ts:258:26)
+    at PopupSelectController.select (/Users/libing/kk_Projects/qilin-engine/packages/client/ui-commands/src/client/popup.ts:224:16)
+    at onKeyDown (/Users/libing/kk_Projects/qilin-engine/packages/client/ui-commands/src/client/PopupSelectView.tsx:96:20)
+    at HTMLUnknownElement.callCallback (/Users/libing/kk_Projects/qilin-engine/node_modules/.pnpm/react-dom@18.3.1_react@18.3.1/node_modules/react-dom/cjs/react-dom.development.js:4164:14)
+    at HTMLUnknownElement.callTheUserObjectsOperation (/Users/libing/kk_Projects/qilin-engine/node_modules/.pnpm/jsdom@29.1.1/node_modules/jsdom/lib/generated/idl/EventListener.js:26:30)
+    at innerInvokeEventListeners (/Users/libing/kk_Projects/qilin-engine/node_modules/.pnpm/jsdom@29.1.1/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:360:16)
+    at invokeEventListeners (/Users/libing/kk_Projects/qilin-engine/node_modules/.pnpm/jsdom@29.1.1/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:296:3)
+    at HTMLUnknownElementImpl._dispatch (/Users/libing/kk_Projects/qilin-engine/node_modules/.pnpm/jsdom@29.1.1/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:243:9)
+    at HTMLUnknownElementImpl.dispatchEvent (/Users/libing/kk_Projects/qilin-engine/node_modules/.pnpm/jsdom@29.1.1/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:114:17)
+
+ ✓ |thread-safe| packages/session-query/session-query/tests/tracing.spec.ts (20 tests) 166ms
+ ✓ |thread-safe| packages/client/ui-commands/tests/popup-view.client.spec.tsx (15 tests) 204ms
+ ✓ |thread-safe| packages/client/connection/tests/websocket-downlink.host.spec.ts (8 tests) 131ms
+ ✓ |thread-safe| packages/client/ui-settings-general/tests/settings-root.client.spec.tsx (17 tests) 213ms
+ ✓ |thread-safe| packages/client/ui-primitives/tests/read-block.client.spec.tsx (22 tests) 201ms
+ ✓ |thread-safe| packages/core/tools/tests/tools.spec.ts (136 tests) 195ms
+ ✓ |thread-safe| packages/client/ui-conversation/tests/skeleton.client.spec.tsx (18 tests) 226ms
+ ✓ |thread-safe| packages/subagent/subagent-in-process-driver/tests/structured.spec.ts (30 tests) 198ms
+ ✓ |thread-safe| packages/util/atomic-write/tests/atomic-write.spec.ts (8 tests) 177ms
+ ✓ |thread-safe| packages/schedule/schedule/tests/runtime.spec.ts (26 tests) 145ms
+ ✓ |thread-safe| packages/extensions/cordis-host-runner/tests/sandbox.spec.ts (24 tests) 173ms
+ ✓ |thread-safe| packages/fs/tool-fs/tests/tools.spec.ts (73 tests) 179ms
+ ✓ |thread-safe| packages/web/tool-web/tests/integration.spec.ts (8 tests) 167ms
+ ✓ |thread-safe| packages/shell/tool-pwsh/tests/tools.spec.ts (61 tests) 178ms
+ ✓ |thread-safe| packages/preset/agent-presets/tests/settings.spec.ts (8 tests) 117ms
+ ✓ |thread-safe| packages/host/frontend-static/tests/frontend-static.spec.ts (1 test) 137ms
+ ✓ |thread-safe| packages/client/ui-settings-general/tests/components.client.spec.tsx (7 tests) 201ms
+ ✓ |thread-safe| packages/client/ui-tool/tests/chat-code-subcalls.client.spec.tsx (8 tests) 173ms
+ ✓ |thread-safe| packages/core/agent-loop/tests/tool-calls.spec.ts (21 tests) 156ms
+ ✓ |thread-safe| packages/client/locale/tests/apply.client.spec.ts (6 tests) 184ms
+ ✓ |thread-safe| packages/client/ui-workspace/tests/rows.client.spec.tsx (27 tests) 186ms
+ ✓ |thread-safe| packages/client/ui-commands/tests/service.client.spec.ts (50 tests) 143ms
+ ✓ |thread-safe| packages/subagent/subagent-in-process-driver/tests/subagent-in-process-driver.spec.ts (18 tests) 167ms
+ ✓ |thread-safe| packages/client/ui-directory-picker-browse/tests/client-flow.client.spec.tsx (10 tests) 181ms
+ ✓ |thread-safe| packages/client/ui-settings/tests/settings-mirror.client.spec.ts (13 tests) 164ms
+ ✓ |thread-safe| scripts/locale-dictionary-parity.spec.ts (1 test) 178ms
+ ✓ |thread-safe| packages/attachment/attachment-local/tests/request-image-verification.spec.ts (1 test) 129ms
+ ✓ |thread-safe| packages/test-support/client-runtime/tests/runtime.client.spec.tsx (26 tests) 113ms
+ ✓ |thread-safe| packages/client/ui-conversation/tests/service-orchestration.client.spec.ts (11 tests) 153ms
+ ✓ |thread-safe| packages/client/runtime/tests/session.client.spec.ts (50 tests) 138ms
+ ✓ |thread-safe| packages/client/ui-workspace/tests/rename-assembly.client.spec.tsx (2 tests) 203ms
+ ✓ |thread-safe| packages/compaction/compaction-basic/tests/manual-compaction.spec.ts (31 tests) 152ms
+ ✓ |thread-safe| packages/plan/plan-mode/tests/plan-mode.spec.ts (63 tests) 142ms
+ ✓ |thread-safe| packages/client/ui-attachment/tests/message-image.client.spec.tsx (11 tests) 121ms
+ ✓ |thread-safe| packages/client/ui-workspace/tests/workspace-picker.client.spec.tsx (16 tests) 202ms
+ ✓ |thread-safe| packages/client/ui-tool/tests/terminal-card.client.spec.tsx (43 tests) 165ms
+ ✓ |thread-safe| scripts/gen-third-party-notices.spec.ts (26 tests) 127ms
+ ✓ |thread-safe| packages/client/ui-primitives/tests/atoms.client.spec.tsx (26 tests) 129ms
+ ✓ |thread-safe| packages/client/ui-agent-preset/tests/components.client.spec.tsx (28 tests) 162ms
+ ✓ |thread-safe| packages/client/runtime/tests/slots-service.client.spec.ts (35 tests) 136ms
+ ✓ |thread-safe| packages/client/ui-permission-presets/tests/permission-presets-row.client.spec.tsx (4 tests) 178ms
+ ✓ |thread-safe| packages/host/webserver/tests/webserver.spec.ts (3 tests) 102ms
+ ✓ |thread-safe| packages/client/ui-settings-models/tests/onboarding-dialog.client.spec.tsx (9 tests) 166ms
+ ✓ |thread-safe| packages/storage/storage-domain/tests/domain.spec.ts (23 tests) 145ms
+ ✓ |thread-safe| packages/client/ui-conversation/tests/queue-dock.client.spec.tsx (17 tests) 138ms
+ ✓ |thread-safe| packages/core/agent/tests/verify-export-jsdoc.spec.ts (41 tests) 133ms
+ ✓ |thread-safe| packages/context/session-reference/tests/session-reference.spec.ts (16 tests) 104ms
+ ✓ |thread-safe| packages/client/ui-primitives/tests/terminal-block.client.spec.tsx (52 tests) 137ms
+ ✓ |thread-safe| packages/lsp/lsp-stdio/tests/provider.spec.ts (15 tests) 119ms
+stdout | scripts/run-gates.spec.ts > gate graph validation > constructs and executes preflight for a valid non-empty ci-primary graph
+run-gates: start runtime closure
+run-gates: start constraints
+run-gates: start QiLin package licenses
+run-gates: start package invariants
+run-gates: start Cordis config
+run-gates: start optional dependency imports
+run-gates: start client packages
+run-gates: start Issue management policy
+run-gates: start Typert contracts
+run-gates: start duplication
+run-gates: start test:coverage
+run-gates: start test:coverage-exempt-heavy
+run-gates: start source worker smoke
+run-gates: start JSONL Zstandard smoke
+run-gates: start qilin source-launch smoke
+run-gates: start Vitest jsdom smoke
+run-gates: start documentation build
+run-gates: start doc graphs
+run-gates: start markdown links
+run-gates: start type equivalence
+run-gates: start cordis catalog
+run-gates: start verify-mermaid
+run-gates: start scoped events
+run-gates: start translation pairing
+run-gates: start markdown wrap
+run-gates: start client catalog
+run-gates: start export jsdoc
+run-gates: start tool catalog
+run-gates: start config catalog
+run-gates: start persistence catalog
+run-gates: start public repository links
+run-gates: start doc refs
+run-gates: start package paths
+run-gates: start config source ownership
+run-gates: start package README model experience
+run-gates: start agent note classification
+run-gates: start agent note format
+run-gates: start archived agent notes
+run-gates: start skill invocation metadata
+run-gates: start translation prompt
+run-gates: start doc budgets
+run-gates: start documentation site checks
+run-gates: start package README limitations
+run-gates: start module graph
+run-gates: start knip
+
+stdout | scripts/run-gates.spec.ts > gate graph validation > constructs and executes preflight for a valid non-empty ci-primary graph
+run-gates: start typecheck:contracts-ready
+run-gates: start lint:contracts-ready
+run-gates: start doc-typecheck:contracts-ready
+
+stdout | scripts/run-gates.spec.ts > gate graph validation > constructs and executes preflight for a valid non-empty ci-primary graph
+run-gates: start build
+
+stdout | scripts/run-gates.spec.ts > gate graph validation > constructs and executes preflight for a valid non-empty ci-primary graph
+run-gates: start test:snapshot
+run-gates: start publint
+run-gates: start node-next types
+run-gates: start built package invariants
+run-gates: start built-bin smoke
+
+stdout | scripts/run-gates.spec.ts > gate graph validation > constructs and executes preflight for a valid non-empty ci-linux-primary graph
+run-gates: start runtime closure
+run-gates: start constraints
+run-gates: start QiLin package licenses
+run-gates: start package invariants
+run-gates: start Cordis config
+run-gates: start optional dependency imports
+run-gates: start client packages
+run-gates: start Issue management policy
+run-gates: start Typert contracts
+run-gates: start duplication
+run-gates: start test:coverage
+run-gates: start test:coverage-exempt-heavy
+run-gates: start source worker smoke
+run-gates: start JSONL Zstandard smoke
+run-gates: start qilin source-launch smoke
+run-gates: start Vitest jsdom smoke
+run-gates: start documentation build
+run-gates: start doc graphs
+run-gates: start markdown links
+run-gates: start type equivalence
+run-gates: start cordis catalog
+run-gates: start verify-mermaid
+run-gates: start scoped events
+run-gates: start translation pairing
+run-gates: start markdown wrap
+run-gates: start client catalog
+run-gates: start export jsdoc
+run-gates: start tool catalog
+run-gates: start config catalog
+run-gates: start persistence catalog
+run-gates: start public repository links
+run-gates: start doc refs
+run-gates: start package paths
+run-gates: start config source ownership
+run-gates: start package README model experience
+run-gates: start agent note classification
+run-gates: start agent note format
+run-gates: start archived agent notes
+run-gates: start skill invocation metadata
+run-gates: start translation prompt
+run-gates: start doc budgets
+run-gates: start documentation site checks
+run-gates: start package README limitations
+run-gates: start module graph
+run-gates: start knip
+
+stdout | scripts/run-gates.spec.ts > gate graph validation > constructs and executes preflight for a valid non-empty ci-linux-primary graph
+run-gates: start typecheck:contracts-ready
+run-gates: start lint:contracts-ready
+run-gates: start doc-typecheck:contracts-ready
+
+stdout | scripts/run-gates.spec.ts > gate graph validation > constructs and executes preflight for a valid non-empty ci-linux-primary graph
+run-gates: start build
+
+stdout | scripts/run-gates.spec.ts > gate graph validation > constructs and executes preflight for a valid non-empty ci-linux-primary graph
+run-gates: start test:snapshot
+run-gates: start publint
+run-gates: start node-next types
+run-gates: start built package invariants
+run-gates: start built-bin smoke
+
+stdout | scripts/run-gates.spec.ts > gate graph validation > constructs and executes preflight for a valid non-empty ci-linux-primary graph
+run-gates: start web browser snapshot
+
+stdout | scripts/run-gates.spec.ts > gate graph validation > constructs and executes preflight for a valid non-empty ci-static graph
+run-gates: start runtime closure
+run-gates: start constraints
+run-gates: start QiLin package licenses
+run-gates: start package invariants
+run-gates: start Cordis config
+run-gates: start optional dependency imports
+run-gates: start client packages
+run-gates: start Issue management policy
+run-gates: start documentation build
+run-gates: start doc graphs
+run-gates: start markdown links
+run-gates: start type equivalence
+run-gates: start cordis catalog
+run-gates: start verify-mermaid
+run-gates: start scoped events
+run-gates: start translation pairing
+run-gates: start markdown wrap
+run-gates: start client catalog
+run-gates: start export jsdoc
+run-gates: start tool catalog
+run-gates: start config catalog
+run-gates: start persistence catalog
+run-gates: start public repository links
+run-gates: start doc refs
+run-gates: start package paths
+run-gates: start config source ownership
+run-gates: start package README model experience
+run-gates: start agent note classification
+run-gates: start agent note format
+run-gates: start archived agent notes
+run-gates: start skill invocation metadata
+run-gates: start translation prompt
+run-gates: start doc budgets
+run-gates: start documentation site checks
+run-gates: start package README limitations
+run-gates: start module graph
+run-gates: start knip
+
+stdout | scripts/run-gates.spec.ts > gate graph validation > constructs and executes preflight for a valid non-empty ci-lint-contracts-ready graph
+run-gates: start lint:contracts-ready
+run-gates: start duplication
+
+stdout | scripts/run-gates.spec.ts > gate graph validation > constructs and executes preflight for a valid non-empty ci-coverage graph
+run-gates: start test:coverage
+run-gates: start test:coverage-exempt-heavy
+
+stdout | scripts/run-gates.spec.ts > gate graph validation > constructs and executes preflight for a valid non-empty ci-snapshot graph
+run-gates: start build
+
+stdout | scripts/run-gates.spec.ts > gate graph validation > constructs and executes preflight for a valid non-empty ci-snapshot graph
+run-gates: start test:snapshot
+
+stdout | scripts/run-gates.spec.ts > gate graph validation > constructs and executes preflight for a valid non-empty ci-artifacts graph
+run-gates: start build
+
+stdout | scripts/run-gates.spec.ts > gate graph validation > constructs and executes preflight for a valid non-empty ci-artifacts graph
+run-gates: start publint
+run-gates: start node-next types
+run-gates: start built package invariants
+run-gates: start built-bin smoke
+
+stdout | scripts/run-gates.spec.ts > gate graph validation > constructs and executes preflight for a valid non-empty ci-consumers graph
+run-gates: start build
+run-gates: start Node compatibility
+
+stdout | scripts/run-gates.spec.ts > gate graph validation > constructs and executes preflight for a valid non-empty ci-consumers graph
+run-gates: start publint
+run-gates: start built package invariants
+
+stdout | scripts/run-gates.spec.ts > gate graph validation > constructs and executes preflight for a valid non-empty ci-consumers graph
+run-gates: start lint and duplication
+run-gates: start test:snapshot
+run-gates: start web browser snapshot
+run-gates: start doc-typecheck:contracts-ready
+run-gates: start node-next types
+run-gates: start built-bin smoke
+
+stdout | scripts/run-gates.spec.ts > gate graph validation > constructs and executes preflight for a valid non-empty ci-windows-blocking graph
+run-gates: start build
+run-gates: start production site
+
+stdout | scripts/run-gates.spec.ts > gate graph validation > constructs and executes preflight for a valid non-empty ci-windows-complete graph
+run-gates: start build
+run-gates: start production site
+run-gates: start test:coverage
+
+stdout | scripts/run-gates.spec.ts > gate graph validation > constructs and executes preflight for a valid non-empty ci-windows-complete graph
+run-gates: start test:coverage-exempt-heavy
+
+stdout | scripts/run-gates.spec.ts > gate graph validation > constructs and executes preflight for a valid non-empty ci-windows-complete graph
+run-gates: start runtime closure
+run-gates: start constraints
+run-gates: start QiLin package licenses
+run-gates: start package invariants
+run-gates: start Cordis config
+run-gates: start optional dependency imports
+run-gates: start client packages
+run-gates: start Issue management policy
+run-gates: start doc-typecheck:contracts-ready
+run-gates: start doc graphs
+run-gates: start markdown links
+run-gates: start type equivalence
+run-gates: start cordis catalog
+run-gates: start verify-mermaid
+run-gates: start scoped events
+run-gates: start translation pairing
+run-gates: start markdown wrap
+run-gates: start client catalog
+run-gates: start export jsdoc
+run-gates: start tool catalog
+run-gates: start config catalog
+run-gates: start persistence catalog
+run-gates: start public repository links
+run-gates: start doc refs
+run-gates: start package paths
+run-gates: start config source ownership
+run-gates: start package README model experience
+run-gates: start agent note classification
+run-gates: start agent note format
+run-gates: start archived agent notes
+run-gates: start skill invocation metadata
+run-gates: start translation prompt
+run-gates: start doc budgets
+run-gates: start documentation site checks
+run-gates: start package README limitations
+run-gates: start module graph
+run-gates: start knip
+run-gates: start duplication
+run-gates: start publint
+run-gates: start node-next types
+run-gates: start built package invariants
+run-gates: start built-bin smoke
+
+ ✓ |thread-safe| packages/client/ui-tool/tests/tool-row.client.spec.tsx (39 tests) 151ms
+stdout | scripts/run-gates.spec.ts > gate graph validation > constructs and executes preflight for a valid non-empty ci-windows-observational graph
+run-gates: start runtime closure
+run-gates: start constraints
+run-gates: start QiLin package licenses
+run-gates: start package invariants
+run-gates: start Cordis config
+run-gates: start optional dependency imports
+run-gates: start client packages
+run-gates: start Issue management policy
+run-gates: start build
+run-gates: start documentation build
+run-gates: start doc graphs
+run-gates: start markdown links
+run-gates: start type equivalence
+run-gates: start cordis catalog
+run-gates: start verify-mermaid
+run-gates: start scoped events
+run-gates: start translation pairing
+run-gates: start markdown wrap
+run-gates: start client catalog
+run-gates: start export jsdoc
+run-gates: start tool catalog
+run-gates: start config catalog
+run-gates: start persistence catalog
+run-gates: start public repository links
+run-gates: start doc refs
+run-gates: start package paths
+run-gates: start config source ownership
+run-gates: start package README model experience
+run-gates: start agent note classification
+run-gates: start agent note format
+run-gates: start archived agent notes
+run-gates: start skill invocation metadata
+run-gates: start translation prompt
+run-gates: start doc budgets
+run-gates: start documentation site checks
+run-gates: start package README limitations
+run-gates: start module graph
+run-gates: start knip
+run-gates: start duplication
+
+stdout | scripts/run-gates.spec.ts > gate graph validation > constructs and executes preflight for a valid non-empty ci-windows-observational graph
+run-gates: start doc-typecheck:contracts-ready
+run-gates: start publint
+run-gates: start node-next types
+run-gates: start built package invariants
+run-gates: start built-bin smoke
+
+stdout | scripts/run-gates.spec.ts > gate graph validation > constructs and executes preflight for a valid non-empty node-compat graph
+run-gates: start typecheck
+run-gates: start source worker smoke
+run-gates: start JSONL Zstandard smoke
+run-gates: start qilin source-launch smoke
+run-gates: start Vitest jsdom smoke
+
+stdout | scripts/run-gates.spec.ts > gate graph validation > constructs and executes preflight for a valid non-empty check-all graph
+run-gates: start runtime closure
+run-gates: start Cordis config
+run-gates: start client domain graph
+run-gates: start test
+run-gates: start Issue management policy
+run-gates: start duplication
+run-gates: start build
+run-gates: start build:web
+run-gates: start vendor rescope
+run-gates: start knip
+run-gates: start constraints
+run-gates: start QiLin package licenses
+run-gates: start package invariants
+run-gates: start optional dependency imports
+run-gates: start client packages
+run-gates: start documentation build
+run-gates: start doc graphs
+run-gates: start markdown links
+run-gates: start type equivalence
+run-gates: start cordis catalog
+run-gates: start verify-mermaid
+run-gates: start scoped events
+run-gates: start translation pairing
+run-gates: start markdown wrap
+run-gates: start client catalog
+run-gates: start export jsdoc
+run-gates: start tool catalog
+run-gates: start config catalog
+run-gates: start persistence catalog
+run-gates: start public repository links
+run-gates: start doc refs
+run-gates: start package paths
+run-gates: start config source ownership
+run-gates: start package README model experience
+run-gates: start agent note classification
+run-gates: start agent note format
+run-gates: start archived agent notes
+run-gates: start skill invocation metadata
+run-gates: start translation prompt
+run-gates: start doc budgets
+run-gates: start documentation site checks
+run-gates: start package README limitations
+run-gates: start module graph
+
+stdout | scripts/run-gates.spec.ts > gate graph validation > constructs and executes preflight for a valid non-empty check-all graph
+run-gates: start test:snapshot
+run-gates: start publint
+run-gates: start built package invariants
+run-gates: start node-next types
+run-gates: start doc-typecheck:contracts-ready
+
+stdout | scripts/run-gates.spec.ts > gate graph validation > constructs and executes preflight for a valid non-empty hygiene graph
+run-gates: start vendor rescope
+run-gates: start knip
+run-gates: start publint
+run-gates: start constraints
+run-gates: start QiLin package licenses
+run-gates: start package invariants
+run-gates: start built package invariants
+run-gates: start node-next types
+run-gates: start optional dependency imports
+run-gates: start client packages
+run-gates: start Cordis config
+run-gates: start runtime closure
+run-gates: start vendored links
+
+stdout | scripts/run-gates.spec.ts > gate graph validation > constructs and executes preflight for a valid non-empty doc-sync graph
+run-gates: start doc-typecheck
+run-gates: start documentation build
+run-gates: start doc graphs
+run-gates: start markdown links
+run-gates: start type equivalence
+run-gates: start cordis catalog
+run-gates: start verify-mermaid
+run-gates: start scoped events
+run-gates: start translation pairing
+run-gates: start markdown wrap
+run-gates: start client catalog
+run-gates: start export jsdoc
+run-gates: start tool catalog
+run-gates: start config catalog
+run-gates: start persistence catalog
+run-gates: start public repository links
+run-gates: start doc refs
+run-gates: start package paths
+run-gates: start config source ownership
+run-gates: start package README model experience
+run-gates: start agent note classification
+run-gates: start agent note format
+run-gates: start archived agent notes
+run-gates: start skill invocation metadata
+run-gates: start translation prompt
+run-gates: start doc budgets
+run-gates: start documentation site checks
+run-gates: start package README limitations
+
+stdout | scripts/run-gates.spec.ts > gate graph validation > skips dependents after their prerequisite fails
+run-gates: start root
+
+stdout | scripts/run-gates.spec.ts > gate graph validation > runs an ordered follower after its predecessor fails
+run-gates: start root
+
+stdout | scripts/run-gates.spec.ts > gate graph validation > runs an ordered follower after its predecessor fails
+run-gates: start follower
+
+stdout | scripts/run-gates.spec.ts > gate graph validation > runs an ordered follower after its predecessor is skipped
+run-gates: start root
+
+stdout | scripts/run-gates.spec.ts > gate graph validation > runs an ordered follower after its predecessor is skipped
+run-gates: start follower
+
+ ✓ |thread-safe| packages/typert/protocol/tests/protocol.spec.ts (9 tests) 123ms
+ ✓ |thread-safe| packages/client/ui-jobs/tests/job-list-action.client.spec.tsx (16 tests) 144ms
+ ✓ |thread-safe| scripts/run-gates.spec.ts (52 tests) 128ms
+ ✓ |thread-safe| packages/shell/tool-bash/tests/integration.spec.ts (4 tests) 154ms
+ ✓ |thread-safe| packages/util/native-command/tests/native-command.spec.ts (4 tests) 115ms
+stdout | packages/extensions/cordis-host-runner/tests/sandbox-context.spec.ts > sandbox context façade — escape surface is closed > reads a symbol property as undefined and answers the `in` operator without throwing
+[cordis:probe-1] probe true true true false
+
+stdout | packages/extensions/cordis-host-runner/tests/sandbox-context.spec.ts > sandbox context façade — inject gate on services > allows optional undeclared services through ctx.get
+[cordis:probe-1] optional service is available
+
+stdout | packages/extensions/cordis-host-runner/tests/sandbox-context.spec.ts > sandbox context façade — inject gate on services > allows a service the host half DID declare in inject
+[cordis:probe-1] has systemPrompt: object
+
+ ✓ |thread-safe| packages/api/remotes/tests/agent-lookup.spec.ts (6 tests) 130ms
+ ✓ |thread-safe| packages/extensions/cordis-host-runner/tests/sandbox-context.spec.ts (24 tests) 103ms
+ ✓ |thread-safe| packages/preset/agent-presets/tests/invariant.spec.ts (7 tests) 124ms
+ ✓ |thread-safe| packages/feedback/message-feedback/tests/loader-composition.spec.ts (1 test) 157ms
+ ✓ |thread-safe| packages/client/ui-settings-plugins/tests/section.client.spec.tsx (26 tests) 162ms
+ ✓ |thread-safe| packages/preset/agent-presets/tests/discovery.spec.ts (21 tests) 104ms
+ ✓ |thread-safe| packages/lsp/lsp-stdio/tests/host.spec.ts (21 tests) 93ms
+ ✓ |thread-safe| packages/client/ui-settings-plugins/tests/apply.client.spec.ts (11 tests) 131ms
+ ✓ |thread-safe| packages/extensions/cordis-host-runner/tests/runner.spec.ts (30 tests) 83ms
+approval policy is Never; reject command ✓ |thread-safe| packages/llm/llm-pi-ai/tests/login.spec.ts (6 tests) 63ms
+ ✓ |thread-safe| packages/subagent/subagent-codex/tests/subagent-codex.spec.ts (57 tests) 101ms
+ ✓ |thread-safe| packages/boot/app-boot/tests/config-reload.spec.ts (12 tests) 100ms
+ ✓ |thread-safe| packages/examples/agent-spine-demo/tests/gen-config-catalog.spec.ts (24 tests) 74ms
+ ✓ |thread-safe| packages/client/ui-settings-models/tests/apply.client.spec.ts (12 tests) 138ms
+ ✓ |thread-safe| packages/api/gateway/tests/gateway.host.spec.ts (43 tests) 104ms
+ ✓ |thread-safe| packages/context/file-reference-local/tests/service.spec.ts (5 tests) 109ms
+ ✓ |thread-safe| packages/client/ui-primitives/tests/search-block.client.spec.tsx (17 tests) 126ms
+ ✓ |thread-safe| packages/client/ui-user-questions/tests/plan-review-panel.client.spec.tsx (19 tests) 127ms
+ ✓ |thread-safe| packages/client/ui-settings-plugin-inventory/tests/components.client.spec.tsx (4 tests) 137ms
+ ✓ |thread-safe| scripts/verify-doc-site-fragments.spec.ts (6 tests) 113ms
+ ✓ |thread-safe| packages/client/ui-tool/tests/diff-card.client.spec.tsx (22 tests) 120ms
+ ✓ |thread-safe| packages/client/ui-settings/tests/settings-scope.client.spec.ts (22 tests) 121ms
+ ✓ |thread-safe| packages/host/apiproxy/tests/api-proxy-agent-preset.spec.ts (38 tests) 110ms
+ ✓ |thread-safe| packages/client/ui-tool/tests/read-card.client.spec.tsx (21 tests) 133ms
+ ✓ |thread-safe| packages/host/apiproxy/tests/api-proxy-workspace.spec.ts (22 tests) 104ms
+ ✓ |thread-safe| packages/settings/settings-file/tests/lock-race.spec.ts (3 tests) 90ms
+ ✓ |thread-safe| packages/compaction/compaction-basic/tests/compaction-basic.spec.ts (80 tests) 115ms
+ ✓ |thread-safe| packages/client/ui-settings/tests/plugin.client.spec.ts (3 tests) 118ms
+ ✓ |thread-safe| packages/core/agent-loop/tests/coverage-edges.spec.ts (19 tests) 107ms
+ ✓ |thread-safe| packages/mcp/mcp-client/tests/mcp-client.spec.ts (56 tests) 124ms
+ ✓ |thread-safe| packages/guard/repeat-tool-reminder/tests/repeat-tool-reminder.spec.ts (20 tests) 100ms
+ ✓ |thread-safe| packages/client/ui-conversation/tests/context-meter.client.spec.tsx (8 tests) 93ms
+ ✓ |thread-safe| packages/client/ui-deliverables/tests/produced-files.client.spec.tsx (13 tests) 123ms
+ ✓ |thread-safe| packages/client/ui-settings-models/tests/welcome-notice.client.spec.tsx (5 tests) 119ms
+ ✓ |thread-safe| scripts/client-build-environment.client.spec.ts (6 tests) 124ms
+ ✓ |thread-safe| packages/subagent/subagent-in-process-driver/tests/inheritance.spec.ts (5 tests) 111ms
+ ✓ |thread-safe| packages/llm/llm-pi-ai/tests/discovery.spec.ts (24 tests) 90ms
+ ✓ |thread-safe| packages/client/ui-primitives/tests/hover-card.client.spec.tsx (24 tests) 159ms
+ ✓ |thread-safe| packages/client/ui-attachment/tests/attachment-rail.client.spec.tsx (7 tests) 99ms
+ ✓ |thread-safe| packages/client/ui-primitives/tests/tooltip.client.spec.tsx (17 tests) 141ms
+ ✓ |thread-safe| packages/core/session/tests/properties.spec.ts (6 tests) 101ms
+ ✓ |thread-safe| packages/subprocess/subprocess-local/tests/local.spec.ts (18 tests) 144ms
+ ✓ |thread-safe| packages/client/ui-primitives/tests/diff-block.client.spec.tsx (15 tests) 109ms
+ ✓ |thread-safe| packages/schedule/schedule/tests/jsonl-restart.spec.ts (1 test) 125ms
+ ✓ |thread-safe| packages/client/ui-model-selection/tests/model-select.client.spec.tsx (5 tests) 129ms
+ ✓ |thread-safe| packages/llm/llm-pi-ai/tests/auth.spec.ts (13 tests) 105ms
+ ✓ |thread-safe| packages/subagent/subagent-in-process-driver/tests/preset-inheritance.spec.ts (5 tests) 78ms
+ ✓ |thread-safe| packages/client/ui-tool/tests/todo-row.client.spec.tsx (18 tests) 81ms
+ ✓ |thread-safe| packages/terminal/terminal-bash/tests/session.spec.ts (41 tests) 106ms
+ ✓ |thread-safe| packages/client/ui-directory-picker-native/tests/client-flow.client.spec.tsx (13 tests) 125ms
+ ✓ |thread-safe| packages/llm/llm/tests/service.spec.ts (85 tests) 100ms
+ ✓ |thread-safe| packages/terminal/tool-terminal/tests/tools.spec.ts (16 tests) 84ms
+ ✓ |thread-safe| packages/client/ui-tool/tests/assembly-surfaces.client.spec.tsx (2 tests) 120ms
+ ✓ |thread-safe| packages/session/session-persistence-jsonl/tests/win32.spec.ts (7 tests) 90ms
+ ✓ |thread-safe| packages/client/runtime/tests/manager.client.spec.ts (60 tests) 95ms
+stderr | packages/acp/acp/tests/bridge.spec.ts > automation-only ACP bridge > rejects a malformed image batch atomically and frees the prompt slot
+Error handling request {
+  jsonrpc: '2.0',
+  id: 2,
+  method: 'session/prompt',
+  params: {
+    sessionId: 'd43dfc25-d43d-452a-a1d4-0c8c54912895',
+    prompt: [ [Object], [Object] ]
+  }
+} {
+  code: -32602,
+  message: 'Invalid params: image data must be canonical base64',
+  data: undefined
+}
+
+stderr | packages/acp/acp/tests/bridge.spec.ts > automation-only ACP bridge > reports durable image write failures as internal prompt failures
+Error handling request {
+  jsonrpc: '2.0',
+  id: 2,
+  method: 'session/prompt',
+  params: {
+    sessionId: 'df3489f5-1b07-4a43-9131-b6e51a493312',
+    prompt: [ [Object] ]
+  }
+} {
+  code: -32603,
+  message: 'Internal error: unable to persist the prompt image batch',
+  data: undefined
+}
+
+stderr | packages/acp/acp/tests/bridge.spec.ts > automation-only ACP bridge > requires one absolute workspace and no MCP servers
+Error handling request {
+  jsonrpc: '2.0',
+  id: 1,
+  method: 'session/new',
+  params: { cwd: 'relative', mcpServers: [] }
+} {
+  code: -32602,
+  message: 'Invalid params: cwd must be an absolute path: relative',
+  data: undefined
+}
+
+stderr | packages/acp/acp/tests/bridge.spec.ts > automation-only ACP bridge > requires one absolute workspace and no MCP servers
+Error handling request {
+  jsonrpc: '2.0',
+  id: 2,
+  method: 'session/new',
+  params: {
+    cwd: '/Users/libing/kk_Projects/qilin-engine',
+    mcpServers: [],
+    additionalDirectories: [ '/tmp/other' ]
+  }
+} {
+  code: -32602,
+  message: 'Invalid params: additionalDirectories is not supported',
+  data: undefined
+}
+
+stderr | packages/acp/acp/tests/bridge.spec.ts > automation-only ACP bridge > requires one absolute workspace and no MCP servers
+Error handling request {
+  jsonrpc: '2.0',
+  id: 3,
+  method: 'session/new',
+  params: {
+    cwd: '/Users/libing/kk_Projects/qilin-engine',
+    mcpServers: [ [Object] ]
+  }
+} {
+  code: -32602,
+  message: 'Invalid params: mcpServers is not supported',
+  data: undefined
+}
+
+stderr | packages/acp/acp/tests/bridge.spec.ts > automation-only ACP bridge > rejects empty and unadvertised image prompts before a turn starts
+Error handling request {
+  jsonrpc: '2.0',
+  id: 2,
+  method: 'session/prompt',
+  params: {
+    sessionId: '67170786-2d42-4a86-b1e9-b0a676f33ca1',
+    prompt: [ [Object] ]
+  }
+} {
+  code: -32602,
+  message: 'Invalid params: empty prompt',
+  data: undefined
+}
+
+stderr | packages/acp/acp/tests/bridge.spec.ts > automation-only ACP bridge > rejects empty and unadvertised image prompts before a turn starts
+Error handling request {
+  jsonrpc: '2.0',
+  id: 3,
+  method: 'session/prompt',
+  params: {
+    sessionId: '67170786-2d42-4a86-b1e9-b0a676f33ca1',
+    prompt: [ [Object] ]
+  }
+} {
+  code: -32602,
+  message: 'Invalid params: inline image prompts were not advertised by this connection',
+  data: undefined
+}
+
+stderr | packages/acp/acp/tests/bridge.spec.ts > automation-only ACP bridge > rejects prompts for unknown sessions and ignores unknown cancellation
+Error handling request {
+  jsonrpc: '2.0',
+  id: 1,
+  method: 'session/prompt',
+  params: { sessionId: 'missing', prompt: [ [Object] ] }
+} {
+  code: -32602,
+  message: 'Invalid params: unknown session: missing',
+  data: undefined
+}
+
+ ✓ |thread-safe| packages/acp/acp/tests/bridge.spec.ts (14 tests) 90ms
+ ✓ |thread-safe| packages/session/session-persistence-sqlite/tests/built-package.spec.ts (1 test) 96ms
+ ✓ |thread-safe| packages/settings/settings-file/tests/loader-composition.spec.ts (2 tests) 98ms
+ ✓ |thread-safe| packages/code-runtime/code-runtime-worker-thread/tests/source-worker.compat.spec.ts (1 test) 86ms
+ ✓ |thread-safe| packages/goal/tool-goal/tests/tool-goal.spec.ts (22 tests) 92ms
+ ✓ |thread-safe| packages/client/ui-conversation/tests/todo-panel.client.spec.tsx (9 tests) 95ms
+ ✓ |thread-safe| packages/core/agent-loop/tests/interception.spec.ts (23 tests) 88ms
+ ✓ |thread-safe| packages/client/ui-skill/tests/skill-row.client.spec.tsx (6 tests) 88ms
+ ✓ |thread-safe| packages/client/ui-agent-preset/tests/apply.client.spec.ts (19 tests) 104ms
+ ✓ |thread-safe| packages/session/session-telemetry/tests/telemetry.spec.ts (26 tests) 92ms
+ ✓ |thread-safe| packages/client/ui-settings-plugins/tests/fields.client.spec.tsx (9 tests) 86ms
+ ✓ |thread-safe| packages/core/agent-loop/tests/request-reconstruction.spec.ts (22 tests) 98ms
+ ✓ |thread-safe| packages/code-runtime/code-runtime-worker-thread/tests/worker-json.spec.ts (12 tests) 92ms
+ ✓ |thread-safe| packages/client/ui-input-trigger/tests/menu-view.client.spec.tsx (17 tests) 93ms
+ ✓ |thread-safe| packages/session-query/session-log-export/tests/dialog.client.spec.tsx (3 tests) 89ms
+ ✓ |thread-safe| packages/extensions/cordis-host-runner/tests/composition.spec.ts (10 tests) 65ms
+ ✓ |thread-safe| packages/storage/storage-sqlite/tests/sqlite-backend.spec.ts (22 tests) 76ms
+Error: renderSlot('root') before any 'root' registration (boot order)
+    at RootOutlet (/Users/libing/kk_Projects/qilin-engine/packages/client/ui-renderer/src/client/scoped-slots.tsx:867:11)
+    at renderWithHooks (/Users/libing/kk_Projects/qilin-engine/node_modules/.pnpm/react-dom@18.3.1_react@18.3.1/node_modules/react-dom/cjs/react-dom.development.js:15486:18)
+    at mountIndeterminateComponent (/Users/libing/kk_Projects/qilin-engine/node_modules/.pnpm/react-dom@18.3.1_react@18.3.1/node_modules/react-dom/cjs/react-dom.development.js:20103:13)
+    at beginWork (/Users/libing/kk_Projects/qilin-engine/node_modules/.pnpm/react-dom@18.3.1_react@18.3.1/node_modules/react-dom/cjs/react-dom.development.js:21626:16)
+    at HTMLUnknownElement.callCallback (/Users/libing/kk_Projects/qilin-engine/node_modules/.pnpm/react-dom@18.3.1_react@18.3.1/node_modules/react-dom/cjs/react-dom.development.js:4164:14)
+    at HTMLUnknownElement.callTheUserObjectsOperation (/Users/libing/kk_Projects/qilin-engine/node_modules/.pnpm/jsdom@29.1.1/node_modules/jsdom/lib/generated/idl/EventListener.js:26:30)
+    at innerInvokeEventListeners (/Users/libing/kk_Projects/qilin-engine/node_modules/.pnpm/jsdom@29.1.1/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:360:16)
+    at invokeEventListeners (/Users/libing/kk_Projects/qilin-engine/node_modules/.pnpm/jsdom@29.1.1/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:296:3)
+    at HTMLUnknownElementImpl._dispatch (/Users/libing/kk_Projects/qilin-engine/node_modules/.pnpm/jsdom@29.1.1/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:243:9)
+    at HTMLUnknownElementImpl.dispatchEvent (/Users/libing/kk_Projects/qilin-engine/node_modules/.pnpm/jsdom@29.1.1/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:114:17)
+Error: renderSlot('root') before any 'root' registration (boot order)
+    at RootOutlet (/Users/libing/kk_Projects/qilin-engine/packages/client/ui-renderer/src/client/scoped-slots.tsx:867:11)
+    at renderWithHooks (/Users/libing/kk_Projects/qilin-engine/node_modules/.pnpm/react-dom@18.3.1_react@18.3.1/node_modules/react-dom/cjs/react-dom.development.js:15486:18)
+    at mountIndeterminateComponent (/Users/libing/kk_Projects/qilin-engine/node_modules/.pnpm/react-dom@18.3.1_react@18.3.1/node_modules/react-dom/cjs/react-dom.development.js:20103:13)
+    at beginWork (/Users/libing/kk_Projects/qilin-engine/node_modules/.pnpm/react-dom@18.3.1_react@18.3.1/node_modules/react-dom/cjs/react-dom.development.js:21626:16)
+    at HTMLUnknownElement.callCallback (/Users/libing/kk_Projects/qilin-engine/node_modules/.pnpm/react-dom@18.3.1_react@18.3.1/node_modules/react-dom/cjs/react-dom.development.js:4164:14)
+    at HTMLUnknownElement.callTheUserObjectsOperation (/Users/libing/kk_Projects/qilin-engine/node_modules/.pnpm/jsdom@29.1.1/node_modules/jsdom/lib/generated/idl/EventListener.js:26:30)
+    at innerInvokeEventListeners (/Users/libing/kk_Projects/qilin-engine/node_modules/.pnpm/jsdom@29.1.1/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:360:16)
+    at invokeEventListeners (/Users/libing/kk_Projects/qilin-engine/node_modules/.pnpm/jsdom@29.1.1/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:296:3)
+    at HTMLUnknownElementImpl._dispatch (/Users/libing/kk_Projects/qilin-engine/node_modules/.pnpm/jsdom@29.1.1/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:243:9)
+    at HTMLUnknownElementImpl.dispatchEvent (/Users/libing/kk_Projects/qilin-engine/node_modules/.pnpm/jsdom@29.1.1/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:114:17)
+Error: entry boom
+    at component (/Users/libing/kk_Projects/qilin-engine/packages/client/ui-renderer/tests/scoped-slots.client.spec.tsx:336:48)
+    at renderWithHooks (/Users/libing/kk_Projects/qilin-engine/node_modules/.pnpm/react-dom@18.3.1_react@18.3.1/node_modules/react-dom/cjs/react-dom.development.js:15486:18)
+    at mountIndeterminateComponent (/Users/libing/kk_Projects/qilin-engine/node_modules/.pnpm/react-dom@18.3.1_react@18.3.1/node_modules/react-dom/cjs/react-dom.development.js:20103:13)
+    at beginWork (/Users/libing/kk_Projects/qilin-engine/node_modules/.pnpm/react-dom@18.3.1_react@18.3.1/node_modules/react-dom/cjs/react-dom.development.js:21626:16)
+    at HTMLUnknownElement.callCallback (/Users/libing/kk_Projects/qilin-engine/node_modules/.pnpm/react-dom@18.3.1_react@18.3.1/node_modules/react-dom/cjs/react-dom.development.js:4164:14)
+    at HTMLUnknownElement.callTheUserObjectsOperation (/Users/libing/kk_Projects/qilin-engine/node_modules/.pnpm/jsdom@29.1.1/node_modules/jsdom/lib/generated/idl/EventListener.js:26:30)
+    at innerInvokeEventListeners (/Users/libing/kk_Projects/qilin-engine/node_modules/.pnpm/jsdom@29.1.1/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:360:16)
+    at invokeEventListeners (/Users/libing/kk_Projects/qilin-engine/node_modules/.pnpm/jsdom@29.1.1/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:296:3)
+    at HTMLUnknownElementImpl._dispatch (/Users/libing/kk_Projects/qilin-engine/node_modules/.pnpm/jsdom@29.1.1/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:243:9)
+    at HTMLUnknownElementImpl.dispatchEvent (/Users/libing/kk_Projects/qilin-engine/node_modules/.pnpm/jsdom@29.1.1/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:114:17)
+Error: entry boom
+    at component (/Users/libing/kk_Projects/qilin-engine/packages/client/ui-renderer/tests/scoped-slots.client.spec.tsx:336:48)
+    at renderWithHooks (/Users/libing/kk_Projects/qilin-engine/node_modules/.pnpm/react-dom@18.3.1_react@18.3.1/node_modules/react-dom/cjs/react-dom.development.js:15486:18)
+    at mountIndeterminateComponent (/Users/libing/kk_Projects/qilin-engine/node_modules/.pnpm/react-dom@18.3.1_react@18.3.1/node_modules/react-dom/cjs/react-dom.development.js:20103:13)
+    at beginWork (/Users/libing/kk_Projects/qilin-engine/node_modules/.pnpm/react-dom@18.3.1_react@18.3.1/node_modules/react-dom/cjs/react-dom.development.js:21626:16)
+    at HTMLUnknownElement.callCallback (/Users/libing/kk_Projects/qilin-engine/node_modules/.pnpm/react-dom@18.3.1_react@18.3.1/node_modules/react-dom/cjs/react-dom.development.js:4164:14)
+    at HTMLUnknownElement.callTheUserObjectsOperation (/Users/libing/kk_Projects/qilin-engine/node_modules/.pnpm/jsdom@29.1.1/node_modules/jsdom/lib/generated/idl/EventListener.js:26:30)
+    at innerInvokeEventListeners (/Users/libing/kk_Projects/qilin-engine/node_modules/.pnpm/jsdom@29.1.1/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:360:16)
+    at invokeEventListeners (/Users/libing/kk_Projects/qilin-engine/node_modules/.pnpm/jsdom@29.1.1/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:296:3)
+    at HTMLUnknownElementImpl._dispatch (/Users/libing/kk_Projects/qilin-engine/node_modules/.pnpm/jsdom@29.1.1/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:243:9)
+    at HTMLUnknownElementImpl.dispatchEvent (/Users/libing/kk_Projects/qilin-engine/node_modules/.pnpm/jsdom@29.1.1/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:114:17)
+Error: entry A boom
+    at component (/Users/libing/kk_Projects/qilin-engine/packages/client/ui-renderer/tests/scoped-slots.client.spec.tsx:395:32)
+    at renderWithHooks (/Users/libing/kk_Projects/qilin-engine/node_modules/.pnpm/react-dom@18.3.1_react@18.3.1/node_modules/react-dom/cjs/react-dom.development.js:15486:18)
+    at mountIndeterminateComponent (/Users/libing/kk_Projects/qilin-engine/node_modules/.pnpm/react-dom@18.3.1_react@18.3.1/node_modules/react-dom/cjs/react-dom.development.js:20103:13)
+    at beginWork (/Users/libing/kk_Projects/qilin-engine/node_modules/.pnpm/react-dom@18.3.1_react@18.3.1/node_modules/react-dom/cjs/react-dom.development.js:21626:16)
+    at HTMLUnknownElement.callCallback (/Users/libing/kk_Projects/qilin-engine/node_modules/.pnpm/react-dom@18.3.1_react@18.3.1/node_modules/react-dom/cjs/react-dom.development.js:4164:14)
+    at HTMLUnknownElement.callTheUserObjectsOperation (/Users/libing/kk_Projects/qilin-engine/node_modules/.pnpm/jsdom@29.1.1/node_modules/jsdom/lib/generated/idl/EventListener.js:26:30)
+    at innerInvokeEventListeners (/Users/libing/kk_Projects/qilin-engine/node_modules/.pnpm/jsdom@29.1.1/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:360:16)
+    at invokeEventListeners (/Users/libing/kk_Projects/qilin-engine/node_modules/.pnpm/jsdom@29.1.1/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:296:3)
+    at HTMLUnknownElementImpl._dispatch (/Users/libing/kk_Projects/qilin-engine/node_modules/.pnpm/jsdom@29.1.1/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:243:9)
+    at HTMLUnknownElementImpl.dispatchEvent (/Users/libing/kk_Projects/qilin-engine/node_modules/.pnpm/jsdom@29.1.1/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:114:17)
+Error: entry A boom
+    at component (/Users/libing/kk_Projects/qilin-engine/packages/client/ui-renderer/tests/scoped-slots.client.spec.tsx:395:32)
+    at renderWithHooks (/Users/libing/kk_Projects/qilin-engine/node_modules/.pnpm/react-dom@18.3.1_react@18.3.1/node_modules/react-dom/cjs/react-dom.development.js:15486:18)
+    at mountIndeterminateComponent (/Users/libing/kk_Projects/qilin-engine/node_modules/.pnpm/react-dom@18.3.1_react@18.3.1/node_modules/react-dom/cjs/react-dom.development.js:20103:13)
+    at beginWork (/Users/libing/kk_Projects/qilin-engine/node_modules/.pnpm/react-dom@18.3.1_react@18.3.1/node_modules/react-dom/cjs/react-dom.development.js:21626:16)
+    at HTMLUnknownElement.callCallback (/Users/libing/kk_Projects/qilin-engine/node_modules/.pnpm/react-dom@18.3.1_react@18.3.1/node_modules/react-dom/cjs/react-dom.development.js:4164:14)
+    at HTMLUnknownElement.callTheUserObjectsOperation (/Users/libing/kk_Projects/qilin-engine/node_modules/.pnpm/jsdom@29.1.1/node_modules/jsdom/lib/generated/idl/EventListener.js:26:30)
+    at innerInvokeEventListeners (/Users/libing/kk_Projects/qilin-engine/node_modules/.pnpm/jsdom@29.1.1/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:360:16)
+    at invokeEventListeners (/Users/libing/kk_Projects/qilin-engine/node_modules/.pnpm/jsdom@29.1.1/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:296:3)
+    at HTMLUnknownElementImpl._dispatch (/Users/libing/kk_Projects/qilin-engine/node_modules/.pnpm/jsdom@29.1.1/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:243:9)
+    at HTMLUnknownElementImpl.dispatchEvent (/Users/libing/kk_Projects/qilin-engine/node_modules/.pnpm/jsdom@29.1.1/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:114:17)
+stderr | packages/client/ui-renderer/tests/scoped-slots.client.spec.tsx > overlay chains (ChainRenderOpts.overlay) > keeps election semantics under overlay: priority order, selector-crash decline, live dispose back to fallback
+chain selector crashed in 'k.chain' (unknown registrant), treating as declined: Error: selector boom
+    at Object.select (/Users/libing/kk_Projects/qilin-engine/packages/client/ui-renderer/tests/scoped-slots.client.spec.tsx:601:29)
+    at renderOutletContent (/Users/libing/kk_Projects/qilin-engine/packages/client/ui-renderer/src/client/scoped-slots.tsx:785:26)
+    at SlotOutlet (/Users/libing/kk_Projects/qilin-engine/packages/client/ui-renderer/src/client/scoped-slots.tsx:677:8)
+    at renderWithHooks (/Users/libing/kk_Projects/qilin-engine/node_modules/.pnpm/react-dom@18.3.1_react@18.3.1/node_modules/react-dom/cjs/react-dom.development.js:15486:18)
+    at updateFunctionComponent (/Users/libing/kk_Projects/qilin-engine/node_modules/.pnpm/react-dom@18.3.1_react@18.3.1/node_modules/react-dom/cjs/react-dom.development.js:19617:20)
+    at beginWork (/Users/libing/kk_Projects/qilin-engine/node_modules/.pnpm/react-dom@18.3.1_react@18.3.1/node_modules/react-dom/cjs/react-dom.development.js:21640:16)
+    at beginWork$1 (/Users/libing/kk_Projects/qilin-engine/node_modules/.pnpm/react-dom@18.3.1_react@18.3.1/node_modules/react-dom/cjs/react-dom.development.js:27465:14)
+    at performUnitOfWork (/Users/libing/kk_Projects/qilin-engine/node_modules/.pnpm/react-dom@18.3.1_react@18.3.1/node_modules/react-dom/cjs/react-dom.development.js:26599:12)
+    at workLoopSync (/Users/libing/kk_Projects/qilin-engine/node_modules/.pnpm/react-dom@18.3.1_react@18.3.1/node_modules/react-dom/cjs/react-dom.development.js:26505:5)
+    at renderRootSync (/Users/libing/kk_Projects/qilin-engine/node_modules/.pnpm/react-dom@18.3.1_react@18.3.1/node_modules/react-dom/cjs/react-dom.development.js:26473:7)
+
+ ✓ |thread-safe| packages/client/locale/tests/language-row.client.spec.tsx (4 tests) 91ms
+Error: inject boom
+    at inject (/Users/libing/kk_Projects/qilin-engine/packages/client/ui-renderer/tests/scoped-slots.client.spec.tsx:935:29)
+    at runInject (/Users/libing/kk_Projects/qilin-engine/packages/client/ui-renderer/src/client/scoped-slots.tsx:110:27)
+    at cachedRootInject (/Users/libing/kk_Projects/qilin-engine/packages/client/ui-renderer/src/client/scoped-slots.tsx:179:13)
+    at RootEntry (/Users/libing/kk_Projects/qilin-engine/packages/client/ui-renderer/src/client/scoped-slots.tsx:614:20)
+    at renderWithHooks (/Users/libing/kk_Projects/qilin-engine/node_modules/.pnpm/react-dom@18.3.1_react@18.3.1/node_modules/react-dom/cjs/react-dom.development.js:15486:18)
+    at mountIndeterminateComponent (/Users/libing/kk_Projects/qilin-engine/node_modules/.pnpm/react-dom@18.3.1_react@18.3.1/node_modules/react-dom/cjs/react-dom.development.js:20103:13)
+    at beginWork (/Users/libing/kk_Projects/qilin-engine/node_modules/.pnpm/react-dom@18.3.1_react@18.3.1/node_modules/react-dom/cjs/react-dom.development.js:21626:16)
+    at HTMLUnknownElement.callCallback (/Users/libing/kk_Projects/qilin-engine/node_modules/.pnpm/react-dom@18.3.1_react@18.3.1/node_modules/react-dom/cjs/react-dom.development.js:4164:14)
+    at HTMLUnknownElement.callTheUserObjectsOperation (/Users/libing/kk_Projects/qilin-engine/node_modules/.pnpm/jsdom@29.1.1/node_modules/jsdom/lib/generated/idl/EventListener.js:26:30)
+    at innerInvokeEventListeners (/Users/libing/kk_Projects/qilin-engine/node_modules/.pnpm/jsdom@29.1.1/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:360:16)
+Error: inject boom
+    at inject (/Users/libing/kk_Projects/qilin-engine/packages/client/ui-renderer/tests/scoped-slots.client.spec.tsx:935:29)
+    at runInject (/Users/libing/kk_Projects/qilin-engine/packages/client/ui-renderer/src/client/scoped-slots.tsx:110:27)
+    at cachedRootInject (/Users/libing/kk_Projects/qilin-engine/packages/client/ui-renderer/src/client/scoped-slots.tsx:179:13)
+    at RootEntry (/Users/libing/kk_Projects/qilin-engine/packages/client/ui-renderer/src/client/scoped-slots.tsx:614:20)
+    at renderWithHooks (/Users/libing/kk_Projects/qilin-engine/node_modules/.pnpm/react-dom@18.3.1_react@18.3.1/node_modules/react-dom/cjs/react-dom.development.js:15486:18)
+    at mountIndeterminateComponent (/Users/libing/kk_Projects/qilin-engine/node_modules/.pnpm/react-dom@18.3.1_react@18.3.1/node_modules/react-dom/cjs/react-dom.development.js:20103:13)
+    at beginWork (/Users/libing/kk_Projects/qilin-engine/node_modules/.pnpm/react-dom@18.3.1_react@18.3.1/node_modules/react-dom/cjs/react-dom.development.js:21626:16)
+    at HTMLUnknownElement.callCallback (/Users/libing/kk_Projects/qilin-engine/node_modules/.pnpm/react-dom@18.3.1_react@18.3.1/node_modules/react-dom/cjs/react-dom.development.js:4164:14)
+    at HTMLUnknownElement.callTheUserObjectsOperation (/Users/libing/kk_Projects/qilin-engine/node_modules/.pnpm/jsdom@29.1.1/node_modules/jsdom/lib/generated/idl/EventListener.js:26:30)
+    at innerInvokeEventListeners (/Users/libing/kk_Projects/qilin-engine/node_modules/.pnpm/jsdom@29.1.1/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:360:16)
+ ✓ |thread-safe| packages/client/ui-renderer/tests/scoped-slots.client.spec.tsx (37 tests) 65ms
+ ✓ |thread-safe| packages/host/apiproxy/tests/api-proxy-config.spec.ts (30 tests) 96ms
+ ✓ |thread-safe| packages/subagent/subagent-fork-in-process/tests/subagent-fork-in-process.spec.ts (11 tests) 93ms
+ ✓ |thread-safe| packages/host/apiproxy/tests/client-handler.spec.ts (38 tests) 93ms
+ ✓ |thread-safe| packages/client/ui-plan/tests/plan-mode-control.client.spec.tsx (6 tests) 106ms
+ ✓ |thread-safe| packages/session-query/session-log-export/tests/client-apply.client.spec.tsx (3 tests) 93ms
+ ✓ |thread-safe| packages/credentials/credentials-local/tests/migration.spec.ts (6 tests) 54ms
+ ✓ |thread-safe| packages/interaction/commands/tests/commands.spec.ts (53 tests) 73ms
+ ✓ |thread-safe| packages/session-query/session-log-export/tests/header-action.client.spec.tsx (2 tests) 118ms
+ ✓ |thread-safe| packages/client/ui-attachment/tests/composer-attachments.client.spec.tsx (5 tests) 88ms
+ ✓ |thread-safe| packages/boot/cmdline/tests/cmdline.spec.ts (13 tests) 63ms
+ ✓ |thread-safe| packages/host/directory-picker-native/tests/win32-dialog-bindings.spec.ts (12 tests) 92ms
+ ✓ |thread-safe| packages/session/session-persistence-sqlite/tests/sql-resource-boundary.spec.ts (2 tests) 101ms
+ ✓ |thread-safe| packages/skill/skill/tests/skill.spec.ts (37 tests) 79ms
+ ✓ |thread-safe| packages/host/directory-picker-browse/tests/service.spec.ts (13 tests) 85ms
+ ✓ |thread-safe| packages/compaction/compaction-basic/tests/compaction-loop-repro.spec.ts (6 tests) 76ms
+ ✓ |thread-safe| packages/preset/agent-presets/tests/user-root.spec.ts (6 tests) 75ms
+ ✓ |thread-safe| packages/llm/llm-retry/tests/persistence.spec.ts (2 tests) 57ms
+ ✓ |thread-safe| packages/session/session-title/tests/provider.spec.ts (7 tests) 59ms
+ ✓ |thread-safe| packages/client/ui-attachment/tests/image-lightbox.client.spec.tsx (3 tests) 72ms
+ ✓ |thread-safe| packages/api/gateway/tests/gateway.client.spec.ts (30 tests) 61ms
+ ✓ |thread-safe| packages/client/ui-settings-general/tests/apply.client.spec.ts (8 tests) 84ms
+ ✓ |thread-safe| packages/client/ui-conversation/tests/enter-behavior-row.client.spec.tsx (2 tests) 91ms
+ ✓ |thread-safe| packages/client/ui-tool/tests/ask-question-row.client.spec.tsx (16 tests) 86ms
+ ✓ |thread-safe| packages/session/session-title/tests/service-contracts.spec.ts (15 tests) 76ms
+ ✓ |thread-safe| packages/sdk/protocol/tests/transport.spec.ts (19 tests) 67ms
+ ✓ |thread-safe| packages/client/ui-primitives/tests/toast.client.spec.tsx (3 tests) 65ms
+ ✓ |thread-safe| packages/session/session-title/tests/persistence.spec.ts (2 tests) 74ms
+ ✓ |thread-safe| packages/goal/goal/tests/goal.spec.ts (35 tests) 73ms
+ ✓ |thread-safe| packages/client/ui-theme/tests/appearance-row.client.spec.tsx (2 tests) 105ms
+ ✓ |thread-safe| packages/host/apiproxy/tests/fetch-carrier.spec.ts (35 tests) 71ms
+ ✓ |thread-safe| packages/client/connection/tests/node-half.host.spec.ts (13 tests) 90ms
+ ✓ |thread-safe| packages/client/ui-goal/tests/goal-command-input.client.spec.tsx (4 tests) 59ms
+ ✓ |thread-safe| packages/client/ui-attachment/tests/drop-overlay.client.spec.tsx (3 tests) 69ms
+ ✓ |thread-safe| packages/client/ui-sidebar/tests/sidebar-root.client.spec.tsx (5 tests) 95ms
+ ✓ |thread-safe| packages/client/ui-tool/tests/search-card.client.spec.tsx (26 tests) 71ms
+ ✓ |thread-safe| packages/core/tools/tests/properties.spec.ts (6 tests) 61ms
+ ✓ |thread-safe| packages/session/session-projection-cache/tests/cache.spec.ts (19 tests) 75ms
+ ✓ |thread-safe| scripts/release/families.spec.ts (25 tests) 66ms
+ ✓ |thread-safe| packages/core/session/tests/session.spec.ts (77 tests) 63ms
+ ✓ |thread-safe| packages/llm/llm-deepseek/tests/upload-index.spec.ts (26 tests) 112ms
+ ✓ |thread-safe| packages/todo/tool-todo/tests/loader-composition.spec.ts (4 tests) 59ms
+ ✓ |thread-safe| packages/web/web-search-deepseek/tests/deepseek.spec.ts (45 tests) 61ms
+ ✓ |thread-safe| scripts/translation-links.spec.ts (18 tests) 60ms
+ ✓ |thread-safe| packages/fs/tool-fs-search/tests/rg-sidecar.spec.ts (3 tests) 67ms
+ ✓ |thread-safe| packages/client/ui-layout/tests/apply.client.spec.ts (7 tests) 63ms
+ ✓ |thread-safe| packages/core/tools/tests/scoped.spec.ts (27 tests) 62ms
+ ✓ |thread-safe| packages/e2b/fs-e2b/tests/filesystem.spec.ts (36 tests) 65ms
+ ✓ |thread-safe| packages/credentials/credentials-local/tests/drain.spec.ts (2 tests) 49ms
+ ✓ |thread-safe| packages/extensions/cordis-client-runner/tests/runner.client.spec.ts (30 tests) 67ms
+ ✓ |thread-safe| packages/client/ui-workspace/tests/apply.client.spec.ts (6 tests) 74ms
+ ✓ |thread-safe| packages/context/time-context/tests/invariant.spec.ts (29 tests) 60ms
+ ✓ |thread-safe| packages/terminal/terminal/tests/service.spec.ts (23 tests) 47ms
+ ✓ |thread-safe| packages/host/apiproxy/tests/api-proxy-approval.spec.ts (11 tests) 69ms
+ ✓ |thread-safe| packages/host/apiproxy/tests/api-proxy-projections.spec.ts (15 tests) 49ms
+ ✓ |thread-safe| packages/client/ui-theme/tests/scrollbar-styles.client.spec.ts (21 tests) 40ms
+ ✓ |thread-safe| packages/subagent/subagent/tests/service.spec.ts (41 tests) 43ms
+ ✓ |thread-safe| packages/client/ui-conversation/tests/reasoning-row.client.spec.tsx (3 tests) 69ms
+ ✓ |thread-safe| packages/compaction/compaction/tests/invariant.spec.ts (31 tests) 53ms
+ ✓ |thread-safe| packages/host/apiproxy/tests/api-proxy-models.spec.ts (10 tests) 46ms
+ ✓ |thread-safe| packages/client/ui-layout/tests/app-frame.client.spec.tsx (24 tests) 67ms
+ ✓ |thread-safe| packages/client/ui-layout/tests/theme-presenter.client.spec.ts (4 tests) 60ms
+ ✓ |thread-safe| packages/context/tmux-context/tests/tmux-context.spec.ts (17 tests) 48ms
+ ✓ |thread-safe| packages/bundle/web-app/tests/web-app.spec.ts (12 tests) 61ms
+ ✓ |thread-safe| packages/core/session/tests/gen-persistence-catalog.spec.ts (25 tests) 55ms
+ ✓ |thread-safe| packages/core/system-prompt/tests/system-prompt.spec.ts (43 tests) 51ms
+ ✓ |thread-safe| packages/credentials/authorization/tests/authorization.spec.ts (25 tests) 55ms
+ ✓ |thread-safe| packages/client/ui-input-trigger/tests/service.client.spec.ts (52 tests) 55ms
+ ✓ |thread-safe| scripts/client-tsconfig.spec.ts (1 test) 45ms
+ ✓ |thread-safe| packages/goal/command-goal/tests/command-goal.spec.ts (13 tests) 51ms
+ ✓ |thread-safe| packages/extensions/cordis-client-runner/tests/plugin.client.spec.ts (15 tests) 46ms
+ ✓ |thread-safe| packages/interaction/user-approval/tests/approval.spec.ts (32 tests) 49ms
+ ✓ |thread-safe| packages/bundle/web-app/tests/startup.spec.ts (5 tests) 57ms
+ ✓ |thread-safe| packages/typert/generator/tests/tsdown-plugin.spec.ts (6 tests) 59ms
+ ✓ |thread-safe| packages/client/runtime/tests/sessions-service.client.spec.ts (43 tests) 54ms
+ ✓ |thread-safe| packages/context/file-reference-local/tests/search.spec.ts (7 tests) 102ms
+ ✓ |thread-safe| packages/client/ui-tool/tests/web-card.client.spec.tsx (15 tests) 80ms
+ ✓ |thread-safe| scripts/client-bundle-purity.spec.ts (17 tests) 56ms
+ ✓ |thread-safe| packages/core/tools/tests/json-schema.spec.ts (25 tests) 51ms
+stderr | packages/acp/acp/tests/edges.spec.ts > ACP automation output boundary > settles the prompt normally when the client rejects update notifications
+Error handling notification {
+  jsonrpc: '2.0',
+  method: 'session/update',
+  params: {
+    sessionId: '3624bb8e-1b5e-407d-81eb-83fe91112d1b',
+    update: { sessionUpdate: 'agent_message_chunk', content: [Object] }
+  }
+} {
+  code: -32603,
+  message: 'Internal error',
+  data: { details: 'client update rejected' }
+}
+
+ ✓ |thread-safe| packages/acp/acp/tests/edges.spec.ts (5 tests) 56ms
+ ✓ |thread-safe| packages/fs/fs-sandbox/tests/containment.spec.ts (5 tests) 25ms
+ ✓ |thread-safe| packages/lsp/tool-lsp/tests/tool-lsp.spec.ts (19 tests) 52ms
+ ✓ |thread-safe| packages/llm/llm/tests/topology.spec.ts (20 tests) 59ms
+ ✓ |thread-safe| packages/terminal/terminal-bash/tests/index.spec.ts (17 tests) 48ms
+ ✓ |thread-safe| packages/core/agent-loop/tests/agent-initiator.spec.ts (6 tests) 54ms
+ ✓ |thread-safe| packages/llm/llm-retry/tests/invariant.spec.ts (25 tests) 43ms
+ ✓ |thread-safe| packages/llm/token-meter/tests/token-meter.spec.ts (26 tests) 63ms
+ ✓ |thread-safe| packages/client/ui-primitives/tests/icons.client.spec.tsx (76 tests) 77ms
+ ✓ |thread-safe| packages/subagent/subagent-claude-code/tests/subagent-claude-code.spec.ts (37 tests) 48ms
+ ✓ |thread-safe| packages/interaction/permission-presets/tests/permission-presets.spec.ts (21 tests) 53ms
+ ✓ |thread-safe| packages/session/session-persistence-sqlite/tests/compression.spec.ts (38 tests) 47ms
+stdout | scripts/coverage-partitions.spec.ts > coverage partition coordinator > runs every single-worker partition before one merged threshold check
+coverage-partitions: start partition 1/3
+coverage-partitions: start partition 2/3
+coverage-partitions: start partition 3/3
+
+stdout | scripts/coverage-partitions.spec.ts > coverage partition coordinator > runs every single-worker partition before one merged threshold check
+coverage-partitions: start merged coverage report
+
+stdout | scripts/coverage-partitions.spec.ts > coverage partition coordinator > runs a native pnpm entrypoint directly
+coverage-partitions: start partition 1/2
+coverage-partitions: start partition 2/2
+
+stdout | scripts/coverage-partitions.spec.ts > coverage partition coordinator > runs a native pnpm entrypoint directly
+coverage-partitions: start merged coverage report
+
+stdout | scripts/coverage-partitions.spec.ts > coverage partition coordinator > merges normal test failures and returns their failed status
+coverage-partitions: start partition 1/2
+coverage-partitions: start partition 2/2
+
+stdout | scripts/coverage-partitions.spec.ts > coverage partition coordinator > merges normal test failures and returns their failed status
+coverage-partitions: start merged coverage report
+
+ ✓ |thread-safe| packages/llm/token-meter/tests/token-usage-projection.spec.ts (18 tests) 45ms
+stdout | scripts/coverage-partitions.spec.ts > coverage partition coordinator > rejects a missing partition blob before merge
+coverage-partitions: start partition 1/2
+coverage-partitions: start partition 2/2
+
+stdout | scripts/coverage-partitions.spec.ts > coverage partition coordinator > reports signal termination before missing-blob validation
+coverage-partitions: start partition 1/2
+coverage-partitions: start partition 2/2
+
+ ✓ |thread-safe| packages/web/web-search-deepseek/tests/settings.spec.ts (4 tests) 42ms
+stdout | scripts/coverage-partitions.spec.ts > coverage partition coordinator > waits for every partition after one spawn failure
+coverage-partitions: start partition 1/2
+coverage-partitions: start partition 2/2
+
+stdout | scripts/coverage-partitions.spec.ts > coverage partition coordinator > waits for every partition after one spawn failure
+coverage-partitions: start merged coverage report
+
+stdout | scripts/coverage-partitions.spec.ts > coverage partition coordinator > unlinks a link-shaped coverage path without touching its target
+coverage-partitions: start partition 1/2
+coverage-partitions: start partition 2/2
+
+stdout | scripts/coverage-partitions.spec.ts > coverage partition coordinator > unlinks a link-shaped coverage path without touching its target
+coverage-partitions: start merged coverage report
+
+ ✓ |thread-safe| scripts/coverage-partitions.spec.ts (21 tests) 57ms
+ ✓ |thread-safe| packages/session/session-projection/tests/registry.spec.ts (23 tests) 51ms
+stderr | packages/client/runtime/tests/workspaces-service.client.spec.ts > startInitialSelection > a failed connect returns to waiting and retries on the next list change
+initial workspace selection failed: SessionCreateError: session create failed: internal: attach exploded
+    at SessionRuntime.create (/Users/libing/kk_Projects/qilin-engine/packages/client/runtime/src/client/sessions/service.ts:487:27) {
+  rpcError: { code: 'internal', message: 'attach exploded', details: {} },
+  requestedSessionId: undefined
+}
+
+ ✓ |thread-safe| packages/client/runtime/tests/workspaces-service.client.spec.ts (22 tests) 51ms
+ ✓ |thread-safe| packages/web/web-search-deepseek/tests/redirect.spec.ts (6 tests) 36ms
+ ✓ |thread-safe| packages/feedback/command-feedback/tests/command-feedback.spec.ts (13 tests) 45ms
+ ✓ |thread-safe| packages/web/web-search-exa/tests/exa.spec.ts (29 tests) 42ms
+ ✓ |thread-safe| packages/llm/llm/tests/properties.spec.ts (4 tests) 46ms
+ ✓ |thread-safe| packages/compaction/command-compact/tests/loader-composition.spec.ts (1 test) 27ms
+ ✓ |thread-safe| packages/bundle/headless/tests/startup.spec.ts (4 tests) 42ms
+ ✓ |thread-safe| packages/web/web-search-perplexity/tests/perplexity.spec.ts (27 tests) 42ms
+ ✓ |thread-safe| packages/attachment/attachment-local/tests/image.spec.ts (7 tests) 57ms
+ ✓ |thread-safe| packages/client/ui-renderer/tests/app.client.spec.tsx (4 tests) 40ms
+ ✓ |thread-safe| packages/core/session/tests/json.spec.ts (11 tests) 45ms
+ ✓ |thread-safe| packages/core/session/tests/invariant.spec.ts (17 tests) 57ms
+ ✓ |thread-safe| scripts/clean.spec.ts (4 tests) 59ms
+ ✓ |thread-safe| packages/core/tools/tests/schema.spec.ts (10 tests) 41ms
+ ✓ |thread-safe| scripts/package-invariants.spec.ts (9 tests) 45ms
+ ✓ |thread-safe| scripts/verify-runtime-closure.spec.ts (7 tests) 37ms
+ ✓ |thread-safe| packages/client/ui-goal/tests/browser-plugin.client.spec.tsx (9 tests) 43ms
+ ✓ |thread-safe| packages/sandbox/sandbox-policy/tests/policy.spec.ts (18 tests) 31ms
+ ✓ |thread-safe| packages/client/ui-conversation/tests/chat-stats.client.spec.tsx (35 tests) 43ms
+ ✓ |thread-safe| packages/workflow/tool-workflow/tests/invariant.spec.ts (24 tests) 35ms
+stderr | packages/acp/acp/tests/approval.spec.ts > ACP machine permission policy > fails closed when the client errors the permission request
+Error handling request {
+  jsonrpc: '2.0',
+  id: 0,
+  method: 'session/request_permission',
+  params: {
+    sessionId: 'c3446d29-6629-4e88-95fa-4302fe2b08ed',
+    toolCall: { toolCallId: 'call-9' },
+    options: [ [Object], [Object] ]
+  }
+} {
+  code: -32603,
+  message: 'Internal error',
+  data: { details: 'client gone' }
+}
+
+ ✓ |thread-safe| packages/session/session-title-llm/tests/llm.spec.ts (12 tests) 33ms
+ ✓ |thread-safe| packages/acp/acp/tests/approval.spec.ts (5 tests) 43ms
+ ✓ |thread-safe| packages/bundle/headless/tests/headless.spec.ts (10 tests) 43ms
+ ✓ |thread-safe| packages/client/ui-conversation/tests/chat-apply.client.spec.tsx (5 tests) 43ms
+ ✓ |thread-safe| packages/llm/llm-deepseek/tests/files-api.spec.ts (49 tests) 36ms
+ ✓ |thread-safe| packages/typert/registry/tests/typert.spec.ts (21 tests) 40ms
+stdout | packages/bundle/web-app/tests/browser-open.spec.ts > web app browser startup > opens the canonical URL only after the complete page is reachable
+qilin web: opening the default browser; pass --no-open to disable
+
+ ✓ |thread-safe| packages/bundle/web-app/tests/browser-open.spec.ts (1 test) 46ms
+ ✓ |thread-safe| packages/host/apiproxy/tests/api-proxy-subagents.spec.ts (15 tests) 38ms
+ ✓ |thread-safe| packages/todo/tool-todo/tests/tool-todo.spec.ts (18 tests) 41ms
+ ✓ |thread-safe| packages/client/ui-conversation/tests/selection-survival.client.spec.tsx (4 tests) 39ms
+ ✓ |thread-safe| packages/llm/llm-retry/tests/loader-composition.spec.ts (1 test) 31ms
+ ✓ |thread-safe| packages/core/agent-loop/tests/agent.spec.ts (9 tests) 36ms
+ ✓ |thread-safe| packages/plan/plan-mode/tests/projection.spec.ts (8 tests) 42ms
+ ✓ |thread-safe| packages/guard/timeout-policy/tests/timeout-policy.spec.ts (12 tests) 36ms
+ ✓ |thread-safe| packages/session/session-checkpoint-policy/tests/session-checkpoint-policy.spec.ts (11 tests) 40ms
+ ✓ |thread-safe| packages/shell/bash-local/tests/settings.spec.ts (7 tests) 22ms
+ ✓ |thread-safe| packages/core/agent/tests/agent.spec.ts (19 tests) 38ms
+ ✓ |thread-safe| packages/client/ui-primitives/tests/web-block.client.spec.tsx (17 tests) 44ms
+ ✓ |thread-safe| packages/client/ui-skill/tests/browser-plugin.client.spec.ts (19 tests) 32ms
+ ✓ |thread-safe| packages/plan/plan-mode/tests/integration.spec.ts (3 tests) 36ms
+ ✓ |thread-safe| packages/compaction/command-compact/tests/command-compact.spec.ts (11 tests) 30ms
+ ✓ |thread-safe| packages/core/system-prompt/tests/scoped.spec.ts (13 tests) 32ms
+ ✓ |thread-safe| packages/sandbox/sandbox-local/tests/acl-grants.spec.ts (9 tests) 30ms
+ ✓ |thread-safe| packages/session/session-telemetry/tests/redact.spec.ts (6 tests) 21ms
+ ✓ |thread-safe| packages/interaction/tool-ask-user/tests/tool-ask-user.spec.ts (10 tests) 33ms
+ ✓ |thread-safe| packages/core/agent-loop/tests/settings.spec.ts (6 tests) 25ms
+ ✓ |thread-safe| packages/web/tool-web/tests/spill.spec.ts (1 test) 33ms
+ ✓ |thread-safe| packages/session/session-title/tests/rename.spec.ts (6 tests) 30ms
+ ✓ |thread-safe| packages/interaction/permission-presets/tests/projection.spec.ts (7 tests) 30ms
+ ✓ |thread-safe| packages/runtime-diagnostics/invariants/tests/service.spec.ts (28 tests) 35ms
+ ✓ |thread-safe| packages/feedback/command-feedback/tests/loader-composition.spec.ts (1 test) 29ms
+stderr | packages/host/apiproxy/tests/api-proxy-view.spec.ts > mux live view computation > attaches the three standard card views, omits view without a presenter, soft-falls on throw
+api-proxy: presenter failed for tool/call, falling back to generic: Error: presenter exploded
+
+stderr | packages/host/apiproxy/tests/api-proxy-view.spec.ts > mux live view computation > serves history entries with call/result views, backscan pairing, and soft-falls
+api-proxy: presenter failed for tool/call, falling back to generic: SyntaxError: Expected property name or '}' in JSON at position 1 (line 1 column 2)
+
+ ✓ |thread-safe| packages/host/apiproxy/tests/api-proxy-view.spec.ts (6 tests) 32ms
+ ✓ |thread-safe| packages/web/web/tests/web.spec.ts (20 tests) 27ms
+ ✓ |thread-safe| scripts/cordis-core-api.spec.ts (2 tests) 38ms
+ ✓ |thread-safe| packages/client/ui-trajectory/tests/layout.client.spec.tsx (22 tests) 26ms
+ ✓ |thread-safe| packages/compaction/compaction-tool-result-pruner/tests/loader-composition.spec.ts (2 tests) 35ms
+ ✓ |thread-safe| packages/core/agent/tests/agent-initiator.spec.ts (12 tests) 31ms
+ ✓ |thread-safe| packages/core/session/tests/fork.spec.ts (14 tests) 33ms
+ ✓ |thread-safe| packages/fs/fs/tests/service.spec.ts (11 tests) 21ms
+ ✓ |thread-safe| packages/client/ui-primitives/tests/markdown-render-units.client.spec.tsx (14 tests) 37ms
+ ✓ |thread-safe| packages/client/ui-renderer/tests/ui-renderer.client.spec.tsx (5 tests) 41ms
+ ✓ |thread-safe| packages/host/apiproxy/tests/api-proxy-fork.spec.ts (7 tests) 33ms
+ ✓ |thread-safe| packages/core/system-prompt/tests/tool-order.spec.ts (15 tests) 29ms
+ ✓ |thread-safe| packages/interaction/user-questions/tests/user-questions.spec.ts (13 tests) 26ms
+ ✓ |thread-safe| packages/session-query/session-log-export/tests/loader-composition.client.spec.ts (1 test) 29ms
+ ✓ |thread-safe| packages/fs/fs-observation-policy/tests/policy.spec.ts (23 tests) 35ms
+ ✓ |thread-safe| packages/shell/shell-env/tests/shell-env.spec.ts (13 tests) 28ms
+ ✓ |thread-safe| packages/jobs/jobs/tests/invariant.spec.ts (13 tests) 24ms
+ ✓ |thread-safe| packages/compaction/compaction-basic/tests/loader-composition.spec.ts (5 tests) 34ms
+ ✓ |thread-safe| packages/extensions/cordis-host-runner/tests/versioning.spec.ts (3 tests) 30ms
+ ✓ |thread-safe| packages/session/session-title-first-prompt-llm/tests/loader-composition.spec.ts (1 test) 53ms
+ ✓ |thread-safe| packages/lsp/lsp/tests/lsp.spec.ts (19 tests) 25ms
+ ✓ |thread-safe| packages/preset/agent-presets/tests/metadata.spec.ts (16 tests) 67ms
+ ✓ |thread-safe| packages/fs/fs-local/tests/win32.spec.ts (4 tests) 20ms
+ ✓ |thread-safe| packages/client/ui-conversation/tests/gate-branch-tails.client.spec.tsx (5 tests) 36ms
+ ✓ |thread-safe| packages/client/connection/tests/http-bridge.host.spec.ts (2 tests) 33ms
+ ✓ |thread-safe| packages/core/tools/tests/ts-types.spec.ts (9 tests) 31ms
+ ✓ |thread-safe| packages/core/agent-loop/tests/tool-order.spec.ts (4 tests) 24ms
+ ✓ |thread-safe| packages/core/session/tests/scoped.spec.ts (12 tests) 26ms
+ ✓ |thread-safe| packages/subagent/tool-subagent/tests/scripted-provider.spec.ts (7 tests) 28ms
+ ✓ |thread-safe| packages/core/agent-loop/tests/request-error.spec.ts (4 tests) 24ms
+ ✓ |thread-safe| packages/client/web/tests/boot.client.spec.ts (5 tests) 33ms
+ ✓ |thread-safe| packages/client/ui-model-selection/tests/browser-plugin.client.spec.ts (12 tests) 30ms
+ ✓ |thread-safe| packages/client/modules/tests/node-half.client.spec.ts (21 tests) 30ms
+ ✓ |thread-safe| packages/hooks/hook-protocol/tests/detached.spec.ts (5 tests) 27ms
+ ✓ |thread-safe| scripts/gen-cordis-catalog-record.spec.ts (12 tests) 29ms
+ ✓ |thread-safe| packages/jobs/jobs-local/tests/loader-composition.spec.ts (1 test) 25ms
+ ✓ |thread-safe| packages/llm/token-meter/tests/context-breakdown-projection.spec.ts (10 tests) 25ms
+ ✓ |thread-safe| packages/llm/llm/tests/call-config.spec.ts (6 tests) 28ms
+ ✓ |thread-safe| packages/schedule/schedule/tests/plugin.spec.ts (3 tests) 26ms
+ ✓ |thread-safe| packages/client/ui-sidebar/tests/pointer-scrollbars.client.spec.tsx (6 tests) 32ms
+ ✓ |thread-safe| packages/host/plugin-inventory/tests/inventory.spec.ts (2 tests) 23ms
+ ✓ |thread-safe| packages/client/ui-settings-general/tests/shell.client.spec.ts (6 tests) 26ms
+ ✓ |thread-safe| packages/session/session-stats/tests/projection.spec.ts (15 tests) 17ms
+ ✓ |thread-safe| packages/client/ui-message-feedback/tests/browser-plugin.client.spec.tsx (10 tests) 24ms
+ ✓ |thread-safe| packages/host/apiproxy/tests/api-proxy-jobs.spec.ts (10 tests) 36ms
+ ✓ |thread-safe| packages/preset/persona/tests/persona.spec.ts (9 tests) 23ms
+ ✓ |thread-safe| packages/subprocess/subprocess-local/tests/terminal.spec.ts (26 tests) 17ms
+ ✓ |thread-safe| packages/session/session-stats/tests/loader-composition.spec.ts (2 tests) 27ms
+ ✓ |thread-safe| packages/client/connection/tests/api-request-trust.host.spec.ts (10 tests) 27ms
+ ✓ |thread-safe| packages/subagent/subagent-fork-in-process/tests/multi-subagent.spec.ts (2 tests) 26ms
+ ✓ |thread-safe| packages/client/connection/tests/fixture-commands.client.spec.ts (11 tests) 25ms
+ ✓ |thread-safe| packages/todo/tool-todo/tests/integration.spec.ts (2 tests) 24ms
+ ✓ |thread-safe| packages/client/runtime/tests/conversation-registry.client.spec.ts (7 tests) 21ms
+ ✓ |thread-safe| packages/host/apiproxy/tests/rpc-schemas.spec.ts (32 tests) 22ms
+ ✓ |thread-safe| packages/e2b/e2b/tests/e2b.spec.ts (16 tests) 24ms
+ ✓ |thread-safe| packages/client/ui-brand-official/tests/browser-plugin.client.spec.tsx (4 tests) 29ms
+ ✓ |thread-safe| packages/client/ui-conversation/tests/coverage-tails.client.spec.tsx (3 tests) 26ms
+ ✓ |thread-safe| scripts/translation-brief.spec.ts (23 tests) 26ms
+ ✓ |thread-safe| packages/llm/llm/tests/invariant.spec.ts (15 tests) 30ms
+ ✓ |thread-safe| packages/boot/app-boot/tests/profile.spec.ts (14 tests) 26ms
+ ✓ |thread-safe| scripts/verify-client-packages.spec.ts (18 tests) 24ms
+ ✓ |thread-safe| packages/core/tools/tests/invariant.spec.ts (10 tests) 24ms
+ ✓ |thread-safe| packages/todo/tool-todo/tests/projection.spec.ts (5 tests) 30ms
+ ✓ |thread-safe| packages/client/runtime/tests/client-apply.client.spec.ts (4 tests) 16ms
+ ✓ |thread-safe| packages/sandbox/sandbox-windows-acl/tests/index-failure-paths.spec.ts (23 tests) 21ms
+ ✓ |thread-safe| packages/client/ui-tool/tests/coverage-tails.client.spec.tsx (4 tests) 31ms
+ ✓ |thread-safe| packages/extensions/cordis-client-runner/tests/guard.client.spec.ts (17 tests) 28ms
+ ✓ |thread-safe| packages/spill/spill-local/tests/spill-local.spec.ts (14 tests) 23ms
+ ✓ |thread-safe| packages/session/session-title/tests/session-title.spec.ts (6 tests) 24ms
+ ✓ |thread-safe| packages/client/ui-tool/tests/tool-call-tree.client.spec.tsx (3 tests) 28ms
+ ✓ |thread-safe| packages/hooks/hook-protocol/tests/invariant.spec.ts (9 tests) 24ms
+ ✓ |thread-safe| packages/client/ui-trajectory/tests/cell.client.spec.tsx (7 tests) 32ms
+ ✓ |thread-safe| packages/goal/goal/tests/projection.spec.ts (7 tests) 26ms
+ ✓ |thread-safe| packages/plan/plan-mode/tests/invariant.spec.ts (9 tests) 18ms
+ ✓ |thread-safe| packages/sandbox/sandbox-policy/tests/invariant.spec.ts (6 tests) 15ms
+ ✓ |thread-safe| packages/client/ui-primitives/tests/use-anchored-position.client.spec.tsx (4 tests) 30ms
+ ✓ |thread-safe| packages/core/agent-tool-presentation/tests/agent-tool-presentation.spec.ts (7 tests) 21ms
+Error: slot machinery rendered outside the installed renderer tree
+    at useHost (/Users/libing/kk_Projects/qilin-engine/packages/client/ui-renderer/src/client/session-provider.tsx:27:20)
+    at SessionProvider (/Users/libing/kk_Projects/qilin-engine/packages/client/ui-renderer/src/client/session-provider.tsx:151:16)
+    at renderWithHooks (/Users/libing/kk_Projects/qilin-engine/node_modules/.pnpm/react-dom@18.3.1_react@18.3.1/node_modules/react-dom/cjs/react-dom.development.js:15486:18)
+    at mountIndeterminateComponent (/Users/libing/kk_Projects/qilin-engine/node_modules/.pnpm/react-dom@18.3.1_react@18.3.1/node_modules/react-dom/cjs/react-dom.development.js:20103:13)
+    at beginWork (/Users/libing/kk_Projects/qilin-engine/node_modules/.pnpm/react-dom@18.3.1_react@18.3.1/node_modules/react-dom/cjs/react-dom.development.js:21626:16)
+    at HTMLUnknownElement.callCallback (/Users/libing/kk_Projects/qilin-engine/node_modules/.pnpm/react-dom@18.3.1_react@18.3.1/node_modules/react-dom/cjs/react-dom.development.js:4164:14)
+    at HTMLUnknownElement.callTheUserObjectsOperation (/Users/libing/kk_Projects/qilin-engine/node_modules/.pnpm/jsdom@29.1.1/node_modules/jsdom/lib/generated/idl/EventListener.js:26:30)
+    at innerInvokeEventListeners (/Users/libing/kk_Projects/qilin-engine/node_modules/.pnpm/jsdom@29.1.1/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:360:16)
+    at invokeEventListeners (/Users/libing/kk_Projects/qilin-engine/node_modules/.pnpm/jsdom@29.1.1/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:296:3)
+    at HTMLUnknownElementImpl._dispatch (/Users/libing/kk_Projects/qilin-engine/node_modules/.pnpm/jsdom@29.1.1/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:243:9)
+Error: slot machinery rendered outside the installed renderer tree
+    at useHost (/Users/libing/kk_Projects/qilin-engine/packages/client/ui-renderer/src/client/session-provider.tsx:27:20)
+    at SessionProvider (/Users/libing/kk_Projects/qilin-engine/packages/client/ui-renderer/src/client/session-provider.tsx:151:16)
+    at renderWithHooks (/Users/libing/kk_Projects/qilin-engine/node_modules/.pnpm/react-dom@18.3.1_react@18.3.1/node_modules/react-dom/cjs/react-dom.development.js:15486:18)
+    at mountIndeterminateComponent (/Users/libing/kk_Projects/qilin-engine/node_modules/.pnpm/react-dom@18.3.1_react@18.3.1/node_modules/react-dom/cjs/react-dom.development.js:20103:13)
+    at beginWork (/Users/libing/kk_Projects/qilin-engine/node_modules/.pnpm/react-dom@18.3.1_react@18.3.1/node_modules/react-dom/cjs/react-dom.development.js:21626:16)
+    at HTMLUnknownElement.callCallback (/Users/libing/kk_Projects/qilin-engine/node_modules/.pnpm/react-dom@18.3.1_react@18.3.1/node_modules/react-dom/cjs/react-dom.development.js:4164:14)
+    at HTMLUnknownElement.callTheUserObjectsOperation (/Users/libing/kk_Projects/qilin-engine/node_modules/.pnpm/jsdom@29.1.1/node_modules/jsdom/lib/generated/idl/EventListener.js:26:30)
+    at innerInvokeEventListeners (/Users/libing/kk_Projects/qilin-engine/node_modules/.pnpm/jsdom@29.1.1/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:360:16)
+    at invokeEventListeners (/Users/libing/kk_Projects/qilin-engine/node_modules/.pnpm/jsdom@29.1.1/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:296:3)
+    at HTMLUnknownElementImpl._dispatch (/Users/libing/kk_Projects/qilin-engine/node_modules/.pnpm/jsdom@29.1.1/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:243:9)
+ ✓ |thread-safe| packages/client/ui-renderer/tests/session-provider.client.spec.tsx (6 tests) 25ms
+ ✓ |thread-safe| scripts/verify-md-links.spec.ts (10 tests) 20ms
+ ✓ |thread-safe| packages/schedule/schedule/tests/invariant.spec.ts (5 tests) 21ms
+ ✓ |thread-safe| packages/session/session-title-first-prompt-llm/tests/provider.spec.ts (2 tests) 23ms
+ ✓ |thread-safe| packages/compaction/compaction-tool-result-pruner/tests/tool-result-pruner.spec.ts (10 tests) 28ms
+ ✓ |thread-safe| scripts/project-reference-faces.spec.ts (3 tests) 28ms
+ ✓ |thread-safe| packages/core/agent-loop/tests/invariant.spec.ts (8 tests) 18ms
+ ✓ |thread-safe| packages/subagent/subagent/tests/activation-setup-registry.spec.ts (11 tests) 18ms
+ ✓ |thread-safe| packages/client/modules/tests/loader.client.spec.ts (30 tests) 23ms
+ ✓ |thread-safe| packages/context/time-context/tests/request-zone.spec.ts (3 tests) 17ms
+ ✓ |thread-safe| packages/core/scope/tests/scope.spec.ts (11 tests) 18ms
+ ✓ |thread-safe| packages/schedule/schedule/tests/domain.spec.ts (73 tests) 20ms
+ ✓ |thread-safe| packages/client/ui-conversation/tests/image-labels.client.spec.tsx (6 tests) 24ms
+ ✓ |thread-safe| packages/core/scope/tests/store.spec.ts (10 tests) 20ms
+ ✓ |thread-safe| packages/client/ui-conversation/tests/conversation-node-definitions.client.spec.ts (22 tests) 19ms
+ ✓ |thread-safe| packages/workflow/workflow/tests/workflow.spec.ts (9 tests) 17ms
+ ✓ |thread-safe| packages/session/session-title-all-prompts-llm/tests/provider.spec.ts (1 test) 16ms
+ ✓ |thread-safe| packages/client/ui-primitives/tests/state-dot.client.spec.tsx (7 tests) 22ms
+ ✓ |thread-safe| packages/jobs/jobs/tests/service.spec.ts (3 tests) 12ms
+ ✓ |thread-safe| packages/interaction/permission-presets/tests/invariant.spec.ts (3 tests) 16ms
+ ✓ |thread-safe| packages/shell/pwsh-local/tests/settings.spec.ts (6 tests) 26ms
+ ✓ |thread-safe| packages/client/ui-theme/tests/client-styles.client.spec.ts (1 test) 32ms
+ ✓ |thread-safe| packages/client/ui-renderer/tests/scoped-slots-real-core.client.spec.tsx (4 tests) 19ms
+ ✓ |thread-safe| packages/core/tools/tests/execution-mode.spec.ts (10 tests) 20ms
+ ✓ |thread-safe| packages/client/ui-primitives/tests/ansi.client.spec.ts (75 tests) 17ms
+ ✓ |thread-safe| packages/extensions/tool-cordis/tests/cordis-lifecycle.spec.ts (11 tests) 20ms
+ ✓ |thread-safe| packages/todo/tool-todo/tests/invariant.spec.ts (12 tests) 20ms
+ ✓ |thread-safe| packages/interaction/user-approval/tests/invariant.spec.ts (6 tests) 20ms
+ ✓ |thread-safe| packages/code-runtime/code-runtime/tests/service.spec.ts (5 tests) 18ms
+ ✓ |thread-safe| packages/interaction/commands/tests/invariant.spec.ts (6 tests) 20ms
+ ✓ |thread-safe| packages/client/ui-primitives/tests/onboarding-surface.client.spec.tsx (3 tests) 15ms
+ ✓ |thread-safe| packages/llm/llm-pi-ai/tests/convert.spec.ts (72 tests) 17ms
+ ✓ |thread-safe| packages/client/locale/tests/document-language.client.spec.ts (3 tests) 21ms
+ ✓ |thread-safe| packages/session/session-title/tests/projection.spec.ts (4 tests) 15ms
+ ✓ |thread-safe| packages/client/ui-permission-presets/tests/browser-plugin.client.spec.ts (4 tests) 19ms
+ ✓ |thread-safe| scripts/client-bundle-css.spec.ts (3 tests) 14ms
+ ✓ |thread-safe| packages/subagent/subagent/tests/invariant.spec.ts (4 tests) 9ms
+ ✓ |thread-safe| packages/client/ui-theme/tests/theme.client.spec.ts (16 tests) 20ms
+ ✓ |thread-safe| packages/client/ui-reference/tests/browser-plugin.client.spec.ts (10 tests) 20ms
+ ✓ |thread-safe| packages/extensions/cordis-client-runner/tests/evaluator.client.spec.ts (16 tests) 18ms
+ ✓ |thread-safe| packages/host/apiproxy/tests/api-proxy-rename.spec.ts (4 tests) 29ms
+ ✓ |thread-safe| packages/core/session/tests/chunk-rows.spec.ts (33 tests) 19ms
+ ✓ |thread-safe| packages/settings/settings/tests/redact.spec.ts (12 tests) 12ms
+ ✓ |thread-safe| packages/code-runtime/code-runtime-worker-thread/tests/output-json.spec.ts (6 tests) 20ms
+ ✓ |thread-safe| packages/client/runtime/tests/time-zone.client.spec.ts (3 tests) 12ms
+ ✓ |thread-safe| packages/core/agent-default-model/tests/agent-default-model.spec.ts (5 tests) 18ms
+ ✓ |thread-safe| packages/client/runtime/tests/conversation-assembler.client.spec.ts (25 tests) 13ms
+ ✓ |thread-safe| packages/goal/goal-round-driver/tests/invariant.spec.ts (4 tests) 14ms
+ ✓ |thread-safe| packages/spill/spill/tests/service.spec.ts (3 tests) 18ms
+ ✓ |thread-safe| packages/llm/llm/tests/content.spec.ts (11 tests) 11ms
+ ✓ |thread-safe| scripts/ci-workflow.spec.ts (15 tests) 15ms
+ ✓ |thread-safe| packages/client/ui-renderer/tests/stale-authorization.client.spec.tsx (3 tests) 14ms
+ ✓ |thread-safe| packages/client/ui-theme/tests/host.client.spec.ts (4 tests) 11ms
+ ✓ |thread-safe| packages/client/ui-sidebar/tests/apply.client.spec.tsx (4 tests) 16ms
+ ✓ |thread-safe| packages/core/agent-loop/tests/runtime-context.spec.ts (1 test) 11ms
+ ✓ |thread-safe| packages/schedule/schedule/tests/recurrence.spec.ts (1 test) 14ms
+stderr | packages/extensions/cordis-client-runner/tests/orchestrator.client.spec.ts > approve > reports a source fetch that failed as the browser half failing
+[cordis-client-runner] Client activation dyn-1/pkg-1 (run-1) failed: Error: definition vanished
+    at Object.clientCode (/Users/libing/kk_Projects/qilin-engine/packages/extensions/cordis-client-runner/tests/orchestrator.client.spec.ts:277:59)
+    at Object.Mock [as getClientCode] (file:///Users/libing/kk_Projects/qilin-engine/node_modules/.pnpm/@vitest+spy@4.1.8/node_modules/@vitest/spy/dist/index.js:332:34)
+    at CordisRunOrchestrator.drive (/Users/libing/kk_Projects/qilin-engine/packages/extensions/cordis-client-runner/src/client/orchestrator.ts:346:36)
+    at processTicksAndRejections (node:internal/process/task_queues:104:5)
+    at /Users/libing/kk_Projects/qilin-engine/packages/extensions/cordis-client-runner/tests/orchestrator.client.spec.ts:279:5
+    at file:///Users/libing/kk_Projects/qilin-engine/node_modules/.pnpm/@vitest+runner@4.1.8/node_modules/@vitest/runner/dist/chunk-artifact.js:1903:20
+
+stderr | packages/extensions/cordis-client-runner/tests/orchestrator.client.spec.ts > approve > carries the failing load stage into the answer
+[cordis-client-runner] Client activation dyn-1/pkg-1 (run-1) failed: { message: 'activate: apply threw' }
+
+stderr | packages/extensions/cordis-client-runner/tests/orchestrator.client.spec.ts > approve > treats a load that rejects outright as a browser-half failure
+[cordis-client-runner] Client activation dyn-1/pkg-1 (run-1) failed: Error: module table missing
+    at Object.loaded (/Users/libing/kk_Projects/qilin-engine/packages/extensions/cordis-client-runner/tests/orchestrator.client.spec.ts:299:55)
+    at Object.Mock (file:///Users/libing/kk_Projects/qilin-engine/node_modules/.pnpm/@vitest+spy@4.1.8/node_modules/@vitest/spy/dist/index.js:332:34)
+    at CordisRunOrchestrator.drive (/Users/libing/kk_Projects/qilin-engine/packages/extensions/cordis-client-runner/src/client/orchestrator.ts:351:42)
+    at processTicksAndRejections (node:internal/process/task_queues:104:5)
+    at /Users/libing/kk_Projects/qilin-engine/packages/extensions/cordis-client-runner/tests/orchestrator.client.spec.ts:301:5
+    at file:///Users/libing/kk_Projects/qilin-engine/node_modules/.pnpm/@vitest+runner@4.1.8/node_modules/@vitest/runner/dist/chunk-artifact.js:1903:20
+
+stderr | packages/extensions/cordis-client-runner/tests/orchestrator.client.spec.ts > approve > clears a previous failure when the same definition is tried again
+[cordis-client-runner] Client activation dyn-1/pkg-1 (run-1) failed: { message: 'activate: first try' }
+
+stderr | packages/extensions/cordis-client-runner/tests/orchestrator.client.spec.ts > startUserRun > records a source fetch failure with nothing to answer
+[cordis-client-runner] Client activation dyn-1/pkg-1 (run-1) failed: Error: gone
+    at Object.clientCode (/Users/libing/kk_Projects/qilin-engine/packages/extensions/cordis-client-runner/tests/orchestrator.client.spec.ts:397:59)
+    at Object.Mock [as getClientCode] (file:///Users/libing/kk_Projects/qilin-engine/node_modules/.pnpm/@vitest+spy@4.1.8/node_modules/@vitest/spy/dist/index.js:332:34)
+    at CordisRunOrchestrator.drive (/Users/libing/kk_Projects/qilin-engine/packages/extensions/cordis-client-runner/src/client/orchestrator.ts:346:36)
+    at processTicksAndRejections (node:internal/process/task_queues:104:5)
+    at /Users/libing/kk_Projects/qilin-engine/packages/extensions/cordis-client-runner/tests/orchestrator.client.spec.ts:398:5
+    at file:///Users/libing/kk_Projects/qilin-engine/node_modules/.pnpm/@vitest+runner@4.1.8/node_modules/@vitest/runner/dist/chunk-artifact.js:1903:20
+
+stderr | packages/extensions/cordis-client-runner/tests/orchestrator.client.spec.ts > startUserRun > records a load failure, stringifying a non-Error rejection
+[cordis-client-runner] Client activation dyn-1/pkg-1 (run-1) failed: plain rejection
+
+ ✓ |thread-safe| packages/extensions/cordis-client-runner/tests/orchestrator.client.spec.ts (30 tests) 11ms
+ ✓ |thread-safe| packages/core/session/tests/surface.spec.ts (57 tests) 11ms
+ ✓ |thread-safe| packages/client/ui-primitives/tests/markdown-plain-text.client.spec.ts (4 tests) 16ms
+ ✓ |thread-safe| packages/feedback/message-feedback/tests/invariant.spec.ts (1 test) 11ms
+ ✓ |thread-safe| packages/core/system-prompt/tests/invariant.spec.ts (10 tests) 11ms
+ ✓ |thread-safe| packages/shell/shell/tests/service.spec.ts (3 tests) 11ms
+ ✓ |thread-safe| scripts/gen-doc-graphs.spec.ts (3 tests) 16ms
+ ✓ |thread-safe| packages/client/locale/tests/locale.client.spec.ts (20 tests) 19ms
+ ✓ |thread-safe| packages/host/apiproxy/tests/api-proxy-question.spec.ts (2 tests) 11ms
+ ✓ |thread-safe| packages/client/ui-settings-plugin-inventory/tests/browser-plugin.client.spec.tsx (3 tests) 15ms
+ ✓ |thread-safe| packages/subprocess/subprocess/tests/service.spec.ts (3 tests) 12ms
+ ✓ |thread-safe| packages/workflow/workflow/tests/invariant.spec.ts (4 tests) 12ms
+ ✓ |thread-safe| apps/cli/tests/windows-shell.spec.ts (6 tests) 14ms
+ ✓ |thread-safe| scripts/install-lefthook.spec.ts (38 tests) 63248ms
+     ✓ skips hook installation when CI marks an automated job  348ms
+     ✓ isolates main and linked worktrees without changing legacy common hooks  6625ms
+     ✓ replaces the owned hook path Git copies into a newly added worktree  8891ms
+     ✓ serializes concurrent installs and keeps repeated output stable  7997ms
+     ✓ waits for a concurrent installer to finish publishing its lock record  5237ms
+     ✓ repairs its owned absolute hook path after the checkout moves  2461ms
+     ✓ refuses a multiply linked ownership marker before relocation rewrites it  2386ms
+     ✓ refuses aliased generated hooks before Lefthook can overwrite their targets  3115ms
+     ✓ restores the marker-backed stale hook path when relocation reinstall fails  1633ms
+     ✓ refuses dormant repository extensions before upgrading the repository format  619ms
+     ✓ refuses direct core.worktree before enabling worktree config  489ms
+     ✓ leaves stale installer locks for explicit recovery  341ms
+     ✓ does not release an installer lock whose ownership changed  1299ms
+     ✓ preserves trailing spaces in worktree paths  1860ms
+     ✓ preserves user-owned hook paths unless an inherited value is explicitly overridden  1375ms
+     ✓ does not trust an ownership marker outside a registered worktree hook path  1218ms
+     ✓ refuses to activate a sibling worktree dormant hook path  417ms
+     ✓ refuses an active symlinked worktree config before writing through it  453ms
+     ✓ ignores core.worktree loaded through include.path  1147ms
+     ✓ ignores core.bare loaded through include.path  1119ms
+     ✓ ignores extensions.dshunknown loaded through include.path  1208ms
+     ✓ ignores core.worktree loaded through includeIf.onbranch:conditional.path  1103ms
+     ✓ ignores core.bare loaded through includeIf.onbranch:conditional.path  1204ms
+     ✓ ignores extensions.dshunknown loaded through includeIf.onbranch:conditional.path  1177ms
+     ✓ ignores an inactive global includeIf that provides a hook path for another repository  1157ms
+     ✓ never overrides a command-scoped hook path  388ms
+     ✓ never replaces a custom worktree pairing merge driver  717ms
+     ✓ never masks an inherited custom pairing merge driver  766ms
+     ✓ does not pass unrelated command-scoped Git config to Lefthook  1060ms
+     ✓ never overrides a hook path included by worktree config  440ms
+     ✓ restores the previous hook lookup when Lefthook installation fails  1215ms
+     ✓ does not publish worktree integration when the pairing driver probe fails  583ms
+     ✓ reports installation and hook-path rollback failures together  1175ms
+     ✓ refuses an unowned directory at the reserved worktree hook path  465ms
+     ✓ rejects Git without config-scope support before mutation  758ms
+ ✓ |thread-safe| scripts/gen-cordis-catalog-partition.spec.ts (10 tests) 14ms
+ ✓ |thread-safe| packages/client/ui-renderer/tests/use-projection.client.spec.tsx (3 tests) 15ms
+ ✓ |thread-safe| packages/skill/skill-badge/tests/skill-badge.spec.ts (2 tests) 8ms
+ ✓ |thread-safe| packages/llm/llm-deepseek/tests/serialize.spec.ts (52 tests) 10ms
+ ✓ |thread-safe| packages/compaction/compaction/tests/compaction.spec.ts (5 tests) 14ms
+ ✓ |thread-safe| packages/test-support/agent-loop-testkit/tests/agent-loop-testkit.spec.ts (1 test) 9ms
+ ✓ |thread-safe| packages/credentials/credentials/tests/credentials.spec.ts (8 tests) 16ms
+ ✓ |thread-safe| packages/client/ui-input-trigger/tests/apply.client.spec.ts (5 tests) 13ms
+ ✓ |thread-safe| packages/client/ui-settings-plugin-inventory/tests/invariant.client.spec.ts (1 test) 11ms
+ ✓ |thread-safe| packages/core/scope/tests/invariant.spec.ts (3 tests) 8ms
+ ✓ |thread-safe| packages/client/ui-plan/tests/browser-plugin.client.spec.ts (4 tests) 10ms
+ ✓ |thread-safe| packages/goal/goal/tests/invariant.spec.ts (3 tests) 11ms
+ ✓ |thread-safe| packages/util/home-paths/tests/home-paths.spec.ts (7 tests) 10ms
+ ✓ |thread-safe| packages/fs/tool-fs-search/tests/load-path.spec.ts (2 tests) 9ms
+ ✓ |thread-safe| packages/client/ui-commands/tests/browser-plugin.client.spec.ts (3 tests) 12ms
+ ✓ |thread-safe| packages/client/ui-subagent/tests/browser-plugin.client.spec.ts (2 tests) 9ms
+ ✓ |thread-safe| packages/util/timeout/tests/timeout.spec.ts (26 tests) 10ms
+ ✓ |thread-safe| packages/client/ui-agent-preset/tests/invariant.client.spec.ts (2 tests) 8ms
+ ✓ |thread-safe| packages/client/runtime/tests/wire-events.client.spec.ts (3 tests) 11ms
+ ✓ |thread-safe| packages/session-query/session-query/tests/search-helpers.spec.ts (9 tests) 16ms
+ ✓ |thread-safe| packages/workflow/workflow-worker-thread/tests/realm.spec.ts (15 tests) 11ms
+ ✓ |thread-safe| packages/host/apiproxy/tests/api-proxy-blank.spec.ts (2 tests) 11ms
+ ✓ |thread-safe| packages/client/ui-settings-models/tests/welcome-store.client.spec.ts (8 tests) 7ms
+ ✓ |thread-safe| packages/code-runtime/code-runtime-worker-thread/tests/bootstrap.spec.ts (27 tests) 11ms
+ ✓ |thread-safe| packages/storage/storage-domain/tests/invariant.spec.ts (6 tests) 11ms
+ ✓ |thread-safe| packages/client/ui-brand-official/tests/invariant.client.spec.ts (2 tests) 5ms
+ ✓ |thread-safe| packages/client/ui-user-questions/tests/node-plugin.client.spec.ts (1 test) 7ms
+ ✓ |thread-safe| packages/session-query/session-log-export/tests/controller.client.spec.ts (7 tests) 14ms
+ ✓ |thread-safe| packages/identity/anonymous-user-id/tests/anonymous-user-id.spec.ts (9 tests) 8ms
+ ✓ |thread-safe| packages/session/session-persistence-jsonl/tests/zstd.compat.spec.ts (1 test) 7ms
+stderr | packages/client/ui-commands/tests/popup.client.spec.ts > open and options load > an options failure keeps the shell open with search retained, surfaces the error, and retry reloads
+[ui-commands] popupSelect options failed for /theme: Error: directory down
+    at Object.options (/Users/libing/kk_Projects/qilin-engine/packages/client/ui-commands/tests/popup.client.spec.ts:133:48)
+    at PopupSelectController.load (/Users/libing/kk_Projects/qilin-engine/packages/client/ui-commands/src/client/popup.ts:145:18)
+    at PopupSelectController.open (/Users/libing/kk_Projects/qilin-engine/packages/client/ui-commands/src/client/popup.ts:140:10)
+    at readyPopup (/Users/libing/kk_Projects/qilin-engine/packages/client/ui-commands/tests/popup.client.spec.ts:53:9)
+    at /Users/libing/kk_Projects/qilin-engine/packages/client/ui-commands/tests/popup.client.spec.ts:130:29
+    at file:///Users/libing/kk_Projects/qilin-engine/node_modules/.pnpm/@vitest+runner@4.1.8/node_modules/@vitest/runner/dist/chunk-artifact.js:302:11
+    at file:///Users/libing/kk_Projects/qilin-engine/node_modules/.pnpm/@vitest+runner@4.1.8/node_modules/@vitest/runner/dist/chunk-artifact.js:1903:26
+    at file:///Users/libing/kk_Projects/qilin-engine/node_modules/.pnpm/@vitest+runner@4.1.8/node_modules/@vitest/runner/dist/chunk-artifact.js:2326:20
+    at new Promise (<anonymous>)
+    at runWithCancel (file:///Users/libing/kk_Projects/qilin-engine/node_modules/.pnpm/@vitest+runner@4.1.8/node_modules/@vitest/runner/dist/chunk-artifact.js:2323:10)
+
+stderr | packages/client/ui-commands/tests/popup.client.spec.ts > select > an onSelect failure keeps the shell open with search/highlight/token intact, no consumption, and select re-arms
+[ui-commands] popupSelect onSelect failed for /theme: Error: host rejected
+    at Object.onSelect (/Users/libing/kk_Projects/qilin-engine/packages/client/ui-commands/tests/popup.client.spec.ts:295:35)
+    at PopupSelectController.settle (/Users/libing/kk_Projects/qilin-engine/packages/client/ui-commands/src/client/popup.ts:258:26)
+    at PopupSelectController.select (/Users/libing/kk_Projects/qilin-engine/packages/client/ui-commands/src/client/popup.ts:224:16)
+    at /Users/libing/kk_Projects/qilin-engine/packages/client/ui-commands/tests/popup.client.spec.ts:301:17
+    at processTicksAndRejections (node:internal/process/task_queues:104:5)
+    at file:///Users/libing/kk_Projects/qilin-engine/node_modules/.pnpm/@vitest+runner@4.1.8/node_modules/@vitest/runner/dist/chunk-artifact.js:1903:20
+
+stderr | packages/client/ui-commands/tests/popup.client.spec.ts > select > ignores selects while closed, pending, failed, or out of filtered range
+[ui-commands] popupSelect options failed for /theme: Error: x
+    at Object.options (/Users/libing/kk_Projects/qilin-engine/packages/client/ui-commands/tests/popup.client.spec.ts:316:80)
+    at PopupSelectController.load (/Users/libing/kk_Projects/qilin-engine/packages/client/ui-commands/src/client/popup.ts:145:18)
+    at PopupSelectController.open (/Users/libing/kk_Projects/qilin-engine/packages/client/ui-commands/src/client/popup.ts:140:10)
+    at readyPopup (/Users/libing/kk_Projects/qilin-engine/packages/client/ui-commands/tests/popup.client.spec.ts:53:9)
+    at /Users/libing/kk_Projects/qilin-engine/packages/client/ui-commands/tests/popup.client.spec.ts:316:37
+    at processTicksAndRejections (node:internal/process/task_queues:104:5)
+
+stderr | packages/client/ui-commands/tests/popup.client.spec.ts > select > a dispose racing a failing onSelect revokes its error write
+[ui-commands] popupSelect onSelect failed for /theme: Error: late
+    at /Users/libing/kk_Projects/qilin-engine/packages/client/ui-commands/tests/popup.client.spec.ts:350:12
+    at processTicksAndRejections (node:internal/process/task_queues:104:5)
+    at file:///Users/libing/kk_Projects/qilin-engine/node_modules/.pnpm/@vitest+runner@4.1.8/node_modules/@vitest/runner/dist/chunk-artifact.js:1903:20
+
+ ✓ |thread-safe| packages/client/ui-commands/tests/popup.client.spec.ts (23 tests) 10ms
+ ✓ |thread-safe| packages/client/web/tests/boot-page.client.spec.ts (5 tests) 14ms
+ ✓ |thread-safe| packages/client/ui-settings/tests/invariant.client.spec.ts (2 tests) 10ms
+ ✓ |thread-safe| scripts/archived-agent-notes.spec.ts (6 tests) 10ms
+ ✓ |thread-safe| packages/session-query/session-query-sqlite/tests/query.spec.ts (10 tests) 14ms
+ ✓ |thread-safe| packages/client/ui-conversation/tests/safari.client.spec.ts (11 tests) 18ms
+ ✓ |thread-safe| packages/test-support/llm-mock-server/tests/cli.spec.ts (25 tests) 13ms
+ ✓ |thread-safe| packages/client/ui-deliverables/tests/prompt.client.spec.ts (1 test) 12ms
+ ✓ |thread-safe| packages/boot/app-boot/tests/config-dump.spec.ts (6 tests) 9ms
+ ✓ |thread-safe| packages/settings/settings/tests/invariant.spec.ts (4 tests) 9ms
+ ✓ |thread-safe| packages/client/ui-renderer/tests/bind.client.spec.tsx (6 tests) 11ms
+ ✓ |thread-safe| packages/client/ui-settings-plugins/tests/invariant.client.spec.ts (2 tests) 14ms
+ ✓ |thread-safe| packages/experimental/agent-team/tests/fold.spec.ts (12 tests) 10ms
+ ✓ |thread-safe| packages/client/locale/tests/host.client.spec.ts (1 test) 10ms
+ ✓ |thread-safe| packages/client/ui-settings-models/tests/invariant.client.spec.ts (3 tests) 9ms
+ ✓ |thread-safe| packages/shell/pwsh-local/tests/executor.spec.ts (36 tests | 27 skipped) 9ms
+ ✓ |thread-safe| scripts/lint-rule-fingerprint.spec.ts (4 tests) 9ms
+ ✓ |thread-safe| packages/llm/llm-pi-ai/tests/context.spec.ts (11 tests) 10ms
+ ✓ |thread-safe| packages/client/ui-sidebar/tests/invariant.client.spec.ts (2 tests) 12ms
+ ✓ |thread-safe| packages/client/ui-conversation/tests/input-machine.client.spec.ts (79 tests) 10ms
+ ✓ |thread-safe| packages/client/ui-user-questions/tests/browser-plugin.client.spec.ts (4 tests) 11ms
+ ✓ |thread-safe| packages/core/session/tests/request-header.spec.ts (12 tests) 9ms
+ ✓ |thread-safe| packages/client/ui-jobs/tests/browser-plugin.client.spec.ts (6 tests) 11ms
+ ✓ |thread-safe| packages/client/ui-theme/tests/invariant.client.spec.ts (3 tests) 13ms
+ ✓ |thread-safe| scripts/verify-qilin-package-licenses.spec.ts (2 tests) 9ms
+ ✓ |thread-safe| packages/core/session/tests/typert.spec.ts (1 test) 12ms
+ ✓ |thread-safe| scripts/cordis-config-files.spec.ts (1 test) 8ms
+ ✓ |thread-safe| apps/cli/tests/args.spec.ts (6 tests) 12ms
+ ✓ |thread-safe| packages/client/ui-conversation/tests/host.client.spec.ts (1 test) 11ms
+ ✓ |thread-safe| packages/llm/llm/tests/assembler.spec.ts (22 tests) 8ms
+ ✓ |thread-safe| packages/sandbox/sandbox-windows-acl/tests/path-boundary.spec.ts (3 tests) 4ms
+ ✓ |thread-safe| packages/storage/storage-sqlite/tests/invariant.spec.ts (1 test) 6ms
+ ✓ |thread-safe| apps/cli/tests/process-shutdown.spec.ts (9 tests) 8ms
+ ✓ |thread-safe| packages/credentials/authorization/tests/invariant.spec.ts (5 tests) 10ms
+ ✓ |thread-safe| packages/client/runtime/tests/queue-store.client.spec.ts (14 tests) 10ms
+ ✓ |thread-safe| packages/sandbox/sandbox-windows-acl/tests/failure-paths.spec.ts (22 tests) 9ms
+ ✓ |thread-safe| packages/client/runtime/tests/projection-store.client.spec.ts (14 tests) 9ms
+ ✓ |thread-safe| packages/core/agent/tests/model-selection.spec.ts (1 test) 9ms
+ ✓ |thread-safe| packages/llm/llm-deepseek/tests/translate.spec.ts (30 tests) 9ms
+ ✓ |thread-safe| packages/client/ui-renderer/tests/document-title.client.spec.tsx (2 tests) 9ms
+ ✓ |thread-safe| packages/experimental/agent-team/tests/invariant.spec.ts (2 tests) 8ms
+ ✓ |thread-safe| packages/core/agent/tests/consumed-work.spec.ts (11 tests) 7ms
+ ✓ |thread-safe| packages/fs/tool-fs/tests/read-render.spec.ts (28 tests) 7ms
+ ✓ |thread-safe| packages/subagent/subagent/tests/timing-projection.spec.ts (4 tests) 10ms
+ ✓ |thread-safe| packages/session/session-title/tests/invariant.spec.ts (2 tests) 7ms
+ ✓ |thread-safe| packages/client/ui-slots/tests/core.client.spec.ts (27 tests) 7ms
+ ✓ |thread-safe| packages/compaction/compaction/tests/tool-pairing.spec.ts (11 tests) 9ms
+ ✓ |thread-safe| packages/test-support/client-runtime/tests/invariant.client.spec.ts (1 test) 4ms
+ ✓ |thread-safe| packages/fs/tool-fs/tests/diff.spec.ts (12 tests) 5ms
+ ✓ |thread-safe| packages/web/tool-web/tests/load-path.spec.ts (2 tests) 9ms
+ ✓ |thread-safe| packages/client/ui-workspace/tests/invariant.client.spec.ts (2 tests) 13ms
+ ✓ |thread-safe| packages/client/ui-conversation/tests/views-type-chain.client.spec.tsx (2 tests) 10ms
+ ✓ |thread-safe| packages/core/session/tests/derived-cache.spec.ts (6 tests) 10ms
+ ✓ |thread-safe| packages/llm/llm-pi-ai/tests/sdk-options.spec.ts (2 tests) 8ms
+ ✓ |thread-safe| packages/test-support/acp-snapshot/tests/normalize.spec.ts (50 tests) 8ms
+ ✓ |thread-safe| packages/client/runtime/tests/scope.client.spec.ts (5 tests) 8ms
+ ✓ |thread-safe| scripts/verify-cordis-config.spec.ts (6 tests) 9ms
+ ✓ |thread-safe| packages/llm/llm-deepseek/tests/sse.spec.ts (7 tests) 8ms
+ ✓ |thread-safe| packages/sandbox/sandbox-windows-acl/tests/acl-failure-paths.spec.ts (20 tests) 12ms
+ ✓ |thread-safe| packages/test-support/loader-smoke/tests/agent-turn.spec.ts (5 tests) 8ms
+ ✓ |thread-safe| packages/client/ui-message-feedback/tests/controller.client.spec.ts (38 tests) 10ms
+ ✓ |thread-safe| scripts/verify-skill-invocation-metadata.spec.ts (2 tests) 8ms
+ ✓ |thread-safe| packages/shell/pwsh-sandbox/tests/sandbox.spec.ts (19 tests | 13 skipped) 4ms
+ ✓ |thread-safe| packages/acp/acp/tests/content.spec.ts (7 tests) 7ms
+ ✓ |thread-safe| packages/session-query/session-log-export/tests/command.client.spec.ts (1 test) 8ms
+ ✓ |thread-safe| packages/credentials/credentials/tests/invariant.spec.ts (3 tests) 9ms
+ ✓ |thread-safe| packages/sandbox/sandbox-windows-acl/tests/provider-chain.spec.ts (2 tests) 13ms
+ ✓ |thread-safe| packages/host/plugin-inventory/tests/invariant.spec.ts (1 test) 5ms
+ ✓ |thread-safe| packages/storage/storage/tests/registry.spec.ts (5 tests) 13ms
+ ✓ |thread-safe| packages/attachment/attachment/tests/index.spec.ts (6 tests) 8ms
+ ✓ |thread-safe| packages/identity/anonymous-user-id/tests/invariant.spec.ts (1 test) 5ms
+ ✓ |thread-safe| packages/core/agent/tests/invariant.spec.ts (3 tests) 6ms
+ ✓ |thread-safe| packages/client/ui-attachment/tests/plugin.client.spec.ts (2 tests) 9ms
+ ✓ |thread-safe| packages/client/ui-settings-general/tests/invariant.client.spec.ts (1 test) 4ms
+ ✓ |thread-safe| scripts/verify-config-source-ownership.spec.ts (1 test) 7ms
+ ✓ |thread-safe| packages/client/ui-theme/tests/boot-theme.client.spec.ts (5 tests) 8ms
+ ✓ |thread-safe| packages/client/runtime/tests/invariant.client.spec.ts (3 tests) 8ms
+ ✓ |thread-safe| packages/subprocess/subprocess-local/tests/process-inspector.spec.ts (7 tests) 5ms
+ ✓ |thread-safe| packages/bundle/base/tests/base.spec.ts (2 tests) 6ms
+ ✓ |thread-safe| packages/fs/tool-fs-search/tests/rg-path.spec.ts (2 tests) 5ms
+ ✓ |thread-safe| packages/workspace/workspace/tests/invariant.spec.ts (4 tests) 7ms
+ ✓ |thread-safe| packages/host/apiproxy/tests/native-path-opener.spec.ts (24 tests) 6ms
+ ✓ |thread-safe| packages/client/ui-settings-general/tests/host.client.spec.ts (1 test) 7ms
+ ✓ |thread-safe| packages/core/session/tests/repair.spec.ts (11 tests) 7ms
+ ✓ |thread-safe| packages/sandbox/sandbox-windows-acl/tests/ffi.spec.ts (18 tests) 4ms
+ ✓ |thread-safe| packages/host/directory-picker-native/tests/native-picker.spec.ts (16 tests) 10ms
+ ✓ |thread-safe| packages/llm/llm/tests/message.spec.ts (4 tests) 7ms
+ ✓ |thread-safe| packages/client/ui-agent-preset/tests/section-store.client.spec.ts (35 tests) 10ms
+ ✓ |thread-safe| packages/host/directory-picker-native/tests/service.spec.ts (1 test) 7ms
+ ✓ |thread-safe| packages/host/directory-picker/tests/seam.spec.ts (2 tests) 8ms
+ ✓ |thread-safe| packages/session/session-persistence/tests/preparations.spec.ts (20 tests) 7ms
+ ✓ |thread-safe| packages/client/ui-workspace/tests/tree.client.spec.ts (24 tests) 8ms
+ ✓ |thread-safe| packages/sandbox/sandbox-windows-acl/tests/token-failure-paths.spec.ts (25 tests) 6ms
+ ✓ |thread-safe| packages/client/ui-permission-presets/tests/settings-store.client.spec.ts (8 tests) 7ms
+ ✓ |thread-safe| packages/test-support/client-runtime/tests/remote.client.spec.ts (3 tests) 5ms
+ ✓ |thread-safe| packages/client/ui-settings-models/tests/styles.client.spec.ts (5 tests) 3ms
+ ✓ |thread-safe| packages/fs/fs/tests/invariant.spec.ts (2 tests) 6ms
+ ✓ |thread-safe| packages/host/directory-picker-auto/tests/resolve.spec.ts (9 tests) 3ms
+ ✓ |thread-safe| packages/client/runtime/tests/store.client.spec.ts (16 tests) 6ms
+ ✓ |thread-safe| scripts/translation-prompt.spec.ts (17 tests) 7ms
+ ✓ |thread-safe| packages/client/ui-settings-models/tests/store.client.spec.ts (14 tests) 6ms
+ ✓ |thread-safe| packages/client/ui-trajectory/tests/conversation-definitions.client.spec.ts (5 tests) 6ms
+ ✓ |thread-safe| packages/util/output-retention/tests/output-retention.spec.ts (36 tests) 6ms
+ ✓ |thread-safe| packages/attachment/attachment-local/tests/encoding.spec.ts (6 tests) 4ms
+ ✓ |thread-safe| packages/client/runtime/tests/tool-call-tree.client.spec.ts (4 tests) 3ms
+ ✓ |thread-safe| packages/util/atomic-write/tests/invariant.spec.ts (1 test) 5ms
+ ✓ |thread-safe| packages/hooks/hook-protocol/tests/codec.spec.ts (25 tests) 4ms
+ ✓ |thread-safe| packages/client/ui-slots/tests/invariant.client.spec.ts (1 test) 5ms
+ ✓ |thread-safe| packages/lsp/tool-lsp/tests/render.spec.ts (24 tests) 6ms
+ ✓ |thread-safe| packages/client/ui-commands/tests/directory.client.spec.ts (20 tests) 5ms
+ ✓ |thread-safe| packages/subagent/subagent/tests/out-of-process.spec.ts (12 tests) 6ms
+ ✓ |thread-safe| packages/workflow/workflow-worker-thread/tests/meta.spec.ts (7 tests) 3ms
+ ✓ |thread-safe| packages/llm/llm/tests/api-key.spec.ts (17 tests) 4ms
+ ✓ |thread-safe| packages/client/ui-attachment/tests/invariant.client.spec.ts (1 test) 4ms
+ ✓ |thread-safe| packages/client/ui-agent-preset/tests/settings-store.client.spec.ts (30 tests) 5ms
+ ✓ |thread-safe| scripts/session-fixture-layout.spec.ts (6 tests) 5ms
+ ✓ |thread-safe| packages/test-support/llm-mock-server/tests/invariant.spec.ts (1 test) 5ms
+ ✓ |thread-safe| packages/context/file-reference/tests/service.spec.ts (1 test) 5ms
+ ✓ |thread-safe| packages/extensions/ui-cordis/tests/card-model.client.spec.ts (8 tests) 3ms
+ ✓ |thread-safe| packages/lsp/lsp-stdio/tests/framing.spec.ts (12 tests) 7ms
+ ✓ |thread-safe| packages/test-support/loader-smoke/tests/example-launch.spec.ts (12 tests) 4ms
+ ✓ |thread-safe| packages/client/ui-settings-general/tests/settings-document-store.client.spec.ts (4 tests) 6ms
+ ✓ |thread-safe| packages/host/directory-picker-native/tests/win32-dialog-logic.spec.ts (8 tests) 4ms
+ ✓ |thread-safe| packages/context/file-reference/tests/invariant.spec.ts (1 test) 5ms
+ ✓ |thread-safe| packages/client/runtime/tests/context-provenance.client.spec.ts (9 tests) 6ms
+ ✓ |thread-safe| packages/client/ui-primitives/tests/invariant.client.spec.ts (1 test) 4ms
+ ✓ |thread-safe| packages/fs/tool-fs-search/tests/presentation.spec.ts (18 tests) 5ms
+ ✓ |thread-safe| packages/terminal/tool-terminal/tests/render.spec.ts (4 tests) 3ms
+ ✓ |thread-safe| packages/client/ui-input-trigger/tests/core-menu.client.spec.ts (24 tests) 4ms
+ ✓ |thread-safe| packages/llm/llm-pi-ai/tests/config.spec.ts (10 tests) 4ms
+ ✓ |thread-safe| packages/util/launch-environment/tests/launch-environment.spec.ts (7 tests) 5ms
+ ✓ |thread-safe| packages/sandbox/sandbox-windows-acl/tests/grant-failure-paths.spec.ts (4 tests) 4ms
+ ✓ |thread-safe| packages/attachment/attachment/tests/admission.spec.ts (5 tests) 4ms
+ ✓ |thread-safe| packages/client/locale/tests/invariant.client.spec.ts (3 tests) 8ms
+ ✓ |thread-safe| packages/sandbox/sandbox-windows-acl/tests/quote.spec.ts (10 tests | 1 skipped) 2ms
+ ✓ |thread-safe| packages/lsp/lsp-stdio/tests/translate.spec.ts (29 tests) 5ms
+ ✓ |thread-safe| packages/session-query/session-log-export/tests/invariant.client.spec.ts (1 test) 4ms
+ ✓ |thread-safe| scripts/verify-optional-dependency-imports.spec.ts (2 tests) 4ms
+ ✓ |thread-safe| packages/client/ui-input-trigger/tests/core-detect.client.spec.ts (17 tests) 4ms
+ ✓ |thread-safe| scripts/coverage-exempt.spec.ts (6 tests) 6ms
+ ✓ |thread-safe| packages/context/file-reference-local/tests/invariant.spec.ts (1 test) 5ms
+ ✓ |thread-safe| scripts/build-exe-for-python-sdk-native-pty.spec.ts (3 tests) 9ms
+ ✓ |thread-safe| packages/sandbox/sandbox/tests/escalation.spec.ts (11 tests) 7ms
+ ✓ |thread-safe| packages/client/ui-theme/tests/settings-store.client.spec.ts (3 tests) 4ms
+ ✓ |thread-safe| packages/client/ui-settings/tests/schema.client.spec.ts (9 tests) 4ms
+ ✓ |thread-safe| packages/extensions/ui-cordis/tests/versioning.client.spec.ts (5 tests) 3ms
+ ✓ |thread-safe| packages/client/runtime/tests/partial.client.spec.ts (9 tests) 3ms
+ ✓ |thread-safe| packages/client/ui-message-feedback/tests/styles.client.spec.ts (4 tests) 2ms
+ ✓ |thread-safe| packages/llm/llm/tests/retry-policy.spec.ts (20 tests) 4ms
+ ✓ |thread-safe| packages/typert/generator/tests/renderer.spec.ts (3 tests) 4ms
+ ✓ |thread-safe| packages/client/ui-workspace/tests/browser-styles.client.spec.ts (7 tests) 3ms
+ ✓ |thread-safe| packages/hooks/hook-protocol/tests/events.spec.ts (10 tests) 4ms
+ ✓ |thread-safe| packages/hooks/hooks-codex/tests/config.spec.ts (11 tests) 4ms
+ ✓ |thread-safe| packages/client/runtime/tests/lineage.client.spec.ts (5 tests) 6ms
+ ✓ |thread-safe| packages/subagent/subagent/tests/run-settlement.spec.ts (9 tests) 5ms
+ ✓ |thread-safe| packages/hooks/hooks-claude-code/tests/config.spec.ts (12 tests) 7ms
+ ✓ |thread-safe| packages/client/ui-slots/tests/dynamic-keys.client.spec.ts (5 tests) 4ms
+ ✓ |thread-safe| scripts/publication-payload.spec.ts (18 tests) 3ms
+ ✓ |thread-safe| packages/client/runtime/tests/notifier.client.spec.ts (9 tests) 3ms
+ ✓ |thread-safe| packages/hooks/hook-protocol/tests/runner.spec.ts (12 tests) 3ms
+ ✓ |thread-safe| packages/subprocess/subprocess-local/tests/windows-inspector.spec.ts (11 tests | 2 skipped) 3ms
+ ✓ |thread-safe| packages/client/ui-layout/tests/layout-store.client.spec.ts (8 tests) 4ms
+ ✓ |thread-safe| packages/client/ui-conversation/tests/turn-metrics.client.spec.ts (11 tests) 4ms
+ ✓ |thread-safe| packages/client/ui-trajectory/tests/virtual-rows.client.spec.ts (7 tests) 3ms
+ ✓ |thread-safe| packages/compaction/command-compact/tests/invariant.spec.ts (1 test) 3ms
+ ✓ |thread-safe| packages/terminal/terminal-bash/tests/config.spec.ts (8 tests) 3ms
+ ✓ |thread-safe| scripts/pnpm-invocation.spec.ts (10 tests) 4ms
+ ✓ |thread-safe| scripts/run-oxlint.spec.ts (9 tests) 3ms
+ ✓ |thread-safe| packages/hooks/hook-protocol/tests/matcher.spec.ts (10 tests) 3ms
+ ✓ |thread-safe| packages/hooks/hook-protocol/tests/merge.spec.ts (12 tests) 3ms
+ ✓ |thread-safe| packages/sandbox/sandbox/tests/roots.spec.ts (4 tests) 3ms
+ ✓ |thread-safe| packages/client/ui-trajectory/tests/snapshot-builder.client.spec.ts (4 tests) 3ms
+ ✓ |thread-safe| packages/fs/tool-fs/tests/error.spec.ts (4 tests) 2ms
+ ✓ |thread-safe| packages/client/ui-agent-preset/tests/locales.client.spec.ts (5 tests) 2ms
+ ✓ |thread-safe| packages/client/ui-conversation/tests/chat-store.client.spec.ts (5 tests) 8ms
+ ✓ |thread-safe| packages/client/ui-layout/tests/columns.client.spec.ts (12 tests) 3ms
+ ✓ |thread-safe| packages/client/ui-sidebar/tests/sidebar-styles.client.spec.ts (4 tests) 3ms
+ ✓ |thread-safe| packages/sandbox/sandbox-windows-acl/tests/workspace-sid.spec.ts (5 tests) 3ms
+ ✓ |thread-safe| packages/terminal/terminal-bash/tests/sanitize.spec.ts (6 tests) 3ms
+ ✓ |thread-safe| packages/subagent/subagent/tests/assistant-output.spec.ts (7 tests) 2ms
+ ✓ |thread-safe| scripts/verify-public-repository-links.spec.ts (2 tests) 2ms
+ ✓ |thread-safe| packages/client/ui-layout/tests/service.client.spec.ts (3 tests) 3ms
+ ✓ |thread-safe| packages/llm/llm/tests/adapter-failure.spec.ts (5 tests) 5ms
+ ✓ |thread-safe| packages/preset/agent-presets/tests/session.spec.ts (5 tests) 2ms
+ ✓ |thread-safe| packages/client/locale/tests/settings-store.client.spec.ts (3 tests) 3ms
+ ✓ |thread-safe| scripts/paired-markdown-derivatives.spec.ts (3 tests) 4ms
+ ✓ |thread-safe| packages/client/connection/tests/api-helpers.client.spec.ts (2 tests) 2ms
+ ✓ |thread-safe| packages/client/ui-settings-models/tests/readiness.client.spec.ts (7 tests) 2ms
+ ✓ |thread-safe| packages/llm/llm/tests/attribution.spec.ts (6 tests) 2ms
+ ✓ |thread-safe| packages/client/ui-conversation/tests/submission-policy.client.spec.ts (4 tests) 3ms
+ ✓ |thread-safe| packages/shell/shell/tests/render.spec.ts (4 tests) 3ms
+ ✓ |thread-safe| scripts/doc-typecheck-paths.spec.ts (2 tests) 4ms
+ ✓ |thread-safe| packages/client/ui-tool/tests/tool-row-styles.client.spec.ts (2 tests) 2ms
+ ✓ |thread-safe| packages/client/runtime/tests/path.client.spec.ts (5 tests) 2ms
+ ✓ |thread-safe| packages/code-runtime/code-runtime/tests/reserved.spec.ts (4 tests) 2ms
+ ✓ |thread-safe| packages/client/web/tests/base-styles.client.spec.ts (1 test) 3ms
+ ✓ |thread-safe| scripts/check-workspace-constraints.spec.ts (6 tests) 3ms
+ ✓ |thread-safe| packages/client/runtime/tests/subagent-lineage.client.spec.ts (2 tests) 4ms
+ ✓ |thread-safe| packages/client/runtime/tests/node-half.client.spec.ts (1 test) 1ms
+ ✓ |thread-safe| packages/client/runtime/tests/conversation.client.spec.ts (1 test) 2ms
+ ✓ |thread-safe| scripts/rescope-vendor.spec.ts (3 tests) 2ms
+ ✓ |thread-safe| apps/cli/tests/telemetry-switch.spec.ts (3 tests) 3ms
+ ✓ |thread-safe| packages/client/ui-sidebar/tests/scrollbar-quiet-styles.client.spec.ts (2 tests) 2ms
+ ✓ |thread-safe| packages/client/connection/tests/loopback-hostname.client.spec.ts (2 tests) 3ms
+ ✓ |thread-safe| packages/sandbox/sandbox/tests/vocabulary.spec.ts (3 tests) 2ms
+ ✓ |thread-safe| packages/client/ui-slots/tests/type-chain.client.spec.tsx (1 test) 3ms
+ ✓ |thread-safe| packages/bundle/web-app/tests/trusted-hosts.spec.ts (2 tests) 2ms
+ ✓ |thread-safe| packages/sdk/server/tests/plugin-shape.spec.ts (1 test) 4ms
+ ✓ |thread-safe| packages/lsp/tool-lsp/tests/load-path.spec.ts (1 test) 2ms
+ ✓ |thread-safe| packages/acp/acp/tests/codec.spec.ts (6 tests) 2ms
+ ✓ |thread-safe| scripts/verify-client-domain-graph.spec.ts (2 tests) 3ms
+ ✓ |thread-safe| packages/session/session-persistence-sqlite/tests/compression-unprofitable.spec.ts (1 test) 2ms
+ ✓ |thread-safe| packages/client/ui-tool/tests/toolview-type-chain.client.spec.tsx (1 test) 1ms
+ ↓ |thread-safe| apps/cli/tests/lazy-search-startup.compat.spec.ts (1 test | 1 skipped)
+ ✓ |thread-safe| packages/core/tools/tests/execution-signal-types.spec.ts (1 test) 1ms
+ ↓ |thread-safe| packages/sandbox/sandbox-windows-acl/tests/acl.spec.ts (9 tests | 9 skipped)
+ ↓ |thread-safe| packages/sandbox/sandbox-windows-acl/tests/grant.spec.ts (3 tests | 3 skipped)
+ ↓ |thread-safe| packages/sandbox/sandbox-windows-acl/tests/probe.spec.ts (3 tests | 3 skipped)
+ ↓ |thread-safe| packages/sandbox/sandbox-windows-acl/tests/runner.spec.ts (14 tests | 14 skipped)
+ ✓ |thread-safe| packages/mcp/mcp-client/tests/load-path.spec.ts (1 test) 2ms
+ ↓ |thread-safe| packages/shell/tool-pwsh/tests/loader.spec.ts (1 test | 1 skipped)
+ ↓ |thread-safe| packages/shell/tool-pwsh/tests/integration.spec.ts (6 tests | 6 skipped)
+ ↓ |thread-safe| packages/shell/tool-pwsh-persistent/tests/loader-composition.spec.ts (1 test | 1 skipped)
+ ↓ |thread-safe| packages/typert/generator/tests/cordis-catalog-contract.spec.ts (28 tests | 28 skipped)
+ ✓ |thread-safe| scripts/vitest-environment.compat.spec.ts (1 test) 1ms
+
+ Test Files  863 passed | 9 skipped (872)
+      Tests  14593 passed | 114 skipped (14707)
+   Start at  04:24:24
+   Duration  67.72s (transform 49.14s, setup 30.69s, import 134.31s, tests 697.72s, environment 47.54s)

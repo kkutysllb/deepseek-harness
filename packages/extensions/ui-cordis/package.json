@@ -1,0 +1,86 @@
+{
+  "name": "@qilin/client-ui-cordis",
+  "description": "Cordis dynamic-plugin definition card: the keyed cordis_define tool row with its run/stop switch",
+  "version": "0.1.1-rc.2",
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/deepseek-ai/deepseek-harness.git",
+    "directory": "packages/extensions/ui-cordis"
+  },
+  "type": "module",
+  "main": "lib/index.js",
+  "types": "lib/types/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./lib/types/index.d.ts",
+      "default": "./lib/index.js"
+    },
+    "./invariant": {
+      "types": "./lib/types/invariant.d.ts",
+      "default": "./lib/invariant.js"
+    },
+    "./client": {
+      "types": "./lib/types/client/index.d.ts",
+      "default": "./lib/client.js"
+    },
+    "./src/*": "./src/*",
+    "./package.json": "./package.json"
+  },
+  "qilin": {
+    "client": {
+      "inject": [
+        "@qilin/client-runtime",
+        "@qilin/client-connection",
+        "@qilin/cordis-client-runner",
+        "@qilin/api-remotes",
+        "@qilin/client-locale",
+        "@qilin/client-ui-input-trigger",
+        "@qilin/client-ui-tool",
+        "@qilin/client-ui-sidebar"
+      ],
+      "platform": "web"
+    }
+  },
+  "scripts": {
+    "bundle": "tsdown",
+    "watch": "tsdown --watch"
+  },
+  "license": "MIT",
+  "peerDependencies": {
+    "@qilin/api-remotes": "workspace:^",
+    "@qilin/client-connection": "workspace:^",
+    "@qilin/cordis-client-runner": "workspace:^",
+    "@qilin/client-locale": "workspace:^",
+    "@qilin/client-runtime": "workspace:^",
+    "@qilin/client-ui-sidebar": "workspace:^",
+    "@qilin/client-ui-input-trigger": "workspace:^",
+    "@qilin/client-ui-tool": "workspace:^",
+    "@qilin/invariants": "workspace:^",
+    "@deepseek-ai/cordis": "workspace:^"
+  },
+  "devDependencies": {
+    "@qilin/api-remotes": "workspace:^",
+    "@qilin/client-connection": "workspace:^",
+    "@qilin/cordis-client-runner": "workspace:^",
+    "@qilin/client-locale": "workspace:^",
+    "@qilin/client-runtime": "workspace:^",
+    "@qilin/client-ui-primitives": "workspace:^",
+    "@qilin/client-ui-sidebar": "workspace:^",
+    "@qilin/client-ui-input-trigger": "workspace:^",
+    "@qilin/client-ui-slots": "workspace:^",
+    "@qilin/client-ui-tool": "workspace:^",
+    "@qilin/invariants": "workspace:^",
+    "@types/react": "~18.3.1",
+    "@deepseek-ai/cordis": "workspace:^",
+    "react": "^18.2.0"
+  },
+  "files": [
+    "lib/index.js",
+    "lib/invariant.js",
+    "lib/client.js",
+    "lib/types/**/*.d.ts"
+  ]
+}

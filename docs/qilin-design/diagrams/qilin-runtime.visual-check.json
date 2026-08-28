@@ -1,0 +1,34 @@
+{
+  "schemaVersion": 1,
+  "ok": false,
+  "command": "visual-check",
+  "status": "fail",
+  "visualReview": "pending",
+  "artifact": {
+    "path": "/Users/libing/kk_Projects/QiLin/docs/diagrams/qilin-runtime.html",
+    "sha256": "5fbd05be5fda51d6a7fbf445fba22a7aa4a1b667ee1e108f1cb4eeea3e4f4ef0",
+    "bytes": 662647
+  },
+  "state": {
+    "detail": "read",
+    "motion": "still"
+  },
+  "chrome": {
+    "status": "available",
+    "executable": "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
+  },
+  "containment": {
+    "status": "fail",
+    "viewports": []
+  },
+  "captures": {
+    "status": "fail",
+    "screenshots": [],
+    "contactSheet": null
+  },
+  "sidecars": {
+    "receipt": "qilin-runtime.visual-check.json",
+    "contactSheet": "qilin-runtime.visual-check.html"
+  },
+  "error": "Chrome exited before visual-check completed (null)"
+}

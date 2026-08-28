@@ -1,0 +1,138 @@
+$ vitest run --config vitest.snapshot.config.ts
+The plugin "vite-tsconfig-paths" is detected. Vite now supports tsconfig paths resolution natively via the resolve.tsconfigPaths option. You can remove the plugin and set resolve.tsconfigPaths: true in your Vite config instead.
+
+ RUN  v4.1.8 /Users/libing/kk_Projects/qilin-engine
+
+ ✓ scripts/translation-prompt.snapshot.ts (1 test) 116ms
+ ✓ scripts/session-fixture-layout.snapshot.ts (1 test) 100ms
+ ✓ apps/cli/tests/web-browser-open.snapshot.ts (4 tests) 2948ms
+     ✓ hands the reachable page to the default browser after the shipped tree settles  819ms
+     ✓ prints the launcher reason and manual URL after the Web app is ready  943ms
+     ✓ prints the host URL without launching a browser in a VS Code Remote SSH session  1106ms
+ ✓ examples/headless-agent/tests/subagent-diagnostic.snapshot.ts (1 test) 3502ms
+     ✓ surfaces the unreadable child as a corrupt diagnostic through the assembled headless app  3501ms
+ ✓ examples/headless-agent/tests/semantic-checkpoint.snapshot.ts (1 test) 3657ms
+     ✓ resumes an unknown tool outcome through the headless stream-json app  3656ms
+ ✓ examples/headless-agent/tests/subagent-inheritance.snapshot.ts (1 test) 4077ms
+     ✓ confines a delegated child through the assembled headless app  4077ms
+ ✓ examples/headless-agent/tests/session-format-guard.snapshot.ts (2 tests) 5806ms
+     ✓ refuses to resume a newer-format log, naming the upgrade direction and the raw log path  3354ms
+     ✓ refuses to resume a log with an unknown required event type  2452ms
+ ✓ examples/headless-agent/tests/workspace-context-resume.snapshot.ts (2 tests) 5763ms
+     ✓ appends an offline replacement without duplicating the visible baseline  3339ms
+     ✓ supersedes an incompatible baseline when precedence changed offline  2424ms
+ ✓ examples/acp-agent/tests/goal.snapshot.ts (2 tests) 9520ms
+     ✓ runs exact automatic rounds in the shipped application and persists cancellation  5781ms
+     ✓ injects the wrap-up instruction after an autonomous completion and delivers a closing message  3739ms
+ ✓ apps/cli/tests/dsh-badge.snapshot.ts (1 test) 13604ms
+     ✓ advertises and loads the opt-in bundled skill through the shipped app  13604ms
+ ✓ examples/jsonrpc-agent/tests/sdk.snapshot.ts (4 tests) 13673ms
+     ✓ replays text-turn through the SDK  4794ms
+     ✓ replays bash-tool through the SDK  3133ms
+     ✓ replays subagent-spawn-in-process through the SDK  2690ms
+     ✓ replays persistent-tools through the SDK  3055ms
+ ✓ examples/acp-agent/tests/acp.snapshot.ts (93 tests | 2 skipped) 50091ms
+     ✓ snapshot: handshake matches the expected outputs  5610ms
+     ✓ snapshot: reject-extra-dirs matches the expected outputs  5662ms
+     ✓ snapshot: text-turn matches the expected outputs  5674ms
+     ✓ snapshot: product-subagent-codex matches the expected outputs  5837ms
+     ✓ snapshot: product-subagent-both matches the expected outputs  6103ms
+     ✓ snapshot: product-subagent-result-diagnostic matches the expected outputs  3805ms
+     ✓ snapshot: session-title-after-turn matches the expected outputs  4020ms
+     ✓ snapshot: tool-call-turn matches the expected outputs  3761ms
+     ✓ snapshot: packed-chunks matches the expected outputs  3698ms
+     ✓ snapshot: parallel-tool-calls matches the expected outputs  3676ms
+     ✓ snapshot: bash-spill matches the expected outputs  3406ms
+     ✓ snapshot: session-query-spill matches the expected outputs  3707ms
+     ✓ snapshot: read-image matches the expected outputs  3555ms
+     ✓ snapshot: read-image-text-route matches the expected outputs  3508ms
+     ✓ snapshot: read-image-dimension matches the expected outputs  3540ms
+     ✓ snapshot: inline-image-prompt matches the expected outputs  2504ms
+     ✓ snapshot: pty-tools matches the expected outputs  2545ms
+     ✓ snapshot: bash-tool-turn matches the expected outputs  2343ms
+     ✓ snapshot: background-job-admission matches the expected outputs  2459ms
+     ✓ snapshot: partial-landlock-child-failure matches the expected outputs  2298ms
+     ✓ snapshot: missing-sandbox-runner matches the expected outputs  2196ms
+     ✓ snapshot: todo-write matches the expected outputs  2255ms
+     ✓ snapshot: skill-load matches the expected outputs  2266ms
+     ✓ snapshot: lsp-definition matches the expected outputs  2471ms
+     ✓ snapshot: web-fetch matches the expected outputs  2395ms
+     ✓ snapshot: workspace-edit matches the expected outputs  2274ms
+     ✓ snapshot: fs-glob-sampling matches the expected outputs  1569ms
+     ✓ snapshot: fs-read matches the expected outputs  2228ms
+     ✓ snapshot: fs-write matches the expected outputs  2251ms
+     ✓ snapshot: fs-edit matches the expected outputs  2258ms
+     ✓ snapshot: fs-write-overwrite matches the expected outputs  2249ms
+     ✓ snapshot: fs-write-overwrite-bounded matches the expected outputs  2246ms
+     ✓ snapshot: fs-read-window matches the expected outputs  2224ms
+     ✓ snapshot: fs-policy-reject matches the expected outputs  2286ms
+     ✓ snapshot: fs-delete-recreate matches the expected outputs  2308ms
+     ✓ snapshot: multi-turn matches the expected outputs  2207ms
+     ✓ snapshot: error-finish matches the expected outputs  2214ms
+     ✓ snapshot: empty-response-retry matches the expected outputs  2212ms
+     ✓ snapshot: max-tokens-continue matches the expected outputs  2238ms
+     ✓ snapshot: repeat-tool-reminder matches the expected outputs  2289ms
+     ✓ snapshot: agent-instructions matches the expected outputs  2250ms
+     ✓ snapshot: cancel matches the expected outputs  2414ms
+     ✓ snapshot: cancel-tool-calls matches the expected outputs  2471ms
+     ✓ snapshot: subagent-spawn-in-process matches the expected outputs  2268ms
+     ✓ snapshot: subagent-max-tokens-partial matches the expected outputs  2262ms
+     ✓ snapshot: subagent-multi matches the expected outputs  2282ms
+     ✓ snapshot: subagent-parallel matches the expected outputs  2274ms
+     ✓ snapshot: subagent-fork-in-process matches the expected outputs  2322ms
+     ✓ snapshot: subagent-mixed matches the expected outputs  2403ms
+     ✓ snapshot: subagent-continuable matches the expected outputs  2590ms
+     ✓ snapshot: subagent-continuable-inheritance matches the expected outputs  2578ms
+     ✓ snapshot: subagent-published-run-failure matches the expected outputs  2348ms
+     ✓ snapshot: subagent-report matches the expected outputs  2626ms
+     ✓ snapshot: subagent-list-agents matches the expected outputs  2634ms
+     ✓ snapshot: subagent-depth-two-rejection matches the expected outputs  2450ms
+     ✓ snapshot: subagent-child-question-rejection matches the expected outputs  2473ms
+     ✓ snapshot: workflow-run matches the expected outputs  2537ms
+     ✓ snapshot: advanced-toolchain matches the expected outputs  2851ms
+     ✓ snapshot: cordis-inspect-jsdoc matches the expected outputs  2496ms
+     ✓ snapshot: hook-cc-promptsubmit-block matches the expected outputs  2339ms
+     ✓ snapshot: hook-codex-promptsubmit-block matches the expected outputs  2326ms
+     ✓ snapshot: hook-cc-invalid-matcher matches the expected outputs  2335ms
+     ✓ snapshot: hook-codex-invalid-matcher matches the expected outputs  2400ms
+     ✓ snapshot: hook-cc-promptsubmit-context matches the expected outputs  2389ms
+     ✓ snapshot: hook-cc-pretool-deny matches the expected outputs  2409ms
+     ✓ snapshot: hook-cc-pretool-ask matches the expected outputs  2401ms
+     ✓ snapshot: hook-cc-posttool-block matches the expected outputs  2428ms
+     ✓ snapshot: hook-cc-posttool-context matches the expected outputs  2412ms
+     ✓ snapshot: hook-cc-stop-continue matches the expected outputs  2394ms
+     ✓ snapshot: hook-codex-promptsubmit-context matches the expected outputs  2367ms
+     ✓ snapshot: hook-codex-pretool-block matches the expected outputs  2367ms
+     ✓ snapshot: hook-codex-posttool-block matches the expected outputs  2408ms
+     ✓ snapshot: hook-codex-posttool-context matches the expected outputs  2406ms
+     ✓ snapshot: hook-codex-stop-continue matches the expected outputs  2386ms
+     ✓ snapshot: code-mode-turn matches the expected outputs  2556ms
+     ✓ snapshot: code-mode-read-image matches the expected outputs  2724ms
+     ✓ snapshot: code-mode-workspace-context matches the expected outputs  2460ms
+     ✓ snapshot: both-mode-turn matches the expected outputs  2518ms
+     ✓ snapshot: escalation-approved matches the expected outputs  2388ms
+     ✓ snapshot: escalation-rejected matches the expected outputs  2350ms
+     ✓ snapshot: fs-escalation-approved matches the expected outputs  2185ms
+     ✓ snapshot: session-sandbox-root matches the expected outputs  2112ms
+   ✓ pins native DeepSeek Files offload and inline fallback in assembled requests  4459ms
+ ✓ examples/headless-agent/tests/headless.snapshot.ts (15 tests) 53860ms
+     ✓ runs one task through the product headless profile command  8626ms
+     ✓ prints a terminal model failure through the product headless profile command  20371ms
+     ✓ prints the original Loader activation error through the assembled one-shot app  417ms
+     ✓ retries a transient provider failure through the one-shot app  2046ms
+     ✓ recovers from context overflow through an assembled compaction  2086ms
+     ✓ logs actionable missing-credential guidance through the one-shot app  2324ms
+     ✓ logs actionable invalid-credential guidance through the one-shot app  2366ms
+     ✓ logs the model default and a dynamic next-step reasoning effort  2084ms
+     ✓ keeps provider comments alive and sends DeepSeek defaults through the one-shot app  2627ms
+     ✓ replays the advanced toolchain through the one-shot app  2423ms
+     ✓ runs a keyless Agent Team with peer mail, dependent tasks, waiting, and Lead aggregation  2020ms
+     ✓ replays persisted goal tools through the one-shot app  1630ms
+     ✓ replays two fresh Ralph rounds through the one-shot app  1769ms
+     ✓ delivers a continuable child result without parent polling  1493ms
+     ✓ replays persistent PTY tools through the one-shot app  1577ms
+
+ Test Files  13 passed (13)
+      Tests  126 passed | 2 skipped (128)
+   Start at  04:58:22
+   Duration  54.40s (transform 3.50s, setup 1.57s, import 3.83s, tests 166.72s, environment 1ms)

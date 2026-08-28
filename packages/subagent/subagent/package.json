@@ -1,0 +1,106 @@
+{
+  "name": "@qilin/subagent",
+  "description": "Abstract subagent seam (ctx.subagents): named-provider registry for delegating to child agents",
+  "version": "0.1.1-rc.2",
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/deepseek-ai/deepseek-harness.git",
+    "directory": "packages/subagent/subagent"
+  },
+  "type": "module",
+  "main": "lib/index.js",
+  "types": "lib/types/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./lib/types/index.d.ts",
+      "default": "./lib/index.js"
+    },
+    "./invariant": {
+      "types": "./lib/types/invariant.d.ts",
+      "default": "./lib/invariant.js"
+    },
+    "./client": {
+      "types": "./lib/types/client.d.ts",
+      "default": "./lib/types/client.js"
+    },
+    "./src/*": "./src/*",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "lib/index.js",
+    "lib/invariant.js",
+    "lib/types/**/*.js",
+    "lib/types/**/*.d.ts"
+  ],
+  "license": "MIT",
+  "dependencies": {
+    "zod": "^4.4.3"
+  },
+  "peerDependencies": {
+    "@qilin/agent": "workspace:^",
+    "@qilin/agent-presets": "workspace:^",
+    "@qilin/brand": "workspace:^",
+    "@qilin/invariants": "workspace:^",
+    "@qilin/llm": "workspace:^",
+    "@qilin/sandbox": "workspace:^",
+    "@qilin/sandbox-policy": "workspace:^",
+    "@qilin/scope": "workspace:^",
+    "@qilin/session": "workspace:^",
+    "@qilin/session-persistence": "workspace:^",
+    "@qilin/session-projection": "workspace:^",
+    "@qilin/session-projection-cache": "workspace:^",
+    "@qilin/jobs": "workspace:^",
+    "@qilin/tools": "workspace:^",
+    "@qilin/user-approval": "workspace:^",
+    "@deepseek-ai/cordis": "workspace:^"
+  },
+  "peerDependenciesMeta": {
+    "@qilin/agent-presets": {
+      "optional": true
+    },
+    "@qilin/sandbox": {
+      "optional": true
+    },
+    "@qilin/sandbox-policy": {
+      "optional": true
+    },
+    "@qilin/session-persistence": {
+      "optional": true
+    },
+    "@qilin/session-projection": {
+      "optional": true
+    },
+    "@qilin/session-projection-cache": {
+      "optional": true
+    },
+    "@qilin/jobs": {
+      "optional": true
+    },
+    "@qilin/user-approval": {
+      "optional": true
+    }
+  },
+  "devDependencies": {
+    "@qilin/agent": "workspace:^",
+    "@qilin/agent-presets": "workspace:^",
+    "@qilin/brand": "workspace:^",
+    "@qilin/invariants": "workspace:^",
+    "@qilin/llm": "workspace:^",
+    "@qilin/sandbox": "workspace:^",
+    "@qilin/sandbox-policy": "workspace:^",
+    "@qilin/scope": "workspace:^",
+    "@qilin/session": "workspace:^",
+    "@qilin/session-persistence": "workspace:^",
+    "@qilin/session-projection": "workspace:^",
+    "@qilin/session-projection-cache": "workspace:^",
+    "@qilin/storage": "workspace:^",
+    "@qilin/storage-domain": "workspace:^",
+    "@qilin/jobs": "workspace:^",
+    "@qilin/tools": "workspace:^",
+    "@qilin/user-approval": "workspace:^",
+    "@deepseek-ai/cordis": "workspace:^"
+  }
+}

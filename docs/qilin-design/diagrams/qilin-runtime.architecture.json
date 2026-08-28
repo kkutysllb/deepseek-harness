@@ -1,0 +1,342 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "QiLin 麒麟智能体引擎 · 运行时架构",
+    "quality_profile": "showcase",
+    "repository": {
+      "url": "https://github.com/kkutysllb/QiLin",
+      "revision": "f616ecc48321a2c3b891c5715e375f45d6966504"
+    },
+    "viewBox": [1760, 1320]
+  },
+  "components": [
+    {
+      "id": "channels",
+      "type": "frontend",
+      "label": "IM 渠道层",
+      "sublabel": "飞书 · Discord · Slack · Telegram · 钉钉 · 企微 · 微信 · GitHub",
+      "pos": [80, 100],
+      "size": [280, 88],
+      "tag": "service surface",
+      "sources": [{ "path": "app/channels/manager.py", "label": "渠道管理器入口" }]
+    },
+    {
+      "id": "gateway",
+      "type": "security",
+      "label": "HTTP Agent Server",
+      "sublabel": "FastAPI · JWT · CSRF · GitHub Webhook",
+      "pos": [440, 100],
+      "size": [340, 88],
+      "tag": "service surface",
+      "sources": [{ "path": "app/gateway/app.py", "label": "Gateway ASGI 入口" }]
+    },
+    {
+      "id": "client",
+      "type": "frontend",
+      "label": "Embedded Client / TUI",
+      "sublabel": "QiLinClient · Textual 终端工作台",
+      "pos": [860, 100],
+      "size": [300, 88],
+      "tag": "service surface",
+      "sources": [{ "path": "qilin/client.py", "label": "嵌入式入口" }]
+    },
+
+    {
+      "id": "agents",
+      "type": "backend",
+      "label": "Agents",
+      "sublabel": "Lead Agent 工厂 · Middleware 链 · Thread 状态",
+      "pos": [80, 300],
+      "size": [300, 96],
+      "tag": "core · kernel",
+      "sources": [{ "path": "qilin/agents/factory.py", "label": "make_lead_agent" }]
+    },
+    {
+      "id": "subagents",
+      "type": "backend",
+      "label": "Sub-Agents",
+      "sublabel": "递归执行器 · 注册中心 · batch 并发",
+      "pos": [440, 300],
+      "size": [300, 96],
+      "tag": "core · kernel",
+      "sources": [{ "path": "qilin/subagents/registry.py", "label": "子代理注册表" }]
+    },
+    {
+      "id": "orchestration",
+      "type": "backend",
+      "label": "Orchestration",
+      "sublabel": "OrchestratorGraph · Handoff · Inbox · Patterns",
+      "pos": [820, 300],
+      "size": [340, 96],
+      "tag": "core · multi-agent",
+      "sources": [{ "path": "qilin/orchestration/graph.py", "label": "OrchestratorGraph" }]
+    },
+
+    {
+      "id": "toolkit",
+      "type": "backend",
+      "label": "Tools · Skills · MCP",
+      "sublabel": "工具注册 · 技能市场 · ACP/MCP 协议",
+      "pos": [80, 500],
+      "size": [340, 96],
+      "tag": "core · extensions",
+      "sources": [{ "path": "qilin/tools/tools.py", "label": "工具装配" }]
+    },
+    {
+      "id": "sandbox",
+      "type": "security",
+      "label": "Sandbox 抽象",
+      "sublabel": "Local · Docker · E2B · BoxLite · Tenki",
+      "pos": [480, 500],
+      "size": [340, 96],
+      "tag": "core · isolation",
+      "sources": [{ "path": "qilin/sandbox/sandbox_provider.py", "label": "SandboxProvider" }]
+    },
+    {
+      "id": "safety",
+      "type": "security",
+      "label": "Guardrails · Authz",
+      "sublabel": "InputPolish · SafetyFinishReason · RBAC",
+      "pos": [880, 500],
+      "size": [280, 96],
+      "tag": "core · safety",
+      "sources": [{ "path": "qilin/authz/rbac.py", "label": "RBAC 资源授权" }]
+    },
+
+    {
+      "id": "runtime",
+      "type": "backend",
+      "label": "Runtime",
+      "sublabel": "LangGraph 运行 · Checkpoint · SSE 流桥",
+      "pos": [80, 720],
+      "size": [340, 96],
+      "tag": "core · execution",
+      "sources": [{ "path": "qilin/runtime/runs/manager.py", "label": "LangGraph 运行器" }]
+    },
+    {
+      "id": "persistence",
+      "type": "database",
+      "label": "Persistence · Scheduler",
+      "sublabel": "SQLite/Postgres · Cron · 热重载 Config",
+      "pos": [480, 720],
+      "size": [340, 96],
+      "tag": "core · state",
+      "sources": [{ "path": "qilin/persistence/engine.py", "label": "存储引擎" }]
+    },
+    {
+      "id": "models",
+      "type": "cloud",
+      "label": "Models",
+      "sublabel": "OpenAI · Anthropic · DeepSeek · Gemini · Ollama",
+      "pos": [880, 720],
+      "size": [280, 96],
+      "tag": "foundation · models",
+      "sources": [{ "path": "qilin/models/factory.py", "label": "模型工厂" }]
+    },
+
+    {
+      "id": "tracing",
+      "type": "external",
+      "label": "Tracing · Memory",
+      "sublabel": "Langfuse · Monocle · FTS5 / Mem0",
+      "pos": [80, 940],
+      "size": [380, 96],
+      "tag": "foundation · observability",
+      "sources": [{ "path": "qilin/tracing/factory.py", "label": "Tracing 路由" }]
+    },
+    {
+      "id": "support",
+      "type": "backend",
+      "label": "Reflection · Utils · Uploads",
+      "sublabel": "${VAR} 解析 · 日志 · 文件虚拟路径",
+      "pos": [520, 940],
+      "size": [340, 96],
+      "tag": "foundation · utilities",
+      "sources": [{ "path": "qilin/reflection/resolvers.py", "label": "变量解析" }]
+    },
+
+    {
+      "id": "im-platforms",
+      "type": "external",
+      "label": "IM 平台",
+      "sublabel": "8 大 IM 服务",
+      "pos": [80, 1160],
+      "size": [180, 80],
+      "tag": "external"
+    },
+    {
+      "id": "db-stores",
+      "type": "database",
+      "label": "PostgreSQL / SQLite",
+      "sublabel": "持久化后端",
+      "pos": [300, 1160],
+      "size": [240, 80],
+      "tag": "storage"
+    },
+    {
+      "id": "redis",
+      "type": "messagebus",
+      "label": "Redis",
+      "sublabel": "流桥 / 缓存",
+      "pos": [580, 1160],
+      "size": [140, 80],
+      "tag": "storage"
+    },
+    {
+      "id": "sandbox-backends",
+      "type": "cloud",
+      "label": "Sandbox Backends",
+      "sublabel": "Docker · E2B · BoxLite · Tenki",
+      "pos": [760, 1160],
+      "size": [180, 80],
+      "tag": "isolation"
+    },
+    {
+      "id": "llm-providers",
+      "type": "external",
+      "label": "LLM Providers",
+      "sublabel": "外部模型 API",
+      "pos": [980, 1160],
+      "size": [200, 80],
+      "tag": "external"
+    }
+  ],
+  "boundaries": [
+    {
+      "kind": "region",
+      "label": "Service Surface · 服务面",
+      "wraps": ["channels", "gateway", "client"],
+      "pad": 18
+    },
+    {
+      "kind": "region",
+      "label": "Engine Core · 引擎内核",
+      "wraps": [
+        "agents", "subagents", "orchestration",
+        "toolkit", "sandbox", "safety",
+        "runtime", "persistence", "models"
+      ],
+      "pad": 22
+    },
+    {
+      "kind": "region",
+      "label": "Foundation · 基础层",
+      "wraps": ["tracing", "support"],
+      "pad": 18
+    },
+    {
+      "kind": "security-group",
+      "label": "Hardened Path · JWT + CSRF + Sandbox",
+      "wraps": ["gateway", "sandbox", "safety", "runtime"],
+      "pad": 14
+    }
+  ],
+  "connections": [
+    {
+      "from": "im-platforms", "to": "channels", "label": "消息推送", "variant": "emphasis",
+      "fromSide": "right",
+      "via": [[280, 1200], [280, 1140], [20, 1140], [20, 205], [220, 205], [220, 144]],
+      "labelAt": [120, 205],
+      "labelSegment": 4
+    },
+    {
+      "from": "channels", "to": "gateway", "label": "REST / Webhook", "variant": "security",
+      "labelAt": [400, 130]
+    },
+    {
+      "from": "client", "to": "gateway", "label": "HTTP / SSE", "variant": "default",
+      "labelAt": [820, 130]
+    },
+
+    {
+      "from": "gateway", "to": "runtime", "label": "dispatch run", "variant": "emphasis",
+      "fromSide": "bottom",
+      "via": [[610, 220], [40, 220], [40, 660], [230, 660], [230, 700], [420, 700]],
+      "labelAt": [135, 660],
+      "labelSegment": 3
+    },
+    {
+      "from": "agents", "to": "subagents", "label": "task_tool", "variant": "default",
+      "labelAt": [415, 348]
+    },
+    {
+      "from": "agents", "to": "orchestration", "label": "multi 模式", "variant": "default",
+      "via": [[380, 274], [820, 274]],
+      "labelAt": [580, 274],
+      "labelSegment": 1
+    },
+    {
+      "from": "agents", "to": "toolkit", "label": "tool call", "variant": "default",
+      "via": [[380, 416], [230, 416], [230, 480], [80, 480]],
+      "labelAt": [240, 446]
+    },
+    {
+      "from": "toolkit", "to": "sandbox", "label": "exec", "variant": "security",
+      "labelAt": [450, 540]
+    },
+
+    {
+      "from": "runtime", "to": "models", "label": "LLM call", "variant": "emphasis",
+      "via": [[470, 768], [470, 900], [870, 900], [880, 900], [880, 768]],
+      "labelAt": [650, 900]
+    },
+    {
+      "from": "runtime", "to": "tracing", "label": "trace_id 贯穿", "variant": "dashed",
+      "fromSide": "bottom", "toSide": "top",
+      "via": [[250, 870], [270, 870], [270, 920]],
+      "labelAt": [260, 890]
+    },
+
+    {
+      "from": "models", "to": "llm-providers", "label": "HTTPS", "variant": "dashed",
+      "fromSide": "bottom",
+      "via": [[1020, 856], [1240, 856], [1240, 1160], [1080, 1160], [1080, 1200], [980, 1200]],
+      "labelAt": [1240, 990]
+    },
+    {
+      "from": "sandbox", "to": "sandbox-backends", "label": "open()", "variant": "security",
+      "fromSide": "bottom",
+      "via": [[650, 616], [1300, 616], [1300, 1250], [850, 1250], [850, 1200], [760, 1200]],
+      "labelAt": [1300, 880]
+    }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "三段分层 · service / core / foundation",
+      "items": [
+        "服务面封装 HTTP / IM / 嵌入式三类入口",
+        "内核承载 Lead Agent、子代理与多智能体编排",
+        "基础层提供模型、可观测与通用工具"
+      ]
+    },
+    {
+      "dot": "emerald",
+      "title": "子代理与多智能体 (v2.0.0)",
+      "items": [
+        "Sub-Agent 与 Lead Agent 同构，独立 checkpoint 可递归",
+        "OrchestratorGraph + AgentInbox + Handoff 支持协作模式",
+        "orchestration.mode 切换属图结构变更，需重启"
+      ]
+    },
+    {
+      "dot": "amber",
+      "title": "纵深防御 · guardrails / sandbox / authz",
+      "items": [
+        "InputPolish 与 SafetyFinishReason 覆盖输入/输出面",
+        "SandboxProvider 屏蔽本地 fork、Docker、E2B、BoxLite、Tenki",
+        "authz.rbac 提供资源级 RBAC，per-agent 配额独立"
+      ]
+    },
+    {
+      "dot": "violet",
+      "title": "可观测与配置热重载",
+      "items": [
+        "Langfuse + Monocle 双适配，X-Trace-Id 贯穿全链路",
+        "Run Events 统一 envelope，落 SQLite / JSONL",
+        "ConfigSignature 触发子配置热重载，结构性配置需重启"
+      ]
+    }
+  ]
+}

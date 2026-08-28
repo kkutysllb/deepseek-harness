@@ -1,0 +1,27 @@
+# Minimal tool-pwsh composition: real app boot path, real pwsh executor, real
+# foreground + background tool calls; driven by the package's loader.spec.ts.
+- id: system-prompt
+  name: '@qilin/system-prompt'
+
+- id: tools
+  name: '@qilin/tools'
+
+- id: subprocess
+  name: '@qilin/subprocess-local'
+
+- id: bash
+  name: '@qilin/pwsh-local'
+  config:
+    graceMs: 200
+
+- id: shell-env
+  name: '@qilin/shell-env'
+
+- id: tasks
+  name: '@qilin/jobs-local'
+
+- id: tool-jobs
+  name: '@qilin/tool-jobs'
+
+- id: tool-pwsh
+  name: '@qilin/tool-pwsh'

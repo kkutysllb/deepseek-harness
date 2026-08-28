@@ -1,0 +1,50 @@
+{
+  "name": "@qilin/tool-ask-user",
+  "description": "Model-facing ask_user_question tool over the ctx.userQuestions seam",
+  "version": "0.1.1-rc.2",
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/deepseek-ai/deepseek-harness.git",
+    "directory": "packages/interaction/tool-ask-user"
+  },
+  "type": "module",
+  "main": "lib/index.js",
+  "types": "lib/types/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./lib/types/index.d.ts",
+      "default": "./lib/index.js"
+    },
+    "./invariant": {
+      "types": "./lib/types/invariant.d.ts",
+      "default": "./lib/invariant.js"
+    },
+    "./src/*": "./src/*",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "lib/index.js",
+    "lib/invariant.js",
+    "lib/types/**/*.d.ts"
+  ],
+  "license": "MIT",
+  "peerDependencies": {
+    "@qilin/agent": "workspace:^",
+    "@qilin/invariants": "workspace:^",
+    "@qilin/tools": "workspace:^",
+    "@qilin/user-questions": "workspace:^",
+    "@deepseek-ai/cordis": "workspace:^"
+  },
+  "devDependencies": {
+    "@qilin/agent": "workspace:^",
+    "@qilin/invariants": "workspace:^",
+    "@qilin/llm": "workspace:^",
+    "@qilin/system-prompt": "workspace:^",
+    "@qilin/tools": "workspace:^",
+    "@qilin/user-questions": "workspace:^",
+    "@deepseek-ai/cordis": "workspace:^"
+  }
+}

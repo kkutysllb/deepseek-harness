@@ -1,0 +1,2 @@
+$ tsx scripts/verify-archived-agent-notes.ts
+verify-archived-agent-notes: 429 frozen artifact(s) checked across 6 kind(s).

@@ -1,0 +1,81 @@
+.backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  display: grid;
+  place-items: center;
+  background: var(--dsw-alias-surface-scrim, rgb(0 0 0 / 45%));
+  pointer-events: auto;
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: min(360px, calc(100vw - 48px));
+  padding: 24px;
+  border: 1px solid var(--dsw-alias-border-subtle);
+  border-radius: 12px;
+  background: var(--dsw-alias-surface-raised);
+  color: var(--dsw-alias-label-primary);
+}
+
+.title {
+  margin: 0 0 6px;
+  font-size: 18px;
+  line-height: 26px;
+  font-weight: 600;
+}
+
+.notice {
+  margin: 0;
+  font-size: 13px;
+  line-height: 20px;
+  color: var(--dsw-alias-label-tertiary);
+}
+
+.label {
+  font-size: 13px;
+  line-height: 20px;
+  color: var(--dsw-alias-label-secondary);
+}
+
+.input {
+  height: 34px;
+  padding: 0 10px;
+  border: 1px solid var(--dsw-alias-border-subtle);
+  border-radius: 8px;
+  background: var(--dsw-alias-surface-base);
+  color: inherit;
+}
+
+.checkbox {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  font-size: 13px;
+  line-height: 20px;
+  color: var(--dsw-alias-label-secondary);
+}
+
+.error {
+  margin: 0;
+  font-size: 13px;
+  line-height: 20px;
+  color: var(--dsw-alias-label-danger, #d33);
+}
+
+.submit {
+  height: 36px;
+  margin-top: 6px;
+  border: none;
+  border-radius: 8px;
+  background: var(--dsw-alias-action-primary);
+  color: var(--dsw-alias-label-on-action, #fff);
+  cursor: pointer;
+}
+
+.submit:disabled {
+  opacity: 0.55;
+  cursor: default;
+}

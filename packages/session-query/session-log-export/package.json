@@ -1,0 +1,60 @@
+{
+  "name": "@qilin/session-log-export",
+  "description": "Web Session-log export command and shared download dialog",
+  "version": "0.1.1-rc.2",
+  "publishConfig": { "access": "public" },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/deepseek-ai/deepseek-harness.git",
+    "directory": "packages/session-query/session-log-export"
+  },
+  "type": "module",
+  "main": "lib/index.js",
+  "types": "lib/types/index.d.ts",
+  "exports": {
+    ".": { "types": "./lib/types/index.d.ts", "default": "./lib/index.js" },
+    "./invariant": { "types": "./lib/types/invariant.d.ts", "default": "./lib/invariant.js" },
+    "./client": { "types": "./lib/types/client/index.d.ts", "default": "./lib/client.js" },
+    "./src/*": "./src/*",
+    "./package.json": "./package.json"
+  },
+  "files": ["lib/index.js", "lib/invariant.js", "lib/client.js", "lib/types/**/*.d.ts"],
+  "scripts": { "bundle": "tsdown", "watch": "tsdown --watch" },
+  "license": "MIT",
+  "peerDependencies": {
+    "@deepseek-ai/cordis": "workspace:^",
+    "@qilin/client-locale": "workspace:^",
+    "@qilin/client-runtime": "workspace:^",
+    "@qilin/client-ui-commands": "workspace:^",
+    "@qilin/client-ui-conversation": "workspace:^",
+    "@qilin/commands": "workspace:^",
+    "@qilin/invariants": "workspace:^"
+  },
+  "devDependencies": {
+    "@deepseek-ai/cordis": "workspace:^",
+    "@deepseek-ai/cordis-plugin-loader": "workspace:^",
+    "@qilin/agent": "workspace:^",
+    "@qilin/client-locale": "workspace:^",
+    "@qilin/client-runtime": "workspace:^",
+    "@qilin/client-ui-commands": "workspace:^",
+    "@qilin/client-ui-conversation": "workspace:^",
+    "@qilin/client-ui-primitives": "workspace:^",
+    "@qilin/client-ui-slots": "workspace:^",
+    "@qilin/commands": "workspace:^",
+    "@qilin/invariants": "workspace:^",
+    "@qilin/session": "workspace:^",
+    "@types/react": "~18.3.1",
+    "react": "^18.2.0"
+  },
+  "qilin": {
+    "client": {
+      "inject": [
+        "@qilin/client-locale",
+        "@qilin/client-runtime",
+        "@qilin/client-ui-commands",
+        "@qilin/client-ui-conversation"
+      ],
+      "platform": "web"
+    }
+  }
+}

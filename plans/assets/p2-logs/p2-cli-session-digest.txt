@@ -1,0 +1,14 @@
+# P2 CLI 冒烟 - 会话证据摘要 (session.jsonl 脱敏摘要)
+来源: /tmp/p2-qilin-home/sessions/--Users-libing-kk_Projects-qilin-engine--/session-0ae685ee-67c3-4e05-b0ed-5d000a9fd0bd/session.jsonl.zstd
+记录数: 46
+
+line 13 [session/title]
+line 14 [request/header] tools=bash,create_goal,edit,exit_plan_mode,get_goal,glob,grep,interrupt_agent,job_kill,job_list,job_output,list_agents,ralph,read,read_image,send_message,skill,str_replace_editor,subagent,subagent_fork,todo_write,update_goal,web_search,workflow,write
+line 17 [session/title]
+line 28 [assistant/message] tools=read
+line 29 [tool/call] tools=read
+line 30 [tool/result]
+line 44 [assistant/message]
+line 46 [turn/end]
+
+结论: 会话建立 + 模型完成(turn/end) + 内置工具调用(read) 均被真实记录。

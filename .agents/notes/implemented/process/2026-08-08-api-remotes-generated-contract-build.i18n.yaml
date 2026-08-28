@@ -1,0 +1,6 @@
+# Bilingual-pair consistency record (docs/i18n/README.md): the git blob hash of each
+# side as of the last confirmed-consistent state. Both languages carry equal authority;
+# after editing either side, bring the other along and re-record with:
+#   pnpm run verify-translation-pairing --write .agents/notes/implemented/process/2026-08-08-api-remotes-generated-contract-build.md
+2026-08-08-api-remotes-generated-contract-build.md: 27564dd646b0ff43c2022c99140401897471b800
+2026-08-08-api-remotes-generated-contract-build.zh.md: bc8427c3066646adefc59d56b2836a20ab095710

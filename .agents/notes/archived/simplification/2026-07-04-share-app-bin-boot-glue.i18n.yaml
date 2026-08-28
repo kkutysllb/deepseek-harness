@@ -1,0 +1,6 @@
+# Bilingual-pair consistency record (docs/i18n/README.md): the git blob hash of each
+# side as of the last confirmed-consistent state. Both languages carry equal authority;
+# after editing either side, bring the other along and re-record with:
+#   pnpm run verify-translation-pairing --write
+2026-07-04-share-app-bin-boot-glue.md: 14eea1b4ee6369861abaf9204c741e11ed1e32d0
+2026-07-04-share-app-bin-boot-glue.zh.md: 9f7047fe1b8e3bbbaa43d72228132c39d788ce34

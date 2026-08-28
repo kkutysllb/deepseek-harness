@@ -1,0 +1,6 @@
+# Bilingual-pair consistency record (docs/i18n/README.md): the git blob hash of each
+# side as of the last confirmed-consistent state. Both languages carry equal authority;
+# after editing either side, bring the other along and re-record with:
+#   pnpm run verify-translation-pairing --write .agents/notes/implemented/process/2026-07-06-node-engine-floor.md
+2026-07-06-node-engine-floor.md: 824e89c86a94d2e00945735bc70dfbfa81ead603
+2026-07-06-node-engine-floor.zh.md: c7b0afc1a404f4ed47842435ff0bdd59a22912d5

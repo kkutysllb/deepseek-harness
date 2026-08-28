@@ -1,0 +1,6 @@
+# Bilingual-pair consistency record (docs/i18n/README.md): the git blob hash of each
+# side as of the last confirmed-consistent state. Both languages carry equal authority;
+# after editing either side, bring the other along and re-record with:
+#   pnpm run verify-translation-pairing --write .agents/notes/implemented/feature/2026-07-31-telemetry-anonymous-user-id.md
+2026-07-31-telemetry-anonymous-user-id.md: 381f3fbf3a1d1337eed10b3da0b890df1fe15cde
+2026-07-31-telemetry-anonymous-user-id.zh.md: 6cc84fd4029d5e305f33b0e09afc9cd81c9dc608
