@@ -294,13 +294,28 @@ export class SessionProjectionCache extends Service {
     }
   }
 
-  /** Replace one session's stored record with its log identity and a detached snapshot of `rows`. */
+  /**
+   * Replace one session's stored record with its log identity and a detached
+   * snapshot of `rows`. Serializes per unit: one unit whose state violates
+   * the plain-JSON contract must not evict the whole session's cache (titles
+   * etc. still persist). Offending rows are dropped with a warning — a
+   * missing key reads as not-yet-available and a fuller read path refolds it
+   * from the log, the same degradation a lost write already costs, bounded
+   * to the broken unit. When nothing survives the per-unit pass, the
+   * previous record is kept rather than replaced with an empty one.
+   */
   private async put(id: SessionId, identity: CheckpointIdentity, rows: ProjectionCheckpoint): Promise<void> {
-    const detached = snapshotJsonValue(rows)
-    if (detached === undefined) {
-      throw new TypeError('projection checkpoint is not losslessly JSON-serializable (a unit state violates the plain-JSON contract)')
+    const detached: CheckpointRecord['rows'] = {}
+    for (const [key, row] of Object.entries(rows)) {
+      const value = snapshotJsonValue(row)
+      if (value === undefined) {
+        this.ctx.logger.warn(`session projection cache: unit "${key}" state for "${id}" violates the plain-JSON contract; persisting without it`)
+        continue
+      }
+      detached[key] = value as CheckpointRecord['rows'][string]
     }
-    await this.requireTable().put(id, { identity, rows: detached as CheckpointRecord['rows'] })
+    if (Object.keys(detached).length === 0) return
+    await this.requireTable().put(id, { identity, rows: detached })
   }
 
   private requireTable(): KvTable<SessionId, CheckpointRecord> {
