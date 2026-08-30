@@ -337,4 +337,22 @@ describe('imageRequestPricing resolution', () => {
     dispose()
     expect(ctx.llm.imageRequestPricing('a', 'vision')).toBeUndefined()
   })
+
+  it('degrades a duck-typed adapter lacking the optional method to undefined instead of throwing', async () => {
+    // Ecosystem adapters (e.g. third-party routing plugins) are sometimes
+    // registered as plain object literals that implement only the required
+    // contract members and never inherit LlmAdapter's default implementation.
+    const duck = {
+      providerInfo: (provider: string) => ({ id: provider, name: 'Duck' }),
+      providerRetryPolicy: () => undefined,
+      async * stream(_options: GenerateOptions): AsyncIterable<StreamChunk> {
+        throw new Error('not exercised')
+      },
+    }
+    const ctx = await setup()
+    ctx.llm.registerAdapter(['duck'], duck as unknown as LlmAdapter)
+
+    expect(() => ctx.llm.imageRequestPricing('duck', 'vision')).not.toThrow()
+    expect(ctx.llm.imageRequestPricing('duck', 'vision')).toBeUndefined()
+  })
 })
