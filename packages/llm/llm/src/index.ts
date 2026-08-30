@@ -648,7 +648,8 @@ export class LlmRuntime extends TypertRemoteService {
 
   /**
    * Resolve provider-side request-image pricing for one exact route, or
-   * `undefined` when the provider is unregistered or declares none. Unknown
+   * `undefined` when the provider is unregistered, declares none, or is a
+   * duck-typed adapter that predates this optional contract member. Unknown
    * providers degrade to `undefined` rather than throwing because callers
    * price durable history whose route may no longer be mounted.
    * @param provider - provider route named by a request header.
@@ -656,7 +657,10 @@ export class LlmRuntime extends TypertRemoteService {
    * @returns the owning adapter's image pricing for the route, when declared.
    */
   imageRequestPricing(provider: string, model: string): LlmImageRequestPricing | undefined {
-    return this.adapters.get(provider)?.adapter.imageRequestPricing(provider, model)
+    const adapter = this.adapters.get(provider)?.adapter
+    return typeof adapter?.imageRequestPricing === 'function'
+      ? adapter.imageRequestPricing(provider, model)
+      : undefined
   }
 
   /** Detach typed adapter-owned modality metadata. */
