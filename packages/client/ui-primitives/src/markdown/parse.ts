@@ -6,6 +6,12 @@
  * plus the math extensions, so the arms differ only where TeX delimiters
  * begin a math construct (a `$$` block is a paragraph while streaming and a
  * math block once settled, by design).
+ *
+ * Both arms feed their source through {@link sanitizeModelMarkdown} first,
+ * a product-layer repair for model output that closes `**` or backticks on
+ * a later line; the fix is in the parser pipeline (not at the message
+ * boundary) so plain-text extraction and the streaming parser see the same
+ * post-repair text the renderer paints.
  */
 
 import type { Root } from 'mdast'
@@ -16,6 +22,7 @@ import { gfm } from 'micromark-extension-gfm'
 import { math } from 'micromark-extension-math'
 import { cjkFriendlyStrong } from './cjkFriendlyStrong.ts'
 import { mathCompatibility } from './mathCompatibility.ts'
+import { sanitizeModelMarkdown } from './modelSanitize.ts'
 
 /**
  * Parse GFM markdown (the streaming arm's grammar: no math, so incomplete
@@ -24,7 +31,7 @@ import { mathCompatibility } from './mathCompatibility.ts'
  * @returns The mdast root.
  */
 export function parseGfm(text: string): Root {
-  return fromMarkdown(text, {
+  return fromMarkdown(sanitizeModelMarkdown(text), {
     extensions: [gfm(), cjkFriendlyStrong()],
     mdastExtensions: [gfmFromMarkdown()],
   })
@@ -37,7 +44,7 @@ export function parseGfm(text: string): Root {
  * @returns The mdast root.
  */
 export function parseGfmWithMath(text: string): Root {
-  return fromMarkdown(text, {
+  return fromMarkdown(sanitizeModelMarkdown(text), {
     extensions: [gfm(), cjkFriendlyStrong(), mathCompatibility(), math()],
     mdastExtensions: [gfmFromMarkdown(), mathFromMarkdown()],
   })
