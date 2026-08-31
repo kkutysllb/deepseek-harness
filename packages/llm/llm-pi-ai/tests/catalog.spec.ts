@@ -794,23 +794,24 @@ describe('compat switches', () => {
     expect(models.get(catalogModel.id)?.compat).toEqual({ ...inherited, thinkingFormat: 'openai' })
   })
 
-  it('skips models of other protocols on a mixed route instead of failing them', () => {
-    // xai ships both completions and responses models, so a route-level switch
-    // must land on the former without invalidating the latter.
+  it('lands a shared route switch on every model of a single-protocol catalog route', () => {
+    // pi-ai 0.84 split the installed catalogs by protocol, so no builtin
+    // provider mixes completions and responses models anymore; xai is now
+    // openai-responses only. A route-level switch the protocol takes must
+    // reach every model on the route.
     const catalog = getBuiltinModels('xai') as readonly Model<Api>[]
-    const completions = catalog.find(model => model.api === 'openai-completions')
     const responses = catalog.find(model => model.api === 'openai-responses')
-    if (completions === undefined || responses === undefined) throw new Error('xai no longer ships a mixed catalog')
+    if (responses === undefined) throw new Error('xai no longer ships an openai-responses catalog')
+    expect(catalog.every(model => model.api === 'openai-responses')).toBe(true)
 
     const models = modelsOf({
       xai: {
-        compat: { supportsReasoningEffort: false },
-        models: [{ id: completions.id }, { id: responses.id }],
+        compat: { supportsDeveloperRole: false },
+        models: [{ id: responses.id }],
       },
     }, 'xai')
 
-    expect((models.get(completions.id)?.compat as OpenAICompletionsCompat).supportsReasoningEffort).toBe(false)
-    expect(models.get(responses.id)?.compat).toEqual(responses.compat)
+    expect((models.get(responses.id)?.compat as { supportsDeveloperRole?: boolean }).supportsDeveloperRole).toBe(false)
   })
 
   it('rejects a model-level switch on a protocol that has no such field, naming what it offers', () => {
@@ -875,26 +876,13 @@ describe('compat switches', () => {
     })
   })
 
-  it('lands each route switch only on the models whose protocol declares it', () => {
-    const catalog = getBuiltinModels('xai') as readonly Model<Api>[]
-    const completions = catalog.find(model => model.api === 'openai-completions')
-    const responses = catalog.find(model => model.api === 'openai-responses')
-    if (completions === undefined || responses === undefined) throw new Error('xai no longer ships a mixed catalog')
-
-    const models = modelsOf({
-      xai: {
-        // Both protocols take the first switch; only completions takes the second.
-        compat: { supportsDeveloperRole: false, thinkingFormat: 'openai' },
-        models: [{ id: completions.id }, { id: responses.id }],
-      },
-    }, 'xai')
-
-    const onCompletions = models.get(completions.id)?.compat as OpenAICompletionsCompat
-    expect(onCompletions.supportsDeveloperRole).toBe(false)
-    expect(onCompletions.thinkingFormat).toBe('openai')
-    const onResponses = models.get(responses.id)?.compat as { supportsDeveloperRole?: boolean; thinkingFormat?: string }
-    expect(onResponses.supportsDeveloperRole).toBe(false)
-    expect(onResponses.thinkingFormat).toBeUndefined()
+  it('rejects a completions-only switch on a responses-only catalog route', () => {
+    // pi-ai 0.84 split the installed catalogs by protocol; xai speaks
+    // openai-responses only, so a completions-only switch like
+    // `thinkingFormat` has no model on the route that takes it.
+    expect(() => modelsOf({
+      xai: { compat: { thinkingFormat: 'openai' } },
+    }, 'xai')).toThrow(/no model on the route speaks a protocol that takes it/)
   })
 
   it('carries chat-template kwargs beside the thinking format that dispatches through them', () => {
