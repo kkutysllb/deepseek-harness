@@ -1,0 +1,42 @@
+diff --git a/dist/api/openai-codex-responses.js b/dist/api/openai-codex-responses.js
+index 2a8aca4b2e91c111c221f204ac37ad1956045826..1b98797ca197896758703b38181e6709cf100d5a 100644
+--- a/dist/api/openai-codex-responses.js
++++ b/dist/api/openai-codex-responses.js
+@@ -1253,7 +1253,14 @@ function extractAccountId(token) {
+         return accountId;
+     }
+     catch {
+-        throw new Error("Failed to extract accountId from token");
++        // KCoder patch: relay/proxy keys are plain API keys, not OpenAI OAuth
++        // JWTs. Fall back to a stable token-derived id so relay setups work;
++        // the value only feeds the chatgpt-account-id header and the WebSocket
++        // session cache key, both irrelevant to relays.
++        let h = 0;
++        for (let i = 0; i < token.length; i++)
++            h = (h * 31 + token.charCodeAt(i)) | 0;
++        return `relay-${(h >>> 0).toString(16)}`;
+     }
+ }
+ function buildBaseCodexHeaders(initHeaders, additionalHeaders, accountId, token) {
+diff --git a/dist/api/openai-responses-shared.js b/dist/api/openai-responses-shared.js
+index c35771dcc9b2173d0b459d13c6d86e622de45e9a..eea7ac76389508165e6332f524bce8dcd0b419f1 100644
+--- a/dist/api/openai-responses-shared.js
++++ b/dist/api/openai-responses-shared.js
+@@ -651,6 +651,17 @@ export async function processResponsesStream(openaiStream, output, stream, model
+         }
+     }
+     if (!sawTerminalResponseEvent) {
++        if (output.content.length > 0) {
++            // KCoder patch: translation-style relays (upstream chat completions
++            // re-shaped into the Responses wire format) commonly stream the
++            // deltas, send [DONE] and close without ever emitting the terminal
++            // response.done/completed event - synthesizing it would need the
++            // full response object they never hold. The official Codex client
++            // tolerates this; treat delivered content as a completed turn
++            // instead of discarding it and failing every attempt.
++            finalizeResponse({ status: "completed" });
++            return;
++        }
+         throw new Error("OpenAI Responses stream ended before a terminal response event");
+     }
+ }
