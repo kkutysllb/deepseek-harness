@@ -37,6 +37,7 @@ declare module '@deepseek-ai/dsh-session-projection/types' {
     'cache-test/marks2': Map<string, string>
     'cache-test/count': number
     'cache-test/secret': string
+    'cache-test/bad-only': Map<string, string>
   }
   interface SessionProjectionMap {
     'cache-test/marks': { marks: string[] }
@@ -221,13 +222,15 @@ describe('SessionProjectionCache write policy', () => {
     expect(write).toHaveBeenCalledExactlyOnceWith(session)
   })
 
-  it('write() on a never-dirty session checkpoints directly and rejects a non-JSON unit state', async () => {
+  it('write() on a never-dirty session checkpoints directly and isolates a non-JSON unit state', async () => {
     const { ctx, root } = await harness()
     // Never dirtied: no events — write() still lands the init-derived cut.
     const clean = ctx.sessions.create(SessionId('clean-write'))
     await ctx.sessionProjectionCache.write(clean)
     expect((await storedRows(root, clean.id))?.['cache-test/marks']).toEqual({ ver: 1, seq: -1, val: null })
-    // A unit whose state violates the plain-JSON contract fails the write loud.
+    // A unit whose state violates the plain-JSON contract is dropped from the
+    // row (cold reads refold it), while the other units still persist — one
+    // bad unit must not evict the whole session's cache (titles etc.).
     ctx.sessionProjections.register({
       key: 'cache-test/marks2',
       stateSchema: z.custom<Map<string, string>>(() => true),
@@ -235,7 +238,37 @@ describe('SessionProjectionCache write policy', () => {
       apply: state => state,
       stateVersion: 1,
     })
-    await expect(ctx.sessionProjectionCache.write(clean)).rejects.toThrow('not losslessly JSON-serializable')
+    const warn = vi.spyOn(ctx.logger, 'warn')
+    await expect(ctx.sessionProjectionCache.write(clean)).resolves.toBeUndefined()
+    const rows = await storedRows(root, clean.id)
+    expect(rows?.['cache-test/marks']).toEqual({ ver: 1, seq: -1, val: null })
+    expect(rows?.['cache-test/marks2']).toBeUndefined()
+    expect(warn).toHaveBeenCalledWith(
+      expect.stringContaining('unit "cache-test/marks2" state'),
+    )
+  })
+
+  it('serves the surviving units from cachedSnapshot when one unit is isolated', async () => {
+    const { ctx } = await harness()
+    const session = ctx.sessions.create(SessionId('isolated-read'), { meta: { cwd: '/work' } })
+    mark(session, ['kept'])
+    // A second unit that is bad from init onward: its row is dropped on write,
+    // but the good unit's value must still be served on the cold read.
+    ctx.sessionProjections.register({
+      key: 'cache-test/bad-only',
+      stateSchema: z.custom<Map<string, string>>(() => true),
+      init: () => new Map<string, string>(),
+      apply: state => state,
+      stateVersion: 1,
+    })
+    const warn = vi.spyOn(ctx.logger, 'warn')
+    await ctx.sessionProjectionCache.write(session)
+    const snap = ctx.sessionProjectionCache.cachedSnapshot(headerOf(session.id, session.header.createdAt, '/work'))
+    expect(snap?.values['cache-test/marks']).toEqual({ marks: ['kept'] })
+    expect('cache-test/bad-only' in (snap?.values ?? {})).toBe(false)
+    expect(warn).toHaveBeenCalledWith(
+      expect.stringContaining('unit "cache-test/bad-only" state'),
+    )
   })
 
   it('plugin disposal clears armed interval timers and leaves cleaned sessions alone', async () => {
