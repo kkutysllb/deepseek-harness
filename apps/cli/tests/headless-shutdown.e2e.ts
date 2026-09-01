@@ -22,7 +22,7 @@ if pid == 0:
     os.chdir(cwd)
     os.execvpe(node, [node, *json.loads(launch_args_json)], env)
 
-markers = [b"dsh-test: never-dispose ready", b"dsh-test: never-dispose started"]
+markers = [b"qilin-test: never-dispose ready", b"qilin-test: never-dispose started"]
 output = bytearray()
 marker_index = 0
 deadline = time.monotonic() + float(timeout_seconds)
@@ -64,13 +64,13 @@ if actual_exit != 130:
 async function runHeadlessPtySmoke(): Promise<string> {
   const cwd = await mkdtemp(join(tmpdir(), 'qilin-headless-shutdown-'))
   try {
-    const home = join(cwd, '.dsh')
+    const home = join(cwd, '.qilin')
     // Pre-initialize the headless profile with the never-dispose row in its
     // user patch layer (the same file a long-lived profile boot hot-reloads).
     const profileDir = join(home, 'profiles', 'headless')
     await mkdir(profileDir, { recursive: true })
     await writeFile(join(profileDir, 'package.json'), JSON.stringify({
-      name: 'dsh-profile-headless',
+      name: 'qilin-profile-headless',
       private: true,
       dependencies: {},
       qilin: { profile: { bundles: ['@qilin/base', '@qilin/headless'] } },
@@ -124,8 +124,8 @@ async function runHeadlessPtySmoke(): Promise<string> {
 describe.skipIf(process.platform === 'win32')('headless process shutdown (real Loader tree in a PTY)', () => {
   it('lets a second Ctrl+C force exit while the first signal is draining', async () => {
     const output = await runHeadlessPtySmoke()
-    expect(output).not.toContain('dsh: observing at ')
-    expect(output).toContain('dsh-test: never-dispose ready')
-    expect(output).toContain('dsh-test: never-dispose started')
+    expect(output).not.toContain('qilin: observing at ')
+    expect(output).toContain('qilin-test: never-dispose ready')
+    expect(output).toContain('qilin-test: never-dispose started')
   }, LOADER_SMOKE_TEST_TIMEOUT_MS)
 })

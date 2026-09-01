@@ -6,7 +6,7 @@ English | [中文](2026-07-19-make-jsonrpc-directional.zh.md)
 
 ## Problem
 
-The JSON-RPC bridge models both endpoints as symmetric peers although the shipped protocol is directional. The shared transport (now `dsh-sdk-protocol`, used by the server and by the TypeScript SDK client, which exercises the outbound-request/inbound-notification direction) still implements two halves no endpoint uses: server-originated requests and client-originated notifications. The Python SDK sends requests and receives responses or notifications, but it also queues unused inbound server requests and exposes response helpers.
+The JSON-RPC bridge models both endpoints as symmetric peers although the shipped protocol is directional. The shared transport (now `qilin-sdk-protocol`, used by the server and by the TypeScript SDK client, which exercises the outbound-request/inbound-notification direction) still implements two halves no endpoint uses: server-originated requests and client-originated notifications. The Python SDK sends requests and receives responses or notifications, but it also queues unused inbound server requests and exposes response helpers.
 
 `session/prompt` also reports one settled turn through two protocol shapes. The server emits `session.finished` and then returns the constant `{ accepted: true }`; the Python SDK discards that response and waits for the notification to recover the status. Because the response is written only after the handler returns, the notification necessarily precedes the constant response on the same stream.
 
@@ -28,7 +28,7 @@ Return the settled outcome directly from `session/prompt` as `{ status, reason }
 
 ## Alternatives considered
 
-**Keep a generic symmetric JSON-RPC peer for future methods.** Server-initiated requests may eventually support interactive permissions, but no typed method or production consumer exists. The pre-release protocol can add the smallest required direction when that feature is designed instead of carrying an unexercised peer today.
+**Keep a generic symmetric JSON-RPC peer for future methods.** Server-initiated requests may eventually support interactive permissions, but no typed method or production consumer exists. The pre-release protocol can add the smallest required direction when that feature is designed instead of carrying an unexercised peer in the shipped protocol.
 
 **Keep `session.finished` for streaming clients.** Turn settlement is not incremental data: the request response already marks the same boundary and follows all earlier notifications on the ordered stream. A second terminal notification creates two representations that clients must reconcile.
 

@@ -8,6 +8,7 @@ import ToolRuntime, { defineContentToolFixture } from '@qilin/tools'
 import AgentRegistry, { type Agent } from '@qilin/agent'
 
 import AgentLoop from '@qilin/agent-loop'
+import SessionProjectionRegistry from '@qilin/session-projection'
 import * as LlmDeepSeek from '@qilin/llm-deepseek'
 
 /**
@@ -41,6 +42,7 @@ async function loopHarness(): Promise<Context> {
   const created = new Context()
   await created.plugin(LlmRuntime)
   await created.plugin(SessionStore)
+  await created.plugin(SessionProjectionRegistry)
   await created.plugin(SystemPrompt, { persona: SYSTEM })
   await created.plugin(ToolRuntime)
   await created.plugin(AgentRegistry)

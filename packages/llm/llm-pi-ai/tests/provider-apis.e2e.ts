@@ -10,7 +10,7 @@ import type {
   SaveImageAttachment,
   StoredImageAttachment,
 } from '@qilin/attachment'
-import LlmRuntime, { createUserMessage, CallId } from '@qilin/llm'
+import LlmRuntime, { createUserMessage, ToolCallId } from '@qilin/llm'
 import type { Message, ToolSchema } from '@qilin/llm'
 import * as LlmPiAi from '@qilin/llm-pi-ai'
 import type { PiAiReplayResponse } from '../src/replay.ts'
@@ -212,7 +212,7 @@ for (const profile of providerCases) {
             createUserMessage({
               content: [{
                 type: 'tool-result',
-                toolCallId: CallId(call!.id),
+                toolCallId: ToolCallId(call!.id),
                 content: [{ type: 'text', text: 'The code blue means ocean.' }],
               }],
               source: { kind: 'plugin', plugin: 'test' },

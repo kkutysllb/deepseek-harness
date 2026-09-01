@@ -7,11 +7,10 @@
  */
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import { cleanup, fireEvent, render, screen, waitFor } from '@testing-library/react'
-import { createSnapshotStore } from '@qilin/client-runtime/client'
-import { bindSnapshotSelector } from '@qilin/client-test-runtime'
+import { createSnapshotStore } from '@qilin/client-store'
+import { bindSnapshotSelector, makeTranslate } from '@qilin/client-test-runtime'
 import type { PlanProjection } from '@qilin/plan-mode/client'
 import { PlanChip, type PlanChipProps } from '../src/client/PlanModeControl.tsx'
-import { makeTranslate } from '@qilin/client-test-runtime'
 import { zh as commonZh } from '@qilin/client-locale/src/locales/zh.ts'
 import { zh } from '../src/client/locales.ts'
 
@@ -82,7 +81,7 @@ describe('PlanChip', () => {
       .mockRejectedValueOnce('socket closed')
     setup({ active: true, pending: false }, exitPlanMode)
     fireEvent.click(chip())
-    expect((await screen.findByText('failed to exit plan mode')).getAttribute('title')).toBe('host said no')
+    expect((await screen.findByText('退出 plan mode 失败')).getAttribute('title')).toBe('host said no')
     expect(chip()).toBeTruthy()
 
     fireEvent.click(chip())

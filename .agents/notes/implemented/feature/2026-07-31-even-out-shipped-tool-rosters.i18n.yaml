@@ -2,5 +2,5 @@
 # side as of the last confirmed-consistent state. Both languages carry equal authority;
 # after editing either side, bring the other along and re-record with:
 #   pnpm run verify-translation-pairing --write .agents/notes/implemented/feature/2026-07-31-even-out-shipped-tool-rosters.md
-2026-07-31-even-out-shipped-tool-rosters.md: b27a699f1eac0cffb154e9caf126fd86b353081b
-2026-07-31-even-out-shipped-tool-rosters.zh.md: 64910f36bda7f81b608b01d769fa3e103fcf3c47
+2026-07-31-even-out-shipped-tool-rosters.md: f6036fbbae824953b3fe9018bb4e51b2fd631da7
+2026-07-31-even-out-shipped-tool-rosters.zh.md: 24b56d3e5496ee4613baad6f42ed50f9ad0866c2

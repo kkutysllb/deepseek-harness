@@ -1,8 +1,8 @@
 /** Built-in Client inspect providers over live Client-owned services. */
 
 import type { Context } from '@deepseek-ai/cordis'
-import type { JsonValue } from '@qilin/api-remotes/client'
-import type { SlotRegistry } from '@qilin/client-runtime/client'
+import type { JsonValue } from '@qilin/util-values'
+import type { SlotRegistry } from '@qilin/client-ui-renderer/client'
 import type {} from '@qilin/client-ui-theme/client'
 import { queryEventApi, queryServiceApi } from './api-catalog.ts'
 import type { ClientCordisInspectProviderRegistration } from './inspect-registry.ts'

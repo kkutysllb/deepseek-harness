@@ -6,10 +6,10 @@
  */
 
 import type { Context } from '@deepseek-ai/cordis'
-import { assertNever } from '@qilin/llm'
-import type { CallId } from '@qilin/llm'
+import type { ToolCallId } from '@qilin/llm'
 import type { InvariantFailure, InvariantInstaller } from '@qilin/invariants'
 import type { Session, SessionEvent } from '@qilin/session'
+import { assertNever } from '@qilin/util-values'
 import { TOOL_NOT_STARTED } from './repair.ts'
 
 const PACKAGE_NAME = '@qilin/session'
@@ -26,7 +26,7 @@ interface SessionTrace {
   openStep: number | null
   nextTurn: number
   nextStep: number
-  pendingCalls: Set<CallId>
+  pendingCalls: Set<ToolCallId>
 }
 
 /** One accepted event's deferred mutation of a committed session trace. */
@@ -34,7 +34,7 @@ interface SessionTraceTransition {
   scalars: Pick<SessionTrace, 'lastSeq' | 'openTurn' | 'openStep' | 'nextTurn' | 'nextStep'>
   pendingCalls:
     | { kind: 'none' }
-    | { kind: 'add' | 'delete'; callId: CallId }
+    | { kind: 'add' | 'delete'; callId: ToolCallId }
     | { kind: 'clear' }
 }
 
@@ -147,7 +147,6 @@ function validateEvent(
     case 'session/end-seed':
       // Unconstrained: an unbalanced seed legally puts it inside an open turn.
       break
-    case 'todo/write':
     case 'request/header':
     case 'request/context': {
       if (trace.openTurn === null) {

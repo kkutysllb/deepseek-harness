@@ -15,6 +15,7 @@ import { Context, Service } from '@deepseek-ai/cordis'
 import { SandboxProvider, SandboxUnavailableError } from '@qilin/sandbox'
 import type { ConfinedArgv, RunnerFailureRule, SandboxExecutionPolicy, SandboxPolicy } from '@qilin/sandbox'
 import { resolvePwshPath } from '@qilin/pwsh-local'
+import SessionProjectionRegistry from '@qilin/session-projection'
 import { SandboxPolicyService } from '@qilin/sandbox-policy'
 import LocalSubprocessRuntime from '@qilin/subprocess-local'
 import { SandboxPwshExecutor } from '../src/index.ts'
@@ -27,7 +28,7 @@ function pwshAvailable(): boolean {
   return spawnSync(resolvePwshPath(), ['-NoLogo', '-NoProfile', '-NonInteractive', '-Command', '$true'], { encoding: 'utf8' }).status === 0
 }
 
-const spillDir = mkdtempSync(join(tmpdir(), 'dsh-pwsh-sandbox-spec-'))
+const spillDir = mkdtempSync(join(tmpdir(), 'qilin-pwsh-sandbox-spec-'))
 
 /** One recorded provider call: the argv handed over and the policy it rode with. */
 interface ConfineCall {
@@ -64,6 +65,7 @@ async function setup(
     }
   }
   const ctx = new Context()
+  await ctx.plugin(SessionProjectionRegistry)
   await ctx.plugin(FakeSandboxProvider)
   await ctx.plugin(SandboxPolicyService, { mode: 'workspace-write', workspaceRoot: spillDir })
   await ctx.plugin(subprocess)
@@ -75,7 +77,7 @@ async function setup(
 }
 
 describe('helpers (pure)', () => {
-  const workdir = mkdtempSync(join(tmpdir(), 'dsh-pwsh-sandbox-helpers-'))
+  const workdir = mkdtempSync(join(tmpdir(), 'qilin-pwsh-sandbox-helpers-'))
   afterAll(() => {
     rmSync(workdir, { recursive: true, force: true })
   })
@@ -155,7 +157,7 @@ describe.skipIf(!pwshAvailable())('SandboxPwshExecutor', () => {
   // unit tests never attempt writes outside the system temp directory. On
   // win32 there is no POSIX mode denial; the real-sandbox denial coverage
   // lives in tests/acl.e2e.ts, where the ACL runner denies scratch paths.
-  const readOnlyDir = mkdtempSync(join(tmpdir(), 'dsh-pwsh-sandbox-ro-'))
+  const readOnlyDir = mkdtempSync(join(tmpdir(), 'qilin-pwsh-sandbox-ro-'))
   if (process.platform !== 'win32') chmodSync(readOnlyDir, 0o555)
   const deniedWriteCommand = `[IO.File]::WriteAllText('${join(readOnlyDir, 'probe.txt')}', 'x')`
 

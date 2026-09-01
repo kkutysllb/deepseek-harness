@@ -1,3 +1,4 @@
+import { execFileSync } from 'node:child_process'
 import { mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { dirname, join, resolve } from 'node:path'
@@ -7,8 +8,12 @@ import {
   assertClientBuildEnvironment,
   clientBuildEnvironmentDefines,
   clientBuildProcessEnvironment,
+  officialClientBuildEnvironment,
   readClientBuildRecord,
+  repositoryClientBuildEnvironment,
   repositoryCommitHash,
+  repositoryGitDirty,
+  repositoryVersion,
   resolveClientBuildEnvironment,
   writeClientBuildRecord,
 } from './client-build-environment.ts'
@@ -43,11 +48,32 @@ function write(path: string, content: string): void {
 }
 
 function buildFixture(environment: Record<string, string>): string {
-  const fixtureRoot = mkdtempSync(join(tmpdir(), 'dsh-client-build-'))
+  const fixtureRoot = mkdtempSync(join(tmpdir(), 'qilin-client-build-'))
   roots.push(fixtureRoot)
   write(join(fixtureRoot, 'apps/web/dist/index.html'), '<main></main>')
   write(join(fixtureRoot, 'packages/client/example/lib/client.js'), 'module.exports = {}\n')
   writeClientBuildRecord(fixtureRoot, environment)
+  return fixtureRoot
+}
+
+function git(root: string, args: readonly string[]): string {
+  return execFileSync('git', [...args], {
+    cwd: root,
+    encoding: 'utf8',
+    stdio: ['ignore', 'pipe', 'pipe'],
+  }).trim()
+}
+
+function repositoryFixture(version = '1.2.3-rc.4'): string {
+  const fixtureRoot = mkdtempSync(join(tmpdir(), 'qilin-client-build-repository-'))
+  roots.push(fixtureRoot)
+  write(join(fixtureRoot, 'package.json'), `${JSON.stringify({ version })}\n`)
+  write(join(fixtureRoot, 'tracked.txt'), 'committed\n')
+  git(fixtureRoot, ['init'])
+  git(fixtureRoot, ['config', 'user.name', 'DSH test'])
+  git(fixtureRoot, ['config', 'user.email', 'qilin-test@example.invalid'])
+  git(fixtureRoot, ['add', 'package.json', 'tracked.txt'])
+  git(fixtureRoot, ['commit', '-m', 'fixture'])
   return fixtureRoot
 }
 
@@ -57,6 +83,7 @@ describe('client build environment', () => {
       QILIN_CLIENT_BUILD_PROFILE: 'official',
       QILIN_CLIENT_COMMIT_HASH: COMMIT_HASH.slice(0, 7),
       QILIN_CLIENT_TITLE: 'DeepSeek Harness',
+      QILIN_CLIENT_VERSION: '1.2.3',
     } as const
 
     expect(() => { assertClientBuildEnvironment({ PATH: '/bin', ...expected }, expected) }).not.toThrow()
@@ -73,7 +100,9 @@ describe('client build environment', () => {
       QILIN_BUILD_CLIENT_PROFILE: 'official',
       QILIN_CLIENT_BUILD_PROFILE: 'local',
       QILIN_CLIENT_COMMIT_HASH: COMMIT_HASH.slice(0, 7),
+      QILIN_CLIENT_GIT_DIRTY: 'true',
       QILIN_CLIENT_TITLE: 'Local title',
+      QILIN_CLIENT_VERSION: '1.2.3',
       QILIN_CLIENT_EXTRA: 'local-extra',
     }
 
@@ -84,22 +113,106 @@ describe('client build environment', () => {
       QILIN_CLIENT_BUILD_PROFILE: 'official',
       QILIN_CLIENT_COMMIT_HASH: COMMIT_HASH.slice(0, 7),
       QILIN_CLIENT_TITLE: 'DeepSeek Harness',
+      QILIN_CLIENT_VERSION: '1.2.3',
     })
     expect(() => {
       resolveClientBuildEnvironment({ QILIN_BUILD_CLIENT_PROFILE: 'official' })
     }).toThrow(/QILIN_CLIENT_COMMIT_HASH/)
+    expect(() => {
+      resolveClientBuildEnvironment({
+        QILIN_BUILD_CLIENT_PROFILE: 'official',
+        QILIN_CLIENT_COMMIT_HASH: COMMIT_HASH.slice(0, 7),
+      })
+    }).toThrow(/QILIN_CLIENT_VERSION/)
     expect(() => { resolveClientBuildEnvironment({}, 'unknown') }).toThrow(/unknown client build profile/)
     expect(clientBuildProcessEnvironment(parent, {
       QILIN_CLIENT_BUILD_PROFILE: 'official',
       QILIN_CLIENT_COMMIT_HASH: COMMIT_HASH.slice(0, 7),
       QILIN_CLIENT_TITLE: 'DeepSeek Harness',
+      QILIN_CLIENT_VERSION: '1.2.3',
     })).toEqual({
       PATH: '/bin',
       QILIN_CLIENT_BUILD_PROFILE: 'official',
       QILIN_CLIENT_COMMIT_HASH: COMMIT_HASH.slice(0, 7),
       QILIN_CLIENT_TITLE: 'DeepSeek Harness',
+      QILIN_CLIENT_VERSION: '1.2.3',
     })
     expect(repositoryCommitHash('/unused', { QILIN_CLIENT_COMMIT_HASH: COMMIT_HASH })).toBe(COMMIT_HASH.slice(0, 7))
+  })
+
+  it('owns repository version, commit, and dirty metadata for complete builds', () => {
+    const fixtureRoot = repositoryFixture()
+    const commit = git(fixtureRoot, ['rev-parse', '--short=7', 'HEAD'])
+
+    expect(repositoryVersion(fixtureRoot)).toBe('1.2.3-rc.4')
+    expect(repositoryGitDirty(fixtureRoot)).toBe(false)
+    expect(repositoryClientBuildEnvironment(fixtureRoot, {
+      QILIN_CLIENT_COMMIT_HASH: COMMIT_HASH,
+      QILIN_CLIENT_EXTRA: 'preserved',
+      QILIN_CLIENT_GIT_DIRTY: 'true',
+      QILIN_CLIENT_VERSION: 'spoofed',
+    })).toEqual({
+      QILIN_CLIENT_COMMIT_HASH: COMMIT_HASH.slice(0, 7),
+      QILIN_CLIENT_EXTRA: 'preserved',
+      QILIN_CLIENT_VERSION: '1.2.3-rc.4',
+    })
+    expect(officialClientBuildEnvironment(fixtureRoot)).toEqual({
+      QILIN_CLIENT_BUILD_PROFILE: 'official',
+      QILIN_CLIENT_COMMIT_HASH: commit,
+      QILIN_CLIENT_TITLE: 'DeepSeek Harness',
+      QILIN_CLIENT_VERSION: '1.2.3-rc.4',
+    })
+
+    write(join(fixtureRoot, '.gitignore'), 'ignored.txt\n')
+    git(fixtureRoot, ['add', '.gitignore'])
+    git(fixtureRoot, ['commit', '-m', 'ignore fixture'])
+    write(join(fixtureRoot, 'ignored.txt'), 'ignored\n')
+    expect(repositoryGitDirty(fixtureRoot)).toBe(false)
+    rmSync(join(fixtureRoot, 'ignored.txt'))
+
+    write(join(fixtureRoot, 'tracked.txt'), 'unstaged\n')
+    expect(repositoryGitDirty(fixtureRoot)).toBe(true)
+    write(join(fixtureRoot, 'tracked.txt'), 'committed\n')
+    expect(repositoryGitDirty(fixtureRoot)).toBe(false)
+
+    write(join(fixtureRoot, 'tracked.txt'), 'staged\n')
+    git(fixtureRoot, ['add', 'tracked.txt'])
+    expect(repositoryGitDirty(fixtureRoot)).toBe(true)
+    git(fixtureRoot, ['commit', '-m', 'staged fixture'])
+    expect(repositoryGitDirty(fixtureRoot)).toBe(false)
+
+    write(join(fixtureRoot, 'untracked.txt'), 'untracked\n')
+    expect(repositoryGitDirty(fixtureRoot)).toBe(true)
+    expect(repositoryClientBuildEnvironment(fixtureRoot, {
+      QILIN_CLIENT_COMMIT_HASH: COMMIT_HASH,
+    })).toEqual({
+      QILIN_CLIENT_COMMIT_HASH: COMMIT_HASH.slice(0, 7),
+      QILIN_CLIENT_GIT_DIRTY: 'true',
+      QILIN_CLIENT_VERSION: '1.2.3-rc.4',
+    })
+
+    rmSync(join(fixtureRoot, 'untracked.txt'))
+    const submoduleSource = repositoryFixture('9.8.7')
+    git(fixtureRoot, ['-c', 'protocol.file.allow=always', 'submodule', 'add', submoduleSource, 'submodule'])
+    git(fixtureRoot, ['commit', '-am', 'submodule fixture'])
+    expect(repositoryGitDirty(fixtureRoot)).toBe(false)
+    write(join(fixtureRoot, 'submodule/tracked.txt'), 'modified submodule\n')
+    expect(repositoryGitDirty(fixtureRoot)).toBe(true)
+  })
+
+  it('omits dirty metadata when repository metadata is unavailable', () => {
+    const fixtureRoot = mkdtempSync(join(tmpdir(), 'qilin-client-build-no-git-'))
+    roots.push(fixtureRoot)
+    write(join(fixtureRoot, 'package.json'), '{"version":"2.0.0"}\n')
+
+    expect(repositoryGitDirty(fixtureRoot)).toBeUndefined()
+    expect(repositoryClientBuildEnvironment(fixtureRoot, {
+      QILIN_CLIENT_COMMIT_HASH: COMMIT_HASH,
+      QILIN_CLIENT_GIT_DIRTY: 'true',
+    })).toEqual({
+      QILIN_CLIENT_COMMIT_HASH: COMMIT_HASH.slice(0, 7),
+      QILIN_CLIENT_VERSION: '2.0.0',
+    })
   })
 
   it('defines only public client values over a non-enumerable fallback', () => {
@@ -151,6 +264,7 @@ describe('client build environment', () => {
       QILIN_CLIENT_BUILD_PROFILE: 'official',
       QILIN_CLIENT_COMMIT_HASH: COMMIT_HASH.slice(0, 7),
       QILIN_CLIENT_TITLE: 'DeepSeek Harness',
+      QILIN_CLIENT_VERSION: '1.2.3',
     }
     const official = buildFixture(officialEnvironment)
     const defaultBuild = buildFixture({})

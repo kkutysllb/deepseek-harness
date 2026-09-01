@@ -2,8 +2,9 @@ import { describe, expect, it, vi } from 'vitest'
 import { Context } from '@deepseek-ai/cordis'
 import Loader from '@deepseek-ai/cordis-plugin-loader'
 import type { Agent } from '@qilin/agent'
-import { CallId } from '@qilin/llm'
+import { ToolCallId } from '@qilin/llm'
 import { SessionId } from '@qilin/session'
+import SessionProjectionRegistry from '@qilin/session-projection'
 import SubagentRuntime from '@qilin/subagent'
 import type { SubagentCapabilities, SubagentProvider, SubagentRun, SubagentStartRequest } from '@qilin/subagent'
 import SystemPrompt from '@qilin/system-prompt'
@@ -56,6 +57,7 @@ class StubProvider implements SubagentProvider {
 
   constructor(options?: { outputSchema?: boolean; inheritsParentContext?: boolean }) {
     this.capabilities = {
+      agentOptions: true,
       outputSchema: options?.outputSchema ?? true,
       depthLimit: true,
       toolFilter: true,
@@ -78,6 +80,7 @@ async function setup(options?: SetupOptions) {
   const ctx = new Context()
   await ctx.plugin(SystemPrompt)
   await ctx.plugin(ToolRuntime)
+  await ctx.plugin(SessionProjectionRegistry)
   await ctx.plugin(SubagentRuntime)
   const provider = options?.provider === false ? undefined : options?.provider ?? new StubProvider()
   if (provider !== undefined) ctx.subagents.registerProvider(provider)
@@ -99,7 +102,7 @@ function execute(
 ): Promise<ToolExecutionResult> {
   return ctx.tools.execute({
     signal: extra?.signal ?? testToolSignal,
-    callId: CallId('ralph-call'),
+    callId: ToolCallId('ralph-call'),
     name: 'ralph',
     arguments: args,
     ...extra?.agent === undefined ? {} : { agent: extra.agent },
@@ -141,7 +144,7 @@ async function settleCompleted(
   return pending
 }
 
-describe('dsh-tool-ralph', () => {
+describe('qilin-tool-ralph', () => {
   it('starts the fixed workflow through the configured fresh provider and renders completion', async () => {
     const { ctx, engine, parent } = await setup({ config: { maxRounds: 9, maxHandoffChars: 9000 } })
     const pending = execute(ctx, { objective: '  Finish the migration.  ', maxRounds: 4 }, { agent: parent })

@@ -11,7 +11,7 @@ import { afterEach, describe, expect, it, vi } from 'vitest'
 import { act, cleanup, fireEvent, render, waitFor } from '@testing-library/react'
 import { makeTranslate } from '@qilin/client-test-runtime'
 import { zh as commonZh } from '@qilin/client-locale/src/locales/zh.ts'
-import type { MessageId } from '@qilin/client-connection/client'
+import type { MessageId } from '@qilin/api-remotes/client'
 import type {
   MessageFeedbackItem, MessageFeedbackRating, MessageFeedbackVersion,
 } from '@qilin/message-feedback/types'

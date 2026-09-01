@@ -21,7 +21,13 @@ import {
 
 describe('NO_START_CAPABILITIES', () => {
   it('advertises nothing and is frozen (shared by every out-of-process backend)', () => {
-    expect(NO_START_CAPABILITIES).toEqual({ outputSchema: false, depthLimit: false, toolFilter: false, persona: false })
+    expect(NO_START_CAPABILITIES).toEqual({
+      agentOptions: false,
+      outputSchema: false,
+      depthLimit: false,
+      toolFilter: false,
+      persona: false,
+    })
     expect(Object.isFrozen(NO_START_CAPABILITIES)).toBe(true)
   })
 })
@@ -40,7 +46,7 @@ describe('child cwd resolution', () => {
   it('accepts an absolute enterable directory and rejects relative or missing paths', () => {
     expect(assertUsableCwd('p', 'config cwd', tmpdir())).toBe(tmpdir())
     expect(() => assertUsableCwd('p', 'config cwd', 'relative/path')).toThrow('must be an absolute path')
-    expect(() => assertUsableCwd('p', 'config cwd', join(tmpdir(), 'dsh-no-such-dir-xyz'))).toThrow('not an accessible directory')
+    expect(() => assertUsableCwd('p', 'config cwd', join(tmpdir(), 'qilin-no-such-dir-xyz'))).toThrow('not an accessible directory')
   })
 
   it('rejects an existing path that is a file, not a directory', () => {

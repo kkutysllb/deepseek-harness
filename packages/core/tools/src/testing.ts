@@ -1,7 +1,7 @@
-/** Canonical tool-definition fixtures for repository tests. @module dsh-tools/testing */
+/** Canonical tool-definition fixtures for repository tests. @module qilin-tools/testing */
 
 import type { ContentBlock } from '@qilin/llm'
-import type { JsonValue } from '@qilin/session'
+import type { JsonValue } from '@qilin/util-values'
 import { defineTool } from './schema.ts'
 import type { DefineToolOptions, ParameterSchemaSpec } from './schema.ts'
 import type { ToolDefinition, ToolRunContext } from './index.ts'

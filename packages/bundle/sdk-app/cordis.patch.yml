@@ -1,0 +1,21 @@
+# The SDK application over qilin-base. Stdout belongs exclusively to JSON-RPC.
+
+- id: system-prompt
+  config:
+    persona: >-
+      You are a coding agent powered by the {{model}} model. Your working directory is {{cwd}}.
+
+- id: session-title-llm
+  disabled: true
+
+- insert:
+    - id: sdk-app-startup
+      name: '@qilin/sdk-app'
+      config:
+        profile: sdk
+
+    - id: sdk-jsonrpc-server
+      name: '@qilin/sdk-jsonrpc-server'
+      inject: [sdkAppStartup, loader]
+      config:
+        maxTokensAsSuccess: !!js "process.env.QILIN_MAX_TOKENS_AS_SUCCESS === undefined ? true : JSON.parse(process.env.QILIN_MAX_TOKENS_AS_SUCCESS)"

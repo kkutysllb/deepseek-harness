@@ -12,7 +12,7 @@ import {
   SIDEBAR_DEFAULT, SIDEBAR_MAX, SIDEBAR_MIN,
 } from '@qilin/client-ui-layout/src/client/columns.ts'
 
-const PERSIST_KEY = 'dsh.layout.panels'
+const PERSIST_KEY = 'qilin.layout.panels'
 
 beforeEach(() => { localStorage.clear() })
 

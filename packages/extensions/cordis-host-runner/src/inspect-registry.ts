@@ -3,8 +3,7 @@
 import { Service } from '@deepseek-ai/cordis'
 import type { Context } from '@deepseek-ai/cordis'
 import type { Agent } from '@qilin/agent'
-import { snapshotJsonValue } from '@qilin/session'
-import type { JsonValue } from '@qilin/session/types'
+import { snapshotJsonValue, type JsonValue } from '@qilin/util-values'
 import { assertSupportedJsonSchema, validateJsonSchemaValue } from '@qilin/tools'
 import type { JsonSchemaNode } from '@qilin/tools'
 import type {

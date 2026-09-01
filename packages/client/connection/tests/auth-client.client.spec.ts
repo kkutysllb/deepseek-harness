@@ -26,8 +26,8 @@ function fetchStub(script: Array<{ status: number; body?: unknown }>): { fetch: 
   return { fetch: stub, calls }
 }
 
-function clientOf(fetch: typeof fetch, unauthorized?: UnauthorizedSignal): AuthClient {
-  return new AuthClient({ fetch, unauthorized })
+function clientOf(fetchFn: typeof fetch, unauthorized?: UnauthorizedSignal): AuthClient {
+  return new AuthClient(unauthorized === undefined ? { fetch: fetchFn } : { fetch: fetchFn, unauthorized })
 }
 
 describe('readCsrfTokenFromCookie', () => {
@@ -204,7 +204,7 @@ describe('FixtureAuthClient', () => {
 describe('connection handle auth plumbing', () => {
   it('mounts auth on the handle and fans the shared 401 signal out once', async () => {
     const ctx = new Context() as Context & { set: unknown }
-    await (ctx as { plugin(options: unknown): Promise<void> }).plugin({ apply, inject: [] })
+    await (ctx as unknown as { plugin(options: unknown): Promise<void> }).plugin({ apply, inject: [] })
     const handle = ctx.get('connection') as ConnectionHandle | undefined
     expect(handle).toBeDefined()
     expect(handle?.auth).toBeDefined()

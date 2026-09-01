@@ -3,7 +3,7 @@ import { Context } from '@deepseek-ai/cordis'
 import { afterEach, describe, expect, it } from 'vitest'
 import { cleanup } from '@testing-library/react'
 import { LocaleRuntime } from '@qilin/client-locale/client'
-import { SlotRegistry } from '@qilin/client-runtime/client'
+import { SlotRegistry } from '@qilin/client-ui-renderer/client'
 import { resolveSlotLabel } from '@qilin/client-ui-slots'
 import { usePinnedBrowserLanguages } from '@qilin/client-test-runtime'
 import type { IAuthClient } from '@qilin/client-connection/client'
@@ -24,7 +24,6 @@ const auth: IAuthClient = {
   listUsers: () => Promise.reject(new Error('unused')),
   updateUser: () => Promise.reject(new Error('unused')),
   resetPassword: () => Promise.reject(new Error('unused')),
-  onUnauthorized: () => () => {},
 }
 
 async function bench(): Promise<{ ctx: Context; slots: SlotRegistry; locale: LocaleRuntime }> {

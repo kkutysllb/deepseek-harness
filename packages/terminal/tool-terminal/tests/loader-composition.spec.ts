@@ -6,7 +6,7 @@ import { afterEach, describe, expect, it } from 'vitest'
 import { Context } from '@deepseek-ai/cordis'
 import Loader from '@deepseek-ai/cordis-plugin-loader'
 import Include from '@deepseek-ai/cordis-plugin-include'
-import { CallId } from '@qilin/llm'
+import { ToolCallId } from '@qilin/llm'
 import { Session, SessionId } from '@qilin/session'
 import AgentRegistry, { Inbox } from '@qilin/agent'
 import type { Agent } from '@qilin/agent'
@@ -16,6 +16,7 @@ import TerminalSessionService from '@qilin/terminal'
 import SandboxProvider from '@qilin/sandbox'
 import type { ConfinedArgv, SandboxPolicy } from '@qilin/sandbox'
 import SandboxPolicyService from '@qilin/sandbox-policy'
+import SessionProjectionRegistry from '@qilin/session-projection'
 import LocalSubprocessRuntime from '@qilin/subprocess-local'
 import * as TerminalLocal from '@qilin/terminal-bash'
 import * as ToolPty from '@qilin/tool-terminal'
@@ -61,7 +62,7 @@ const suite = process.platform === 'linux' || process.platform === 'darwin' ? de
 
 suite('terminal real Loader composition through cordis.yml', () => {
   it('boots cordis.yml and preserves shell state across real tool calls', async () => {
-    root = await mkdtemp(join(tmpdir(), 'dsh-pty-loader-'))
+    root = await mkdtemp(join(tmpdir(), 'qilin-pty-loader-'))
     const configPath = join(root, 'cordis.yml')
     await writeFile(configPath, [
       "- name: '@qilin/agent'",
@@ -69,6 +70,7 @@ suite('terminal real Loader composition through cordis.yml', () => {
       "- name: '@qilin/tools'",
       "- name: '@qilin/terminal'",
       "- name: '@qilin/test-sandbox'",
+      "- name: '@qilin/session-projection'",
       "- name: '@qilin/sandbox-policy'",
       '  config:',
       '    mode: danger-full-access',
@@ -96,6 +98,7 @@ suite('terminal real Loader composition through cordis.yml', () => {
       ['@qilin/tools', ToolRuntime],
       ['@qilin/terminal', TerminalSessionService],
       ['@qilin/test-sandbox', PassthroughSandbox],
+      ['@qilin/session-projection', SessionProjectionRegistry],
       ['@qilin/sandbox-policy', SandboxPolicyService],
       ['@qilin/subprocess-local', LocalSubprocessRuntime],
       ['@qilin/terminal-bash', TerminalLocal],
@@ -114,15 +117,15 @@ suite('terminal real Loader composition through cordis.yml', () => {
     const owner = agent(context)
     const signal = new AbortController().signal
     const spawn = await context.tools.execute({
-      signal, callId: CallId('spawn'), name: 'terminal_open', arguments: { type: 'shell', name: 'main', cwd: root }, agent: owner,
+      signal, callId: ToolCallId('spawn'), name: 'terminal_open', arguments: { type: 'shell', name: 'main', cwd: root }, agent: owner,
     })
     expect(resultText(spawn)).toContain('started terminal session pty-1 (main)')
 
     await context.tools.execute({
-      signal, callId: CallId('state'), name: 'terminal_send', arguments: { sessionId: 'pty-1', text: 'export KEEP=loader; cd /' }, agent: owner,
+      signal, callId: ToolCallId('state'), name: 'terminal_send', arguments: { sessionId: 'pty-1', text: 'export KEEP=loader; cd /' }, agent: owner,
     })
     const read = await context.tools.execute({
-      signal, callId: CallId('read'), name: 'terminal_send', arguments: { sessionId: 'pty-1', text: 'printf "cwd=%s keep=%s\\n" "$PWD" "$KEEP"' }, agent: owner,
+      signal, callId: ToolCallId('read'), name: 'terminal_send', arguments: { sessionId: 'pty-1', text: 'printf "cwd=%s keep=%s\\n" "$PWD" "$KEEP"' }, agent: owner,
     })
     expect(resultText(read)).toContain('cwd=/ keep=loader')
     expect(context.terminals.list(owner)).toHaveLength(1)

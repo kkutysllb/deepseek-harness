@@ -4,7 +4,7 @@ import AgentLoop from '@qilin/agent-loop'
 import { renderPrompt } from '@qilin/system-prompt'
 import { mountAgentLoopTestDependencies } from '../src/index.ts'
 
-describe('dsh-agent-loop-testkit', () => {
+describe('qilin-agent-loop-testkit', () => {
   it('mounts a configurable prerequisite spine that can activate AgentLoop', async () => {
     const ctx = new Context()
     await mountAgentLoopTestDependencies(ctx, {

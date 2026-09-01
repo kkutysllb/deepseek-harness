@@ -51,13 +51,19 @@ export interface SessionReferenceCandidate {
   label: string
   /** Source session working directory, when recorded. */
   cwd?: string
+  /**
+   * True when {@link SessionReferenceCandidate.cwd} is recorded and equals the
+   * requesting agent's. Hosts that only surface a distinguishing location
+   * read this instead of comparing paths they never received.
+   */
+  sameWorkspace: boolean
   /** Source session creation time in Unix epoch milliseconds. */
   createdAt: number
 }
 
 /** One discovery candidate carrying its canonical prompt mention. */
 export interface SessionReferenceMentionCandidate extends SessionReferenceCandidate {
-  /** Canonical `@[label](dsh-session:…)` mention serialized into the prompt draft. */
+  /** Canonical `@[label](qilin-session:…)` mention serialized into the prompt draft. */
   mention: string
 }
 

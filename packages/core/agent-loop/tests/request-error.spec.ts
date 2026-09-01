@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest'
 import { Context } from '@deepseek-ai/cordis'
 import AgentRegistry from '@qilin/agent'
 import AgentLoop from '@qilin/agent-loop'
+import SessionProjectionRegistry from '@qilin/session-projection'
 import LlmRuntime, { createUserMessage, LlmError  } from '@qilin/llm'
 import type { LlmFailure, ResolvedRetryPolicy } from '@qilin/llm'
 import SessionStore, { SessionId } from '@qilin/session'
@@ -13,6 +14,7 @@ async function harness(adapter: MockAdapter): Promise<Context> {
   const ctx = new Context()
   await ctx.plugin(LlmRuntime)
   await ctx.plugin(SessionStore)
+  await ctx.plugin(SessionProjectionRegistry)
   await ctx.plugin(SystemPrompt)
   await ctx.plugin(ToolRuntime)
   await ctx.plugin(AgentRegistry)
@@ -96,6 +98,8 @@ describe('agent/request-error', () => {
       expect.objectContaining({ mode: 'normal' }),
     ])
     expect(statuses).toEqual(['running', 'idle'])
+    expect(agent.session.events.flatMap(event =>
+      event.type === 'request/header' ? [event.data.reason] : [])).toEqual(['initial'])
   })
 
   it('lets cancellation win over a retry action', async () => {

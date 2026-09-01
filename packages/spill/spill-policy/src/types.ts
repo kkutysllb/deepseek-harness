@@ -3,9 +3,9 @@
  * execution the policy needs to derive the owning session for a spill artifact.
  *
  * `@qilin/tools`' `ToolExecution` satisfies this shape, so the policy
- * reads `exec` straight through without importing `dsh-tools` or `dsh-agent`.
+ * reads `exec` straight through without importing `qilin-tools` or `qilin-agent`.
  * Only the session HEADER id is read — the same identity every other subsystem
- * keys off (see `dsh-tool-bash`'s owner derivation).
+ * keys off (see `qilin-tool-bash`'s owner derivation).
  *
  * @module @qilin/spill-policy/types
  */

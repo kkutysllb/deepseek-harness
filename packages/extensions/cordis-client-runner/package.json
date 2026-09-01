@@ -1,7 +1,7 @@
 {
   "name": "@qilin/cordis-client-runner",
   "description": "Browser half of dynamic dual-half plugin packages: event subscription, closure evaluation, guard facade, and loader entries",
-  "version": "0.1.1-rc.2",
+  "version": "0.1.2-alpha.3",
   "publishConfig": {
     "access": "public"
   },
@@ -32,7 +32,7 @@
   "qilin": {
     "client": {
       "inject": [
-        "@qilin/client-runtime",
+        "@qilin/client-ui-renderer",
         "@qilin/api-remotes",
         "@qilin/client-modules",
         "@qilin/client-ui-theme"
@@ -46,26 +46,19 @@
   },
   "license": "MIT",
   "peerDependencies": {
-    "@deepseek-ai/cordis-plugin-loader": "workspace:^",
-    "@qilin/api-remotes": "workspace:^",
-    "@qilin/client-connection": "workspace:^",
-    "@qilin/client-modules": "workspace:^",
-    "@qilin/client-runtime": "workspace:^",
-    "@qilin/client-ui-theme": "workspace:^",
-    "@qilin/invariants": "workspace:^",
     "@deepseek-ai/cordis": "workspace:^"
   },
   "devDependencies": {
     "@deepseek-ai/cordis-plugin-loader": "workspace:^",
     "@qilin/api-remotes": "workspace:^",
-    "@qilin/client-connection": "workspace:^",
     "@qilin/client-modules": "workspace:^",
-    "@qilin/client-runtime": "workspace:^",
+    "@qilin/client-ui-renderer": "workspace:^",
     "@qilin/client-ui-theme": "workspace:^",
     "@qilin/invariants": "workspace:^",
     "@types/react": "~18.3.1",
     "@deepseek-ai/cordis": "workspace:^",
-    "react": "^18.2.0"
+    "react": "^18.2.0",
+    "@qilin/util-values": "workspace:^"
   },
   "files": [
     "lib/index.js",

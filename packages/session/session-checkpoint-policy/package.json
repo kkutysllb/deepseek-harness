@@ -1,7 +1,7 @@
 {
   "name": "@qilin/session-checkpoint-policy",
   "description": "Semantic session durability checkpoints before model requests and tool side effects",
-  "version": "0.1.1-rc.2",
+  "version": "0.1.2-alpha.3",
   "publishConfig": {
     "access": "public"
   },
@@ -32,15 +32,16 @@
   ],
   "license": "MIT",
   "peerDependencies": {
+    "@deepseek-ai/cordis": "workspace:^",
     "@qilin/agent": "workspace:^",
     "@qilin/invariants": "workspace:^",
     "@qilin/llm": "workspace:^",
     "@qilin/session": "workspace:^",
     "@qilin/session-persistence": "workspace:^",
-    "@qilin/tools": "workspace:^",
-    "@deepseek-ai/cordis": "workspace:^"
+    "@qilin/tools": "workspace:^"
   },
   "devDependencies": {
+    "@deepseek-ai/cordis": "workspace:^",
     "@deepseek-ai/cordis-plugin-loader": "workspace:^",
     "@qilin/agent": "workspace:^",
     "@qilin/agent-loop": "workspace:^",
@@ -50,8 +51,8 @@
     "@qilin/session": "workspace:^",
     "@qilin/session-persistence": "workspace:^",
     "@qilin/session-persistence-jsonl": "workspace:^",
+    "@qilin/session-projection": "workspace:^",
     "@qilin/system-prompt": "workspace:^",
-    "@qilin/tools": "workspace:^",
-    "@deepseek-ai/cordis": "workspace:^"
+    "@qilin/tools": "workspace:^"
   }
 }

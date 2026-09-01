@@ -3,7 +3,7 @@ import { mkdir, writeFile } from 'node:fs/promises'
 import { join } from 'node:path'
 import { tmpdir } from 'node:os'
 import { Context } from '@deepseek-ai/cordis'
-import { createUserMessage, CallId, type Message } from '@qilin/llm'
+import { createUserMessage, ToolCallId, type Message } from '@qilin/llm'
 import { createScope, type Scope } from '@qilin/scope'
 import { Session, SessionId, type SessionEvent, type UserMessage } from '@qilin/session'
 import SystemPrompt, { renderPrompt } from '@qilin/system-prompt'
@@ -31,7 +31,7 @@ async function setup(home: string, config: toolSkill.Config = {}): Promise<Conte
   await ctx.plugin(ToolRuntime)
   await ctx.plugin(AgentRegistry)
   await ctx.plugin(SkillRegistry)
-  await ctx.plugin(SkillFileSystem, { dshHome: join(home, '.dsh'), agentsHome: join(home, '.agents'), watch: false })
+  await ctx.plugin(SkillFileSystem, { dshHome: join(home, '.qilin'), agentsHome: join(home, '.agents'), watch: false })
   await ctx.plugin(toolSkill, config)
   return ctx
 }
@@ -156,7 +156,7 @@ async function mintAgentScope(ctx: Context, subject: string | Agent): Promise<{ 
   return { agent, scope }
 }
 
-describe('dsh-tool-skill', () => {
+describe('qilin-tool-skill', () => {
   it('registers the skill tool schema and removes it on dispose', async () => {
     const ctx = new Context()
     await ctx.plugin(SystemPrompt)
@@ -164,7 +164,7 @@ describe('dsh-tool-skill', () => {
     await ctx.plugin(AgentRegistry)
     const home = await tempDir('tool-schema')
     await ctx.plugin(SkillRegistry)
-    await ctx.plugin(SkillFileSystem, { dshHome: join(home, '.dsh'), agentsHome: join(home, '.agents'), watch: false })
+    await ctx.plugin(SkillFileSystem, { dshHome: join(home, '.qilin'), agentsHome: join(home, '.agents'), watch: false })
     ctx.skills.register({ name: 'lifecycle-skill', description: 'Lifecycle', source: 'runtime', content: 'body' })
 
     const fiber = await ctx.plugin(toolSkill)
@@ -520,7 +520,7 @@ describe('dsh-tool-skill', () => {
     }), { surfaceOp: 'append' })
     session.append('user/message', createUserMessage({
       content: catalogContent(['- `resumed-skill`: Resumed skill']),
-      source: { kind: 'plugin', plugin: 'dsh-tool-skill' },
+      source: { kind: 'plugin', plugin: 'qilin-tool-skill' },
     }), { surfaceOp: 'append' })
 
     await fireStep(ctx, agent, 1, 1)
@@ -544,7 +544,7 @@ describe('dsh-tool-skill', () => {
   })
 
   it('treats a malformed durable catalog as unrecognizable instead of failing the step', async () => {
-    // Seeds reach `agent.session.events` from JSONL/SQLite on resume or fork,
+    // Seeds reach `agent.session.events` from persistence on resume or fork,
     // and seed validation only guarantees a source object with a non-empty
     // `kind`. A catalog whose entries are missing or wrongly shaped must be
     // skipped like any foreign record; throwing here would fail every later
@@ -616,7 +616,7 @@ describe('dsh-tool-skill', () => {
 
   it('keeps body-only edits out of the catalog and loads the latest body on demand', async () => {
     const home = await tempDir('tool-body-refresh')
-    const root = join(home, '.dsh/skills')
+    const root = join(home, '.qilin/skills')
     await writeSkill(root, 'body-skill', 'Stable description', 'First body.')
     const ctx = await setup(home)
     const session = Session.create(SessionId('body-refresh'))
@@ -630,7 +630,7 @@ describe('dsh-tool-skill', () => {
 
     const result = await ctx.tools.execute({
       signal: testToolSignal,
-      callId: CallId('body-refresh'),
+      callId: ToolCallId('body-refresh'),
       name: 'skill',
       arguments: { name: 'body-skill' },
       agent,
@@ -658,7 +658,7 @@ describe('dsh-tool-skill', () => {
 
     const scoped = await ctx.tools.execute({
       signal: testToolSignal,
-      callId: CallId('scoped-load'),
+      callId: ToolCallId('scoped-load'),
       name: 'skill',
       arguments: { name: 'preset-only-skill' },
       agent,
@@ -668,7 +668,7 @@ describe('dsh-tool-skill', () => {
 
     const foreign = await ctx.tools.execute({
       signal: testToolSignal,
-      callId: CallId('foreign-load'),
+      callId: ToolCallId('foreign-load'),
       name: 'skill',
       arguments: { name: 'preset-only-skill' },
       agent: agentForCwd('/workspace/other'),
@@ -752,7 +752,7 @@ describe('dsh-tool-skill', () => {
     await ctx.plugin(ToolRuntime)
     await ctx.plugin(AgentRegistry)
     await ctx.plugin(SkillRegistry)
-    await ctx.plugin(SkillFileSystem, { dshHome: join(home, '.dsh'), agentsHome: join(home, '.agents'), watch: false })
+    await ctx.plugin(SkillFileSystem, { dshHome: join(home, '.qilin'), agentsHome: join(home, '.agents'), watch: false })
 
     await expect(ctx.plugin(toolSkill, { catalogDescriptionMaxLength: 2 })).rejects.toThrow('greater than or equal to 3')
   })
@@ -761,12 +761,12 @@ describe('dsh-tool-skill', () => {
     const home = await tempDir('tool-load')
     const project = await tempDir('tool-project')
     await mkdir(join(project, '.git'), { recursive: true })
-    await writeSkill(join(project, '.dsh/skills'), 'project-skill', 'Project skill', 'Project instructions.')
+    await writeSkill(join(project, '.qilin/skills'), 'project-skill', 'Project skill', 'Project instructions.')
     const ctx = await setup(home)
 
     const result = await ctx.tools.execute({
       signal: testToolSignal,
-      callId: CallId('c1'),
+      callId: ToolCallId('c1'),
       name: 'skill',
       arguments: { name: 'project-skill' },
       agent: { session: { header: { cwd: project } } } as never,
@@ -777,7 +777,7 @@ describe('dsh-tool-skill', () => {
     expect(result.value).toEqual({
       name: 'project-skill',
       provider: 'filesystem',
-      resourceBase: { kind: 'directory', path: join(project, '.dsh/skills/project-skill') },
+      resourceBase: { kind: 'directory', path: join(project, '.qilin/skills/project-skill') },
       content: 'Project instructions.',
     })
     const block = result.content[0]
@@ -786,7 +786,7 @@ describe('dsh-tool-skill', () => {
     expect(block.text).toBe([
       '<skill_content name="project-skill">',
       '<skill_resources>',
-      `Base directory for this skill: ${join(project, '.dsh/skills/project-skill')}`,
+      `Base directory for this skill: ${join(project, '.qilin/skills/project-skill')}`,
       'Resolve relative paths mentioned by this skill against the base directory before using them. Load referenced resources only as needed.',
       '</skill_resources>',
       '',
@@ -825,9 +825,9 @@ describe('dsh-tool-skill', () => {
       content: 'Provider instructions.',
     })
 
-    const opaque = await ctx.tools.execute({ signal: testToolSignal, callId: CallId('c2'), name: 'skill', arguments: { name: 'opaque-skill' } })
-    const url = await ctx.tools.execute({ signal: testToolSignal, callId: CallId('c3'), name: 'skill', arguments: { name: 'url-skill' } })
-    const provider = await ctx.tools.execute({ signal: testToolSignal, callId: CallId('c4'), name: 'skill', arguments: { name: 'provider-skill' } })
+    const opaque = await ctx.tools.execute({ signal: testToolSignal, callId: ToolCallId('c2'), name: 'skill', arguments: { name: 'opaque-skill' } })
+    const url = await ctx.tools.execute({ signal: testToolSignal, callId: ToolCallId('c3'), name: 'skill', arguments: { name: 'url-skill' } })
+    const provider = await ctx.tools.execute({ signal: testToolSignal, callId: ToolCallId('c4'), name: 'skill', arguments: { name: 'provider-skill' } })
 
     if (opaque.content[0]?.type !== 'text' || url.content[0]?.type !== 'text' || provider.content[0]?.type !== 'text') {
       throw new Error('expected text tool results')
@@ -849,7 +849,7 @@ describe('dsh-tool-skill', () => {
       content: 'Rogue instructions.',
     })
 
-    const result = await ctx.tools.execute({ signal: testToolSignal, callId: CallId('c5'), name: 'skill', arguments: { name: 'rogue-resource-skill' } })
+    const result = await ctx.tools.execute({ signal: testToolSignal, callId: ToolCallId('c5'), name: 'skill', arguments: { name: 'rogue-resource-skill' } })
 
     expect(result.isError).toBe(true)
     expect(result.error?.info?.code).toBe('INVALID_TOOL_OUTPUT')
@@ -860,8 +860,8 @@ describe('dsh-tool-skill', () => {
 
   it('returns isError for unknown, invalid, and model-disabled skills', async () => {
     const home = await tempDir('tool-errors')
-    await writeSkill(join(home, '.dsh/skills'), 'hidden-skill', 'Hidden skill', 'Hidden instructions.')
-    await writeFile(join(home, '.dsh/skills/hidden-skill/SKILL.md'), '---\nname: hidden-skill\ndescription: Hidden skill\ndisable-model-invocation: true\n---\n\nHidden instructions.\n')
+    await writeSkill(join(home, '.qilin/skills'), 'hidden-skill', 'Hidden skill', 'Hidden instructions.')
+    await writeFile(join(home, '.qilin/skills/hidden-skill/SKILL.md'), '---\nname: hidden-skill\ndescription: Hidden skill\ndisable-model-invocation: true\n---\n\nHidden instructions.\n')
     const ctx = await setup(home)
     ctx.skills.register({
       name: 'model-only-skill',
@@ -871,10 +871,10 @@ describe('dsh-tool-skill', () => {
       content: 'Model-only instructions.',
     })
 
-    const unknown = await ctx.tools.execute({ signal: testToolSignal, callId: CallId('c1'), name: 'skill', arguments: { name: 'missing' } })
-    const invalid = await ctx.tools.execute({ signal: testToolSignal, callId: CallId('c2'), name: 'skill', arguments: { name: 'Bad_Name' } })
-    const disabled = await ctx.tools.execute({ signal: testToolSignal, callId: CallId('c3'), name: 'skill', arguments: { name: 'hidden-skill' } })
-    const modelOnly = await ctx.tools.execute({ signal: testToolSignal, callId: CallId('c4'), name: 'skill', arguments: { name: 'model-only-skill' } })
+    const unknown = await ctx.tools.execute({ signal: testToolSignal, callId: ToolCallId('c1'), name: 'skill', arguments: { name: 'missing' } })
+    const invalid = await ctx.tools.execute({ signal: testToolSignal, callId: ToolCallId('c2'), name: 'skill', arguments: { name: 'Bad_Name' } })
+    const disabled = await ctx.tools.execute({ signal: testToolSignal, callId: ToolCallId('c3'), name: 'skill', arguments: { name: 'hidden-skill' } })
+    const modelOnly = await ctx.tools.execute({ signal: testToolSignal, callId: ToolCallId('c4'), name: 'skill', arguments: { name: 'model-only-skill' } })
 
     expect(unknown.isError).toBe(true)
     expect(invalid.isError).toBe(true)
@@ -933,9 +933,9 @@ describe('dsh-tool-skill', () => {
       },
     }))
 
-    const denied = await ctx.tools.execute({ signal: testToolSignal, callId: CallId('c6'), name: 'skill', arguments: { name: 'denied-skill' } })
-    const raced = await ctx.tools.execute({ signal: testToolSignal, callId: CallId('c7'), name: 'skill', arguments: { name: 'policy-race-skill' } })
-    const vanished = await ctx.tools.execute({ signal: testToolSignal, callId: CallId('c8'), name: 'skill', arguments: { name: 'vanishing-skill' } })
+    const denied = await ctx.tools.execute({ signal: testToolSignal, callId: ToolCallId('c6'), name: 'skill', arguments: { name: 'denied-skill' } })
+    const raced = await ctx.tools.execute({ signal: testToolSignal, callId: ToolCallId('c7'), name: 'skill', arguments: { name: 'policy-race-skill' } })
+    const vanished = await ctx.tools.execute({ signal: testToolSignal, callId: ToolCallId('c8'), name: 'skill', arguments: { name: 'vanishing-skill' } })
 
     expect(denied.isError).toBe(true)
     expect(raced.isError).toBe(true)

@@ -1,7 +1,7 @@
 {
   "name": "@qilin/experimental-tool-agent-team",
   "description": "Scoped model-facing Agent Teams tools over ctx.agentTeams",
-  "version": "0.1.1-rc.2",
+  "version": "0.1.2-alpha.3",
   "private": true,
   "repository": {
     "type": "git",
@@ -47,7 +47,9 @@
     "@qilin/agent-loop-testkit": "workspace:^",
     "@qilin/invariants": "workspace:^",
     "@qilin/session": "workspace:^",
+    "@qilin/session-projection": "workspace:^",
     "@qilin/session-persistence-jsonl": "workspace:^",
+    "@qilin/session-query": "workspace:^",
     "@qilin/scope": "workspace:^",
     "@qilin/subagent": "workspace:^",
     "@qilin/subagent-fork-in-process": "workspace:^",

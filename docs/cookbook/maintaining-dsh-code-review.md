@@ -1,8 +1,8 @@
-# Maintaining the dsh-code-review skill
+# Maintaining the qilin-code-review skill
 
 English | [中文](maintaining-dsh-code-review.zh.md)
 
-The [`dsh-code-review`](../../.agents/skills/dsh-code-review/SKILL.md) skill is kept current by a single designated operator running a private periodic maintenance tool. This cookbook is the entry point for that operator — and for anyone taking over the role — and for repo contributors who want to understand why skill updates arrive as small periodic PRs rather than one-off audits. The workflow itself is specified in the [human-review skill-maintenance Agent Note](../../.agents/notes/proposed/process/2026-07-13-human-review-skill-maintenance.md).
+The [`qilin-code-review`](../../.agents/skills/dsh-code-review/SKILL.md) skill is kept current by a single designated operator running a private periodic maintenance tool. This cookbook is the entry point for that operator — and for anyone taking over the role — and for repo contributors who want to understand why skill updates arrive as small periodic PRs rather than one-off audits. The workflow itself is specified in the [human-review skill-maintenance Agent Note](../../.agents/notes/proposed/process/2026-07-13-human-review-skill-maintenance.md).
 
 ## What the maintainer receives
 
@@ -18,7 +18,7 @@ Each run stores its artifacts on the operator's machine. The saved diff, candida
 
 ## What the operator does with a candidate diff
 
-When a run produces a candidate, a macOS notification arrives with a `dsh-code-review-promote <timestamp>` hint.
+When a run produces a candidate, a macOS notification arrives with a `qilin-code-review-promote <timestamp>` hint.
 
 1. **Read the diff on its own merits.** Do not defer to "the reviewers approved"; the maintainer contract is that the operator makes the final decision. Look for checklist bloat, historical prose, unsupported extrapolation from a single incident, and duplicated coverage with existing skill or authoritative-doc content.
 
@@ -42,7 +42,7 @@ When a run produces a candidate, a macOS notification arrives with a `dsh-code-r
 
      ```sh
      cd ~/path/to/deepseek-harness   # clean master
-     dsh-code-review-promote 2026-07-16T02-00-00Z
+     qilin-code-review-promote 2026-07-16T02-00-00Z
      ```
 
 4. **Do not commit adapter output verbatim.** Small edits during promotion — tightening wording, removing an example that only makes sense with the source PR's context, folding a rule into an existing one — are expected and preserve the "reviewer judgment" the workflow depends on. Amend the branch before merging.

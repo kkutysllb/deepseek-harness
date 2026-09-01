@@ -4,8 +4,9 @@
  * Host and Agent keep the actual delivery-window authority.
  */
 import {
-  createSnapshotStore, type SettingsScope, type SnapshotStore,
-} from '@qilin/client-runtime/client'
+  createSnapshotStore, type SnapshotStore,
+} from '@qilin/client-store'
+import type { SettingsScope } from '@qilin/client-ui-settings/client'
 import type {
   BusyEnterBehavior, ComposerSubmitGesture, InputSubmitMode,
 } from '../contract/composer-submission.ts'

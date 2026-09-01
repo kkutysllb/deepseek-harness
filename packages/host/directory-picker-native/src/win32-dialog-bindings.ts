@@ -37,7 +37,9 @@ interface Koffi {
 function readUtf16(koffi: Koffi, address: unknown): string {
   const bytes = Buffer.from(koffi.view(address, 32768))
   let end = 0
-  while (end + 1 < bytes.length && bytes[end] !== 0) end += 2
+  // UTF-16LE NUL is two zero bytes. A single zero low byte is a valid BMP
+  // code unit (U+XX00, e.g. 开 = U+5F00) and must not terminate the scan.
+  while (end + 1 < bytes.length && !(bytes[end] === 0 && bytes[end + 1] === 0)) end += 2
   return bytes.toString('utf16le', 0, end)
 }
 
@@ -100,12 +102,12 @@ export async function loadWin32DialogBindings(): Promise<Win32DialogBindings> {
   const coTaskMemFree = ole32.func('__stdcall', 'CoTaskMemFree', 'void', ['void *'])
   const getCurrentThreadId = kernel32.func('__stdcall', 'GetCurrentThreadId', 'uint32', [])
 
-  const protoShow = koffi.proto('int32 __stdcall DshDialogShow(void *self, void *owner)')
-  const protoSetOptions = koffi.proto('int32 __stdcall DshDialogSetOptions(void *self, uint32 options)')
-  const protoSetTitle = koffi.proto('int32 __stdcall DshDialogSetTitle(void *self, str16 title)')
-  const protoGetResult = koffi.proto('int32 __stdcall DshDialogGetResult(void *self, _Out_ void **item)')
-  const protoGetDisplayName = koffi.proto('int32 __stdcall DshItemGetDisplayName(void *self, int32 form, _Out_ void **name)')
-  const protoRelease = koffi.proto('uint32 __stdcall DshComRelease(void *self)')
+  const protoShow = koffi.proto('int32 __stdcall QilinDialogShow(void *self, void *owner)')
+  const protoSetOptions = koffi.proto('int32 __stdcall QilinDialogSetOptions(void *self, uint32 options)')
+  const protoSetTitle = koffi.proto('int32 __stdcall QilinDialogSetTitle(void *self, str16 title)')
+  const protoGetResult = koffi.proto('int32 __stdcall QilinDialogGetResult(void *self, _Out_ void **item)')
+  const protoGetDisplayName = koffi.proto('int32 __stdcall QilinItemGetDisplayName(void *self, int32 form, _Out_ void **name)')
+  const protoRelease = koffi.proto('uint32 __stdcall QilinComRelease(void *self)')
 
   /** Bind vtable slot `slot` of COM object `self` to a caller through `proto`. */
   const method = (self: unknown, slot: number, proto: unknown): (...args: unknown[]) => number => {
@@ -182,7 +184,7 @@ export async function closeThreadWindows(threadId: number): Promise<void> {
   const user32 = koffi.load('user32.dll')
   const enumThreadWindows = user32.func('__stdcall', 'EnumThreadWindows', 'int', ['uint32', 'void *', 'intptr'])
   const postMessageW = user32.func('__stdcall', 'PostMessageW', 'int', ['void *', 'uint32', 'uintptr', 'intptr'])
-  const protoEnumProc = koffi.proto('int __stdcall DshEnumThreadWndProc(void *hwnd, intptr lparam)')
+  const protoEnumProc = koffi.proto('int __stdcall QilinEnumThreadWndProc(void *hwnd, intptr lparam)')
   const callback = koffi.register((hwnd: unknown) => {
     postMessageW(hwnd, WM_CLOSE, 0, 0)
     return 1

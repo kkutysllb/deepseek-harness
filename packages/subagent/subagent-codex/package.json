@@ -1,7 +1,7 @@
 {
   "name": "@qilin/subagent-codex",
   "description": "One-shot Codex subagent provider over the official app-server protocol",
-  "version": "0.1.1-rc.2",
+  "version": "0.1.2-alpha.3",
   "publishConfig": {
     "access": "public"
   },
@@ -38,30 +38,38 @@
     }
   },
   "peerDependencies": {
+    "@deepseek-ai/cordis": "workspace:^",
     "@qilin/invariants": "workspace:^",
     "@qilin/llm": "workspace:^",
     "@qilin/session": "workspace:^",
     "@qilin/subagent": "workspace:^",
     "@qilin/subprocess": "workspace:^",
-    "@qilin/timeout": "workspace:^",
-    "@deepseek-ai/cordis": "workspace:^"
+    "@qilin/timeout": "workspace:^"
   },
   "dependencies": {
+    "@qilin/brand": "workspace:^",
     "@qilin/sdk-protocol": "workspace:^",
     "@deepseek-ai/schemastery": "workspace:^",
-    "@openai/codex": "0.147.0"
+    "@openai/codex": "0.149.1"
   },
   "devDependencies": {
+    "@deepseek-ai/cordis": "workspace:^",
     "@deepseek-ai/cordis-plugin-loader": "workspace:^",
     "@qilin/agent": "workspace:^",
+    "@qilin/app-boot": "workspace:^",
     "@qilin/invariants": "workspace:^",
     "@qilin/llm": "workspace:^",
     "@qilin/loader-smoke": "workspace:^",
     "@qilin/session": "workspace:^",
+    "@qilin/session-checkpoint-policy": "workspace:^",
+    "@qilin/session-persistence-jsonl": "workspace:^",
+    "@qilin/session-projection": "workspace:^",
     "@qilin/subagent": "workspace:^",
     "@qilin/subprocess": "workspace:^",
     "@qilin/subprocess-local": "workspace:^",
     "@qilin/timeout": "workspace:^",
-    "@deepseek-ai/cordis": "workspace:^"
+    "@qilin/tool-jobs": "workspace:^",
+    "@qilin/tool-subagent": "workspace:^",
+    "@qilin/tools": "workspace:^"
   }
 }

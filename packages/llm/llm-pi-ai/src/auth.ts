@@ -5,7 +5,7 @@
  * name nothing from this library, so another adapter family can arrive with a
  * different auth model and share the same two seams.
  *
- * @module dsh-llm-pi-ai/auth
+ * @module qilin-llm-pi-ai/auth
  */
 
 import { homedir } from 'node:os'
@@ -35,6 +35,30 @@ export const RECORD_SCOPE = 'llm-pi-ai'
  */
 export function recordKeyFor(providerId: string): CredentialKey {
   return credentialKey(RECORD_SCOPE, providerId)
+}
+
+/**
+ * The JSON image of one grant payload: plain objects lose their
+ * explicitly-undefined members and array entries JSON cannot hold become
+ * null, exactly as `JSON.stringify` would render them. pi-ai credentials
+ * idiomatically carry optional members as explicit `undefined` (a github.com
+ * Copilot grant holds `enterpriseUrl: undefined`), which the credential
+ * store's strict validator refuses as unrepresentable. Everything else —
+ * non-finite numbers and foreign prototypes included — passes through
+ * untouched, so a genuinely unstorable value still fails loud at the store.
+ * @param value - the value to render.
+ * @returns the value's JSON image.
+ */
+function jsonImage(value: unknown): unknown {
+  if (Array.isArray(value)) return value.map(entry => entry === undefined ? null : jsonImage(entry))
+  if (typeof value === 'object' && value !== null && Object.getPrototypeOf(value) === Object.prototype) {
+    const image: Record<string, unknown> = {}
+    for (const [key, member] of Object.entries(value)) {
+      if (member !== undefined) image[key] = jsonImage(member)
+    }
+    return image
+  }
+  return value
 }
 
 /**
@@ -72,7 +96,7 @@ function toRecord(credential: Credential): CredentialRecord {
       ...credential.env === undefined ? {} : { env: { ...credential.env } },
     }
   }
-  return { kind: 'grant', payload: credential }
+  return { kind: 'grant', payload: jsonImage(credential) }
 }
 
 /**
@@ -90,7 +114,7 @@ function writableStore(ctx: Context): CredentialProvider {
   if (credentials === undefined) {
     throw new LlmError(
       'llm-pi-ai: this composition mounts no credentials service, so there is nowhere to store the'
-      + ' credential a sign-in produces; mount one (dsh-credentials-local) to sign in',
+      + ' credential a sign-in produces; mount one (qilin-credentials-local) to sign in',
       'NO_CREDENTIAL_STORE',
     )
   }

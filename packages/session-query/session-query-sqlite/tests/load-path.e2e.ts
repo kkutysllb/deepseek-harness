@@ -8,9 +8,9 @@ import { createUserMessage } from '@qilin/llm'
 import { afterEach, describe, expect, it } from 'vitest'
 import { Context } from '@deepseek-ai/cordis'
 import Loader from '@deepseek-ai/cordis-plugin-loader'
-import { SESSION_FORMAT_VERSION, SessionId } from '@qilin/session'
-import SessionStore from '@qilin/session'
-import SqliteSessionPersistence from '@qilin/session-persistence-sqlite'
+import SessionStore, { SESSION_FORMAT_VERSION, SessionId } from '@qilin/session'
+import SessionProjectionRegistry from '@qilin/session-projection'
+import JsonlSessionPersistence from '@qilin/session-persistence-jsonl'
 import SqliteSessionQueryEngine, * as queryModule from '@qilin/session-query-sqlite'
 import { mkdtemp, rm } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
@@ -25,18 +25,22 @@ afterEach(async () => {
 })
 
 async function temporaryPath(name: string): Promise<string> {
-  const directory = await mkdtemp(join(tmpdir(), 'dsh-session-search-loader-'))
+  const directory = await mkdtemp(join(tmpdir(), 'qilin-session-search-loader-'))
   temporaryDirectories.push(directory)
   return join(directory, name)
 }
 
-describe('dsh-session-query-sqlite real Loader path', () => {
+describe('qilin-session-query-sqlite real Loader path', () => {
   it('unwraps, mounts, and searches the real persistence backend', async () => {
-    const persistencePath = await temporaryPath('canonical.db')
+    const persistenceRoot = await temporaryPath('canonical')
     const searchPath = await temporaryPath('derived.db')
     const ctx = new Context()
+    await ctx.plugin(SessionProjectionRegistry)
     await ctx.plugin(SessionStore)
-    const persistence = await ctx.plugin(SqliteSessionPersistence, { path: persistencePath })
+    const persistence = await ctx.plugin(JsonlSessionPersistence, {
+      root: persistenceRoot,
+      compression: 'none',
+    })
 
     const loader = Object.create(Loader.prototype) as Loader
     const unwrapped = loader.unwrapExports(queryModule) as Parameters<Context['plugin']>[0]

@@ -9,6 +9,7 @@ import { Context } from '@deepseek-ai/cordis'
 import type { Agent } from '@qilin/agent'
 import SubagentRuntime from '@qilin/subagent'
 import type { SubagentProvider } from '@qilin/subagent'
+import SessionProjectionRegistry from '@qilin/session-projection'
 import WorkerThreadWorkflowEngine from '../src/index.ts'
 import { SessionId } from '@qilin/session'
 
@@ -18,10 +19,11 @@ vi.setConfig({ testTimeout: 30_000 })
 
 it('runs the default config through the source worker', async () => {
   const ctx = new Context()
+  await ctx.plugin(SessionProjectionRegistry)
   const subagents = await ctx.plugin(SubagentRuntime)
   const provider: SubagentProvider = {
     name: 'spawn',
-    capabilities: { outputSchema: true, depthLimit: true, toolFilter: true, persona: true },
+    capabilities: { agentOptions: true, outputSchema: true, depthLimit: true, toolFilter: true, persona: true },
     inheritsParentContext: false,
     start: () => Promise.reject(new Error('source-worker compat script must not start a child')),
   }

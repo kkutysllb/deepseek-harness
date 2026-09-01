@@ -8,7 +8,7 @@ import { describe, expect, it, vi, beforeEach } from 'vitest'
 import { Context } from '@deepseek-ai/cordis'
 import SystemPrompt from '@qilin/system-prompt'
 import ToolRuntime from '@qilin/tools'
-import { CallId } from '@qilin/llm'
+import { ToolCallId } from '@qilin/llm'
 import type { Config } from '@qilin/mcp-client'
 
 // ---- Mock MCP SDK ----
@@ -115,8 +115,8 @@ function listing(...names: string[]): { tools: { name: string; inputSchema: { ty
 }
 
 let callSeq = 0
-function nextCallId(): CallId {
-  return CallId(`reconnect-${++callSeq}`)
+function nextCallId(): ToolCallId {
+  return ToolCallId(`reconnect-${++callSeq}`)
 }
 
 // ---- Tests ----

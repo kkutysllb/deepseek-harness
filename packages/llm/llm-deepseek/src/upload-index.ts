@@ -1,4 +1,4 @@
-/** Durable DeepSeek attachment-to-file-id index. @module dsh-llm-deepseek/upload-index */
+/** Durable DeepSeek attachment-to-file-id index. @module qilin-llm-deepseek/upload-index */
 
 import { createHash } from 'node:crypto'
 import { readFile, mkdir } from 'node:fs/promises'

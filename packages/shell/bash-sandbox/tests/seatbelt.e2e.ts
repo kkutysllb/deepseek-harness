@@ -7,6 +7,7 @@ import { afterEach, describe, expect, it } from 'vitest'
 import { Context } from '@deepseek-ai/cordis'
 import { LocalSandboxProvider } from '@qilin/sandbox-local'
 import { SandboxPolicyService } from '@qilin/sandbox-policy'
+import SessionProjectionRegistry from '@qilin/session-projection'
 import { seatbeltProfileArgs } from '@qilin/sandbox-local/src/profiles.ts'
 import { SandboxBashExecutor } from '@qilin/bash-sandbox'
 import LocalSubprocessRuntime from '@qilin/subprocess-local'
@@ -32,7 +33,7 @@ afterEach(async () => {
 })
 
 async function tempDir(base: string): Promise<string> {
-  const dir = await mkdtemp(join(base, 'dsh-seatbelt-e2e-'))
+  const dir = await mkdtemp(join(base, 'qilin-seatbelt-e2e-'))
   tempDirs.push(dir)
   return dir
 }
@@ -41,6 +42,7 @@ async function sandboxedBash(workspace: string, mode: 'read-only' | 'workspace-w
   ctx = new Context()
   await ctx.plugin(LocalSandboxProvider, {})
   ;(ctx.sandbox as LocalSandboxProvider).internals = { probeBwrap: () => false, probeLandlock: () => 'unusable' }
+  await ctx.plugin(SessionProjectionRegistry)
   await ctx.plugin(SandboxPolicyService, { mode, workspaceRoot: workspace })
   await ctx.plugin(LocalSubprocessRuntime)
   await ctx.plugin(SandboxBashExecutor, { cwd: workspace, timeoutMs: 30_000 })

@@ -10,7 +10,7 @@ import { mkdtemp, readFile, rm, writeFile } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { Context } from '@deepseek-ai/cordis'
-import { CallId } from '@qilin/llm'
+import { ToolCallId } from '@qilin/llm'
 import SystemPrompt from '@qilin/system-prompt'
 import ToolRuntime, { TOOL_ABORTED_BEFORE_DISPATCH } from '@qilin/tools'
 import { LocalFileSystem } from '@qilin/fs-local'
@@ -29,7 +29,7 @@ let callCounter = 0
 function call(name: string, args: unknown) {
   return ctx.tools.execute({
     signal: testToolSignal,
-    callId: CallId(`call-${++callCounter}`),
+    callId: ToolCallId(`call-${++callCounter}`),
     name,
     arguments: args,
     agent: { session } as never,
@@ -48,9 +48,9 @@ afterEach(async () => {
 // --------------------------------------------------------------------------
 // DEFAULT deployment: the policy gate plugin is loaded.
 // --------------------------------------------------------------------------
-describe('default deployment (with dsh-fs-observation-policy)', () => {
+describe('default deployment (with qilin-fs-observation-policy)', () => {
   beforeEach(async () => {
-    dir = await mkdtemp(join(tmpdir(), 'dsh-tool-fs-'))
+    dir = await mkdtemp(join(tmpdir(), 'qilin-tool-fs-'))
     ctx = new Context()
     await ctx.plugin(SystemPrompt)
     await ctx.plugin(ToolRuntime)
@@ -310,9 +310,9 @@ describe('default deployment (with dsh-fs-observation-policy)', () => {
 // --------------------------------------------------------------------------
 // BARE deployment: the tool suite WITHOUT the policy gate.
 // --------------------------------------------------------------------------
-describe('bare provider (no dsh-fs-observation-policy)', () => {
+describe('bare provider (no qilin-fs-observation-policy)', () => {
   beforeEach(async () => {
-    dir = await mkdtemp(join(tmpdir(), 'dsh-tool-fs-bare-'))
+    dir = await mkdtemp(join(tmpdir(), 'qilin-tool-fs-bare-'))
     ctx = new Context()
     await ctx.plugin(SystemPrompt)
     await ctx.plugin(ToolRuntime)
@@ -375,12 +375,12 @@ describe('bare provider (no dsh-fs-observation-policy)', () => {
 
 // Per-session cwd: a relative file_path resolves against the calling session's workspace
 // (`exec.agent.session.header.cwd`), not the backend's config.cwd, so the
-// caller-selected session workspace wins, matching dsh-tool-bash.
+// caller-selected session workspace wins, matching qilin-tool-bash.
 describe('per-session cwd', () => {
   let sessionDir: string
   beforeEach(async () => {
-    dir = await mkdtemp(join(tmpdir(), 'dsh-tool-fs-cfg-'))
-    sessionDir = await mkdtemp(join(tmpdir(), 'dsh-tool-fs-session-'))
+    dir = await mkdtemp(join(tmpdir(), 'qilin-tool-fs-cfg-'))
+    sessionDir = await mkdtemp(join(tmpdir(), 'qilin-tool-fs-session-'))
     ctx = new Context()
     await ctx.plugin(SystemPrompt)
     await ctx.plugin(ToolRuntime)
@@ -393,7 +393,7 @@ describe('per-session cwd', () => {
   const callIn = (sessionObj: object, name: string, args: unknown) =>
     ctx.tools.execute({
       signal: testToolSignal,
-      callId: CallId(`call-${++callCounter}`),
+      callId: ToolCallId(`call-${++callCounter}`),
       name,
       arguments: args,
       agent: { session: sessionObj } as never,
@@ -425,7 +425,7 @@ describe('per-session cwd', () => {
 // --------------------------------------------------------------------------
 describe('signal, concurrency, and the fs/observed contract', () => {
   beforeEach(async () => {
-    dir = await mkdtemp(join(tmpdir(), 'dsh-tool-fs-'))
+    dir = await mkdtemp(join(tmpdir(), 'qilin-tool-fs-'))
     ctx = new Context()
     await ctx.plugin(SystemPrompt)
     await ctx.plugin(ToolRuntime)
@@ -436,9 +436,9 @@ describe('signal, concurrency, and the fs/observed contract', () => {
 
   const session = { header: {} }
   const callSig = (signal: AbortSignal, name: string, args: unknown) =>
-    ctx.tools.execute({ callId: CallId(`c-${++callCounter}`), name, arguments: args, agent: { session } as never, signal })
+    ctx.tools.execute({ callId: ToolCallId(`c-${++callCounter}`), name, arguments: args, agent: { session } as never, signal })
   const callOwned = (name: string, args: unknown) =>
-    ctx.tools.execute({ signal: testToolSignal, callId: CallId(`c-${++callCounter}`), name, arguments: args, agent: { session } as never })
+    ctx.tools.execute({ signal: testToolSignal, callId: ToolCallId(`c-${++callCounter}`), name, arguments: args, agent: { session } as never })
 
   it('a pre-aborted registry call skips read/write/edit with ABORTED_BEFORE_DISPATCH', async () => {
     await writeFile(join(dir, 'a.txt'), 'hello')

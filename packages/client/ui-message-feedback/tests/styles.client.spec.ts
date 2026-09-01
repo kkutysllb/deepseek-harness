@@ -53,7 +53,7 @@ describe('MessageFeedbackActions theme styles', () => {
     // never been written. Every theme-variable prefix the sheets actually use,
     // not just `--dsw-`: a `--dsh-` name reads as a plausible sibling and would
     // otherwise slip past into an invalid declaration.
-    const named = [...css.matchAll(/var\((--(?:dsw|dsh|ds)-[a-z0-9-]+)/g)].map(match => match[1])
+    const named = [...css.matchAll(/var\((--(?:dsw|qilin|ds)-[a-z0-9-]+)/g)].map(match => match[1])
     // Vacuity guard: the sheet has to actually name tokens, or the filter below
     // is satisfied by an empty list and this test proves nothing.
     expect(named.length).toBeGreaterThan(5)
@@ -89,5 +89,15 @@ describe('MessageFeedbackActions theme styles', () => {
     // part of the block above, and the controls would paint unstyled.
     const bare = css.replace(/\/\*[\s\S]*?\*\//g, '')
     expect((bare.match(/\}/g) ?? []).length).toBe((bare.match(/\{/g) ?? []).length)
+  })
+
+  it('slot-injected actions ride the content font-size axis like their host row', () => {
+    // These buttons render inside ui-chat's MessageIconActions row; a fixed
+    // 28px would leave them undersized (or overflowing) once the Settings
+    // font size moves the row.
+    expect(block('.action')).toMatch(/width:\s*calc\(28px \+ var\(--dsh-content-font-delta, 0px\)\)/)
+    expect(block('.action')).toMatch(/height:\s*calc\(28px \+ var\(--dsh-content-font-delta, 0px\)\)/)
+    expect(block('.action svg')).toMatch(/width:\s*calc\(15px \+ var\(--dsh-content-font-delta, 0px\)\)/)
+    expect(block('.noteOpen')).toMatch(/line-height:\s*calc\(28px \+ var\(--dsh-content-font-delta, 0px\)\)/)
   })
 })

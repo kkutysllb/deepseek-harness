@@ -1,7 +1,7 @@
 {
   "name": "@qilin/settings-file",
   "description": "File-backed settings provider (settings.yaml) for the DeepSeek Harness",
-  "version": "0.1.1-rc.2",
+  "version": "0.1.2-alpha.3",
   "publishConfig": {
     "access": "public"
   },
@@ -32,22 +32,23 @@
   ],
   "license": "MIT",
   "peerDependencies": {
+    "@deepseek-ai/cordis": "workspace:^",
     "@qilin/atomic-write": "workspace:^",
-    "@qilin/invariants": "workspace:^",
     "@qilin/home-paths": "workspace:^",
-    "@qilin/settings": "workspace:^",
-    "@deepseek-ai/cordis": "workspace:^"
+    "@qilin/invariants": "workspace:^",
+    "@qilin/settings": "workspace:^"
   },
   "dependencies": {
-    "chokidar": "^4.0.3",
+    "@qilin/util-values": "workspace:^",
     "@deepseek-ai/schemastery": "workspace:^",
+    "chokidar": "^4.0.3",
     "yaml": "^2.9.0"
   },
   "devDependencies": {
+    "@deepseek-ai/cordis": "workspace:^",
     "@qilin/atomic-write": "workspace:^",
-    "@qilin/invariants": "workspace:^",
     "@qilin/home-paths": "workspace:^",
-    "@qilin/settings": "workspace:^",
-    "@deepseek-ai/cordis": "workspace:^"
+    "@qilin/invariants": "workspace:^",
+    "@qilin/settings": "workspace:^"
   }
 }

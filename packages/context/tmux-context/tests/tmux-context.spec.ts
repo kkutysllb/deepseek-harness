@@ -2,6 +2,7 @@ import { afterEach, describe, expect, it, vi } from 'vitest'
 import { Context } from '@deepseek-ai/cordis'
 import { Session, SessionId } from '@qilin/session'
 import AgentRegistry, { agentEvents, Inbox, type Agent } from '@qilin/agent'
+import SessionProjectionRegistry from '@qilin/session-projection'
 import { createUserMessage } from '@qilin/llm'
 import { ShellExecutor } from '@qilin/shell'
 import type { ShellExecRequest, ShellExecSpec, ShellProcess, ShellRunResult } from '@qilin/shell'
@@ -82,6 +83,7 @@ async function mount(
 ): Promise<{ ctx: Context; bash: FakeBash | undefined }> {
   const ctx = new Context()
   await ctx.plugin(AgentRegistry)
+  await ctx.plugin(SessionProjectionRegistry)
   let bash: FakeBash | undefined
   if (withBash) {
     await ctx.plugin(FakeBash)

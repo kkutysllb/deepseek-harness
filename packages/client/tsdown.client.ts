@@ -53,12 +53,12 @@ function styleInjectionModule(
 }
 
 /**
- * Wire/type layers a client bundle may inline: browser-safe contracts
- * with no runtime identity to share (no Symbol/instanceof/singleton state).
+ * Contract layers and pure folds a client bundle may inline: browser-safe
+ * values with no runtime identity to share (no Symbol/instanceof/singleton state).
  * Everything else under @qilin/* is either a module-table entry
  * (external) or a leak the purity gate rejects.
  */
-export const INLINE_SAFE = /^@qilin\/(host-apiproxy|file-reference|session|llm|tools|brand)(\/|$)/
+export const INLINE_SAFE = /^(?:@qilin\/(?:file-reference|session|llm|tools|brand|deque|typert-protocol|util-crypto|util-values|util-workspace-path)(?:\/|$)|@qilin\/token-meter\/client$|@qilin\/agent-presets\/display$)/
 
 /**
  * Vendored framework libraries: rescoped into @deepseek-ai, so the gate below
@@ -94,7 +94,8 @@ function browserSourcePath(source: string, sourcemapPath: string): string {
  * earlier Host pass. A package-level tsdown.config.ts REPLACES the root
  * workspace layout, so the lib half must be restated here — dropping it leaves
  * the package without lib/index.js and the host Loader cannot import its node
- * half.
+ * half. The Client build consumes `lib/types` and chains those tsc maps, with
+ * original source content, into the standalone plugin map.
  * @param id - plugin id (package name), stamped into the __ModuleLoader__.load
  * handoff and onto the injected style tags.
  * @param libEntry - node-half entries, spelled at the call site so the
@@ -267,6 +268,7 @@ function staticLinkedConfig(id: string, entry: string, outputName = basename(ent
     // The shell compiles this artifact, so its map is the only path from a
     // browser stack frame back to the TSX (tsc emits the lib/types half).
     sourcemap: true,
+    outputOptions: { sourcemapExcludeSources: false },
     plugins: [{
       // Contract 1. `pre` because tsdown's own deps plugin would otherwise
       // resolve and inline every specifier missing from the npm production
@@ -281,21 +283,10 @@ function staticLinkedConfig(id: string, entry: string, outputName = basename(ent
           return isBareSpecifier(source) ? { id: source, external: true } : null
         },
       },
-    }, {
-      // Contract 3. Rolldown does not read the `//# sourceMappingURL` of its
-      // inputs, so each tsc map is handed over as that module's map and
-      // composed into the bundle map; without it frames stop at the emitted
-      // lib/types JavaScript instead of reaching the TSX.
-      name: 'dsh-tsc-sourcemap',
-      async load(id: string) {
-        if (!id.includes(TYPES_MARKER) || !id.endsWith('.js') || !existsSync(`${id}.map`)) return null
-        const code = await readFile(id, 'utf8')
-        return { code: code.replace(SOURCEMAP_COMMENT, ''), map: await readFile(`${id}.map`, 'utf8') }
-      },
-    }, {
+    }, tscSourceMapPlugin(), {
       // Contract 4. The import survives verbatim and the sheet lands beside the
       // JavaScript, so the shell's CSS Modules pipeline sees a real stylesheet.
-      name: 'dsh-css-asset',
+      name: 'qilin-css-asset',
       async resolveId(this: AssetEmitter, source: string, importer: string | undefined) {
         if (!source.endsWith('.css') || importer === undefined) return null
         const { file, fileName } = stylesheetAsset(source, importer)
@@ -460,6 +451,18 @@ function clientConfig(id: string, entry: string): UserConfig {
       // everything else is bundled.
       alwaysBundle: (specifier: string) => !isRequested(specifier),
     },
+    // Dual-mode libraries (lexical's exports carry development/production/
+    // node conditions; the node file picks its flavor with a top-level await
+    // a CJS bundle cannot carry) resolve their static flavor matching the
+    // NODE_ENV the defines below bake in.
+    inputOptions: {
+      resolve: {
+        conditionNames: [
+          (process.env.NODE_ENV ?? 'production') === 'development' ? 'development' : 'production',
+          'browser', 'import', 'module', 'default',
+        ],
+      },
+    },
     // Browser bundles inline node-idiom deps (zustand/immer read
     // process.env.NODE_ENV; zustand's esm build also probes
     // import.meta.env.MODE, which a CJS output cannot carry — rolldown flags
@@ -479,14 +482,13 @@ function clientConfig(id: string, entry: string): UserConfig {
     plugins: [{
       // Bundle purity gate (build-time mirror of the module-edge rules): the
       // baseline and package-specific requests stay external, inline-safe wire layers
-      // inline, and every other @qilin/ or vendor @deepseek-ai/ value import is a
-      // build error — a
+      // inline, and every other @qilin value import is a build error — a
       // cross-plugin value import either inlines a duplicate runtime instance
       // or requires a specifier the module table cannot answer for this package.
       // Cross-plugin collaboration goes through cordis services instead.
-      name: 'dsh-client-bundle-purity',
+      name: 'qilin-client-bundle-purity',
       resolveId(source: string) {
-        if (!source.startsWith('@qilin/') && !source.startsWith('@deepseek-ai/')) return null
+        if (!source.startsWith('@qilin/')) return null
         if (isRequested(source)) return null // requested module-table row: external wins
         if (VENDORED_LIBRARY.test(source)) return null // vendored library: inline, no shared identity
         if (INLINE_SAFE.test(source) || GENERATED_REMOTE.test(source)) return null // wire contribution: inline is the point
@@ -496,8 +498,8 @@ function clientConfig(id: string, entry: string): UserConfig {
           + '(type-only imports are erased and never reach this gate)',
         )
       },
-    }, {
-      name: 'dsh-css-modules-inline',
+    }, tscSourceMapPlugin(), {
+      name: 'qilin-css-modules-inline',
       resolveId(source: string, importer: string | undefined) {
         if (!source.endsWith('.module.css')) return null
         const abs = importer !== undefined ? sourceAssetPath(source, importer) : source
@@ -522,7 +524,7 @@ function clientConfig(id: string, entry: string): UserConfig {
         return styleInjectionModule(id, fileId, code.toString(), classMap)
       },
     }, {
-      name: 'dsh-css-text-inline',
+      name: 'qilin-css-text-inline',
       resolveId(source: string, importer: string | undefined) {
         if (!source.endsWith(`.css${INLINE_CSS_QUERY}`)) return null
         const stylesheet = source.slice(0, -INLINE_CSS_QUERY.length)
@@ -538,7 +540,7 @@ function clientConfig(id: string, entry: string): UserConfig {
         return `export default ${JSON.stringify(code.toString())};`
       },
     }, {
-      name: 'dsh-css-global-inline',
+      name: 'qilin-css-global-inline',
       resolveId(source: string, importer: string | undefined) {
         if (!source.endsWith('.css') || source.endsWith('.module.css')) return null
         const abs = importer !== undefined ? sourceAssetPath(source, importer) : source
@@ -555,6 +557,7 @@ function clientConfig(id: string, entry: string): UserConfig {
     }],
     outputOptions: {
       entryFileNames: 'client.js',
+      sourcemapExcludeSources: false,
       // The map is served from /plugins/<scoped-package>/client.js.map. The
       // browser resolves its local sources back into URLs that mirror the
       // /packages/<group>/<package>/src directories; sourcesContent keeps them usable
@@ -567,11 +570,43 @@ function clientConfig(id: string, entry: string): UserConfig {
   }
 }
 
+/** Chain tsc's emitted maps into any Client bundle that consumes `lib/types`. */
+function tscSourceMapPlugin() {
+  return {
+    name: 'qilin-tsc-sourcemap',
+    async load(id: string) {
+      if (!id.includes(TYPES_MARKER) || !id.endsWith('.js') || !existsSync(`${id}.map`)) return null
+      const code = await readFile(id, 'utf8')
+      const mapPath = `${id}.map`
+      const map = JSON.parse(await readFile(mapPath, 'utf8')) as {
+        sourceRoot?: unknown
+        sources?: unknown
+        sourcesContent?: unknown
+        [key: string]: unknown
+      }
+      if (!Array.isArray(map.sources) || map.sources.some(source => typeof source !== 'string')) {
+        throw new Error(`client sourcemap: ${mapPath} has invalid sources`)
+      }
+      const sources = map.sources as string[]
+      if (
+        !Array.isArray(map.sourcesContent)
+        || map.sourcesContent.length !== sources.length
+        || map.sourcesContent.some(source => typeof source !== 'string')
+      ) {
+        const sourceRoot = typeof map.sourceRoot === 'string' ? map.sourceRoot : ''
+        map.sourcesContent = await Promise.all(sources.map(async source =>
+          await readFile(resolvePath(dirname(mapPath), sourceRoot, source), 'utf8')))
+      }
+      return { code: code.replace(SOURCEMAP_COMMENT, ''), map }
+    },
+  }
+}
+
 /** Path segment separating a package's tsc output from the sources it was emitted from. */
 const TYPES_MARKER = `${sep}lib${sep}types${sep}`
 
 /** Plugin name carrying contract 1, and the marker that identifies a statically linked config. */
-const STATIC_LINKED_PLUGIN = 'dsh-static-linked-external'
+const STATIC_LINKED_PLUGIN = 'qilin-static-linked-external'
 
 /** Path segment a package's sources hang under, and the root emitted assets mirror. */
 const SOURCE_MARKER = `${sep}src${sep}`

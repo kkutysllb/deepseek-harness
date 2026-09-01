@@ -19,11 +19,11 @@
  * that it cannot be interrogated so the surface falls back to hand-entry
  * rather than guessing a response shape.
  *
- * @module dsh-llm-pi-ai/discovery
+ * @module qilin-llm-pi-ai/discovery
  */
 
 import { INVALID_CREDENTIAL_CODE, LlmError, normalizeApiKey } from '@qilin/llm'
-import type { LlmDiscoveredModel, LlmModelDiscoveryRequest } from '@qilin/llm'
+import type { LlmDiscoveredModel, LlmModelDiscoveryOperation } from '@qilin/llm'
 import { attributionHeaders } from '@qilin/llm'
 import { catalogModels } from './catalog.ts'
 
@@ -43,7 +43,7 @@ const LISTABLE_PROTOCOLS: ReadonlySet<string> = new Set([
 /**
  * Endpoint replies larger than this are refused. The endpoint is whatever URL
  * the user typed, so the ceiling holds on the bytes actually read rather than
- * on the length the server claims — the same two-stage shape `dsh-web-fetch`
+ * on the length the server claims — the same two-stage shape `qilin-web-fetch`
  * uses for its own caller-supplied URLs, except that a truncated model listing
  * is not parseable, so overflow rejects instead of truncating.
  */
@@ -193,7 +193,7 @@ function usableProbeKey(raw: string): string {
  *   refuses or fails the request, or the reply is not a model listing.
  */
 export async function discoverModels(
-  request: LlmModelDiscoveryRequest,
+  request: LlmModelDiscoveryOperation,
   storedApiKey?: () => Promise<string | undefined>,
 ): Promise<readonly LlmDiscoveredModel[]> {
   // A catalog route already has its answer, and a better one: the installed

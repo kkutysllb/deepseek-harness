@@ -22,7 +22,15 @@ export default async function open(url) {
   if (process.env.BROWSER_OPEN_TEST_FAILURE !== undefined) {
     throw new Error(process.env.BROWSER_OPEN_TEST_FAILURE)
   }
-  const response = await fetch(url)
+  const exchange = await fetch(url, { redirect: 'manual' })
+  const setCookie = exchange.headers.get('set-cookie')
+  const location = exchange.headers.get('location')
+  if (exchange.status !== 303 || setCookie === null || location === null) {
+    throw new Error(`browser authentication exchange returned HTTP ${exchange.status}`)
+  }
+  const response = await fetch(new URL(location, url), {
+    headers: { cookie: setCookie.split(';', 1)[0] },
+  })
   const html = await response.text()
   console.log(`qilin browser-open: ${JSON.stringify({
     url,
@@ -35,7 +43,7 @@ export default async function open(url) {
   // remains alive, so the assembled test detects an early helper exit.
   const launcher = spawn(process.execPath, [
     '--eval', handoffProbe,
-    '--', join(process.cwd(), `.dsh-browser-open-${process.ppid}`), String(process.pid),
+    '--', join(process.cwd(), `.qilin-browser-open-${process.ppid}`), String(process.pid),
   ], { stdio: 'ignore' })
   launcher.unref()
   return launcher

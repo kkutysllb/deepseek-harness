@@ -12,6 +12,8 @@ import {
   bundleManifestPaths,
   bundlePluginDependencyErrors,
   metadataExpressionErrors,
+  packageTestFixtureDependencyErrors,
+  packageTestPluginDependencyErrors,
 } from './verify-cordis-config.ts'
 
 describe('verify-cordis-config metadata expressions', () => {
@@ -47,7 +49,7 @@ describe('verify-cordis-config metadata expressions', () => {
 
 describe('workspace Bundle discovery and product dependency closures', () => {
   it('discovers a Bundle outside packages/bundle from its manifest declaration', () => {
-    const fixture = mkdtempSync(join(tmpdir(), 'dsh-bundle-discovery-'))
+    const fixture = mkdtempSync(join(tmpdir(), 'qilin-bundle-discovery-'))
     try {
       const bundleDir = join(fixture, 'packages/subagent/example')
       const plainDir = join(fixture, 'packages/bundle/plain')
@@ -84,5 +86,70 @@ describe('workspace Bundle discovery and product dependency closures', () => {
     ])).toEqual([
       `${file}: @qilin/missing-plugin must be declared in ${manifestPath} dependencies`,
     ])
+  })
+})
+
+describe('package-owned Loader test dependency closures', () => {
+  it('requires package test configs to declare each named plugin they load', () => {
+    const manifestPath = 'packages/example/owner/package.json'
+    const file = 'packages/example/owner/tests/fixtures/cordis.yml'
+    const manifest = {
+      name: '@qilin/owner',
+      dependencies: {},
+      devDependencies: {
+        '@qilin/declared': 'workspace:^',
+      },
+    }
+    expect(packageTestPluginDependencyErrors(manifestPath, manifest, [
+      { file, name: '@qilin/owner' },
+      { file, name: '@qilin/declared' },
+      { file, name: '@qilin/missing' },
+    ])).toEqual([
+      `${file}: @qilin/missing must be declared in ${manifestPath} dependencies or devDependencies`,
+    ])
+  })
+
+  it('requires executable package test fixtures to declare their bare imports', () => {
+    const fixture = mkdtempSync(join(tmpdir(), 'qilin-package-test-entrypoint-'))
+    try {
+      const packageDir = join(fixture, 'packages/example/owner')
+      const driverDir = join(packageDir, 'tests/fixtures/loader')
+      mkdirSync(driverDir, { recursive: true })
+      writeFileSync(join(packageDir, 'package.json'), JSON.stringify({
+        name: '@qilin/owner',
+        devDependencies: {
+          '@qilin/declared': 'workspace:^',
+        },
+      }))
+      writeFileSync(join(driverDir, 'driver.ts'), [
+        "import '@qilin/owner'",
+        "import '@qilin/declared'",
+        "import '@qilin/missing'",
+      ].join('\n'))
+      writeFileSync(join(driverDir, 'cordis.yml'), '[]\n')
+      writeFileSync(join(driverDir, 'fixture.mjs'), "import '@qilin/declared'\n")
+      const unrelatedDir = join(packageDir, 'tests/fixtures/unrelated')
+      mkdirSync(unrelatedDir, { recursive: true })
+      writeFileSync(join(unrelatedDir, 'driver.ts'), "import '@qilin/unrelated'\n")
+
+      expect(packageTestFixtureDependencyErrors(fixture)).toEqual([
+        'packages/example/owner/tests/fixtures/loader/driver.ts: '
+        + '@qilin/missing must be declared in '
+        + 'packages/example/owner/package.json dependencies or devDependencies',
+      ])
+    } finally {
+      rmSync(fixture, { recursive: true, force: true })
+    }
+  })
+
+  it('fails loud when package-owned Loader fixtures disappear from the scan', () => {
+    const fixture = mkdtempSync(join(tmpdir(), 'qilin-empty-package-test-entrypoint-'))
+    try {
+      expect(packageTestFixtureDependencyErrors(fixture)).toEqual([
+        'package test fixture dependency scan found no package-owned Loader configs',
+      ])
+    } finally {
+      rmSync(fixture, { recursive: true, force: true })
+    }
   })
 })

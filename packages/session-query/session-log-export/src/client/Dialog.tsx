@@ -1,4 +1,5 @@
-import type { ObservableSnapshot, SessionId } from '@qilin/client-runtime/client'
+import type { ObservableSnapshot } from '@qilin/client-store'
+import type { SessionId } from '@qilin/session/types'
 import { Button, Modal } from '@qilin/client-ui-primitives'
 import type { InjectFace, PropsLocale, PropsRuntime } from '@qilin/client-ui-slots'
 import type { SessionLogDownloadState } from './controller.ts'

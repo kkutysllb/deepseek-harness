@@ -54,10 +54,10 @@
 .cell {
   fill: currentColor;
   opacity: 0.15;
-  animation: dsh-state-dot-chase 1s infinite;
+  animation: qilin-state-dot-chase 1s infinite;
 }
 
-@keyframes dsh-state-dot-chase {
+@keyframes qilin-state-dot-chase {
   0%, 12.4% { opacity: 1; }
   12.5%, 24.9% { opacity: 0.6; }
   25%, 37.4% { opacity: 0.35; }

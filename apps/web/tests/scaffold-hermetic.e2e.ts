@@ -20,8 +20,8 @@ Ambient host state.
 }
 
 it('isolates replay skill discovery from every ambient host root', async () => {
-  const ambient = await mkdtemp(join(tmpdir(), 'dsh-web-ambient-skills-'))
-  const dshHome = join(ambient, 'dsh-home')
+  const ambient = await mkdtemp(join(tmpdir(), 'qilin-web-ambient-skills-'))
+  const dshHome = join(ambient, 'qilin-home')
   const agentsHome = join(ambient, 'agents-home')
   const bundled = join(ambient, 'bundled')
   await Promise.all([
@@ -42,7 +42,7 @@ it('isolates replay skill discovery from every ambient host root', async () => {
     const ctx = scaffold.ctx
     // Local skill discovery belongs to the agent's preset LAYER of the host
     // registry, so the roots under test are only reachable through a composed
-    // agent's view — the same scope the gateway's `skill.list` resolves for a
+    // agent's view — the same scope the `skills/list` Remote resolves for a
     // browser request about a session.
     const handle = await ctx.agents.create({
       sessionId: SessionId('hermetic-skills'),

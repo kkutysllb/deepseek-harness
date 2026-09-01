@@ -1,4 +1,4 @@
-import type { MessageImagesProps } from '@qilin/client-ui-conversation/client'
+import type { MessageImagesProps } from '@qilin/client-ui-chat/client'
 import { ImageGallery } from '../MessageImage.tsx'
 import { messageImageLabels } from './labels.ts'
 

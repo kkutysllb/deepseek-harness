@@ -12,7 +12,7 @@ fork 与 spawn 的唯一区别是 child 的 Session 会以 parent 已完成轮�
 
 ## 决策
 
-所有随附组合都把 fork 委派工具绑定为 `backgroundMode: one-shot`：[base 组合包](../../../../packages/bundle/base/cordis.patch.yml)、[ACP 示例](../../../../examples/acp-agent/cordis.yml)与[headless 示例](../../../../examples/headless-agent/cordis.yml)。base 组合包保留 `run_in_background`，因为它挂载了 task 服务；两个示例设置 `enableRunInBackground: false`，因为它们都不挂载 task 服务，否则一次 one-shot 后台启动会在调用时因缺少 `tasks` 服务而失败。
+所有交付组合都从 [base bundle](../../../../packages/bundle/base/cordis.patch.yml)继承 fork 委派工具的 `backgroundMode: one-shot`。base bundle 保留 `run_in_background`，因为它也挂载了结算后台工作所需的 task 服务。
 
 one-shot child——前台与后台皆然——经由 `SubagentRuntime.start()` 创建，该路径从不进入可继续的 activation setup 注册表，因此 `report` 与它的提示词 section 都不会被安装。于是一个 fork 出的 one-shot child 的系统提示词与工具 schema 与其 parent 相同，只差部署逐个委派工具主动选择的 `persona` 与 `toolFilter` 增量。
 
@@ -20,7 +20,7 @@ one-shot child——前台与后台皆然——经由 `SubagentRuntime.start()` 
 
 ### 该限制在于组合，不在于代码
 
-`ForkInProcessProvider.prepareContinuable` 仍然实现完好，`ctx.subagents.startContinuable()` 也仍接受 `fork`；改动的只有随附的 `cordis.yml` 行。`tool-subagent` 在挂载时同时知道提供方的 `inheritsParentContext` 与自身的 `backgroundMode`，因此一个加载期拒绝该组合的检查是可行的，而这里刻意不加：该组合并非普遍错误。它只在某个 child 作用域增量位于继承历史之前时才是错的，而产生该增量的包——[`dsh-tool-subagent-report`](../../../../packages/subagent/tool-subagent-report/README.zh.md)——是独立安装的，并且按其自身设计对 `tool-subagent` 不可见。一个不安装 report 包的部署可以在前缀完好的前提下运行可继续的 fork child。把某一份插件清单的后果写成委派工具的不变量，会让该工具断言它无法观察到的事实。
+`ForkInProcessProvider.prepareContinuable` 仍然实现完好，`ctx.subagents.startContinuable()` 也仍接受 `fork`；改动的只有随附的 `cordis.yml` 行。`tool-subagent` 在挂载时同时知道提供方的 `inheritsParentContext` 与自身的 `backgroundMode`，因此一个加载期拒绝该组合的检查是可行的，而这里刻意不加：该组合并非普遍错误。它只在某个 child 作用域增量位于继承历史之前时才是错的，而产生该增量的包——[`qilin-tool-subagent-report`](../../../../packages/subagent/tool-subagent-report/README.zh.md)——是独立安装的，并且按其自身设计对 `tool-subagent` 不可见。一个不安装 report 包的部署可以在前缀完好的前提下运行可继续的 fork child。把某一份插件清单的后果写成委派工具的不变量，会让该工具断言它无法观察到的事实。
 
 重新开放的条件记录为 `prepareContinuable` 方法上的 `TODO(fork-continuable-prefix-reuse)` 标记——随附组合不调用这个方法——并由 issue #2124 跟踪：当 child 的系统提示词与工具 schema 能与其 parent 逐字节一致时，可继续 fork 即可重新开放。
 

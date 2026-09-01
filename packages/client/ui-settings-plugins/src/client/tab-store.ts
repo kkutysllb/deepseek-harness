@@ -12,7 +12,7 @@
 
 import type { SettingsDescribeFace } from '@qilin/client-ui-settings/client'
 import type { StoredEntry } from '@qilin/client-ui-slots'
-import { createSnapshotStore, type SnapshotStore } from '@qilin/client-runtime/client'
+import { createSnapshotStore, type SnapshotStore } from '@qilin/client-store'
 
 /** What the section renders. */
 export interface ConfigurablePluginsTabState {

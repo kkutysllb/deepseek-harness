@@ -11,7 +11,6 @@ import type { GoalRef, GoalView } from '@qilin/goal'
 import { boundContextSummary, createUserMessage, HarnessError } from '@qilin/llm'
 import { defineTool } from '@qilin/tools'
 import type { GenericCallView } from '@qilin/tools'
-import type {} from '@qilin/system-prompt'
 import {
   completionAuthority,
   goalToolExecution,
@@ -20,7 +19,7 @@ import {
 import { renderWrapupContext } from './wrapup.ts'
 
 export const name = 'tool-goal'
-export const inject = ['agents', 'goals', 'tools', 'systemPrompt']
+export const inject = ['agents', 'goals', 'tools', 'systemPrompt', 'sessionProjections']
 
 /** Model policy and hard lower bounds for goal-state updates. */
 export interface Config {
@@ -188,7 +187,7 @@ export function apply(ctx: Context, config: Config): void {
   const resolved = resolveConfig(config)
   ctx.systemPrompt.section({
     name: 'tool:goal',
-    order: 114,
+    order: ctx.systemPrompt.getSectionOrder('TOOL_GOAL'),
     text: guidance(resolved.blockedAfterConsecutiveRounds),
   })
 

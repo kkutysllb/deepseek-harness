@@ -8,8 +8,9 @@
  */
 import { Context } from '@deepseek-ai/cordis'
 import { describe, expect, it } from 'vitest'
-import { createScope, scopeOf, SlotRegistry } from '@qilin/client-runtime/client'
-import type { SessionId } from '@qilin/client-runtime/client'
+import { createScope, scopeOf } from '@qilin/api-session-controller/client'
+import { SlotRegistry } from '@qilin/client-ui-renderer/client'
+import type { SessionId } from '@qilin/session/types'
 import type { InputTriggerSource } from '@qilin/client-ui-input-trigger/client'
 import type { CommandUiContract } from '../src/client/contract.ts'
 import type { PopupSelectInjected } from '../src/client/PopupSelectView.tsx'

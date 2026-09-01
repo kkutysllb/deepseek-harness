@@ -1,4 +1,4 @@
-/** DeepSeek Files API identifiers. @module dsh-llm-deepseek/file-id */
+/** DeepSeek Files API identifiers. @module qilin-llm-deepseek/file-id */
 
 import type { Branded } from '@qilin/brand'
 

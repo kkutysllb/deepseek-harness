@@ -3,13 +3,15 @@ import { Context } from '@deepseek-ai/cordis'
 import Loader from '@deepseek-ai/cordis-plugin-loader'
 import AgentRegistry, { agentEvents, Inbox } from '@qilin/agent'
 import type { Agent, AgentStatus } from '@qilin/agent'
+import { turnBoundaryProjectionDefinition } from '@qilin/agent-loop'
 import GoalService, { GoalId } from '@qilin/goal'
 import type { GoalRef } from '@qilin/goal'
-import { createUserMessage, CallId } from '@qilin/llm'
+import { createUserMessage, ToolCallId } from '@qilin/llm'
 import type { MessageSource } from '@qilin/llm'
 import { SESSION_FORMAT_VERSION, Session, SessionId } from '@qilin/session'
 import SystemPrompt from '@qilin/system-prompt'
 import ToolRuntime from '@qilin/tools'
+import SessionProjectionRegistry from '@qilin/session-projection'
 import type { ToolExecutionResult } from '@qilin/tools'
 import * as toolGoal from '@qilin/tool-goal'
 
@@ -74,6 +76,8 @@ async function harness(config: toolGoal.Config = {}) {
   await ctx.plugin(SystemPrompt)
   await ctx.plugin(AgentRegistry)
   await ctx.plugin(ToolRuntime)
+  await ctx.plugin(SessionProjectionRegistry)
+  ctx.sessionProjections.register(turnBoundaryProjectionDefinition)
   await ctx.plugin(GoalService)
   const fiber = await ctx.plugin(toolGoal, config)
   const root = stubAgent(`goal-tool-root-${Math.random()}`)
@@ -91,7 +95,7 @@ async function execute(
 ): Promise<ToolExecutionResult> {
   const run = () => ctx.tools.execute({
     signal: testToolSignal,
-    callId: CallId(`call-${Math.random()}`),
+    callId: ToolCallId(`call-${Math.random()}`),
     name,
     arguments: args,
     ...agent === undefined ? {} : { agent },
@@ -123,7 +127,7 @@ describe('goal tool registration and presentation', () => {
     expect(['create_goal', 'get_goal', 'update_goal'].map(name => ctx.tools.get(name)?.name))
       .toEqual(['create_goal', 'get_goal', 'update_goal'])
     for (const name of ['create_goal', 'get_goal', 'update_goal']) {
-      expect(ctx.tools.executionMode({ signal: testToolSignal, callId: CallId(name), name, arguments: {} }))
+      expect(ctx.tools.executionMode({ signal: testToolSignal, callId: ToolCallId(name), name, arguments: {} }))
         .toEqual({ kind: 'exclusive' })
     }
     const section = (await ctx.systemPrompt.assemble()).sections.find(item => item.name === 'tool:goal')
@@ -164,7 +168,7 @@ describe('goal tool registration and presentation', () => {
   it('has the Loader-safe namespace export shape', () => {
     expect('default' in toolGoal).toBe(false)
     expect(toolGoal.name).toBe('tool-goal')
-    expect(toolGoal.inject).toEqual(['agents', 'goals', 'tools', 'systemPrompt'])
+    expect(toolGoal.inject).toEqual(['agents', 'goals', 'tools', 'systemPrompt', 'sessionProjections'])
     const loader = Object.create(Loader.prototype) as Loader
     expect(loader.unwrapExports(toolGoal)).toBe(toolGoal)
   })
@@ -217,7 +221,7 @@ describe('goal tool execution authority', () => {
     openTurn(root, { kind: 'user' })
     const driverless = await ctx.tools.execute({
       signal: testToolSignal,
-      callId: CallId('call-driverless'),
+      callId: ToolCallId('call-driverless'),
       name: 'get_goal',
       arguments: {},
       agent: root.agent,

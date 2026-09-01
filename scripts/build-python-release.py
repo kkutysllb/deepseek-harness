@@ -17,8 +17,8 @@ from pathlib import Path
 
 
 ROOT = Path(__file__).resolve().parents[1]
-SDK_DISTRIBUTION = "deepseek-harness-sdk"
-RUNTIME_DISTRIBUTION = "deepseek-harness-runtime-bin"
+SDK_DISTRIBUTION = "openkylin-sdk"
+RUNTIME_DISTRIBUTION = "openkylin-runtime-bin"
 PLATFORM_MANIFEST = ROOT / "python" / "sdk-runtime" / "platforms.json"
 
 
@@ -47,9 +47,12 @@ def load_platforms(path: Path = PLATFORM_MANIFEST) -> dict[str, tuple[str, str]]
 PLATFORMS = load_platforms()
 
 
-def runtime_suffixes(executable_name: str) -> tuple[str, ...]:
-    suffixes = ("", "-rg")
-    return (*suffixes, "-spawn-helper") if "-macos-" in executable_name else suffixes
+def runtime_filenames(executable_name: str) -> tuple[str, ...]:
+    """Return the exact platform payload names for one runtime executable."""
+    if executable_name.endswith(".exe"):
+        return (executable_name, f"{executable_name.removesuffix('.exe')}-rg.exe")
+    names = (executable_name, f"{executable_name}-rg")
+    return (*names, f"{executable_name}-spawn-helper") if "-macos-" in executable_name else names
 
 
 def main() -> None:
@@ -74,17 +77,17 @@ def main() -> None:
 
     output_dir = args.output_dir.resolve()
     output_dir.mkdir(parents=True, exist_ok=True)
-    with tempfile.TemporaryDirectory(prefix="dsh-python-release-") as temporary:
+    with tempfile.TemporaryDirectory(prefix="qilin-python-release-") as temporary:
         staging = Path(temporary) / args.package
         if args.package == "sdk":
             stage_sdk(staging, wheel_version)
             environment = None
-            expected = output_dir / f"deepseek_harness_sdk-{wheel_version}-py3-none-any.whl"
+            expected = output_dir / f"openkylin_sdk-{wheel_version}-py3-none-any.whl"
         else:
             platform_tag, executable_name = PLATFORMS[args.platform]
             stage_runtime(staging, wheel_version, args.runtime_exe.resolve(), executable_name)
             environment = {"QILIN_RUNTIME_PLATFORM_TAG": platform_tag}
-            expected = output_dir / f"deepseek_harness_runtime_bin-{wheel_version}-py3-none-{platform_tag}.whl"
+            expected = output_dir / f"openkylin_runtime_bin-{wheel_version}-py3-none-{platform_tag}.whl"
         command = ["uv", "build", "--wheel", "--out-dir", str(output_dir), str(staging)]
         subprocess.run(command, cwd=ROOT, env=None if environment is None else {**os.environ, **environment}, check=True)
     if not expected.is_file():
@@ -150,7 +153,7 @@ def copy_package(source: Path, destination: Path) -> None:
             "*.pyc",
             "dist",
             "node_modules",
-            "dsh-jsonrpc-agent-pkg-*",
+            "openkylin-sdk-runtime-*",
         ),
     )
 
@@ -194,8 +197,8 @@ def stage_sdk(destination: Path, version: str) -> None:
     pyproject = destination / "pyproject.toml"
     rewrite_version(pyproject, version)
     text, count = re.subn(
-        r'"deepseek-harness-runtime-bin==[^"]+"',
-        f'"deepseek-harness-runtime-bin=={version}"',
+        r'"openkylin-runtime-bin==[^"]+"',
+        f'"openkylin-runtime-bin=={version}"',
         pyproject.read_text(),
         count=1,
     )
@@ -205,13 +208,18 @@ def stage_sdk(destination: Path, version: str) -> None:
 
 
 def stage_runtime(destination: Path, version: str, executable: Path, executable_name: str) -> None:
+    if executable.name != executable_name:
+        raise ValueError(
+            f"runtime executable must be named {executable_name}, got {executable.name}"
+        )
     copy_package(ROOT / "python" / "sdk-runtime", destination)
     stage_license_files(destination, include_notices=True)
     rewrite_version(destination / "pyproject.toml", version)
-    runtime_dir = destination / "src" / "deepseek_harness_runtime" / "runtime"
+    runtime_dir = destination / "src" / "openkylin_runtime" / "runtime"
     runtime_dir.mkdir(parents=True, exist_ok=True)
-    for suffix in runtime_suffixes(executable_name):
-        shutil.copy2(Path(f"{executable}{suffix}"), runtime_dir / f"{executable_name}{suffix}")
+    source_directory = executable.parent
+    for filename in runtime_filenames(executable_name):
+        shutil.copy2(source_directory / filename, runtime_dir / filename)
 
 
 def verify_wheel(
@@ -246,17 +254,17 @@ def verify_wheel(
                 f"{wheel} has license files {license_files}, expected {expected_license_files}"
             )
         runtime_files = [
-            name for name in archive.namelist() if "/runtime/dsh-jsonrpc-agent-pkg-" in name
+            name for name in archive.namelist() if "/runtime/openkylin-sdk-runtime-" in name
         ]
         if package == "runtime":
             assert platform is not None
-            expected_files = [f"{platform[1]}{suffix}" for suffix in runtime_suffixes(platform[1])]
+            expected_files = sorted(runtime_filenames(platform[1]))
             found_files = sorted(Path(name).name for name in runtime_files)
             if found_files != expected_files:
                 raise RuntimeError(f"{wheel} runtime payload must be {expected_files}, found {found_files}")
             for runtime_file in runtime_files:
                 mode = archive.getinfo(runtime_file).external_attr >> 16
-                if mode & stat.S_IXUSR == 0:
+                if platform[0] != "win_amd64" and mode & stat.S_IXUSR == 0:
                     raise RuntimeError(f"{wheel} runtime executable lost its executable bit: {runtime_file}")
         elif runtime_files:
             raise RuntimeError(f"SDK wheel unexpectedly contains runtime executables: {runtime_files}")

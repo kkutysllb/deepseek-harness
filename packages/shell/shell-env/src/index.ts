@@ -1,7 +1,7 @@
 /**
  * Tool-independent shell environment plugin: owns the `ctx.shellEnv` registry of
  * trusted, per-execution `QILIN_*` variables consumed by the model-facing shell
- * tools (`dsh-tool-bash`, `dsh-tool-pwsh`). Built-in shell facts are owned by
+ * tools (`qilin-tool-bash`, `qilin-tool-pwsh`). Built-in shell facts are owned by
  * the registry itself while plugins can register additional, enumerable facts
  * with effect-scoped disposal.
  *
@@ -11,7 +11,7 @@
 import { Service, type Context } from '@deepseek-ai/cordis'
 import z from '@deepseek-ai/schemastery'
 import { QILIN_ENV_PREFIX } from '@qilin/shell'
-import type { DshEnvironment, DshEnvironmentKey } from '@qilin/shell'
+import type { QilinEnvironment, QilinEnvironmentKey } from '@qilin/shell'
 import { QILIN_HOME_ENV, resolveDshHome } from '@qilin/home-paths'
 import type { ToolExecution } from '@qilin/tools'
 import type {} from '@qilin/session-persistence'
@@ -27,7 +27,7 @@ export const inject: string[] = []
 
 /** Plugin config (all optional — the built-in facts resolve without defaults). */
 export interface Config {
-  /** DeepSeek Harness home directory exposed as `QILIN_HOME`; defaults to `$QILIN_HOME` or `~/.dsh`. */
+  /** DeepSeek Harness home directory exposed as `QILIN_HOME`; defaults to `$QILIN_HOME` or `~/.qilin`. */
   dshHome?: string
 }
 
@@ -51,13 +51,13 @@ export interface BashEnvContributor {
   /** Stable contributor name used in diagnostics and duplicate detection. */
   name: string
   /** Complete set of `QILIN_*` keys this contributor may return. */
-  variables: Readonly<Record<DshEnvironmentKey, BashEnvVariable>>
+  variables: Readonly<Record<QilinEnvironmentKey, BashEnvVariable>>
   /**
    * Resolve this contributor's available values for one tool execution.
    * @param execution - the shell tool execution and its optional calling agent.
    * @returns a partial map containing only keys declared in {@link variables}.
    */
-  resolve(execution: ToolExecution): Readonly<Partial<Record<DshEnvironmentKey, string>>>
+  resolve(execution: ToolExecution): Readonly<Partial<Record<QilinEnvironmentKey, string>>>
 }
 
 /** An enumerable declaration returned by {@link ShellEnvRegistry.list}. */
@@ -65,13 +65,13 @@ export interface BashEnvVariableInfo extends BashEnvVariable {
   /** Contributor that owns the variable. */
   contributor: string
   /** Declared `QILIN_*` environment variable name. */
-  key: DshEnvironmentKey
+  key: QilinEnvironmentKey
 }
 
 const QILIN_SHELL_KEY = `${QILIN_ENV_PREFIX}SHELL` as const
 const QILIN_SESSION_ID_KEY = `${QILIN_ENV_PREFIX}SESSION_ID` as const
 const QILIN_SESSION_JSONL_KEY = `${QILIN_ENV_PREFIX}SESSION_JSONL` as const
-const RESERVED_BASH_ENV_KEYS = new Set<DshEnvironmentKey>([
+const RESERVED_BASH_ENV_KEYS = new Set<QilinEnvironmentKey>([
   QILIN_HOME_ENV,
   QILIN_SHELL_KEY,
   QILIN_SESSION_ID_KEY,
@@ -88,7 +88,7 @@ const BASH_ENV_KEY_SUFFIX = /^[A-Z][A-Z0-9_]*$/
  */
 export class ShellEnvRegistry extends Service {
   private readonly contributors = new Map<string, BashEnvContributor>()
-  private readonly keyOwners = new Map<DshEnvironmentKey, string>()
+  private readonly keyOwners = new Map<QilinEnvironmentKey, string>()
   private readonly dshHome: string
 
   /**
@@ -116,7 +116,7 @@ export class ShellEnvRegistry extends Service {
         throw new Error(`bash env contributor "${contributor.name}" is already registered`)
       }
 
-      const variables = Object.entries(contributor.variables) as [DshEnvironmentKey, BashEnvVariable][]
+      const variables = Object.entries(contributor.variables) as [QilinEnvironmentKey, BashEnvVariable][]
       for (const [key, variable] of variables) {
         if (!key.startsWith(QILIN_ENV_PREFIX)
           || !BASH_ENV_KEY_SUFFIX.test(key.slice(QILIN_ENV_PREFIX.length))) {
@@ -149,8 +149,8 @@ export class ShellEnvRegistry extends Service {
    * @param execution - the current tool execution.
    * @returns an immutable environment overlay containing built-ins and current contributions.
    */
-  collect(execution: ToolExecution): DshEnvironment {
-    const values: Record<DshEnvironmentKey, string> = {
+  collect(execution: ToolExecution): QilinEnvironment {
+    const values: Record<QilinEnvironmentKey, string> = {
       [QILIN_HOME_ENV]: this.dshHome,
       [QILIN_SHELL_KEY]: '1',
     }
@@ -161,7 +161,7 @@ export class ShellEnvRegistry extends Service {
     for (const contributor of [...this.contributors.values()].sort((left, right) => left.name.localeCompare(right.name))) {
       const resolved = contributor.resolve(execution)
       for (const [rawKey, value] of Object.entries(resolved)) {
-        const key = rawKey as DshEnvironmentKey
+        const key = rawKey as QilinEnvironmentKey
         if (!Object.hasOwn(contributor.variables, key)) {
           throw new Error(`bash env contributor "${contributor.name}" returned undeclared key "${key}"`)
         }
@@ -186,7 +186,7 @@ export class ShellEnvRegistry extends Service {
       .flatMap(contributor => Object.entries(contributor.variables).map(([key, variable]) => ({
         contributor: contributor.name,
         description: variable.description,
-        key: key as DshEnvironmentKey,
+        key: key as QilinEnvironmentKey,
       })))
       .sort((left, right) => left.key.localeCompare(right.key))
   }

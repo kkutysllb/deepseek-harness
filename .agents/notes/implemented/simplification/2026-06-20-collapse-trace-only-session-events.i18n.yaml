@@ -2,5 +2,5 @@
 # side as of the last confirmed-consistent state. Both languages carry equal authority;
 # after editing either side, bring the other along and re-record with:
 #   pnpm run verify-translation-pairing --write .agents/notes/implemented/simplification/2026-06-20-collapse-trace-only-session-events.md
-2026-06-20-collapse-trace-only-session-events.md: a7a4ab3a2e4c008b59bc4cb1023e699c6fd8a76b
-2026-06-20-collapse-trace-only-session-events.zh.md: 3b37f55795aa76fbdc5193e751f518c713483ccb
+2026-06-20-collapse-trace-only-session-events.md: ae539fb541ff1452186d68882cf549a855e5f44d
+2026-06-20-collapse-trace-only-session-events.zh.md: ee6bd2d3f8efff9a03f602d151e3a520533a6ea1

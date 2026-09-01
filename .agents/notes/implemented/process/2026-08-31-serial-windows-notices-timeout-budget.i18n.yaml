@@ -1,0 +1,6 @@
+# Bilingual-pair consistency record (docs/i18n/README.md): the git blob hash of each
+# side as of the last confirmed-consistent state. Both languages carry equal authority;
+# after editing either side, bring the other along and re-record with:
+#   pnpm run verify-translation-pairing --write .agents/notes/implemented/process/2026-08-31-serial-windows-notices-timeout-budget.md
+2026-08-31-serial-windows-notices-timeout-budget.md: 844fdb3723856d535318fa1c4978dcfedab5d31d
+2026-08-31-serial-windows-notices-timeout-budget.zh.md: f37783e48a9cf13a649ad7922670f7693af2070d

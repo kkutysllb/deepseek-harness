@@ -1,0 +1,100 @@
+{
+  "name": "@qilin/client-ui-chat",
+  "description": "Chat Conversation target, node definitions, renderers, and details surface",
+  "version": "0.1.2-alpha.3",
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/deepseek-ai/deepseek-harness.git",
+    "directory": "packages/client/ui-chat"
+  },
+  "type": "module",
+  "main": "lib/index.js",
+  "types": "lib/types/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./lib/types/index.d.ts",
+      "default": "./lib/index.js"
+    },
+    "./invariant": {
+      "types": "./lib/types/invariant.d.ts",
+      "default": "./lib/invariant.js"
+    },
+    "./client": {
+      "types": "./lib/types/client/index.d.ts",
+      "default": "./lib/client.js"
+    },
+    "./src/*": "./src/*",
+    "./package.json": "./package.json"
+  },
+  "qilin": {
+    "client": {
+      "inject": [
+        "@qilin/api-session-controller",
+        "@qilin/api-workspace-controller",
+        "@qilin/client-locale",
+        "@qilin/client-ui-conversation",
+        "@qilin/client-ui-layout",
+        "@qilin/client-ui-renderer",
+        "@qilin/client-ui-session",
+        "@qilin/client-ui-settings",
+        "@qilin/client-ui-workspace"
+      ],
+      "platform": "web"
+    }
+  },
+  "scripts": {
+    "bundle": "tsdown",
+    "watch": "tsdown --watch"
+  },
+  "license": "MIT",
+  "peerDependencies": {
+    "@deepseek-ai/cordis": "workspace:^"
+  },
+  "devDependencies": {
+    "@deepseek-ai/cordis": "workspace:^",
+    "@qilin/agent": "workspace:^",
+    "@qilin/api-remotes": "workspace:^",
+    "@qilin/api-session-controller": "workspace:^",
+    "@qilin/api-workspace-controller": "workspace:^",
+    "@qilin/attachment": "workspace:^",
+    "@qilin/client-locale": "workspace:^",
+    "@qilin/client-store": "workspace:^",
+    "@qilin/client-ui-approval": "workspace:^",
+    "@qilin/client-ui-conversation": "workspace:^",
+    "@qilin/client-ui-layout": "workspace:^",
+    "@qilin/client-ui-primitives": "workspace:^",
+    "@qilin/client-ui-renderer": "workspace:^",
+    "@qilin/client-ui-session": "workspace:^",
+    "@qilin/client-ui-settings": "workspace:^",
+    "@qilin/client-ui-slots": "workspace:^",
+    "@qilin/client-ui-workspace": "workspace:^",
+    "@qilin/commands": "workspace:^",
+    "@qilin/compaction": "workspace:^",
+    "@qilin/invariants": "workspace:^",
+    "@qilin/llm": "workspace:^",
+    "@qilin/llm-retry": "workspace:^",
+    "@qilin/session": "workspace:^",
+    "@qilin/session-stats": "workspace:^",
+    "@qilin/session-turn-outline": "workspace:^",
+    "@qilin/token-meter": "workspace:^",
+    "@qilin/tools": "workspace:^",
+    "@qilin/util-workspace-path": "workspace:^",
+    "@types/react": "~18.3.1",
+    "@types/react-dom": "~18.3.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "@qilin/settings": "workspace:^"
+  },
+  "dependencies": {
+    "@deepseek-ai/schemastery": "workspace:^"
+  },
+  "files": [
+    "lib/index.js",
+    "lib/invariant.js",
+    "lib/client.js",
+    "lib/types/**/*.d.ts"
+  ]
+}

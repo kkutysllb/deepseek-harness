@@ -2,7 +2,8 @@ import { writeFile } from 'node:fs/promises'
 import { Context } from '@deepseek-ai/cordis'
 import AgentLoop from '@qilin/agent-loop'
 import { mountAgentLoopTestDependencies } from '@qilin/agent-loop-testkit'
-import { createUserMessage, CallId, type GenerateOptions, LlmAdapter, type StreamChunk  } from '@qilin/llm'
+import SessionProjectionRegistry from '@qilin/session-projection'
+import { createUserMessage, ToolCallId, type GenerateOptions, LlmAdapter, type StreamChunk  } from '@qilin/llm'
 import { SessionId } from '@qilin/session'
 import JsonlSessionPersistence from '@qilin/session-persistence-jsonl'
 import * as checkpointPolicy from '../../src/index.ts'
@@ -29,7 +30,7 @@ class CrashAdapter extends LlmAdapter {
     yield {
       type: 'block-end',
       index: 0,
-      block: { type: 'tool-call', id: CallId('crash-call'), name: 'crash_tool', arguments: '{}' },
+      block: { type: 'tool-call', id: ToolCallId('crash-call'), name: 'crash_tool', arguments: '{}' },
     }
     yield { type: 'finish', reason: { kind: 'tool-calls' } }
   }
@@ -37,6 +38,7 @@ class CrashAdapter extends LlmAdapter {
 
 const ctx = new Context()
 await mountAgentLoopTestDependencies(ctx)
+await ctx.plugin(SessionProjectionRegistry)
 await ctx.plugin(AgentLoop, { agents: [] })
 await ctx.plugin(JsonlSessionPersistence, { root: persistenceRoot, compression: 'none' })
 await ctx.plugin(checkpointPolicy)

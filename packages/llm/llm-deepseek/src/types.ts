@@ -6,7 +6,7 @@
  * guides/thinking_mode.mdx, guides/tool_calls.md), cross-checked against
  * live streams from the internal endpoint (2026-06).
  *
- * @module dsh-llm-deepseek/types
+ * @module qilin-llm-deepseek/types
  */
 
 /** Request body for `POST {baseURL}/chat/completions`. */
@@ -166,6 +166,8 @@ export interface WireToolCallDelta {
 export interface WireUsage {
   prompt_tokens: number
   completion_tokens: number
+  /** Provider-reported aggregate across prompt and completion tokens. */
+  total_tokens?: number
   prompt_cache_hit_tokens?: number
   prompt_cache_miss_tokens?: number
   prompt_tokens_details?: { cached_tokens?: number }

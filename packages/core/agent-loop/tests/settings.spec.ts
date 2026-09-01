@@ -8,6 +8,7 @@ import SessionStore from '@qilin/session'
 import SystemPrompt from '@qilin/system-prompt'
 import ToolRuntime from '@qilin/tools'
 import AgentRegistry from '@qilin/agent'
+import SessionProjectionRegistry from '@qilin/session-projection'
 import { SettingsProvider } from '@qilin/settings'
 import type { SettingsNamespace } from '@qilin/settings'
 import AgentLoop, { AGENT_LOOP_SETTINGS_NAMESPACE } from '@qilin/agent-loop'
@@ -34,6 +35,7 @@ async function boot(): Promise<{ ctx: Context; settingsFiber: Fiber; loopFiber: 
   const ctx = new Context()
   await ctx.plugin(LlmRuntime)
   await ctx.plugin(SessionStore)
+  await ctx.plugin(SessionProjectionRegistry)
   await ctx.plugin(SystemPrompt)
   await ctx.plugin(ToolRuntime)
   await ctx.plugin(AgentRegistry)

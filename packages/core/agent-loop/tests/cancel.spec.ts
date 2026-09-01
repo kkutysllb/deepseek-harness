@@ -1,10 +1,10 @@
-import { CallId, createUserMessage } from '@qilin/llm'
+import { ToolCallId, createUserMessage } from '@qilin/llm'
 /**
  * Tests for the queue-aware `Agent.cancel()` primitive. The default clears
  * queued and steering work, while `keepInbox` preserves pending input for a
  * later wake after the active turn reaches quiescence. The suite
  * covers every landing window plus signal reset and `whenIdle()` quiescence.
- * @module dsh-agent-loop/tests/cancel
+ * @module qilin-agent-loop/tests/cancel
  */
 
 import { describe, expect, it } from 'vitest'
@@ -15,6 +15,7 @@ import SystemPrompt from '@qilin/system-prompt'
 import ToolRuntime, { defineContentToolFixture, TOOL_ABORTED_BEFORE_DISPATCH } from '@qilin/tools'
 import AgentRegistry, { type Agent } from '@qilin/agent'
 import AgentLoop from '@qilin/agent-loop'
+import SessionProjectionRegistry from '@qilin/session-projection'
 import { MockAdapter, textResponse, toolCallResponse } from './mock-adapter.ts'
 
 function driverDone(agent: Agent): Promise<void> {
@@ -25,6 +26,7 @@ async function harness(adapter: MockAdapter) {
   const ctx = new Context()
   await ctx.plugin(LlmRuntime)
   await ctx.plugin(SessionStore)
+  await ctx.plugin(SessionProjectionRegistry)
   await ctx.plugin(SystemPrompt)
   await ctx.plugin(ToolRuntime)
   await ctx.plugin(AgentRegistry)
@@ -543,7 +545,7 @@ describe('Agent.cancel()', () => {
         { type: 'text-delta', index: 0, text: 'reading the file' },
         { type: 'block-end', index: 0, block: { type: 'text', text: 'reading the file' } },
         { type: 'block-start', index: 1, blockType: 'tool-call' },
-        { type: 'tool-call-delta', index: 1, id: CallId('c1'), name: 'read', argumentsDelta: '{"pa' },
+        { type: 'tool-call-delta', index: 1, id: ToolCallId('c1'), name: 'read', argumentsDelta: '{"pa' },
       ],
     }])
     const ctx = await harness(adapter)
@@ -570,7 +572,7 @@ describe('Agent.cancel()', () => {
     const ctx = await harness(adapter)
     const agent = ctx.agentLoop.create(SessionId('recovery-cancel'), { provider: 'mock', model: 'mock' })
     // Cancellation lands while agent/request-error is in flight — the window
-    // dsh-llm-retry opens when its backoff waits after appending llm/retry.
+    // qilin-llm-retry opens when its backoff waits after appending llm/retry.
     ctx.on('agent/request-error', async ({ agent: subject }) => {
       if (subject === agent) subject.cancel({ kind: 'user' })
     })
@@ -620,7 +622,7 @@ describe('Agent.cancel()', () => {
     const adapter = new MockAdapter([{
       hangAfter: [
         { type: 'block-start', index: 0, blockType: 'tool-call' },
-        { type: 'tool-call-delta', index: 0, id: CallId('c1'), name: 'read', argumentsDelta: '{"pa' },
+        { type: 'tool-call-delta', index: 0, id: ToolCallId('c1'), name: 'read', argumentsDelta: '{"pa' },
       ],
     }])
     const ctx = await harness(adapter)
@@ -669,6 +671,7 @@ describe('Agent.cancel()', () => {
     const ctx = new Context()
     await ctx.plugin(LlmRuntime)
     await ctx.plugin(SessionStore)
+    await ctx.plugin(SessionProjectionRegistry)
     await ctx.plugin(SystemPrompt)
     await ctx.plugin(ToolRuntime)
     await ctx.plugin(AgentRegistry)

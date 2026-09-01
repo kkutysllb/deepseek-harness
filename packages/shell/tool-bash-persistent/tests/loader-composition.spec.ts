@@ -6,7 +6,7 @@ import { afterEach, describe, expect, it } from 'vitest'
 import { Context } from '@deepseek-ai/cordis'
 import Loader from '@deepseek-ai/cordis-plugin-loader'
 import Include from '@deepseek-ai/cordis-plugin-include'
-import { CallId } from '@qilin/llm'
+import { ToolCallId } from '@qilin/llm'
 import { Session, SessionId } from '@qilin/session'
 import AgentRegistry, { Inbox } from '@qilin/agent'
 import type { Agent } from '@qilin/agent'
@@ -15,6 +15,7 @@ import * as TerminalLocal from '@qilin/terminal-bash'
 import SandboxProvider from '@qilin/sandbox'
 import type { ConfinedArgv, SandboxPolicy } from '@qilin/sandbox'
 import SandboxPolicyService from '@qilin/sandbox-policy'
+import SessionProjectionRegistry from '@qilin/session-projection'
 import LocalSubprocessRuntime from '@qilin/subprocess-local'
 import SystemPrompt from '@qilin/system-prompt'
 import ToolRuntime from '@qilin/tools'
@@ -67,7 +68,7 @@ const suite = process.platform === 'linux' || process.platform === 'darwin' ? de
 
 suite('persistent Bash through a real cordis.yml Loader composition', () => {
   it('preserves cwd and environment across calls', async () => {
-    root = await mkdtemp(join(tmpdir(), 'dsh-persistent-bash-loader-'))
+    root = await mkdtemp(join(tmpdir(), 'qilin-persistent-bash-loader-'))
     const configPath = join(root, 'cordis.yml')
     await writeFile(configPath, [
       "- name: '@qilin/agent'",
@@ -75,6 +76,7 @@ suite('persistent Bash through a real cordis.yml Loader composition', () => {
       "- name: '@qilin/tools'",
       "- name: '@qilin/terminal'",
       "- name: '@qilin/test-sandbox'",
+      "- name: '@qilin/session-projection'",
       "- name: '@qilin/sandbox-policy'",
       '  config:',
       '    mode: danger-full-access',
@@ -108,6 +110,7 @@ suite('persistent Bash through a real cordis.yml Loader composition', () => {
       ['@qilin/tools', ToolRuntime],
       ['@qilin/terminal', TerminalSessionService],
       ['@qilin/test-sandbox', PassthroughSandbox],
+      ['@qilin/session-projection', SessionProjectionRegistry],
       ['@qilin/sandbox-policy', SandboxPolicyService],
       ['@qilin/subprocess-local', LocalSubprocessRuntime],
       ['@qilin/terminal-bash', TerminalLocal],
@@ -127,7 +130,7 @@ suite('persistent Bash through a real cordis.yml Loader composition', () => {
     const signal = new AbortController().signal
     const execute = (id: string, command: string) => context!.tools.execute({
       signal,
-      callId: CallId(id),
+      callId: ToolCallId(id),
       name: 'bash',
       arguments: { command },
       agent: owner,
@@ -152,6 +155,12 @@ suite('persistent Bash through a real cordis.yml Loader composition', () => {
     ))
     expect(heredoc).toBe('alpha\nbeta')
 
+    const pipeline = text(await execute(
+      'pipeline',
+      '{ sleep 0.1; printf "delayed\\n"; } | cat',
+    ))
+    expect(pipeline).toBe('delayed')
+
     const large = text(await execute('large-output', 'seq 1 12050'))
     expect(large.startsWith('1\n2\n3\n')).toBe(true)
     expect(large).toContain('<response clipped>')
@@ -161,7 +170,7 @@ suite('persistent Bash through a real cordis.yml Loader composition', () => {
     // stdin_read readiness is what returns the replacement shell's prompt
     // instead of spinning until the tool deadline.
     const execed = text(await execute('exec-replacement', 'exec bash --noprofile --norc -i'))
-    expect(execed).toBe('dsh> ')
+    expect(execed).toBe('qilin> ')
 
     const exited = text(await execute('exit', 'exit'))
     expect(exited).toContain('next bash call starts from the workspace')

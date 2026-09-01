@@ -3,6 +3,8 @@ import { describe, expect, it } from 'vitest'
 import LlmRuntime, { createUserMessage, LlmAdapter  } from '@qilin/llm'
 import type { GenerateOptions, StreamChunk } from '@qilin/llm'
 import SessionStore, { Session, SessionId } from '@qilin/session'
+import SessionProjectionRegistry from '@qilin/session-projection'
+import { turnBoundaryProjectionDefinition } from '@qilin/agent-loop'
 import SessionTitleService from '@qilin/session-title'
 import * as providerPlugin from '@qilin/session-title-all-prompts-llm'
 
@@ -44,6 +46,8 @@ describe('all-messages LLM title provider', () => {
     const ctx = new Context()
     await ctx.plugin(LlmRuntime)
     await ctx.plugin(SessionStore)
+    await ctx.plugin(SessionProjectionRegistry)
+    ctx.sessionProjections.register(turnBoundaryProjectionDefinition)
     await ctx.plugin(SessionTitleService, TITLE_CONFIG)
     const adapter = new RecordingAdapter()
     ctx.llm.registerAdapter(['current-route'], adapter)

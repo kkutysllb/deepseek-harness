@@ -1,8 +1,8 @@
-/** Unified JSON-value schema DSL, inference, compilation, and typed tool helper. @module dsh-tools/schema */
+/** Unified JSON-value schema DSL, inference, compilation, and typed tool helper. @module qilin-tools/schema */
 
 import { HarnessError } from '@qilin/llm'
 import type { ContentBlock } from '@qilin/llm'
-import type { JsonValue } from '@qilin/session'
+import type { JsonValue } from '@qilin/util-values'
 import type { ToolDefinition, ToolExecution, ToolExecutionResult, ToolRunContext, ToolResult } from './index.ts'
 import { assertSupportedJsonSchema, isJsonSchemaRecord, isPlainJsonArray, JsonSchemaError, validateJsonSchemaValue } from './json-schema.ts'
 import type { JsonSchemaNode, JsonSchemaScalar, ObjectJsonSchema } from './json-schema.ts'

@@ -469,7 +469,7 @@ export async function spawnE2BTerminal(
     argv: posix.join(stateDir, 'argv'),
     outputMarker: posix.join(stateDir, 'output-marker'),
   }
-  const outputMarker = Buffer.from(`dsh-e2b-bootstrap:${randomUUID()}`)
+  const outputMarker = Buffer.from(`qilin-e2b-bootstrap:${randomUUID()}`)
   const output = new PassThrough()
   const outputFilter = new BootstrapOutputFilter(outputMarker, output)
   let handle: CommandHandle | undefined

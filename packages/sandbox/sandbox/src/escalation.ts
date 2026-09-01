@@ -13,10 +13,10 @@
  * hands the closure down, so this package never depends on the approval or
  * agent packages.
  *
- * @module dsh-sandbox/escalation
+ * @module qilin-sandbox/escalation
  */
 
-import { assertNever } from '@qilin/llm'
+import { assertNever } from '@qilin/util-values'
 import type { SandboxMode } from './index.ts'
 
 /**
@@ -97,7 +97,7 @@ export type EscalationOutcome = 'allowed-once' | 'rejected' | 'cancelled' | 'una
  * structurally the approval seam's `ApprovalService`, generic over the agent
  * type `A` and call-id type `C` so this package resolves escalations through
  * `ctx.approval` without importing the approval or agent packages (the tool
- * layer infers `A`/`C` as its own `Agent`/`CallId`).
+ * layer infers `A`/`C` as its own `Agent`/`ToolCallId`).
  */
 export interface EscalationApprover<A = object, C = string> {
   /**

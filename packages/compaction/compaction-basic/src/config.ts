@@ -4,8 +4,8 @@
  * @module @qilin/compaction-basic/config
  */
 
-import { deepFreeze } from '@qilin/llm'
 import type { LlmCallConfig } from '@qilin/llm'
+import { deepFreeze } from '@qilin/util-values'
 import type {
   BasicCompactionConfig,
   CompactionPolicyConfig,

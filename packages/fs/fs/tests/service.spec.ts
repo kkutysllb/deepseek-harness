@@ -1,7 +1,7 @@
 /**
  * Tests for the filesystem Service Definition: registration, duplicate-service
  * behavior, disposal, and the branded id factories. The provider primitives and
- * policy live in `dsh-fs-local` and `dsh-fs-observation-policy`; this seam owns only the
+ * policy live in `qilin-fs-local` and `qilin-fs-observation-policy`; this seam owns only the
  * abstract service contract, so a minimal fake backend exercises it.
  */
 
@@ -88,6 +88,7 @@ describe('FileSystem provider seam', () => {
     await ctx.plugin(FakeFileSystem)
     const fs = ctx.fs as FakeFileSystem
     expect(fs.sandboxMode).toBeUndefined()
+    expect(fs.processPathFromHostPath('/host/file')).toBeUndefined()
     fs.files.set('a.txt', 'hi')
     const target = await fs.resolve('a.txt')
     expect((await fs.stat(target))?.type).toBe('file')

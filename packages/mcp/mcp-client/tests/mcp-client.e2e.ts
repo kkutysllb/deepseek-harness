@@ -1,5 +1,5 @@
 /**
- * End-to-end tests for dsh-mcp-client. Exercises the REAL MCP protocol against:
+ * End-to-end tests for qilin-mcp-client. Exercises the REAL MCP protocol against:
  * 1. A self-written fixture server over stdio (controlled edge cases)
  * 2. @modelcontextprotocol/server-everything (official integration test server)
  * 3. @modelcontextprotocol/server-filesystem (real filesystem operations)
@@ -22,7 +22,7 @@ import type { Transport } from '@modelcontextprotocol/sdk/shared/transport.js'
 import LocalAttachmentStore from '@qilin/attachment-local'
 import SystemPrompt from '@qilin/system-prompt'
 import ToolRuntime from '@qilin/tools'
-import { CallId, LlmAdapter, LlmRuntime } from '@qilin/llm'
+import { ToolCallId, LlmAdapter, LlmRuntime } from '@qilin/llm'
 import type { GenerateOptions, LlmResolvedModelInfo, StreamChunk } from '@qilin/llm'
 import { apply } from '@qilin/mcp-client/src/index.ts'
 import { publicToolName } from '@qilin/mcp-client/src/tools.ts'
@@ -87,8 +87,8 @@ function textOf(block: unknown): string {
 }
 
 let callSeq = 0
-function nextCallId(): CallId {
-  return CallId(`e2e-${++callSeq}`)
+function nextCallId(): ToolCallId {
+  return ToolCallId(`e2e-${++callSeq}`)
 }
 
 // ---- Fixture server tests ----

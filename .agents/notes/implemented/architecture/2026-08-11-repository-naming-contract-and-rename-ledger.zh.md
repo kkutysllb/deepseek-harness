@@ -72,7 +72,7 @@ Status: implemented
 
 PascalCase 标识符中的首字母缩略词使用首字母大写格式：`Ui`、`Llm`、`JsonRpc` 和 `ApiProxy`。在文案和适用的包名中使用惯例规定的全大写形式：UI、LLM、JSON-RPC 和 API。`Typert` 是标识符和文案中的唯一准确产品拼写；不得写成 `TypeRT`、`TypeRt`，也不得对 `Typert` 作其他内部拆分。
 
-不得为了避免重复而删除有意保留的供应商限定词。`dsh-subagent-dsh-sdk` 表示 DeepSeek Harness SDK 提供方，可避免与其他 SDK 混淆。其私有类改名为 `SdkSubagentProvider`，因为类名还需要说明它提供什么。
+不得为了避免重复而删除有意保留的供应商限定词。`qilin-subagent-dsh-sdk` 表示 DeepSeek Harness SDK 提供方，可避免与其他 SDK 混淆。其私有类改名为 `SdkSubagentProvider`，因为类名还需要说明它提供什么。
 
 ### 将规则写入项目文档
 
@@ -171,7 +171,7 @@ PascalCase 标识符中的首字母缩略词使用首字母大写格式：`Ui`�
 | `TelemetryBackend` | `SessionTelemetrySink` | 该底层接收已发出的记录。`Sink` 用于将它与协调型后端服务区分开。 |
 | `TelemetryCoordinator`、`TelemetryRecord`、`TelemetrySeverity`、`TelemetrySharingStatus` 和 `TelemetryCapture` | 对应的 `SessionTelemetry*` 名称 | 这些公开类型只属于会话遥测。 |
 | `telemetry/record` | `session-telemetry/record` | 事件名称必须说明所属领域。 |
-| `TelemetryOtel`、`TelemetryMode`，插件 `telemetry-otel` | `OpenTelemetrySessionBackend`、`SessionTelemetryMode`，插件 `session-telemetry-otel` | 提供方名称同时说明 OpenTelemetry 机制和会话作用域。保留包名 `dsh-session-telemetry` 和 `dsh-session-telemetry-otel`。 |
+| `TelemetryOtel`、`TelemetryMode`，插件 `telemetry-otel` | `OpenTelemetrySessionBackend`、`SessionTelemetryMode`，插件 `session-telemetry-otel` | 提供方名称同时说明 OpenTelemetry 机制和会话作用域。保留包名 `qilin-session-telemetry` 和 `qilin-session-telemetry-otel`。 |
 | `docs/subsystems/telemetry.md` | `docs/subsystems/session-telemetry.md` | 该页面记录会话遥测，而不是仓库级可观测性。 |
 | `session/user-id/`, `@qilin/user-id` | `identity/anonymous-user-id/`, `@qilin/anonymous-user-id` | 该值是遥测、反馈和 DeepSeek 请求共用的随机关联 id。它既不属于 Session 领域，也不是经过身份验证的用户身份。 |
 | `USER_ID_FILE_NAME`、`.userid`，反馈标签 `User` | `ANONYMOUS_USER_ID_FILE_NAME`、`.anonymous-user-id`，反馈标签 `Anonymous user` | 文件和 UI 不得暗示账户身份。保留现有 `AnonymousUserId` 函数和标准 OTel 属性 `user.id`。 |
@@ -243,11 +243,11 @@ PascalCase 标识符中的首字母缩略词使用首字母大写格式：`Ui`�
 | `@qilin/subagent-spawn`, `SpawnProvider` | `@qilin/subagent-spawn-in-process`, `SpawnInProcessProvider` | 该提供方在当前进程内启动子 agent。配置的提供方 id 仍为 `spawn`。 |
 | `@qilin/subagent-fork`, `ForkProvider` | `@qilin/subagent-fork-in-process`, `ForkInProcessProvider` | 该提供方在当前进程内 fork 一个 agent。配置的提供方 id 仍为 `fork`。 |
 | `@qilin/subagent-inprocess`, `subagent-inprocess/` | `@qilin/subagent-in-process-driver`, `subagent-in-process-driver/` | 该包包含通用的进程内驱动逻辑，而不是第三个提供方。 |
-| 私有的 `SdkProvider`，位于 `dsh-subagent-dsh-sdk` 中 | `SdkSubagentProvider` | 重复的包限定词是有意保留的，类名还必须说明它通过 SDK 提供 subagent。 |
+| 私有的 `SdkProvider`，位于 `qilin-subagent-dsh-sdk` 中 | `SdkSubagentProvider` | 重复的包限定词是有意保留的，类名还必须说明它通过 SDK 提供 subagent。 |
 | `WebService`, `WebServiceConfig` | `WebRuntime`, `WebRuntimeConfig` | 该对象选择提供方并运行实时搜索和抓取操作。保留包、键、提供方包和模型工具。 |
 | `@qilin/web-fetch-local`、`LocalFetchProvider`、`LocalFetchLimits`，提供方 id `local-http` | `@qilin/web-fetch-http`、`HttpFetchProvider`、`HttpFetchLimits`，提供方 id `http` | 该提供方执行直接 HTTP 抓取。`local` 只说明代码恰好在哪里运行，并未说明它提供哪种机制。 |
 
-保留 `@qilin/subagent-dsh-sdk`、其提供方 id `dsh-sdk`、外部 ACP（Agent Client Protocol）、Codex 和 Claude Code 提供方系列、subagent 工具包名、主文件系统包和后端、文件系统工具和事件，以及 skill 徽章和工具包。
+保留 `@qilin/subagent-dsh-sdk`、其提供方 id `qilin-sdk`、外部 ACP（Agent Client Protocol）、Codex 和 Claude Code 提供方系列、subagent 工具包名、主文件系统包和后端、文件系统工具和事件，以及 skill 徽章和工具包。
 
 ### 钩子、防护、Plan Mode、扩展与诊断
 
@@ -274,10 +274,14 @@ PascalCase 标识符中的首字母缩略词使用首字母大写格式：`Ui`�
 | `E2BSandboxService` | `E2BRuntime` | 该类创建、复用和释放文件系统与子进程适配器所使用的 E2B 执行环境。它比单个沙箱句柄的职责更广，又比通用所有者更具体。保留 `@qilin/e2b`、`ctx.e2b` 和 `e2b/` 组。 |
 | `@qilin/frontend-static` | `@qilin/host-frontend-static` | 该包是提供前端资源的 Host 插件。此前缀可将它与前端应用代码区分开。 |
 | `PluginInventoryService` | `PluginInventoryGateway` | 该类只负责把实时 Loader 树适配到 `pluginInventory/list` RPC。它不拥有同进程服务、缓存、历史或修改路径。`Gateway` 准确说明现有角色。 |
-| `@qilin/jsonrpc-demo` | `@qilin/sdk-jsonrpc-demo` | 该示例演示通过 JSON-RPC 使用运行时 SDK，属于 SDK 的唯一含义。 |
+| `@qilin/jsonrpc-demo`、`@qilin/sdk-jsonrpc-demo`、`@qilin/sdk-python-runtime` | 已删除 | Python 运行时打包现有 `@qilin/cli` CLI 与其 `sdk` profile；私有应用包会重新产生第二个启动器。 |
+| `packages/examples/jsonrpc-demo/`、`packages/sdk/python-runtime/` | 已删除 | Python 运行时 wheel 的闭包 manifest 负责打包，无需独立应用包。 |
+| `examples/jsonrpc-agent/` | `python/sdk/examples/` | 该示例演示 Python 使用 `sdk` profile 与有序 patch。 |
+| `@qilin/acp-demo` | `@qilin/acp-app` | 该包是 ACP profile 的应用组合包，不是独立 demo bin。 |
+| 部署根 manifest `qilin-jsonrpc-agent-pkg`、`qilin-sdk-python-runtime-closure` | `qilin-python-runtime-closure` | 该零代码 manifest 定义 Python 运行时 wheel 的完整 `qilin` 依赖闭包，不再命名独立 SDK 应用。 |
 | `@qilin/frontend` | `@qilin/web-frontend` | 该应用是 Web 前端。保留其物理目录 `apps/web/`。 |
 
-保留 atomic-write、brand、native-command、timeout 实用工具、目录选择器、`qilin-base`、`qilin-web-app`、应用启动、CLI（命令行界面）名称，以及 `headless` 包、组合包和示例身份。`headless` 是预期的产品本质，未来也可以支持不止一次性执行。
+保留 atomic-write、brand、native-command、timeout 实用工具、目录选择器、`qilin-base`、`qilin-web-app`、`qilin-sdk-app`、`qilin-acp-app`、应用启动、CLI（命令行界面）名称，以及 `headless` 包、组合包和示例身份。`headless` 是预期的产品本质，未来也可以支持不止一次性执行。
 
 ### 客户端运行时与 UI
 
@@ -309,7 +313,7 @@ PascalCase 标识符中的首字母缩略词使用首字母大写格式：`Ui`�
 | `ConversationService` | `ConversationController` | 该对象控制当前对话状态和用户操作。 |
 | `InputService` | `SessionInputResolver` | 该接口为一个会话作用域解析输入外观。它既不是全局输入注册表，也不是执行服务。保留 `InputHub` 作为具体中枢，并保留 `ctx.conversation.input` 作为对外接口。 |
 
-PascalCase 标识符内部使用 `Ui`，不要使用 `UI`。除非清单明确要求重命名，否则保留其余客户端包名。暂时保留已弃用的客户端连接和 Host `ApiProxy` 词汇；API 平面将替换它们，而在计划移除的表面上重命名只会增加改动量。
+PascalCase 标识符内部使用 `Ui`，不要使用 `UI`。除非清单明确要求重命名，否则保留其余客户端包名。在 API 平面移除相关表层之前，保留已弃用的客户端连接与 Host `ApiProxy` 词汇；提前重命名只会增加改动量，不会建立持久名称。
 
 ## 明确保留的名称
 
@@ -324,7 +328,7 @@ PascalCase 标识符内部使用 `Ui`，不要使用 `UI`。除非清单明确�
 - 保留 `PermissionPresetSettingsController`，即使它很长。每个词都在限定其职责。
 - 保留 `ModelsSettingsStore`；其主要约定是一个具有存储操作的设置数据模型。
 - 保留 `InputHub`；它是支撑 `SessionInputResolver` 的具体中枢。
-- 保留 `dsh-subagent-dsh-sdk` 和提供方 id `dsh-sdk`；重复的限定词可避免歧义。
+- 保留 `qilin-subagent-dsh-sdk` 和提供方 id `qilin-sdk`；重复的限定词可避免歧义。
 - 保留 `headless`；即使运行时以后支持不止一次性使用，该产品身份仍然准确。
 - 保留已弃用的 Host `ApiProxy` 和客户端连接名称，直至 API 替代方案将其移除。
 - Host 服务器和提供方无关的 Web 能力都保留 `Web`。仅直接抓取提供方使用 `HTTP`。
@@ -355,7 +359,7 @@ PascalCase 标识符内部使用 `Ui`，不要使用 `UI`。除非清单明确�
 
 **为未来可能出现的功能使用宽泛名称。**不予采纳。应按稳定的当前职责命名。未来若要改变边界，可以在发布前再次重命名对象，或在发布后另写提案。含义模糊的名称会让每位当前读者为尚未构建的未来付出理解成本。
 
-**将 `dsh-compact-basic` 重命名为 `dsh-compaction-llm`。**不予采纳。`LLM` 没有在当前后端系列中增加区别。`basic` 意图更克制，也不会声称存在一个实际并不存在的算法。
+**将 `qilin-compact-basic` 重命名为 `qilin-compaction-llm`。**不予采纳。`LLM` 没有在当前后端系列中增加区别。`basic` 意图更克制，也不会声称存在一个实际并不存在的算法。
 
 **将会话投影重命名为归约器。**不予采纳。归约只是构建投影的方式。该包还拥有读取模型值、缓存和查找约定。
 

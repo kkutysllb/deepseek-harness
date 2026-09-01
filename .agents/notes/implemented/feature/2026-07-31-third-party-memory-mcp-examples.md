@@ -12,7 +12,7 @@ The acceptance bar is stronger than "the socket connects": each reference must s
 
 ## Decision
 
-Ship three default-off Cordis overlay examples under `examples/mcp-memory`: Memorix, MCP Reference Memory, and Engram. Every file inserts exactly one `@qilin/mcp-client` row. None is referenced by the shipped composition, and the CLI declares the generic bridge only so an explicitly selected overlay can resolve it.
+Ship three default-off Cordis overlay examples under `apps/cli/config/examples/mcp-memory`: Memorix, MCP Reference Memory, and Engram. Every file inserts exactly one `@qilin/mcp-client` row. None is referenced by the default composition, and the CLI declares the generic bridge so an explicitly selected overlay resolves in installed and source launches. The [memory MCP guide](../../../../docs/user/guide/mcp-memory.md) owns setup and verification.
 
 These third-party configurations are provided as interoperability examples only. Their inclusion does not imply endorsement, recommendation, partnership, or ongoing support by DeepSeek. There is no memory preset registry, vendor-specific DSH plugin, universal memory service, installation UI, migration layer, health checker, or reconnect controller. Another memory MCP server uses the same documented stdio or Streamable HTTP row.
 
@@ -37,7 +37,7 @@ The generic stdio transport scrubs ambient credential-shaped and `QILIN_*` varia
 | MCP Reference Memory | npm `2026.7.4`, package commit `6dd0a683e198783e30feabf7abaf42f925bd18b1` |
 | Engram | tag `v1.20.0`, commit `ba9e46ced152c37a7cb9e576153c41995873e2fc` |
 
-Storage remains provider-owned. Memorix uses `~/.memorix/data` and Engram uses `~/.engram` by default. The Reference Memory example sets a stable `$HOME/.dsh-mcp-reference-memory.jsonl` path instead of writing into the installed npm package directory. Each provider's own environment variable can override these locations before DSH starts.
+Storage remains provider-owned. Memorix uses `~/.memorix/data` and Engram uses `~/.engram` by default. The Reference Memory example sets a stable `$HOME/.qilin-mcp-reference-memory.jsonl` path instead of writing into the installed npm package directory. Each provider's own environment variable can override these locations before DSH starts.
 
 Project identity remains provider-owned: Memorix and Engram use the DSH working directory's Git project, with Engram optionally accepting `ENGRAM_PROJECT`.
 

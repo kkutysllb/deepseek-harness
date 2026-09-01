@@ -15,7 +15,7 @@ import { Context } from '@deepseek-ai/cordis'
 import Loader from '@deepseek-ai/cordis-plugin-loader'
 import Include from '@deepseek-ai/cordis-plugin-include'
 import z from '@deepseek-ai/schemastery'
-import { settingsNamespace, type SettingsScope } from '@qilin/settings'
+import { type SettingsScope } from '@qilin/settings'
 import FileSettingsProvider from '../src/index.ts'
 
 interface ThemeConfig {
@@ -49,7 +49,7 @@ async function loadComposition(
   options?: { withSettings?: boolean },
 ): Promise<{ ctx: Context; state: ConsumerState; settingsPath: string }> {
   const withSettings = options?.withSettings ?? true
-  root = await mkdtemp(join(tmpdir(), 'dsh-settings-composition-'))
+  root = await mkdtemp(join(tmpdir(), 'qilin-settings-composition-'))
   const settingsPath = join(root, 'settings.yaml')
   await writeFile(settingsPath, 'ui-theme:\n  theme: light\n')
 
@@ -63,7 +63,7 @@ async function loadComposition(
       const base: Partial<ThemeConfig> = { fontSize: 16 }
       state.applied = ThemeSchema(base as ThemeConfig)
       ctx.inject(['settings'], (child: Context) => {
-        const scope = child.settings.register(settingsNamespace('ui-theme'), ThemeSchema, { base })
+        const scope = child.settings.register('ui-theme', ThemeSchema, { base })
         state.scope = scope
         state.applied = scope.get()
         scope.watch((next) => {

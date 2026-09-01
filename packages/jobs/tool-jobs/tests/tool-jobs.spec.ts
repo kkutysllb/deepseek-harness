@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from 'vitest'
 import { Context } from '@deepseek-ai/cordis'
-import { CallId } from '@qilin/llm'
+import { ToolCallId } from '@qilin/llm'
 import SystemPrompt from '@qilin/system-prompt'
 import ToolRuntime from '@qilin/tools'
 import AgentRegistry, { emitAgentEvent } from '@qilin/agent'
@@ -92,7 +92,7 @@ function producer(overrides: Partial<Omit<JobStart, 'run'> & JobHooks> = {}) {
 
 let callCounter = 0
 function call(ctx: Context, name: string, args: unknown, agent?: Agent) {
-  return ctx.tools.execute({ signal: testToolSignal, callId: CallId(`call-${++callCounter}`), name, arguments: args, ...agent ? { agent } : {} })
+  return ctx.tools.execute({ signal: testToolSignal, callId: ToolCallId(`call-${++callCounter}`), name, arguments: args, ...agent ? { agent } : {} })
 }
 
 function text(result: { content: { type: string; text?: string }[] }): string {

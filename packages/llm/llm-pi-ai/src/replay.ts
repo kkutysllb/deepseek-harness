@@ -5,7 +5,7 @@
  * module stores only the provider-native metadata needed to reconstruct a
  * pi-ai assistant message on a later request.
  *
- * @module dsh-llm-pi-ai/replay
+ * @module qilin-llm-pi-ai/replay
  */
 
 import { LlmError } from '@qilin/llm'
@@ -166,9 +166,9 @@ function foreignAssistant(message: Message): AssistantMessage {
     content,
     // Deliberately never equals a catalog API: absent replay state is foreign
     // even if source names the same provider/model as this request.
-    api: 'dsh-foreign',
-    provider: source?.provider ?? 'dsh-foreign',
-    model: source?.model ?? 'dsh-foreign',
+    api: 'qilin-foreign',
+    provider: source?.provider ?? 'qilin-foreign',
+    model: source?.model ?? 'qilin-foreign',
     usage: emptyPiUsage(),
     stopReason: content.some(piece => piece.type === 'toolCall') ? 'toolUse' : 'stop',
     timestamp: 0,
@@ -240,7 +240,7 @@ export function toPiAssistant(message: Message, onDegrade?: (reason: string) => 
   try {
     return replayedAssistant(message, source, source.replayState)
   } catch (error: unknown) {
-    /* v8 ignore next -- replayedAssistant throws only INVALID_REPLAY_STATE LlmErrors today; the
+    /* v8 ignore next -- replayedAssistant throws only INVALID_REPLAY_STATE LlmErrors; the
        guard keeps a future non-replay failure loud instead of silently degrading it */
     if (!(error instanceof LlmError) || error.code !== 'INVALID_REPLAY_STATE') throw error
     onDegrade?.(error.message)

@@ -1,7 +1,7 @@
 {
   "name": "@qilin/client-ui-subagent",
   "description": "Subagent conversation catalog, continuation routing UI, and '@' reference source",
-  "version": "0.1.1-rc.2",
+  "version": "0.1.2-alpha.3",
   "publishConfig": {
     "access": "public"
   },
@@ -32,8 +32,8 @@
   "qilin": {
     "client": {
       "inject": [
+        "@qilin/api-session-controller",
         "@qilin/client-locale",
-        "@qilin/client-runtime",
         "@qilin/client-ui-conversation",
         "@qilin/client-ui-primitives",
         "@qilin/client-ui-input-trigger"
@@ -47,18 +47,10 @@
   },
   "license": "MIT",
   "peerDependencies": {
-    "@qilin/client-locale": "workspace:^",
-    "@qilin/client-runtime": "workspace:^",
-    "@qilin/client-ui-conversation": "workspace:^",
-    "@qilin/client-ui-input-trigger": "workspace:^",
-    "@qilin/invariants": "workspace:^",
-    "@qilin/subagent": "workspace:^",
-    "@qilin/token-meter": "workspace:^",
     "@deepseek-ai/cordis": "workspace:^"
   },
   "devDependencies": {
     "@qilin/client-locale": "workspace:^",
-    "@qilin/client-runtime": "workspace:^",
     "@qilin/client-test-runtime": "workspace:^",
     "@qilin/client-ui-conversation": "workspace:^",
     "@qilin/client-ui-input-trigger": "workspace:^",
@@ -71,7 +63,12 @@
     "@types/react-dom": "~18.3.0",
     "@deepseek-ai/cordis": "workspace:^",
     "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "react-dom": "^18.2.0",
+    "@qilin/api-session-controller": "workspace:^",
+    "@qilin/client-connection": "workspace:^",
+    "@qilin/session": "workspace:^",
+    "@qilin/client-ui-renderer": "workspace:^",
+    "@qilin/client-ui-session": "workspace:^"
   },
   "files": [
     "lib/index.js",

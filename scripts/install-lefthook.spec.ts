@@ -23,9 +23,6 @@ const pairingMergeDriver = 'scripts/merge-translation-pairing-driver.sh %O %A %B
 const scriptsDirectory = fileURLToPath(new URL('.', import.meta.url))
 const tsxPackageDirectory = dirname(fileURLToPath(import.meta.resolve('tsx/package.json')))
 const fixtures: string[] = []
-// Multi-worktree cases spawn several Git and Node subprocesses; native Windows
-// coverage concurrency can delay them without changing installer behavior.
-const MULTI_PROCESS_TEST_TIMEOUT_MS = 30_000
 
 interface Fixture {
   container: string
@@ -133,7 +130,7 @@ function installPairingProbeFixture(root: string): void {
 }
 
 function createFixture(names: { main?: string; linked?: string } = {}): Fixture {
-  const container = mkdtempSync(join(tmpdir(), 'dsh-lefthook-'))
+  const container = mkdtempSync(join(tmpdir(), 'qilin-lefthook-'))
   fixtures.push(container)
   const main = join(container, names.main ?? 'main')
   const linked = join(container, names.linked ?? 'linked')
@@ -176,11 +173,11 @@ function commonDirectory(fixture: Fixture): string {
 }
 
 function hooksPath(fixture: Fixture, root: string): string {
-  return join(gitDirectory(fixture, root), 'dsh-hooks')
+  return join(gitDirectory(fixture, root), 'qilin-hooks')
 }
 
 function installLockPath(fixture: Fixture): string {
-  return join(commonDirectory(fixture), 'dsh-lefthook-install.lock')
+  return join(commonDirectory(fixture), 'qilin-lefthook-install.lock')
 }
 
 async function waitForPath(path: string): Promise<void> {
@@ -211,7 +208,15 @@ function runInstaller(
   })
 }
 
-describe('worktree-local Lefthook installer', { timeout: 30_000 }, () => {
+// Every case builds scratch worktrees and drives them through spawned Git and
+// Node subprocesses, so the suite is bound by process creation rather than by
+// its assertions. The value matches QILIN_COVERAGE_TEST_TIMEOUT_MS, which the
+// Windows coverage lane passes as --testTimeout: a describe value overrides that
+// flag rather than yielding to it, so a smaller one here lowers what the lane
+// grants every case in this file, none of which carries an allowance of its own.
+// Rationale and the paired hook budget are in
+// .agents/notes/implemented/testing/2026-08-29-windows-lane-hook-and-lefthook-budget.md.
+describe('worktree-local Lefthook installer', { timeout: 90_000 }, () => {
   for (const [label, extraEnv] of [
     ['CI', { CI: 'true' }],
     ['GitHub Actions', { GITHUB_ACTIONS: 'true' }],
@@ -235,7 +240,7 @@ describe('worktree-local Lefthook installer', { timeout: 30_000 }, () => {
       expect(existsSync(hooksPath(fixture, fixture.main))).toBe(false)
       expect(existsSync(join(common, 'config.worktree'))).toBe(false)
       expect(gitResult(fixture, fixture.main, [
-        'config', '--get', 'merge.dsh-translation-pairing.driver',
+        'config', '--get', 'merge.qilin-translation-pairing.driver',
       ]).status).toBe(1)
     })
   }
@@ -257,10 +262,10 @@ describe('worktree-local Lefthook installer', { timeout: 30_000 }, () => {
     expect(git(fixture, fixture.main, ['config', '--worktree', '--get', 'core.hooksPath'])).toBe(mainHooks)
     expect(git(fixture, fixture.linked, ['config', '--worktree', '--get', 'core.hooksPath'])).toBe(linkedHooks)
     expect(git(fixture, fixture.main, [
-      'config', '--worktree', '--get', 'merge.dsh-translation-pairing.driver',
+      'config', '--worktree', '--get', 'merge.qilin-translation-pairing.driver',
     ])).toBe(pairingMergeDriver)
     expect(git(fixture, fixture.linked, [
-      'config', '--worktree', '--get', 'merge.dsh-translation-pairing.driver',
+      'config', '--worktree', '--get', 'merge.qilin-translation-pairing.driver',
     ])).toBe(pairingMergeDriver)
 
     const mainHook = readFileSync(join(mainHooks, 'pre-commit'), 'utf8')
@@ -290,7 +295,7 @@ describe('worktree-local Lefthook installer', { timeout: 30_000 }, () => {
     git(fixture, fixture.main, ['worktree', 'remove', '--force', fixture.linked])
     expect(readFileSync(join(mainHooks, 'pre-commit'), 'utf8')).toBe(mainHookBeforeRemoval)
     expect(readFileSync(legacyHook, 'utf8')).toBe('#!/bin/sh\n# legacy hook\n')
-  }, MULTI_PROCESS_TEST_TIMEOUT_MS)
+  })
 
   it('replaces the owned hook path Git copies into a newly added worktree', async () => {
     const fixture = createFixture()
@@ -315,7 +320,7 @@ describe('worktree-local Lefthook installer', { timeout: 30_000 }, () => {
       '# config=late-linked-worktree-config',
     )
     expect(readFileSync(join(mainHooks, 'pre-commit'), 'utf8')).toBe(mainHookBefore)
-  }, MULTI_PROCESS_TEST_TIMEOUT_MS)
+  })
 
   it('serializes concurrent installs and keeps repeated output stable', async () => {
     const fixture = createFixture()
@@ -334,9 +339,9 @@ describe('worktree-local Lefthook installer', { timeout: 30_000 }, () => {
     ])
     for (const result of repeated) expect(result.status, result.stderr).toBe(0)
     expect(readFileSync(mainHookPath, 'utf8')).toBe(initialHook)
-    expect(existsSync(join(commonDirectory(fixture), 'dsh-lefthook-install.lock'))).toBe(false)
+    expect(existsSync(join(commonDirectory(fixture), 'qilin-lefthook-install.lock'))).toBe(false)
     expect(existsSync(join(hooksPath(fixture, fixture.main), '.fake-lefthook-running'))).toBe(false)
-  }, MULTI_PROCESS_TEST_TIMEOUT_MS)
+  })
 
   it('waits for a concurrent installer to finish publishing its lock record', async () => {
     const fixture = createFixture()
@@ -371,10 +376,10 @@ describe('worktree-local Lefthook installer', { timeout: 30_000 }, () => {
     expect(git(fixture, movedRoot, ['config', '--worktree', '--get', 'core.hooksPath'])).toBe(movedHooks)
     const canonicalMoved = git(fixture, movedRoot, ['rev-parse', '--show-toplevel'])
     expect(readFileSync(join(movedHooks, 'pre-commit'), 'utf8')).toContain(`# root=${canonicalMoved}`)
-    expect(readFileSync(join(movedHooks, '.dsh-lefthook-owned'), 'utf8')).toContain(
+    expect(readFileSync(join(movedHooks, '.qilin-lefthook-owned'), 'utf8')).toContain(
       JSON.stringify(movedHooks),
     )
-  }, MULTI_PROCESS_TEST_TIMEOUT_MS)
+  })
 
   it.skipIf(process.platform === 'win32')('refuses a multiply linked ownership marker before relocation rewrites it', async () => {
     const fixture = createFixture()
@@ -382,7 +387,7 @@ describe('worktree-local Lefthook installer', { timeout: 30_000 }, () => {
     const first = await runInstaller(fixture, oldRoot)
     expect(first.status, first.stderr).toBe(0)
     const oldHooks = hooksPath(fixture, oldRoot)
-    const markerName = '.dsh-lefthook-owned'
+    const markerName = '.qilin-lefthook-owned'
     const externalMarker = join(fixture.container, 'external-marker')
     linkSync(join(oldHooks, markerName), externalMarker)
     const externalContent = readFileSync(externalMarker, 'utf8')
@@ -415,7 +420,7 @@ describe('worktree-local Lefthook installer', { timeout: 30_000 }, () => {
       expect(result.stderr).toContain('non-regular or multiply linked hook entry')
       expect(readFileSync(externalHook, 'utf8')).toBe(externalContent)
     }
-  }, MULTI_PROCESS_TEST_TIMEOUT_MS)
+  })
 
   it('restores the marker-backed stale hook path when relocation reinstall fails', async () => {
     const fixture = createFixture()
@@ -423,7 +428,7 @@ describe('worktree-local Lefthook installer', { timeout: 30_000 }, () => {
     const first = await runInstaller(fixture, oldRoot)
     expect(first.status, first.stderr).toBe(0)
     const oldHooks = hooksPath(fixture, oldRoot)
-    const markerName = '.dsh-lefthook-owned'
+    const markerName = '.qilin-lefthook-owned'
     const previousMarker = readFileSync(join(oldHooks, markerName), 'utf8')
     const movedRoot = join(fixture.container, 'moved-main')
     renameSync(oldRoot, movedRoot)
@@ -591,7 +596,7 @@ describe('worktree-local Lefthook installer', { timeout: 30_000 }, () => {
     expect(mainInstall.status, mainInstall.stderr).toBe(0)
     const externalHooks = join(fixture.container, 'external-owned-hooks')
     write(
-      join(externalHooks, '.dsh-lefthook-owned'),
+      join(externalHooks, '.qilin-lefthook-owned'),
       `${JSON.stringify({
         version: 1,
         owner: 'deepseek-harness worktree-local lefthook hooks',
@@ -711,7 +716,7 @@ describe('worktree-local Lefthook installer', { timeout: 30_000 }, () => {
     expect(readFileSync(sentinel, 'utf8')).toBe('#!/bin/sh\n# command-scope sentinel\n')
     expect(gitResult(fixture, fixture.main, ['config', '--get', 'core.hooksPath']).status).toBe(1)
     expect(gitResult(fixture, fixture.main, [
-      'config', '--get', 'merge.dsh-translation-pairing.driver',
+      'config', '--get', 'merge.qilin-translation-pairing.driver',
     ]).status).toBe(1)
     expect(existsSync(hooksPath(fixture, fixture.main))).toBe(false)
   })
@@ -722,15 +727,15 @@ describe('worktree-local Lefthook installer', { timeout: 30_000 }, () => {
     git(fixture, fixture.main, ['config', '--file', commonConfig, 'core.repositoryFormatVersion', '1'])
     git(fixture, fixture.main, ['config', '--file', commonConfig, 'extensions.worktreeConfig', 'true'])
     git(fixture, fixture.main, [
-      'config', '--worktree', 'merge.dsh-translation-pairing.driver', 'custom-driver %A',
+      'config', '--worktree', 'merge.qilin-translation-pairing.driver', 'custom-driver %A',
     ])
 
     const result = await runInstaller(fixture, fixture.main)
 
     expect(result.status).toBe(1)
-    expect(result.stderr).toContain('refusing to replace worktree merge.dsh-translation-pairing.driver')
+    expect(result.stderr).toContain('refusing to replace worktree merge.qilin-translation-pairing.driver')
     expect(git(fixture, fixture.main, [
-      'config', '--worktree', '--get', 'merge.dsh-translation-pairing.driver',
+      'config', '--worktree', '--get', 'merge.qilin-translation-pairing.driver',
     ])).toBe('custom-driver %A')
     expect(gitResult(fixture, fixture.main, ['config', '--get', 'core.hooksPath']).status).toBe(1)
   })
@@ -738,18 +743,18 @@ describe('worktree-local Lefthook installer', { timeout: 30_000 }, () => {
   it('never masks an inherited custom pairing merge driver', async () => {
     const fixture = createFixture()
     git(fixture, fixture.main, [
-      'config', '--local', 'merge.dsh-translation-pairing.driver', 'inherited-driver %A',
+      'config', '--local', 'merge.qilin-translation-pairing.driver', 'inherited-driver %A',
     ])
 
     const result = await runInstaller(fixture, fixture.main)
 
     expect(result.status).toBe(1)
-    expect(result.stderr).toContain('refusing to mask inherited merge.dsh-translation-pairing.driver')
+    expect(result.stderr).toContain('refusing to mask inherited merge.qilin-translation-pairing.driver')
     expect(git(fixture, fixture.main, [
-      'config', '--local', '--get', 'merge.dsh-translation-pairing.driver',
+      'config', '--local', '--get', 'merge.qilin-translation-pairing.driver',
     ])).toBe('inherited-driver %A')
     expect(gitResult(fixture, fixture.main, [
-      'config', '--worktree', '--get', 'merge.dsh-translation-pairing.driver',
+      'config', '--worktree', '--get', 'merge.qilin-translation-pairing.driver',
     ]).status).toBe(1)
     expect(gitResult(fixture, fixture.main, ['config', '--get', 'core.hooksPath']).status).toBe(1)
   })
@@ -758,9 +763,9 @@ describe('worktree-local Lefthook installer', { timeout: 30_000 }, () => {
     const fixture = createFixture()
 
     const result = await runInstaller(fixture, fixture.main, {
-      QILIN_TEST_FORBIDDEN_GIT_CONFIG_KEY: 'dsh.testSentinel',
+      QILIN_TEST_FORBIDDEN_GIT_CONFIG_KEY: 'qilin.testSentinel',
       GIT_CONFIG_COUNT: '1',
-      GIT_CONFIG_KEY_0: 'dsh.testSentinel',
+      GIT_CONFIG_KEY_0: 'qilin.testSentinel',
       GIT_CONFIG_VALUE_0: 'must-not-reach-lefthook',
     })
 
@@ -804,10 +809,10 @@ describe('worktree-local Lefthook installer', { timeout: 30_000 }, () => {
     expect(gitResult(fixture, fixture.main, ['config', '--worktree', '--get', 'core.hooksPath']).status).toBe(1)
     expect(gitResult(fixture, fixture.main, ['config', '--get', 'core.hooksPath']).status).toBe(1)
     expect(gitResult(fixture, fixture.main, [
-      'config', '--worktree', '--get', 'merge.dsh-translation-pairing.name',
+      'config', '--worktree', '--get', 'merge.qilin-translation-pairing.name',
     ]).status).toBe(1)
     expect(gitResult(fixture, fixture.main, [
-      'config', '--worktree', '--get', 'merge.dsh-translation-pairing.driver',
+      'config', '--worktree', '--get', 'merge.qilin-translation-pairing.driver',
     ]).status).toBe(1)
     expect(readFileSync(legacyHook, 'utf8')).toBe('#!/bin/sh\n# legacy pre-push\n')
   })
@@ -822,7 +827,7 @@ describe('worktree-local Lefthook installer', { timeout: 30_000 }, () => {
     expect(result.stderr).toContain('merge-translation-pairing.ts --probe failed')
     expect(gitResult(fixture, fixture.main, ['config', '--get', 'core.hooksPath']).status).toBe(1)
     expect(gitResult(fixture, fixture.main, [
-      'config', '--get', 'merge.dsh-translation-pairing.driver',
+      'config', '--get', 'merge.qilin-translation-pairing.driver',
     ]).status).toBe(1)
   })
 
@@ -839,7 +844,7 @@ describe('worktree-local Lefthook installer', { timeout: 30_000 }, () => {
     expect(result.stderr).toContain('exit status 77')
     expect(result.stderr).toContain('worktree integration rollback also failed')
     expect(result.stderr).toContain('git config --worktree --unset-all core.hooksPath failed')
-    expect(result.stderr).toContain('git config --worktree --unset-all merge.dsh-translation-pairing.driver failed')
+    expect(result.stderr).toContain('git config --worktree --unset-all merge.qilin-translation-pairing.driver failed')
   })
 
   it('refuses an unowned directory at the reserved worktree hook path', async () => {

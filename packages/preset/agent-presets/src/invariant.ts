@@ -6,7 +6,7 @@
 import type { Context } from '@deepseek-ai/cordis'
 import type { InvariantInstaller } from '@qilin/invariants'
 // Type-only: resolves the `system-prompt/assemble` waterfall this companion
-// joins, and the `agent` field `dsh-agent` merges into its context.
+// joins, and the `agent` field `qilin-agent` merges into its context.
 import type {} from '@qilin/system-prompt'
 import type {} from '@qilin/agent'
 // Imported through the package name, not `./mount.ts`: a module shared between

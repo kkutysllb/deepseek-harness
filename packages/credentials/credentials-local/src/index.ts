@@ -9,7 +9,7 @@
  * > $QILIN_HOME/.env                   (read-only fallback)
  * ```
  *
- * The inherited environment wins because `DEEPSEEK_API_KEY=… dsh`, a CI
+ * The inherited environment wins because `DEEPSEEK_API_KEY=… qilin`, a CI
  * secret, or a container `-e` is this run's explicit intent; it cannot be
  * edited from inside, so it must be *visibly* read-only rather than silently
  * shadow writes. Everything below it loses to the managed store, so a key the
@@ -64,7 +64,7 @@ export const CREDENTIALS_FILENAME = '.credentials.yaml'
 export interface Config {
   /** Credentials document path; defaults to `.credentials.yaml` under the harness home. */
   path?: string
-  /** Harness home used when `path` is omitted; defaults to `$QILIN_HOME` or `~/.dsh`. */
+  /** Harness home used when `path` is omitted; defaults to `$QILIN_HOME` or `~/.qilin`. */
   dshHome?: string
   /** Watch the document and hot-publish external edits; defaults to true. */
   watch?: boolean
@@ -105,7 +105,7 @@ const GROUP_OTHER_BITS = 0o077
  * wait is sized by the longest holder it can meet, and refs and records share
  * one file and one lock, so every writer of this document — reference writes
  * and record deletes included — waits this long, not only the mutation that
- * holds it. Like the retry cadence in `dsh-atomic-write`, this is a
+ * holds it. Like the retry cadence in `qilin-atomic-write`, this is a
  * robustness bound of the write protocol rather than a deployment choice: it
  * is sized by what a provider request costs, which no deployment varies.
  */
@@ -795,7 +795,7 @@ export class LocalCredentialProvider extends CredentialProvider {
     if (this.inherited(ref) !== undefined) {
       throw new Error(
         `credentials-local: "${ref}" is supplied read-only by the launching environment, so ${verb} would be`
-        + ' shadowed; unset it in the shell you start dsh from instead',
+        + ' shadowed; unset it in the shell you start qilin from instead',
       )
     }
   }

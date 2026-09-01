@@ -13,11 +13,12 @@
 import { afterEach, describe, expect, it } from 'vitest'
 import { mkdtempSync, rmSync, readFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
-import { join, resolve } from 'node:path'
+import { join } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import yaml from 'js-yaml'
 import { entryListSchema } from '@deepseek-ai/cordis-plugin-include'
 import { evaluate } from '@deepseek-ai/cordis-plugin-loader'
+import { SHIPPED_PRESET_ROOT } from '@qilin/agent-presets'
 import { composeEntries, initProfile, loadProfile, PROFILES_DIR } from '@qilin/app-boot'
 
 /**
@@ -36,7 +37,7 @@ describe('the shipped shell composition (real bundle layers)', () => {
   let home: string
   afterEach(() => { if (home !== undefined) rmSync(home, { recursive: true, force: true }) })
   // The app installation anchor, mirroring profile-boot.ts: the bundle layers
-  // resolve from the REAL qilin-base/qilin-web-app packages through it, so this
+  // resolve from the REAL qilin-base/dsh-web-app packages through it, so this
   // suite composes the shipped patch files, not test fixtures.
   const anchor = fileURLToPath(new URL('../package.json', import.meta.url))
 
@@ -101,9 +102,9 @@ describe('the shipped shell composition (real bundle layers)', () => {
 })
 
 describe('shipped agent presets gate both shell tools by platform', () => {
-  const presetRoot = resolve(fileURLToPath(new URL('../package.json', import.meta.url)), '..', 'config', 'agent-presets')
+  const presetRoot = SHIPPED_PRESET_ROOT
 
-  it.each(['standard', 'code', 'cordis'])('preset %s gates its shell tool rows by platform', (preset) => {
+  it.each(['standard', 'ptc', 'cordis'])('preset %s gates its shell tool rows by platform', (preset) => {
     const entries: unknown = yaml.load(
       readFileSync(join(presetRoot, preset, 'agent.cordis.yml'), 'utf8'),
       { schema: entryListSchema },

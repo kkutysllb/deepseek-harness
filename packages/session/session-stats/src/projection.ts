@@ -11,7 +11,7 @@
  * and undercount cancelled steps (aborted before the message assembles).
  *
  * The wall-time folds mirror the client window fold field by field
- * (`deriveStats` in dsh-client-ui-conversation, that fold's whole-window
+ * (`deriveStats` in qilin-client-ui-conversation, that fold's whole-window
  * fallback role): model time is `step/start` → `assistant/message`, first
  * token is the first non-empty delta chunk and survives an in-step
  * `llm/retry`, decode spans first token → assembled message on steps that
@@ -24,8 +24,25 @@
  */
 
 import { z } from 'zod'
-import { isTokenDelta } from '@qilin/llm/message'
+import type { StreamChunk } from '@qilin/llm/types'
 import type { ProjectionDefinition } from '@qilin/session-projection'
+
+/* jscpd:ignore-start -- Session Stats owns its whole-log timing projection independently. */
+
+/** Whether a stream chunk carries a non-empty first-token delta. */
+function isTokenDelta(chunk: StreamChunk): boolean {
+  switch (chunk.type) {
+    case 'text-delta':
+    case 'reasoning-delta':
+      return chunk.text !== ''
+    case 'tool-call-delta':
+      return chunk.argumentsDelta !== '' || chunk.name !== undefined
+    default:
+      return false
+  }
+}
+
+/* jscpd:ignore-end */
 
 /** Accumulated whole-log figures (the view is exactly these totals). */
 interface SessionStatsTotals {

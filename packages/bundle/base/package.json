@@ -1,7 +1,7 @@
 {
   "name": "@qilin/base",
-  "description": "The shared dsh core as a profile bundle: every profile's first patch layer, inserting the base plugin rows over the empty profile root",
-  "version": "0.1.1-rc.2",
+  "description": "The shared qilin core as a profile bundle: the first patch layer of base-backed profiles, inserting core rows over the empty profile root",
+  "version": "0.1.2-alpha.3",
   "publishConfig": {
     "access": "public"
   },
@@ -54,6 +54,8 @@
     "@qilin/compaction-basic": "workspace:^",
     "@qilin/compaction-tool-result-pruner": "workspace:^",
     "@qilin/credentials-local": "workspace:^",
+    "@qilin/deepseek-llm-api-extensions": "workspace:^",
+    "@qilin/plugin-package-inventory-deepseek": "workspace:^",
     "@qilin/fs-local": "workspace:^",
     "@qilin/fs-observation-policy": "workspace:^",
     "@qilin/fs-sandbox": "workspace:^",
@@ -72,8 +74,10 @@
     "@qilin/sandbox-policy": "workspace:^",
     "@qilin/session": "workspace:^",
     "@qilin/session-checkpoint-policy": "workspace:^",
+    "@qilin/session-log-deepseek": "workspace:^",
     "@qilin/session-persistence-jsonl": "workspace:^",
     "@qilin/session-projection": "workspace:^",
+    "@qilin/session-projection-cache": "workspace:^",
     "@qilin/session-query-sqlite": "workspace:^",
     "@qilin/session-telemetry-otel": "workspace:^",
     "@qilin/session-title": "workspace:^",
@@ -84,6 +88,9 @@
     "@qilin/skill-filesystem": "workspace:^",
     "@qilin/spill-local": "workspace:^",
     "@qilin/spill-policy": "workspace:^",
+    "@qilin/storage": "workspace:^",
+    "@qilin/storage-domain": "workspace:^",
+    "@qilin/storage-json": "workspace:^",
     "@qilin/subagent": "workspace:^",
     "@qilin/subagent-fork-in-process": "workspace:^",
     "@qilin/subagent-spawn-in-process": "workspace:^",
@@ -113,6 +120,7 @@
     "@qilin/user-approval": "workspace:^",
     "@qilin/user-questions": "workspace:^",
     "@qilin/web": "workspace:^",
+    "@qilin/web-fetch-http": "workspace:^",
     "@qilin/web-search-deepseek": "workspace:^",
     "@qilin/workflow-worker-thread": "workspace:^",
     "@qilin/agent-instructions": "workspace:^"

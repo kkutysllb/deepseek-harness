@@ -1,26 +1,25 @@
 import { fileURLToPath } from 'node:url'
-import { Context } from '@deepseek-ai/cordis'
 import { agentEvents, Inbox, type Agent } from '@qilin/agent'
-import { CallId } from '@qilin/llm'
+import { ToolCallId } from '@qilin/llm'
 import { boot, loadOverlayPatches } from '@qilin/app-boot'
 import { SessionId } from '@qilin/session'
 import type {} from '@qilin/skill'
 import type {} from '@qilin/tools'
 
 const overlayPath = process.argv[2]
-if (overlayPath === undefined) throw new Error('dsh-badge snapshot requires an overlay path')
+if (overlayPath === undefined) throw new Error('qilin-badge snapshot requires an overlay path')
 const rootConfigPath = fileURLToPath(new URL('../../../../../packages/bundle/base/tests/fixtures/root.cordis.yml', import.meta.url))
 const basePatchPath = fileURLToPath(new URL('../../../../../packages/bundle/base/cordis.patch.yml', import.meta.url))
-const ctx = await boot('dsh-badge-snapshot', rootConfigPath, [
-  ...loadOverlayPatches('dsh-badge-snapshot', basePatchPath),
-  ...loadOverlayPatches('dsh-badge-snapshot', overlayPath),
+const ctx = await boot('qilin-badge-snapshot', rootConfigPath, [
+  ...loadOverlayPatches('qilin-badge-snapshot', basePatchPath),
+  ...loadOverlayPatches('qilin-badge-snapshot', overlayPath),
 ])
 
 try {
-  const agentId = SessionId('dsh-badge-snapshot')
+  const agentId = SessionId('qilin-badge-snapshot')
   const session = ctx.sessions.create(agentId, { meta: { cwd: process.cwd() } })
   const agent: Agent = {
-    ctx: new Context(),
+    ctx,
     id: agentId,
     options: {},
     session,
@@ -29,7 +28,7 @@ try {
     send: () => {},
     followup: () => {},
     steer: () => {},
-    inject: () => { throw new Error('dsh-badge snapshot must receive the catalog at the step boundary') },
+    inject: () => { throw new Error('qilin-badge snapshot must receive the catalog at the step boundary') },
     cancel: () => {},
     runMaintenance: job => job(new AbortController().signal),
     whenIdle: () => Promise.resolve(),
@@ -43,11 +42,11 @@ try {
     ? decision.messages.find(message => message.role === 'user'
       && message.source.kind === 'skill-catalog')?.content
     : undefined
-  const summary = (await ctx.skills.list()).find(skill => skill.name === 'dsh-badge')
+  const summary = (await ctx.skills.list()).find(skill => skill.name === 'qilin-badge')
   const result = await ctx.tools.execute({
-    callId: CallId('dsh-badge-snapshot'),
+    callId: ToolCallId('qilin-badge-snapshot'),
     name: 'skill',
-    arguments: { name: 'dsh-badge' },
+    arguments: { name: 'qilin-badge' },
     signal: new AbortController().signal,
   })
   process.stdout.write(`${JSON.stringify({ catalog: catalog ?? null, summary: summary ?? null, result })}\n`)

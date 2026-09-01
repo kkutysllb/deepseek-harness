@@ -3,6 +3,8 @@ import { describe, expect, it, vi } from 'vitest'
 import LlmRuntime, { createUserMessage, LlmAdapter  } from '@qilin/llm'
 import type { GenerateOptions, StreamChunk } from '@qilin/llm'
 import SessionStore, { Session, SessionId } from '@qilin/session'
+import SessionProjectionRegistry from '@qilin/session-projection'
+import { turnBoundaryProjectionDefinition } from '@qilin/agent-loop'
 import SessionTitleService, { type SessionTitleProvider } from '@qilin/session-title'
 import * as providerPlugin from '@qilin/session-title-first-prompt-llm'
 
@@ -36,6 +38,8 @@ describe('first-prompt LLM title provider', () => {
     const ctx = new Context()
     await ctx.plugin(LlmRuntime)
     await ctx.plugin(SessionStore)
+    await ctx.plugin(SessionProjectionRegistry)
+    ctx.sessionProjections.register(turnBoundaryProjectionDefinition)
     await ctx.plugin(SessionTitleService, TITLE_CONFIG)
     let registered: SessionTitleProvider | undefined
     vi.spyOn(ctx.sessionTitle, 'register').mockImplementation((provider) => {
@@ -55,6 +59,8 @@ describe('first-prompt LLM title provider', () => {
     const ctx = new Context()
     await ctx.plugin(LlmRuntime)
     await ctx.plugin(SessionStore)
+    await ctx.plugin(SessionProjectionRegistry)
+    ctx.sessionProjections.register(turnBoundaryProjectionDefinition)
     await ctx.plugin(SessionTitleService, TITLE_CONFIG)
     const adapter = new RecordingAdapter()
     ctx.llm.registerAdapter(['title-route'], adapter)

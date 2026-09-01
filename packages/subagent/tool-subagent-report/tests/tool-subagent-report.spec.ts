@@ -7,12 +7,13 @@ import type { Agent } from '@qilin/agent'
 import { assembleContextFor } from '@qilin/agent'
 import AgentLoop from '@qilin/agent-loop'
 import { mountAgentLoopTestDependencies } from '@qilin/agent-loop-testkit'
-import { CallId, LlmAdapter, createUserMessage } from '@qilin/llm'
+import { ToolCallId, LlmAdapter, createUserMessage } from '@qilin/llm'
 import type { GenerateOptions, StreamChunk } from '@qilin/llm'
 import { SessionId } from '@qilin/session'
 import type { SessionEvent } from '@qilin/session'
 import JsonlSessionPersistence from '@qilin/session-persistence-jsonl'
 import SubagentRuntime from '@qilin/subagent'
+import SessionProjectionRegistry from '@qilin/session-projection'
 import * as SubagentSpawn from '@qilin/subagent-spawn-in-process'
 import * as control from '@qilin/tool-subagent-control'
 import { textResponse } from '../../../core/agent-loop/tests/mock-adapter.ts'
@@ -65,9 +66,10 @@ afterEach(async () => {
 async function setup(options: { load?: boolean; config?: tool.Config } = {}) {
   const ctx = new Context()
   await mountAgentLoopTestDependencies(ctx)
-  const root = mkdtempSync(join(tmpdir(), 'dsh-tool-subagent-report-'))
+  const root = mkdtempSync(join(tmpdir(), 'qilin-tool-subagent-report-'))
   await ctx.plugin(JsonlSessionPersistence, { root })
   await ctx.plugin(AgentLoop, { agents: [] })
+  await ctx.plugin(SessionProjectionRegistry)
   await ctx.plugin(SubagentRuntime)
   await ctx.plugin(SubagentSpawn, { providerName: 'spawn' })
   const fiber = options.load === false
@@ -118,7 +120,7 @@ let calls = 0
 function callReport(ctx: Context, child: Agent, output: string, signal = testSignal) {
   return ctx.tools.execute({
     signal,
-    callId: CallId(`report-${++calls}`),
+    callId: ToolCallId(`report-${++calls}`),
     name: 'report',
     arguments: { output },
     agent: child,
@@ -159,7 +161,7 @@ async function sectionNames(ctx: Context, agent: Agent): Promise<string[]> {
   return assembly.sections.map(section => section.name)
 }
 
-describe('dsh-tool-subagent-report', () => {
+describe('qilin-tool-subagent-report', () => {
   it('registers report only in continuable child scopes', async () => {
     const { ctx, parent } = await setup()
     expect(ctx.tools.schemas().map(schema => schema.name)).not.toContain('report')
@@ -587,7 +589,7 @@ function userTexts(events: readonly SessionEvent[]): string[] {
     : [])
 }
 
-describe('dsh-tool-subagent-report result independence', () => {
+describe('qilin-tool-subagent-report result independence', () => {
   it('does not report a final assistant answer automatically or create Jobs', async () => {
     const { ctx, parent, adapter } = await setup()
     const { started } = await startChild(ctx, parent)

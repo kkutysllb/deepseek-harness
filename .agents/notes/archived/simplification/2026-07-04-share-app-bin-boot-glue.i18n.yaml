@@ -2,5 +2,5 @@
 # side as of the last confirmed-consistent state. Both languages carry equal authority;
 # after editing either side, bring the other along and re-record with:
 #   pnpm run verify-translation-pairing --write
-2026-07-04-share-app-bin-boot-glue.md: 14eea1b4ee6369861abaf9204c741e11ed1e32d0
-2026-07-04-share-app-bin-boot-glue.zh.md: 9f7047fe1b8e3bbbaa43d72228132c39d788ce34
+2026-07-04-share-app-bin-boot-glue.md: 8b2aeef73ecfc07f3102f852d4b0a44b336b7d92
+2026-07-04-share-app-bin-boot-glue.zh.md: ed5146030ca8d23a653497d6c097ad6c3b4445b1

@@ -1,7 +1,7 @@
 {
   "name": "@qilin/client-ui-permission-presets",
   "description": "Permission surfaces: a new-session default in General settings and a current-session /permission popup over the permissions projection",
-  "version": "0.1.1-rc.2",
+  "version": "0.1.2-alpha.3",
   "publishConfig": {
     "access": "public"
   },
@@ -32,9 +32,8 @@
   "qilin": {
     "client": {
       "inject": [
-        "@qilin/client-connection",
+        "@qilin/api-session-controller",
         "@qilin/client-locale",
-        "@qilin/client-runtime",
         "@qilin/client-ui-commands",
         "@qilin/api-remotes",
         "@qilin/client-ui-settings"
@@ -48,23 +47,14 @@
   },
   "license": "MIT",
   "peerDependencies": {
-    "@deepseek-ai/cordis": "workspace:^",
-    "@qilin/api-remotes": "workspace:^",
-    "@qilin/client-connection": "workspace:^",
-    "@qilin/client-locale": "workspace:^",
-    "@qilin/client-runtime": "workspace:^",
-    "@qilin/client-ui-commands": "workspace:^",
-    "@qilin/client-ui-settings": "workspace:^",
-    "@qilin/client-ui-input-trigger": "workspace:^",
-    "@qilin/invariants": "workspace:^",
-    "@qilin/permission-presets": "workspace:^"
+    "@deepseek-ai/cordis": "workspace:^"
   },
   "devDependencies": {
     "@deepseek-ai/cordis": "workspace:^",
     "@qilin/api-remotes": "workspace:^",
-    "@qilin/client-connection": "workspace:^",
+    "@qilin/api-session-controller": "workspace:^",
     "@qilin/client-locale": "workspace:^",
-    "@qilin/client-runtime": "workspace:^",
+    "@qilin/client-store": "workspace:^",
     "@qilin/client-test-runtime": "workspace:^",
     "@qilin/client-ui-commands": "workspace:^",
     "@qilin/client-ui-primitives": "workspace:^",
@@ -74,7 +64,9 @@
     "@qilin/invariants": "workspace:^",
     "@qilin/permission-presets": "workspace:^",
     "@types/react": "~18.3.1",
-    "react": "^18.2.0"
+    "react": "^18.2.0",
+    "@qilin/client-ui-renderer": "workspace:^",
+    "@qilin/client-ui-session": "workspace:^"
   },
   "files": [
     "lib/index.js",

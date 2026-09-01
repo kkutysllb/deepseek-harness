@@ -5,8 +5,8 @@ import { mkdtemp, rm } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import SessionStore, { SessionId } from '@qilin/session'
+import SessionProjectionRegistry from '@qilin/session-projection'
 import JsonlSessionPersistence from '@qilin/session-persistence-jsonl'
-import SqliteSessionPersistence from '@qilin/session-persistence-sqlite'
 import SessionTitleService, { foldSessionTitle } from '@qilin/session-title'
 
 const CONFIG = {
@@ -52,11 +52,12 @@ async function expectPersistedTitle(ctx: Context, id: ReturnType<typeof SessionI
 
 describe('session title persistence round trips', () => {
   it('round-trips through a remounted JSONL backend', async () => {
-    const root = await mkdtemp(join(tmpdir(), 'dsh-title-jsonl-'))
+    const root = await mkdtemp(join(tmpdir(), 'qilin-title-jsonl-'))
     roots.push(root)
     const id = SessionId('title-jsonl')
     const writer = new Context()
     await writer.plugin(SessionStore)
+    await writer.plugin(SessionProjectionRegistry)
     await writer.plugin(JsonlSessionPersistence, { root, compression: 'none' })
     await writer.plugin(SessionTitleService, CONFIG)
     await appendPersistedTitle(writer, id)
@@ -64,26 +65,8 @@ describe('session title persistence round trips', () => {
 
     const reader = new Context()
     await reader.plugin(SessionStore)
+    await reader.plugin(SessionProjectionRegistry)
     await reader.plugin(JsonlSessionPersistence, { root, compression: 'none' })
-    await expectPersistedTitle(reader, id)
-    await reader.fiber.dispose()
-  })
-
-  it('round-trips through a remounted SQLite backend', async () => {
-    const root = await mkdtemp(join(tmpdir(), 'dsh-title-sqlite-'))
-    roots.push(root)
-    const path = join(root, 'sessions.db')
-    const id = SessionId('title-sqlite')
-    const writer = new Context()
-    await writer.plugin(SessionStore)
-    await writer.plugin(SqliteSessionPersistence, { path })
-    await writer.plugin(SessionTitleService, CONFIG)
-    await appendPersistedTitle(writer, id)
-    await writer.fiber.dispose()
-
-    const reader = new Context()
-    await reader.plugin(SessionStore)
-    await reader.plugin(SqliteSessionPersistence, { path })
     await expectPersistedTitle(reader, id)
     await reader.fiber.dispose()
   })

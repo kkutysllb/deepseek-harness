@@ -1,3 +1,8 @@
+---
+description: "accounts 组地图：多用户账户体系，含服务端会话、CSRF 双提交、管理员管理与 RBAC，面向构建托管部署的运营者。"
+kind: "package-group"
+---
+
 # accounts/ — 多用户账户
 
 [English](README.md) | 中文

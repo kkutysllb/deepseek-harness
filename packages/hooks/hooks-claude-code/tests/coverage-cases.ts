@@ -15,6 +15,7 @@ import LocalSubprocessRuntime from '@qilin/subprocess-local'
 import { scopeTarget } from '@qilin/scope'
 import SubagentRuntime, { SubagentRunId } from '@qilin/subagent'
 import * as HooksClaude from '@qilin/hooks-claude-code'
+import SessionProjectionRegistry from '@qilin/session-projection'
 import { MockAdapter, textResponse, toolCallResponse } from '../../../core/agent-loop/tests/mock-adapter.ts'
 
 const testToolSignal = new AbortController().signal
@@ -29,7 +30,7 @@ function subagentCarrier(ctx: Context) {
   return scopeTarget(ctx as unknown as SubagentRuntime, undefined)
 }
 
-function dir(): string { const d = mkdtempSync(join(tmpdir(), 'dsh-hc-cov-')); dirs.push(d); return d }
+function dir(): string { const d = mkdtempSync(join(tmpdir(), 'qilin-hc-cov-')); dirs.push(d); return d }
 function sh(d: string, name: string, body: string): string {
   const p = join(d, name); writeFileSync(p, body); chmodSync(p, 0o755); return p
 }
@@ -41,6 +42,7 @@ type HarnessOpts = { pluginRoot?: string; projectDir?: string; stderrSummaryMaxC
 async function harness(configPath: string, adapter: MockAdapter, opts: HarnessOpts = {}): Promise<Context> {
   const ctx = new Context()
   await mountAgentLoopTestDependencies(ctx)
+  await ctx.plugin(SessionProjectionRegistry)
   if (opts.sessionRoot !== undefined) await ctx.plugin(JsonlSessionPersistence, { root: opts.sessionRoot })
   await ctx.plugin(AgentLoop, { agents: [] })
   await ctx.plugin(LocalSubprocessRuntime)
@@ -153,8 +155,8 @@ export function defineCoverageCases(group: CoverageGroup): void {
       const ctx = await harness(path, new MockAdapter([]))
       let ran = false
       ctx.tools.register(defineContentToolFixture({ name: 'echo', description: 'e', parameters: {}, async execute() { ran = true; return [{ type: 'text', text: 'x' }] } }))
-      const { CallId } = await import('@qilin/llm')
-      const result = await ctx.tools.execute({ signal: testToolSignal, callId: CallId('c1'), name: 'echo', arguments: {} })
+      const { ToolCallId } = await import('@qilin/llm')
+      const result = await ctx.tools.execute({ signal: testToolSignal, callId: ToolCallId('c1'), name: 'echo', arguments: {} })
       expect(ran).toBe(false)
       expect(result.isError).toBe(true)
     })
@@ -368,6 +370,7 @@ export function defineCoverageCases(group: CoverageGroup): void {
       const adapter = new MockAdapter([textResponse('ok')])
       const ctx = new Context()
       await mountAgentLoopTestDependencies(ctx)
+      await ctx.plugin(SessionProjectionRegistry)
       await ctx.plugin(AgentLoop, { agents: [] })
       await ctx.plugin(LocalSubprocessRuntime)
       await ctx.plugin(LocalBashExecutor, { timeoutMs: 10_000 })
@@ -667,6 +670,7 @@ export function defineCoverageCases(group: CoverageGroup): void {
       const adapter = new MockAdapter([toolCallResponse('c1', 'echo', {}), textResponse('done')])
       const ctx = new Context()
       await mountAgentLoopTestDependencies(ctx)
+      await ctx.plugin(SessionProjectionRegistry)
       await ctx.plugin(AgentLoop, { agents: [] })
       // Executor default cwd = serverDir (deliberately NOT the session cwd).
       await ctx.plugin(LocalSubprocessRuntime)
@@ -696,6 +700,7 @@ export function defineCoverageCases(group: CoverageGroup): void {
       hooks(serverDir, { SubagentStop: [{ hooks: [{ type: 'command', command: 'cat > stoppayload.tmp; mv stoppayload.tmp stoppayload; pwd > stopwhere' }] }] })
       const ctx = new Context()
       await mountAgentLoopTestDependencies(ctx)
+      await ctx.plugin(SessionProjectionRegistry)
       await ctx.plugin(AgentLoop, { agents: [] })
       // Executor default cwd = serverDir (deliberately NOT the child session cwd).
       await ctx.plugin(LocalSubprocessRuntime)

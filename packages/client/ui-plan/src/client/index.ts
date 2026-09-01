@@ -8,13 +8,16 @@
  * plan state.
  */
 import type {} from '@qilin/api-remotes/client'
-import type { ClientContext, SessionId } from '@qilin/client-runtime/client'
+import type { Context as ClientContext } from '@deepseek-ai/cordis'
+import type { SessionId } from '@qilin/session/types'
 // Type-only: pulls the ui-conversation SlotMap merge (the input.plan seat).
 import type {} from '@qilin/client-ui-conversation/client'
 // Type-only: pulls the locale plugin's Context merge (ctx.locale).
 import type {} from '@qilin/client-locale/client'
 // Type-only: pulls the `plan` SessionProjectionMap merge for useProjection.
 import type {} from '@qilin/plan-mode/client'
+import type {} from '@qilin/client-ui-renderer/client'
+import type {} from '@qilin/client-ui-session/client'
 import { PlanChip } from './PlanModeControl.tsx'
 import { en, zh, type PlanKey } from './locales.ts'
 

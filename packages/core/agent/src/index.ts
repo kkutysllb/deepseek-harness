@@ -12,26 +12,17 @@ import { isPromise } from 'node:util/types'
 import { scopeTarget } from '@qilin/scope'
 import type { Scoped } from '@qilin/scope'
 import type { SessionEvent, SessionId } from '@qilin/session'
-import type { TypertContext, TypertLookup } from '@qilin/typert-protocol'
-import type { Agent, AgentOptions } from './runtime-types.ts'
+import type { Agent } from './types.ts'
+import type { AgentOptions } from './runtime-types.ts'
 
 export * from './runtime-types.ts'
 export * from './types.ts'
+export type * from './projection.ts'
 export * from './inbox.ts'
 export * from './consumed-work.ts'
 export * from './model-selection.ts'
 export { agentCarrier, agentEvents, assembleContextFor, emitAgentEvent } from './dispatch.ts'
 export type { AgentEventDispatch, AgentSubjectEvent } from './dispatch.ts'
-
-declare module '@qilin/typert-protocol' {
-  interface TypertLookupMap {
-    agent: TypertLookup<Agent, SessionId>
-  }
-
-  interface TypertContextMap {
-    agent: TypertContext<SessionId>
-  }
-}
 
 declare module '@deepseek-ai/cordis' {
   interface Context {
@@ -40,7 +31,7 @@ declare module '@deepseek-ai/cordis' {
      * The agent association installed as an own property on `Agent.ctx`, or
      * `undefined` on a plain context. Contexts derived from `Agent.ctx` inherit
      * the association; a deliberately nested scope may carry a nearer
-     * `dsh-scope` tag while retaining it, so this field is DX context rather
+     * `qilin-scope` tag while retaining it, so this field is DX context rather
      * than the scope resolver. {@link AgentRegistry} registers a root accessor
      * defaulting to `undefined`, and core packages below the agent layer use
      * `scopeOf()` for layer selection instead of reading this field.
@@ -85,7 +76,7 @@ export interface CreateAgentOptions {
    * fork lineage, the `seedLength` seed boundary, the coarse `origin`
    * classification, and the `delegationDepth` recursion budget. Mirrors the
    * `cwd`/`parentSession`/`seedLength`/`origin`/`delegationDepth` fields of
-   * {@link CreateSessionOptions.meta} in dsh-session (the internal-only
+   * {@link CreateSessionOptions.meta} in qilin-session (the internal-only
    * `createdAt`, used when reconstructing a persisted session, is deliberately
    * excluded — a factory caller never sets it). This is durable session data,
    * so the session boundary validates and snapshots it before asynchronous
@@ -176,9 +167,9 @@ export interface AgentHandle {
 
 /**
  * The agent-creation factory the loop implementation provides to the registry
- * via {@link AgentRegistry.setFactory}. Kept on the `dsh-agent` interface so
+ * via {@link AgentRegistry.setFactory}. Kept on the `qilin-agent` interface so
  * consumers (e.g. the ACP bridge) program against `ctx.agents` without
- * depending on the concrete `dsh-agent-loop` package.
+ * depending on the concrete `qilin-agent-loop` package.
  */
 export interface AgentFactory {
   /**
@@ -276,6 +267,7 @@ export class AgentRegistry extends Service {
       typeCtx.typert.contexts.registerHost('agent', {
         wire: 'agentId',
         wireTypeSymbol: '@qilin/session/types#SessionId',
+        identity: candidate => candidate.agent?.id,
         resolve: sessionId => this.get(sessionId)?.ctx,
       })
     })

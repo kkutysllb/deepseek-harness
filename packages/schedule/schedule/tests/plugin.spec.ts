@@ -4,7 +4,8 @@ import Loader from '@deepseek-ai/cordis-plugin-loader'
 import { agentEvents } from '@qilin/agent'
 import AgentLoop from '@qilin/agent-loop'
 import { mountAgentLoopTestDependencies } from '@qilin/agent-loop-testkit'
-import { CallId } from '@qilin/llm'
+import SessionProjectionRegistry from '@qilin/session-projection'
+import { ToolCallId } from '@qilin/llm'
 import { SessionId } from '@qilin/session'
 import * as toolSchedule from '../src/index.ts'
 
@@ -17,6 +18,7 @@ class PersistenceProbe extends Service {
 async function harness(): Promise<Context> {
   const ctx = new Context()
   await mountAgentLoopTestDependencies(ctx)
+  await ctx.plugin(SessionProjectionRegistry)
   await ctx.plugin(PersistenceProbe)
   ctx.on('session/flush', () => {})
   await ctx.plugin(AgentLoop, { agents: [] })
@@ -51,7 +53,7 @@ describe('Schedule plugin composition', () => {
 
     const created = await ctx.agents.withInitiator(root.agent, () => ctx.tools.execute({
       signal: new AbortController().signal,
-      callId: CallId('schedule-plugin-create'),
+      callId: ToolCallId('schedule-plugin-create'),
       name: 'schedule_create',
       arguments: { prompt: 'future reminder', after_seconds: 3_600 },
       agent: root.agent,

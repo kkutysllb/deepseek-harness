@@ -2,5 +2,5 @@
 # side as of the last confirmed-consistent state. Both languages carry equal authority;
 # after editing either side, bring the other along and re-record with:
 #   pnpm run verify-translation-pairing --write .agents/notes/proposed/process/2026-06-20-discover-package-inventory.md
-2026-06-20-discover-package-inventory.md: 519e34c892cc22cd045d137252bb65abf98dfe8b
-2026-06-20-discover-package-inventory.zh.md: ebfe5e5c294cb8fd2923eb9d650e387a55ff0f1f
+2026-06-20-discover-package-inventory.md: 211389a8697f72577a33ee6e8c9c5b7edea71c24
+2026-06-20-discover-package-inventory.zh.md: 39694d70c50de7f86dca1e7b13db4ae1b7eb4ba6

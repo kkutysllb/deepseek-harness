@@ -4,7 +4,7 @@
  * recovery, raw piped streams, and tree-scoped termination. Command
  * defaulting, shell semantics, protocol framing, and presentation belong to
  * consumers such as the bash executor seam.
- * @module dsh-subprocess/types
+ * @module qilin-subprocess/types
  */
 
 import type { Readable, Writable } from 'node:stream'
@@ -13,10 +13,10 @@ import type { Readable, Writable } from 'node:stream'
 export const QILIN_ENV_PREFIX = 'QILIN_' as const
 
 /** One environment key inside the managed {@link QILIN_ENV_PREFIX} namespace. */
-export type DshEnvironmentKey = `${typeof QILIN_ENV_PREFIX}${string}`
+export type QilinEnvironmentKey = `${typeof QILIN_ENV_PREFIX}${string}`
 
 /** Trusted DeepSeek Harness variables for one child-process execution. */
-export type DshEnvironment = Readonly<Record<DshEnvironmentKey, string>>
+export type QilinEnvironment = Readonly<Record<QilinEnvironmentKey, string>>
 
 /** One captured stream: the (possibly truncated) text plus recovery info. */
 export interface CollectedOutput {
@@ -69,7 +69,7 @@ export interface SubprocessStdio {
 /**
  * A fully-specified spawn request. This seam applies no defaults: every
  * disposition, limit, and directory is explicit, so the caller's own config —
- * not a hidden subprocess-service default — decides them (the `dsh-shell`
+ * not a hidden subprocess-service default — decides them (the `qilin-shell`
  * request/spec split is the owning template).
  */
 export interface SubprocessSpawnSpec {

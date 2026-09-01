@@ -82,6 +82,7 @@ export function authDisabledRbacPrincipal(): RbacPrincipal {
       email: RBAC_AUTH_DISABLED_USER_EMAIL,
       systemRole: 'admin',
       needsSetup: false,
+      disabledAt: null,
       oauthProvider: null,
       oauthId: null,
       sessionVersion: 0,

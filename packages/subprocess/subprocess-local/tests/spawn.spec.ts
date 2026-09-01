@@ -80,7 +80,7 @@ vi.mock('node:fs', async (importOriginal) => {
   }
 })
 
-const spillDir = mkdtempSync(join(tmpdir(), 'dsh-subprocess-spec-'))
+const spillDir = mkdtempSync(join(tmpdir(), 'qilin-subprocess-spec-'))
 
 type SpecOverrides = Partial<Parameters<typeof spawnSubprocess>[0]> & {
   stdoutMaxBytes?: number
@@ -315,7 +315,7 @@ describe('spawnSubprocess', () => {
   })
 
   it('rejects with a spawn error for a nonexistent cwd', async () => {
-    await expect(spawnSubprocess(spec('echo hi', { cwd: '/nonexistent-dir-dsh-test' })).done)
+    await expect(spawnSubprocess(spec('echo hi', { cwd: '/nonexistent-dir-qilin-test' })).done)
       .rejects.toThrow(/ENOENT/)
   })
 
@@ -874,7 +874,7 @@ describe('coverage seams', () => {
   })
 
   it('a spawn-failed handle rejects done while waitForExit reports gone', async () => {
-    const running = spawnSubprocess(spec('true', { cwd: '/nonexistent-dir-dsh-dispose-test' }))
+    const running = spawnSubprocess(spec('true', { cwd: '/nonexistent-dir-qilin-dispose-test' }))
     await expect(running.done).rejects.toThrow()
     await expect(running.waitForExit()).resolves.toBe(true)
   })
@@ -932,7 +932,7 @@ describe('coverage seams', () => {
   })
 
   it('waitForExit on a failed spawn reports exited immediately', async () => {
-    const running = spawnSubprocess(spec('true', { cwd: '/nonexistent-dir-dsh-spawn-test' }))
+    const running = spawnSubprocess(spec('true', { cwd: '/nonexistent-dir-qilin-spawn-test' }))
     await expect(running.done).rejects.toThrow()
     await expect(running.waitForExit()).resolves.toBe(true)
   })
@@ -1076,7 +1076,7 @@ describe('environment and spill-file hardening', () => {
       { spillDir },
     ))
     const path = result.stdout.spillPath!
-    expect(path).toMatch(/dsh-subprocess-\d+-\d+-[0-9a-f]{12}-stdout\.log$/)
+    expect(path).toMatch(/qilin-subprocess-\d+-\d+-[0-9a-f]{12}-stdout\.log$/)
     const mode = statSync(path).mode & 0o777
     expect(mode).toBe(0o600)
   })
@@ -1086,7 +1086,7 @@ describe('environment and spill-file hardening', () => {
       spec('for i in $(seq 1 200); do printf "line-%04d\\n" $i; done', { stdoutMaxBytes: 500, stderrMaxBytes: 500 }),
     ))
     const dir = dirname(result.stdout.spillPath!)
-    expect(dir).toMatch(/dsh-subprocess-/)
+    expect(dir).toMatch(/qilin-subprocess-/)
     const mode = statSync(dir).mode & 0o777
     expect(mode).toBe(0o700)
   })

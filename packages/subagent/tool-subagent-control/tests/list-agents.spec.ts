@@ -3,7 +3,7 @@ import { mkdtempSync, rmSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { Context } from '@deepseek-ai/cordis'
-import { CallId } from '@qilin/llm'
+import { ToolCallId } from '@qilin/llm'
 import AgentLoop from '@qilin/agent-loop'
 import { mountAgentLoopTestDependencies } from '@qilin/agent-loop-testkit'
 import { SessionId } from '@qilin/session'
@@ -17,6 +17,7 @@ import { LlmAdapter } from '@qilin/llm'
 import { MockAdapter, textResponse } from '../../../core/agent-loop/tests/mock-adapter.ts'
 import * as tool from '../src/list-agents.ts'
 import { parkParent } from './park-parent.ts'
+import { TestSessionQuery } from './test-session-query.ts'
 
 /** One scripted response that may wait on a caller-released gate before streaming. */
 interface GatedEntry {
@@ -54,9 +55,10 @@ afterEach(() => {
 async function setupWith(adapter: MockAdapter | GatedAdapter) {
   const ctx = new Context()
   await mountAgentLoopTestDependencies(ctx)
-  const root = mkdtempSync(join(tmpdir(), 'dsh-tool-list-agents-'))
+  const root = mkdtempSync(join(tmpdir(), 'qilin-tool-list-agents-'))
   roots.push(root)
   await ctx.plugin(JsonlSessionPersistence, { root })
+  await ctx.plugin(TestSessionQuery)
   await ctx.plugin(AgentLoop, { agents: [] })
   await ctx.plugin(SessionProjectionRegistry)
   await ctx.plugin(SubagentRuntime)
@@ -86,7 +88,7 @@ function callTool(
 ) {
   return ctx.tools.execute({
     signal,
-    callId: CallId(`call-${++calls}`),
+    callId: ToolCallId(`call-${++calls}`),
     name,
     arguments: args,
     ...agent !== undefined ? { agent: agent as never } : {},
@@ -100,7 +102,7 @@ async function waitNoActivation(ctx: Context, childId: SessionId): Promise<void>
   }, { timeout: 5_000 })
 }
 
-describe('dsh-tool-subagent-control/list-agents', () => {
+describe('qilin-tool-subagent-control/list-agents', () => {
   it('registers list_agents once, globally, with only the optional scope parameter', async () => {
     const { ctx } = await setup([])
     const schemas = ctx.tools.schemas().filter(schema => schema.name === 'list_agents')
@@ -247,6 +249,7 @@ describe('dsh-tool-subagent-control/list-agents', () => {
     const ctx = new Context()
     await mountAgentLoopTestDependencies(ctx)
     await ctx.plugin(AgentLoop, { agents: [] })
+    await ctx.plugin(SessionProjectionRegistry)
     await ctx.plugin(SubagentRuntime)
     const fiber = await ctx.plugin(tool)
     expect(ctx.tools.schemas().some(schema => schema.name === 'list_agents')).toBe(true)

@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from 'vitest'
 import { Context } from '@deepseek-ai/cordis'
-import LlmRuntime, { createUserMessage, CallId  } from '@qilin/llm'
+import LlmRuntime, { createUserMessage, ToolCallId  } from '@qilin/llm'
 import SessionStore, {
   SessionId,
   type SessionEvent,
@@ -16,6 +16,7 @@ import AgentRegistry, {
 } from '@qilin/agent'
 
 import AgentLoop from '@qilin/agent-loop'
+import SessionProjectionRegistry from '@qilin/session-projection'
 import { MockAdapter, textResponse, toolCallResponse } from './mock-adapter.ts'
 
 /**
@@ -31,6 +32,7 @@ async function harness(adapter: MockAdapter) {
   const ctx = new Context()
   await ctx.plugin(LlmRuntime)
   await ctx.plugin(SessionStore)
+  await ctx.plugin(SessionProjectionRegistry)
   await ctx.plugin(SystemPrompt)
   await ctx.plugin(ToolRuntime)
   await ctx.plugin(AgentRegistry)
@@ -613,9 +615,9 @@ describe('tool additionalContexts buffering across a step', () => {
     // One assistant step with TWO tool calls; the second model response stops.
     const twoCalls = [
       { type: 'block-start' as const, index: 0, blockType: 'tool-call' as const },
-      { type: 'block-end' as const, index: 0, block: { type: 'tool-call' as const, id: CallId('c1'), name: 'echo', arguments: '{"text":"a"}' } },
+      { type: 'block-end' as const, index: 0, block: { type: 'tool-call' as const, id: ToolCallId('c1'), name: 'echo', arguments: '{"text":"a"}' } },
       { type: 'block-start' as const, index: 1, blockType: 'tool-call' as const },
-      { type: 'block-end' as const, index: 1, block: { type: 'tool-call' as const, id: CallId('c2'), name: 'echo', arguments: '{"text":"b"}' } },
+      { type: 'block-end' as const, index: 1, block: { type: 'tool-call' as const, id: ToolCallId('c2'), name: 'echo', arguments: '{"text":"b"}' } },
       { type: 'usage' as const, usage: { inputTokens: 5, outputTokens: 5 } },
       { type: 'finish' as const, reason: { kind: 'tool-calls' as const } },
     ]
@@ -717,7 +719,7 @@ describe('tools/pre-execute gate (native-plugin permission pattern, end-to-end t
 })
 
 describe('worked example: a native hook plugin is just a cordis plugin on the seams', () => {
-  // The whole point of the interception taxonomy: a "native hook" needs no dsh-hook-protocol,
+  // The whole point of the interception taxonomy: a "native hook" needs no qilin-hook-protocol,
   // no external command, no hook/* log — it is an ordinary cordis plugin subscribing to the
   // canonical events and returning typed decisions.
   const NativeGuard = {

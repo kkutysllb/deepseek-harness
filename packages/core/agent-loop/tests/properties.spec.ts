@@ -20,6 +20,7 @@ import ToolRuntime from '@qilin/tools'
 import AgentRegistry, { type Agent } from '@qilin/agent'
 
 import AgentLoop from '@qilin/agent-loop'
+import SessionProjectionRegistry from '@qilin/session-projection'
 import fc from 'fast-check'
 
 /** A never-exhausting adapter: every model call returns the same short reply. */
@@ -39,6 +40,7 @@ async function harness() {
   const ctx = new Context()
   await ctx.plugin(LlmRuntime)
   await ctx.plugin(SessionStore)
+  await ctx.plugin(SessionProjectionRegistry)
   await ctx.plugin(SystemPrompt)
   await ctx.plugin(ToolRuntime)
   await ctx.plugin(AgentRegistry)

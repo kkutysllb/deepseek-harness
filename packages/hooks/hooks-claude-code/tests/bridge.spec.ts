@@ -15,11 +15,12 @@ import LocalSubprocessRuntime from '@qilin/subprocess-local'
 import { scopeTarget } from '@qilin/scope'
 import SubagentRuntime, { SubagentRunId } from '@qilin/subagent'
 import * as HooksClaude from '@qilin/hooks-claude-code'
+import SessionProjectionRegistry from '@qilin/session-projection'
 import { MockAdapter, textResponse, toolCallResponse } from '../../../core/agent-loop/tests/mock-adapter.ts'
 
 /**
  * Full-loop bridge tests: a scripted mock MODEL drives the REAL agent loop + REAL
- * bash executor, and the REAL `dsh-hooks-claude-code` bridge runs REAL shell hook
+ * bash executor, and the REAL `qilin-hooks-claude-code` bridge runs REAL shell hook
  * scripts written to a temp dir — only the model is mocked (the "prefer the real
  * implementation" rule). Each test writes a `hooks.json` + executable scripts,
  * loads the bridge pointed at them, and asserts the hook's effect on the loop.
@@ -34,7 +35,7 @@ function subagentCarrier(ctx: Context) {
 
 /** Write a hooks.json + named executable scripts into a fresh temp dir. */
 function writeConfig(hooks: unknown, scripts: Record<string, string> = {}): string {
-  const dir = mkdtempSync(join(tmpdir(), 'dsh-hooks-claude-'))
+  const dir = mkdtempSync(join(tmpdir(), 'qilin-hooks-claude-'))
   dirs.push(dir)
   writeFileSync(join(dir, 'hooks.json'), JSON.stringify({ hooks }))
   for (const [name, body] of Object.entries(scripts)) {
@@ -57,6 +58,7 @@ async function harnessWithFiber(
 ): Promise<{ ctx: Context; hooks: Fiber }> {
   const ctx = new Context()
   await mountAgentLoopTestDependencies(ctx)
+  await ctx.plugin(SessionProjectionRegistry)
   await ctx.plugin(AgentLoop, { agents: [] })
   await ctx.plugin(LocalSubprocessRuntime)
   await ctx.plugin(LocalBashExecutor, { timeoutMs: 10_000 })
@@ -92,7 +94,7 @@ describe('hooks-claude-code bridge — UserPromptSubmit', () => {
   it('a UserPromptSubmit hook that exits 2 closes a blocked turn without a step', async () => {
     // UserPromptSubmit ignores its malformed matcher field, then exit 2 blocks
     // with the reason on stderr.
-    const dir = mkdtempSync(join(tmpdir(), 'dsh-hooks-claude-'))
+    const dir = mkdtempSync(join(tmpdir(), 'qilin-hooks-claude-'))
     dirs.push(dir)
     const block = join(dir, 'block.sh')
     writeFileSync(block, '#!/usr/bin/env bash\necho "prompt denied by policy" >&2\nexit 2\n')
@@ -113,7 +115,7 @@ describe('hooks-claude-code bridge — UserPromptSubmit', () => {
   })
 
   it('a UserPromptSubmit hook printing additionalContext injects it for the model', async () => {
-    const dir = mkdtempSync(join(tmpdir(), 'dsh-hooks-claude-'))
+    const dir = mkdtempSync(join(tmpdir(), 'qilin-hooks-claude-'))
     dirs.push(dir)
     const ctxScript = join(dir, 'ctx.sh')
     writeFileSync(ctxScript, '#!/usr/bin/env bash\necho \'{"hookSpecificOutput":{"hookEventName":"UserPromptSubmit","additionalContext":"remember: be brief"}}\'\n')
@@ -135,7 +137,7 @@ describe('hooks-claude-code bridge — UserPromptSubmit', () => {
 
 describe('hooks-claude-code bridge — PreToolUse', () => {
   it('a matching PreToolUse hook that exits 2 denies the tool (isError result), tool never runs', async () => {
-    const dir = mkdtempSync(join(tmpdir(), 'dsh-hooks-claude-'))
+    const dir = mkdtempSync(join(tmpdir(), 'qilin-hooks-claude-'))
     dirs.push(dir)
     const deny = join(dir, 'deny.sh')
     writeFileSync(deny, '#!/usr/bin/env bash\necho "danger tool blocked" >&2\nexit 2\n')
@@ -158,7 +160,7 @@ describe('hooks-claude-code bridge — PreToolUse', () => {
   })
 
   it('a PreToolUse hook whose matcher does NOT match leaves the tool alone', async () => {
-    const dir = mkdtempSync(join(tmpdir(), 'dsh-hooks-claude-'))
+    const dir = mkdtempSync(join(tmpdir(), 'qilin-hooks-claude-'))
     dirs.push(dir)
     const deny = join(dir, 'deny.sh')
     writeFileSync(deny, '#!/usr/bin/env bash\nexit 2\n')
@@ -182,7 +184,7 @@ describe('hooks-claude-code bridge — PreToolUse', () => {
 
 describe('hooks-claude-code bridge — PostToolUse', () => {
   it('a PostToolUse hook that blocks (exit 2) turns the result into an isError with feedback', async () => {
-    const dir = mkdtempSync(join(tmpdir(), 'dsh-hooks-claude-'))
+    const dir = mkdtempSync(join(tmpdir(), 'qilin-hooks-claude-'))
     dirs.push(dir)
     const block = join(dir, 'block.sh')
     writeFileSync(block, '#!/usr/bin/env bash\necho "output rejected, retry" >&2\nexit 2\n')
@@ -203,7 +205,7 @@ describe('hooks-claude-code bridge — PostToolUse', () => {
   })
 
   it('a PostToolUse hook printing additionalContext attaches it after the tool result', async () => {
-    const dir = mkdtempSync(join(tmpdir(), 'dsh-hooks-claude-'))
+    const dir = mkdtempSync(join(tmpdir(), 'qilin-hooks-claude-'))
     dirs.push(dir)
     const s = join(dir, 'ctx.sh')
     writeFileSync(s, '#!/usr/bin/env bash\necho \'{"hookSpecificOutput":{"hookEventName":"PostToolUse","additionalContext":"note: tool was slow"}}\'\n')
@@ -226,7 +228,7 @@ describe('hooks-claude-code bridge — PostToolUse', () => {
   })
 
   it('a PreToolUse permissionDecision:ask fails closed without an approval service', async () => {
-    const dir = mkdtempSync(join(tmpdir(), 'dsh-hooks-claude-'))
+    const dir = mkdtempSync(join(tmpdir(), 'qilin-hooks-claude-'))
     dirs.push(dir)
     const s = join(dir, 'ask.sh')
     writeFileSync(s, '#!/usr/bin/env bash\necho \'{"hookSpecificOutput":{"hookEventName":"PreToolUse","permissionDecision":"ask","permissionDecisionReason":"needs approval"}}\'\n')
@@ -251,7 +253,7 @@ describe('hooks-claude-code bridge — PostToolUse', () => {
 
 describe('hooks-claude-code bridge — SessionStart', () => {
   it('a SessionStart hook injects additionalContext the first request sees', async () => {
-    const dir = mkdtempSync(join(tmpdir(), 'dsh-hooks-claude-'))
+    const dir = mkdtempSync(join(tmpdir(), 'qilin-hooks-claude-'))
     dirs.push(dir)
     const s = join(dir, 'start.sh')
     writeFileSync(s, '#!/usr/bin/env bash\necho \'{"hookSpecificOutput":{"hookEventName":"SessionStart","additionalContext":"project uses tabs"}}\'\n')
@@ -276,7 +278,7 @@ describe('hooks-claude-code bridge — SessionStart', () => {
 
 describe('hooks-claude-code bridge — SubagentStart / SubagentStop (observe)', () => {
   it('runs SubagentStart and SubagentStop hooks when the subagent lifecycle events fire', async () => {
-    const dir = mkdtempSync(join(tmpdir(), 'dsh-hooks-claude-'))
+    const dir = mkdtempSync(join(tmpdir(), 'qilin-hooks-claude-'))
     dirs.push(dir)
     // Each hook touches a marker file so we can assert it ran (these events are
     // observe-only — there is no decision to assert, only the side effect).
@@ -295,9 +297,8 @@ describe('hooks-claude-code bridge — SubagentStart / SubagentStop (observe)', 
 
     const adapter = new MockAdapter([])
     const { ctx, hooks } = await harnessWithFiber(dir, adapter)
-    // Drive the observe-only lifecycle events directly (no real child needed — the
-    // bridge just listens). No child agent is registered, so SubagentStart's
-    // child lookup yields undefined and it simply runs the hook.
+    // Drive the observe-only lifecycle events directly. SubagentStart must run
+    // the hook even when no registered child resolves from the notification.
     ctx.emit(subagentCarrier(ctx), 'subagent/start', { runId: SubagentRunId('run-1'), provider: 'inproc', id: SessionId('child-1'), local: false })
     ctx.emit(subagentCarrier(ctx), 'subagent/end', { runId: SubagentRunId('run-1'), provider: 'inproc', id: SessionId('child-1'), local: false, stopReason: 'completed', lastAssistantMessage: [{ type: 'text', text: 'done' }] })
 
@@ -316,7 +317,7 @@ describe('hooks-claude-code bridge — SubagentStart / SubagentStop (observe)', 
   })
 
   it('disposing the bridge aborts a still-running hook and drains to quiescence', async () => {
-    const dir = mkdtempSync(join(tmpdir(), 'dsh-hooks-claude-'))
+    const dir = mkdtempSync(join(tmpdir(), 'qilin-hooks-claude-'))
     dirs.push(dir)
     const pidFile = join(dir, 'pid')
     const marker = join(dir, 'started')
@@ -355,6 +356,7 @@ describe('hooks-claude-code bridge — load resilience', () => {
     const adapter = new MockAdapter([textResponse('fine')])
     const ctx = new Context()
     await mountAgentLoopTestDependencies(ctx)
+    await ctx.plugin(SessionProjectionRegistry)
     await ctx.plugin(AgentLoop, { agents: [] })
     await ctx.plugin(LocalSubprocessRuntime)
     await ctx.plugin(LocalBashExecutor, { timeoutMs: 10_000 })
@@ -415,6 +417,7 @@ describe('hooks-claude-code bridge — load resilience', () => {
     const adapter = new MockAdapter([textResponse('ok')])
     const ctx = new Context()
     await mountAgentLoopTestDependencies(ctx)
+    await ctx.plugin(SessionProjectionRegistry)
     await ctx.plugin(AgentLoop, { agents: [] })
     await ctx.plugin(LocalSubprocessRuntime)
     await ctx.plugin(LocalBashExecutor, { timeoutMs: 10_000 })
@@ -435,12 +438,12 @@ describe('hooks-claude-code bridge — load resilience', () => {
     // "cannot get property … without inject". Guard the shape directly.
     expect('default' in HooksClaude).toBe(false)
     expect(HooksClaude.name).toBe('hooks-claude-code')
-    expect(HooksClaude.inject).toEqual(['shell'])
+    expect(HooksClaude.inject).toEqual(['shell', 'sessionProjections'])
     const loader = Object.create(Loader.prototype) as Loader
     const unwrapped = loader.unwrapExports(HooksClaude) as Record<string, unknown>
     expect(unwrapped).toBe(HooksClaude)
     expect(unwrapped.name).toBe('hooks-claude-code')
-    expect(unwrapped.inject).toEqual(['shell'])
+    expect(unwrapped.inject).toEqual(['shell', 'sessionProjections'])
     expect(typeof unwrapped.apply).toBe('function')
   })
 })

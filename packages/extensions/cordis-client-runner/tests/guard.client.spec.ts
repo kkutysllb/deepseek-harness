@@ -16,7 +16,7 @@ import type {
   CordisDynamicPluginRunId,
   DynamicCordisPackage,
 } from '@qilin/api-remotes/client'
-import { SlotRegistry } from '@qilin/client-runtime/client'
+import { SlotRegistry } from '@qilin/client-ui-renderer/client'
 import { dynamicCordisContext } from '../src/client/guard.ts'
 import type { DynamicCordisSlotLedgerRow } from '../src/client/guard.ts'
 

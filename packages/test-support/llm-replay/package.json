@@ -1,7 +1,7 @@
 {
   "name": "@qilin/llm-replay",
   "description": "Replay LLM plugin: short-circuits llm/stream with model chunks reconstructed from a recorded session JSONL (keyless snapshot tests)",
-  "version": "0.1.1-rc.2",
+  "version": "0.1.2-alpha.3",
   "publishConfig": {
     "access": "public"
   },
@@ -32,17 +32,27 @@
   ],
   "license": "MIT",
   "peerDependencies": {
+    "@deepseek-ai/cordis": "workspace:^",
     "@qilin/compaction": "workspace:^",
+    "@qilin/deepseek-llm-api-extensions": "workspace:^",
     "@qilin/invariants": "workspace:^",
     "@qilin/llm": "workspace:^",
-    "@qilin/session": "workspace:^",
-    "@deepseek-ai/cordis": "workspace:^"
+    "@qilin/session": "workspace:^"
+  },
+  "peerDependenciesMeta": {
+    "@qilin/deepseek-llm-api-extensions": {
+      "optional": true
+    }
   },
   "devDependencies": {
+    "@deepseek-ai/cordis": "workspace:^",
     "@qilin/compaction": "workspace:^",
+    "@qilin/deepseek-llm-api-extensions": "workspace:^",
     "@qilin/invariants": "workspace:^",
     "@qilin/llm": "workspace:^",
-    "@qilin/session": "workspace:^",
-    "@deepseek-ai/cordis": "workspace:^"
+    "@qilin/session": "workspace:^"
+  },
+  "dependencies": {
+    "@qilin/util-values": "workspace:^"
   }
 }

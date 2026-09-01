@@ -5,7 +5,7 @@
 
 import type { Context } from '@deepseek-ai/cordis'
 import type { InvariantFailure, InvariantInstaller } from '@qilin/invariants'
-import { deepEqualJson } from './index.ts'
+import { deepEqualJson } from '@qilin/util-values'
 
 const PACKAGE_NAME = '@qilin/settings'
 

@@ -1,3 +1,8 @@
+---
+description: "The accounts group map: multi-user accounts with server-side sessions, CSRF double-submit, admin management, and RBAC for operators building hosted deployments."
+kind: "package-group"
+---
+
 # accounts/ — multi-user accounts
 
 English | [中文](README.zh.md)

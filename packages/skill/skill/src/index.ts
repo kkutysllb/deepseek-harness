@@ -11,7 +11,8 @@
  */
 
 import { Context, Service } from '@deepseek-ai/cordis'
-import { assertNever } from '@qilin/llm'
+import type {} from '@qilin/llm'
+import { assertNever } from '@qilin/util-values'
 import { NamedEntries, ScopedLayers, scopeChainOf, scopeOf } from '@qilin/scope'
 import type { ScopeKey, ScopeLayer } from '@qilin/scope'
 import z from '@deepseek-ai/schemastery'

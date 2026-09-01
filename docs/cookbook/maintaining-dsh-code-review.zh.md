@@ -1,8 +1,8 @@
-# 维护 dsh-code-review skill
+# 维护 qilin-code-review skill
 
 [English](maintaining-dsh-code-review.md) | 中文
 
-[`dsh-code-review`](../../.agents/skills/dsh-code-review/SKILL.md) skill（技能）由一名指定操作员通过私有的周期维护工具持续更新。本实操手册既是该操作员和接任者的入口，也帮助仓库贡献者理解为何 skill 更新会以小型周期 PR（Pull Request）的形式出现，而不是一次性审计。工作流本身由[人工评审 skill 维护 Agent Note](../../.agents/notes/proposed/process/2026-07-13-human-review-skill-maintenance.zh.md)规定。
+[`qilin-code-review`](../../.agents/skills/dsh-code-review/SKILL.md) skill（技能）由一名指定操作员通过私有的周期维护工具持续更新。本实操手册既是该操作员和接任者的入口，也帮助仓库贡献者理解为何 skill 更新会以小型周期 PR（Pull Request）的形式出现，而不是一次性审计。工作流本身由[人工评审 skill 维护 Agent Note](../../.agents/notes/proposed/process/2026-07-13-human-review-skill-maintenance.zh.md)规定。
 
 ## 维护者会收到什么
 
@@ -18,7 +18,7 @@
 
 ## 操作员如何处理候选 diff
 
-某次运行产出候选版本时，macOS 会发出一条带 `dsh-code-review-promote <timestamp>` 提示的通知。
+某次运行产出候选版本时，macOS 会发出一条带 `qilin-code-review-promote <timestamp>` 提示的通知。
 
 1. **根据 diff 本身作出判断。** 不要因为「评审者已经批准」就直接接受；维护者约定规定由操作员作出最终决定。检查清单是否膨胀、是否有历史叙述、是否根据单次事件作出无依据的外推，以及是否与现有 skill 或权威文档重复。
 
@@ -42,7 +42,7 @@
 
      ```sh
      cd ~/path/to/deepseek-harness   # clean master
-     dsh-code-review-promote 2026-07-16T02-00-00Z
+     qilin-code-review-promote 2026-07-16T02-00-00Z
      ```
 
 4. **不要逐字提交适配器输出。** 提升过程中可以进行小幅编辑，例如收紧措辞、移除只有结合源 PR 上下文才有意义的示例、把规则并入现有规则。这些编辑是预期行为，也保留了工作流所依赖的「评审者判断」。合并前应在该分支上修订这些改动。

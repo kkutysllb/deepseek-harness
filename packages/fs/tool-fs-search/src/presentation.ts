@@ -20,7 +20,7 @@
  * kilobytes, and `meta` is persisted with the session log and re-sent on every
  * request. {@link capMetaBytes} drops trailing groups/paths until the serialized
  * `meta` fits `maxMetaBytes` and marks the result `truncated`; a deployment's
- * final output budget (`dsh-spill-policy`) only shrinks `content`, never `meta`,
+ * final output budget (`qilin-spill-policy`) only shrinks `content`, never `meta`,
  * so this projection owns keeping `meta` bounded.
  *
  * @module @qilin/tool-fs-search/presentation

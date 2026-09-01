@@ -1,11 +1,12 @@
 import { describe, expect, it } from 'vitest'
 import { Context } from '@deepseek-ai/cordis'
-import { createUserMessage, CallId  } from '@qilin/llm'
+import { createUserMessage, ToolCallId  } from '@qilin/llm'
 import { SessionId, type SessionEvent } from '@qilin/session'
 import { defineContentToolFixture } from '@qilin/tools'
 import type { Agent } from '@qilin/agent'
 import AgentLoop from '@qilin/agent-loop'
 import { mountAgentLoopTestDependencies } from '@qilin/agent-loop-testkit'
+import SessionProjectionRegistry from '@qilin/session-projection'
 import * as RepeatToolGuard from '@qilin/repeat-tool-reminder'
 import type { Config } from '@qilin/repeat-tool-reminder'
 import { MockAdapter, textResponse, toolCallResponse } from '../../../core/agent-loop/tests/mock-adapter.ts'
@@ -24,6 +25,8 @@ const testToolSignal = new AbortController().signal
 async function harness(config: Config = {}): Promise<Context> {
   const ctx = new Context()
   await mountAgentLoopTestDependencies(ctx)
+  // AgentLoop declares the registry as a required injection.
+  await ctx.plugin(SessionProjectionRegistry)
   await ctx.plugin(AgentLoop, { agents: [] })
   await ctx.plugin(RepeatToolGuard, config)
   ctx.tools.register(defineContentToolFixture({ name: 'probe', description: 'p', parameters: {}, async execute() { return [{ type: 'text', text: 'ok' }] } }))
@@ -293,7 +296,7 @@ describe('chain semantics', () => {
 
   it('ignores direct executes with no agent (they neither crash nor advance any chain)', async () => {
     const ctx = await harness({ thresholds: [2] })
-    const direct = await ctx.tools.execute({ signal: testToolSignal, callId: CallId('d1'), name: 'probe', arguments: { q: 1 } })
+    const direct = await ctx.tools.execute({ signal: testToolSignal, callId: ToolCallId('d1'), name: 'probe', arguments: { q: 1 } })
     expect(direct.isError).toBe(false)
 
     ctx.llm.registerAdapter(['mock'], new MockAdapter([
@@ -370,6 +373,7 @@ describe('config validation fails loud', () => {
   async function spine(): Promise<Context> {
     const ctx = new Context()
     await mountAgentLoopTestDependencies(ctx)
+    await ctx.plugin(SessionProjectionRegistry)
     await ctx.plugin(AgentLoop, { agents: [] })
     return ctx
   }

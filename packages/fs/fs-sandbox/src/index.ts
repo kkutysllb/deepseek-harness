@@ -10,22 +10,18 @@
  * The fence is a policy check in TRUSTED code over a MODEL-CONTROLLED path,
  * NOT a kernel boundary — the operations are the seam's own (open, rename),
  * and only the target path is untrusted, so canonicalize-then-contain is the
- * complete answer to this surface. Kernel-grade isolation of untrusted CODE
- * stays `ctx.shell`'s job (`@qilin/bash-sandbox`). This mirrors the
- * `code-runtime` stance: containment, not a security boundary. The residual
+ * complete answer to this surface. This is containment, not a security
+ * boundary; kernel-grade isolation of untrusted CODE stays `ctx.shell`'s job
+ * (`@qilin/bash-sandbox`). The residual
  * TOCTOU (an ancestor symlink swapped between the containment re-check and the
  * syscall) is narrowed by re-canonicalizing immediately before delegating and
  * is accepted for this threat model.
  *
  * Per-call policy: `read-only` denies every mutation; `workspace-write` allows
  * a mutation only when the target canonicalizes under the policy's workspace
- * root or a platform temp area (the SAME writable-root set Seatbelt grants,
- * derived from the one `writableRoots` function so bash and fs cannot drift);
+ * root or a platform temp area from the shared `writableRoots` policy;
  * `danger-full-access` delegates unfenced. A denial throws the structured
- * `FS_SANDBOX_DENIED` — no text inference is needed (unlike bash's kernel
- * stderr), because an in-process fence knows exactly what it refused. The
- * escalation retry lives in the tool layer (`@qilin/tool-fs`),
- * exactly as bash's does.
+ * `FS_SANDBOX_DENIED`.
  *
  * @module @qilin/fs-sandbox
  */
@@ -50,9 +46,9 @@ export type Config = LocalConfig
 
 /**
  * Sandbox-enforcing filesystem backend. Registers as `ctx.fs` (loading it
- * INSTEAD OF `dsh-fs-local`, together with a `ctx.sandboxPolicy`, is the whole
+ * INSTEAD OF `qilin-fs-local`, together with a `ctx.sandboxPolicy`, is the whole
  * swap — the model-facing tools are untouched). Its configured default mode is
- * the capability fact exposed by {@link sandboxMode}; `dsh-tool-fs` resolves
+ * the capability fact exposed by {@link sandboxMode}; `qilin-tool-fs` resolves
  * each session's mode and cwd into a policy for every mutation, while an
  * approved escalation may stamp a strictly wider mode for one call.
  */

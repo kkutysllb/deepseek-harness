@@ -27,18 +27,26 @@ describe('qilin-base bundle', () => {
     )
     expect(Array.isArray(parsed)).toBe(true)
     // The base layer is one insert list over the empty profile root.
-    const rows = (parsed as { insert?: { id?: string; config?: Record<string, unknown> }[] }[]).flatMap(
+    const rows = (parsed as { insert?: { id?: string; config?: Record<string, unknown>; disabled?: boolean }[] }[]).flatMap(
       patch => patch.insert ?? [],
     )
     expect(rows.length).toBeGreaterThan(50)
     expect(rows.some(row => row.id === 'agent-loop')).toBe(true)
     expect(rows.find(row => row.id === 'session-telemetry-otel')?.config?.['mode']).toEqual({
-      __jsExpr: "process.env.QILIN_TELEMETRY_MODE || 'DISABLED'",
+      __jsExpr: "process.env.QILIN_TELEMETRY_MODE || 'FEEDBACK_ONLY'",
+    })
+    expect(rows.find(row => row.id === 'hmr')).toMatchObject({
+      disabled: true,
+      config: { root: ['.'] },
     })
     expect(rows.filter(row => row.id === 'subagent-codex')).toHaveLength(0)
     expect(rows.filter(row => row.id === 'subagent-claude-code')).toHaveLength(0)
+    expect(rows.find(row => row.id === 'web')?.config).toMatchObject({ fetchProvider: 'http' })
+    expect(rows.find(row => row.id === 'web-fetch-http')).toBeDefined()
+    expect(rows.find(row => row.id === 'tool-web')?.config).toMatchObject({ fetch: false })
     expect(manifest.dependencies).not.toHaveProperty('@qilin/subagent-codex')
     expect(manifest.dependencies).not.toHaveProperty('@qilin/subagent-claude-code')
+    expect(manifest.dependencies).toHaveProperty('@qilin/web-fetch-http')
   })
 
   it('gates each shell stack by platform with a symmetric disabled expression', () => {

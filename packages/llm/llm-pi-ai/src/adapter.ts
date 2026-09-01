@@ -23,7 +23,7 @@
  * so a configuration change rebuilds the collection without forgetting who is
  * signed in.
  *
- * @module dsh-llm-pi-ai/adapter
+ * @module qilin-llm-pi-ai/adapter
  */
 
 import { createModels, getSupportedThinkingLevels } from '@earendil-works/pi-ai'
@@ -47,6 +47,7 @@ import {
 } from '@qilin/llm'
 import type {
   GenerateOptions,
+  ImageAttachmentAccess,
   LlmModelInfo,
   LlmProviderInfo,
   LlmResolvedModelInfo,
@@ -55,7 +56,7 @@ import type {
   ResolvedRetryPolicy,
   StreamChunk,
 } from '@qilin/llm'
-import type { AttachmentStore } from '@qilin/attachment'
+import type { AttachmentStore, ImageAttachmentRef } from '@qilin/attachment'
 import { idleWatchdog, timeoutOf } from '@qilin/timeout'
 import type { ResolvedPiAiProviderProfile } from './config.ts'
 import { toPiContext } from './context.ts'
@@ -93,6 +94,8 @@ export interface PiAiAdapterOptions {
   auth: PiAiAuthInjection
   /** Resolve the optional durable attachment service at request time. */
   resolveAttachments?: () => AttachmentStore | undefined
+  /** Bridge one attachment reference into the current model-tool execution world. */
+  resolveImageAccess?: (attachments: AttachmentStore, ref: ImageAttachmentRef) => ImageAttachmentAccess | undefined
   /**
    * Observe one assistant history message degrading to provider-neutral
    * conversion because its stored replay state is unusable by this build.
@@ -360,10 +363,15 @@ export class PiAiAdapter extends LlmAdapter {
       }
       const context = attachments === undefined
         ? toPiContext(options, undefined, onReplayDegrade)
-        : await toPiContext({ ...options, signal: watchdog.signal }, attachments, onReplayDegrade, profile.maxRequestImageBytes, {
-          maxPixels: profile.requestImagePixelBudget,
-          maxBytes: profile.requestImageMaxBytes,
-        })
+        : await toPiContext({ ...options, signal: watchdog.signal }, {
+          attachments,
+          resolveImageAccess: ref => this.config.resolveImageAccess?.(attachments, ref),
+          maxRequestImageBytes: profile.maxRequestImageBytes,
+          requestImagePolicy: {
+            maxPixels: profile.requestImagePixelBudget,
+            maxBytes: profile.requestImageMaxBytes,
+          },
+        }, onReplayDegrade)
       const events = snapshot.models.streamSimple(model, context, {
         ...profileOptions(profile, reasoning, apiKey),
         ...options.temperature === undefined ? {} : { temperature: options.temperature },
@@ -374,7 +382,7 @@ export class PiAiAdapter extends LlmAdapter {
         // Harness-owned and therefore win collisions.
         headers: requestHeaders(profile.headers),
       })
-      const iterator = toStreamChunks(events, model.contextWindow)[Symbol.asyncIterator]()
+      const iterator = toStreamChunks(events, model.contextWindow, options.signal)[Symbol.asyncIterator]()
       let exhausted = false
       try {
         while (true) {

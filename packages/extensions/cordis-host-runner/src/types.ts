@@ -4,7 +4,8 @@
  */
 
 import type { Branded } from '@qilin/brand'
-import type { JsonValue, SessionId } from '@qilin/session/types'
+import type { SessionId } from '@qilin/session/types'
+import type { JsonValue } from '@qilin/util-values'
 
 /** Stable identity of one dynamic plugin instance. */
 export type CordisDynamicPluginId = Branded<'CordisDynamicPluginId'>

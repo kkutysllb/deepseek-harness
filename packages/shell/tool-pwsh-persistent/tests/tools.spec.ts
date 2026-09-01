@@ -1,6 +1,6 @@
 import { afterEach, describe, expect, it } from 'vitest'
 import { Context } from '@deepseek-ai/cordis'
-import { CallId } from '@qilin/llm'
+import { ToolCallId } from '@qilin/llm'
 import { Session, SessionId } from '@qilin/session'
 import AgentRegistry, { Inbox } from '@qilin/agent'
 import type { Agent } from '@qilin/agent'
@@ -66,7 +66,7 @@ function call(
 ) {
   return ctx.tools.execute({
     signal,
-    callId: CallId(`persistent-pwsh-${++callNumber}`),
+    callId: ToolCallId(`persistent-pwsh-${++callNumber}`),
     name: 'pwsh',
     arguments: { command },
     ...owner === undefined ? {} : { agent: owner },
@@ -102,11 +102,11 @@ type StubMode =
   | 'exit-after-send'
   | 'prompt-collision'
 
-const START_PATTERN = /__DSH_PERSISTENT_PWSH_START_[^_]+(?:-[^_]+)*__/
-const END_PATTERN = /__DSH_PERSISTENT_PWSH_END_[^:]+:/
+const START_PATTERN = /__QILIN_PERSISTENT_PWSH_START_[^_]+(?:-[^_]+)*__/
+const END_PATTERN = /__QILIN_PERSISTENT_PWSH_END_[^:]+:/
 
 class StubTerminalSession implements TerminalBackendSession {
-  readonly motd = '__DSH_PERSISTENT_PWSH_PROMPT__ '
+  readonly motd = '__QILIN_PERSISTENT_PWSH_PROMPT__ '
   readonly pid = 123
   statusValue: TerminalSessionStatus = { kind: 'running' }
   scrollback = this.motd
@@ -360,8 +360,8 @@ describe('tool-pwsh-persistent', () => {
     stub.sessions[0]!.mode = 'with-echo'
     const result = text(await call(ctx, owner, 'Write-Output hi'))
     expect(result).toBe('hello from stub')
-    expect(result).not.toContain('__DSH_PERSISTENT_PWSH_START_')
-    expect(result).not.toContain('__DSH_PERSISTENT_PWSH_END_')
+    expect(result).not.toContain('__QILIN_PERSISTENT_PWSH_START_')
+    expect(result).not.toContain('__QILIN_PERSISTENT_PWSH_END_')
     expect(result).not.toContain('Invoke-Expression')
   })
 

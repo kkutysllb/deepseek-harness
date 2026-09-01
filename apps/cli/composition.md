@@ -3,7 +3,7 @@
 
 # QiLin Base Composition
 
-The qilin-base bundle patch every profile applies first; mode bundles (qilin-web-app, qilin-headless) and the user's profile layer patch over it.
+The qilin-base bundle patch shared by the web, headless, sdk, and acp profiles; their mode bundles and user layers patch over it, while sdk-minimal owns a separate standalone tree.
 
 ```mermaid
 flowchart LR
@@ -14,8 +14,12 @@ flowchart LR
   cfg --> plugin_qilin_base_hmr
   plugin_qilin_base_llm["llm<br/>@qilin/llm"]
   cfg --> plugin_qilin_base_llm
+  plugin_qilin_base_deepseek_llm_api_extensions["deepseek-llm-api-extensions<br/>@qilin/deepseek-llm-api-extensions"]
+  cfg --> plugin_qilin_base_deepseek_llm_api_extensions
   plugin_qilin_base_session["session<br/>@qilin/session"]
   cfg --> plugin_qilin_base_session
+  plugin_qilin_base_session_log_deepseek["session-log-deepseek<br/>@qilin/session-log-deepseek"]
+  cfg --> plugin_qilin_base_session_log_deepseek
   plugin_qilin_base_typert["typert<br/>@qilin/typert-registry"]
   cfg --> plugin_qilin_base_typert
   plugin_qilin_base_typert_loader["typert-loader<br/>@qilin/typert-loader"]
@@ -30,6 +34,8 @@ flowchart LR
   cfg --> plugin_qilin_base_user_questions
   plugin_qilin_base_agent["agent<br/>@qilin/agent"]
   cfg --> plugin_qilin_base_agent
+  plugin_qilin_base_plugin_package_inventory_deepseek["plugin-package-inventory-deepseek<br/>@qilin/plugin-package-inventory-deepseek"]
+  cfg --> plugin_qilin_base_plugin_package_inventory_deepseek
   plugin_qilin_base_agent_default_model["agent-default-model<br/>@qilin/agent-default-model"]
   cfg --> plugin_qilin_base_agent_default_model
   plugin_qilin_base_jobs["jobs<br/>@qilin/jobs-local"]
@@ -50,6 +56,14 @@ flowchart LR
   cfg --> plugin_qilin_base_session_query_sqlite
   plugin_qilin_base_session_projection["session-projection<br/>@qilin/session-projection"]
   cfg --> plugin_qilin_base_session_projection
+  plugin_qilin_base_storage["storage<br/>@qilin/storage"]
+  cfg --> plugin_qilin_base_storage
+  plugin_qilin_base_storage_json["storage-json<br/>@qilin/storage-json"]
+  cfg --> plugin_qilin_base_storage_json
+  plugin_qilin_base_storage_domain["storage-domain<br/>@qilin/storage-domain"]
+  cfg --> plugin_qilin_base_storage_domain
+  plugin_qilin_base_session_projection_cache["session-projection-cache<br/>@qilin/session-projection-cache"]
+  cfg --> plugin_qilin_base_session_projection_cache
   plugin_qilin_base_session_telemetry_otel["session-telemetry-otel<br/>@qilin/session-telemetry-otel"]
   cfg --> plugin_qilin_base_session_telemetry_otel
   plugin_qilin_base_subprocess["subprocess<br/>@qilin/subprocess-local"]
@@ -152,6 +166,8 @@ flowchart LR
   cfg --> plugin_qilin_base_web
   plugin_qilin_base_web_search_deepseek["web-search-deepseek<br/>@qilin/web-search-deepseek"]
   cfg --> plugin_qilin_base_web_search_deepseek
+  plugin_qilin_base_web_fetch_http["web-fetch-http<br/>@qilin/web-fetch-http"]
+  cfg --> plugin_qilin_base_web_fetch_http
   plugin_qilin_base_tool_web["tool-web<br/>@qilin/tool-web"]
   cfg --> plugin_qilin_base_tool_web
   plugin_qilin_base_tools["tools<br/>@qilin/tools"]
@@ -171,7 +187,9 @@ flowchart LR
 | `timer` | `@deepseek-ai/cordis-plugin-timer` |
 | `hmr` | `@deepseek-ai/cordis-plugin-hmr` |
 | `llm` | `@qilin/llm` |
+| `deepseek-llm-api-extensions` | `@qilin/deepseek-llm-api-extensions` |
 | `session` | `@qilin/session` |
+| `session-log-deepseek` | `@qilin/session-log-deepseek` |
 | `typert` | `@qilin/typert-registry` |
 | `typert-loader` | `@qilin/typert-loader` |
 | `typert-gateway` | `@qilin/api-gateway` |
@@ -179,6 +197,7 @@ flowchart LR
 | `session-title-llm` | `@qilin/session-title-first-prompt-llm` |
 | `user-questions` | `@qilin/user-questions` |
 | `agent` | `@qilin/agent` |
+| `plugin-package-inventory-deepseek` | `@qilin/plugin-package-inventory-deepseek` |
 | `agent-default-model` | `@qilin/agent-default-model` |
 | `jobs` | `@qilin/jobs-local` |
 | `llm-retry` | `@qilin/llm-retry` |
@@ -189,6 +208,10 @@ flowchart LR
 | `attachment-local` | `@qilin/attachment-local` |
 | `session-query-sqlite` | `@qilin/session-query-sqlite` |
 | `session-projection` | `@qilin/session-projection` |
+| `storage` | `@qilin/storage` |
+| `storage-json` | `@qilin/storage-json` |
+| `storage-domain` | `@qilin/storage-domain` |
+| `session-projection-cache` | `@qilin/session-projection-cache` |
 | `session-telemetry-otel` | `@qilin/session-telemetry-otel` |
 | `subprocess` | `@qilin/subprocess-local` |
 | `sandbox` | `@qilin/sandbox-local` |
@@ -240,6 +263,7 @@ flowchart LR
 | `repeat-tool-reminder` | `@qilin/repeat-tool-reminder` |
 | `web` | `@qilin/web` |
 | `web-search-deepseek` | `@qilin/web-search-deepseek` |
+| `web-fetch-http` | `@qilin/web-fetch-http` |
 | `tool-web` | `@qilin/tool-web` |
 | `tools` | `@qilin/tools` |
 | `system-prompt` | `@qilin/system-prompt` |
@@ -249,4 +273,4 @@ flowchart LR
 
 Source config: [`packages/bundle/base/cordis.patch.yml`](../../packages/bundle/base/cordis.patch.yml).
 
-Maintenance mode: hybrid: the leaf plugin list is parsed from its `cordis.yml`; app package expansion is curated from package source.
+Maintenance mode: hybrid: the patch row list is parsed from its `cordis.yml`; app package expansion is curated from package source.

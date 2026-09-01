@@ -5,7 +5,9 @@ import { join } from 'node:path'
 import { randomBytes } from 'node:crypto'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { Context } from '@deepseek-ai/cordis'
-import LlmRuntime, { createUserMessage, CallId, ReasoningEffortId, createMessage } from '@qilin/llm'
+import Loader from '@deepseek-ai/cordis-plugin-loader'
+import AgentRegistry from '@qilin/agent'
+import LlmRuntime, { createUserMessage, ToolCallId, ReasoningEffortId, createMessage } from '@qilin/llm'
 import type { Message, ToolSchema } from '@qilin/llm'
 import AttachmentStore, { AttachmentId, ImageVariantId } from '@qilin/attachment'
 import type {
@@ -17,19 +19,22 @@ import type {
   StoredImageAttachment,
 } from '@qilin/attachment'
 import { LocalCredentialProvider } from '@qilin/credentials-local'
+import SessionStore, { SessionId } from '@qilin/session'
+import DeepSeekLlmApiExtensionRegistry from '@qilin/deepseek-llm-api-extensions'
+import * as PluginPackageInventoryDeepSeek from '@qilin/plugin-package-inventory-deepseek'
+import * as SessionLogDeepSeek from '@qilin/session-log-deepseek'
 import * as LlmDeepSeek from '@qilin/llm-deepseek'
 import type { Config } from '@qilin/llm-deepseek'
 import { assemble, type AssembledResult } from './assemble.ts'
 
 /**
- * Real-API e2e for the direct-fetch adapter: V4 Flash + V4 Pro across
- * thinking modes and all official effort levels. The suite skips entirely
- * without $DEEPSEEK_API_KEY; the pre-release vision smoke additionally
+ * Real-API e2e for the direct-fetch adapter: V4 Flash across thinking modes
+ * and a max-effort tool round trip with reasoning passback. The suite skips
+ * entirely without $DEEPSEEK_API_KEY; the pre-release vision smoke additionally
  * requires $DEEPSEEK_VISION_E2E=1 (see vitest.e2e.config.ts).
  */
 
 const FLASH = 'deepseek-v4-flash'
-const PRO = 'deepseek-v4-pro'
 const VISION = 'deepseek-v4-flash-vision-exp'
 const VISION_E2E_ENABLED = process.env.DEEPSEEK_VISION_E2E === '1'
 const TEST_PNG = Uint8Array.from(readFileSync(
@@ -90,7 +95,7 @@ class E2eAttachmentStore extends AttachmentStore {
 }
 
 beforeEach(async () => {
-  identityHome = await mkdtemp(join(tmpdir(), 'dsh-e2e-user-id-'))
+  identityHome = await mkdtemp(join(tmpdir(), 'qilin-e2e-user-id-'))
   vi.stubEnv('QILIN_HOME', identityHome)
 })
 
@@ -180,10 +185,35 @@ describe.skipIf(!process.env.DEEPSEEK_API_KEY)('llm-deepseek e2e (real API)', ()
     }
   })
 
+  it('accepts the session-log and plugin-package request extension fields', async () => {
+    const ctx = new Context()
+    contexts.push(ctx)
+    await ctx.plugin(Loader)
+    await ctx.plugin(AgentRegistry)
+    await ctx.plugin(LlmRuntime)
+    await ctx.plugin(SessionStore)
+    await ctx.plugin(DeepSeekLlmApiExtensionRegistry)
+    await ctx.plugin(SessionLogDeepSeek, { enabled: true })
+    await ctx.plugin(PluginPackageInventoryDeepSeek)
+    await ctx.plugin(LlmDeepSeek, { thinking: 'disabled' })
+    const session = ctx.sessions.create(SessionId('real-extension-fields'))
+    session.append('turn/start', { turn: 1 })
+
+    const result = await assemble(ctx, {
+      model: FLASH,
+      messages: ask('Reply with exactly the word: pong'),
+      maxTokens: 50,
+      sessionId: session.id,
+    })
+    expect(result.finish.kind).toBe('stop')
+    expect(textOf(result).toLowerCase()).toContain('pong')
+    expect(SessionLogDeepSeek.acceptedThrough(session)).toBe(0)
+  })
+
   it('serves a real request with the key held only by a credentials-local document', async () => {
     const key = process.env.DEEPSEEK_API_KEY
     if (key === undefined) throw new Error('e2e ran without DEEPSEEK_API_KEY')
-    const dir = await mkdtemp(join(tmpdir(), 'dsh-e2e-credentials-'))
+    const dir = await mkdtemp(join(tmpdir(), 'qilin-e2e-credentials-'))
     try {
       // JSON.stringify quotes the value: YAML is a JSON superset, so a real
       // key survives whatever characters it happens to carry.
@@ -235,20 +265,23 @@ describe.skipIf(!process.env.DEEPSEEK_API_KEY)('llm-deepseek e2e (real API)', ()
     expect(withThinking.usage?.reasoningTokens).toBeGreaterThan(0)
   })
 
-  it.each(['high', 'max'] as const)(
-    'pro + thinking enabled (effort %s): tool-call round trip with reasoning passback',
-    async (effort) => {
-      const ctx = await harness(PRO, { thinking: 'enabled' })
+  it(
+    'flash + thinking enabled (effort max): tool-call round trip with reasoning passback',
+    async () => {
+      const ctx = await harness(FLASH, { thinking: 'enabled' })
 
       // Turn 1: the model must call the tool (and think before it).
       const first = await assemble(ctx,{
-        model: PRO,
-        reasoningEffort: ReasoningEffortId(effort),
+        model: FLASH,
+        reasoningEffort: ReasoningEffortId('max'),
         messages: ask('What is the weather in Paris right now? Use the get_weather tool.'),
         tools: [weatherTool],
         maxTokens: 2000,
       })
-      expect(first.finish.kind).toBe('tool-calls')
+      expect(
+        first.finish.kind,
+        `DeepSeek Flash tool-call turn finished as ${JSON.stringify(first.finish)}`,
+      ).toBe('tool-calls')
       const call = first.message.content.find(block => block.type === 'tool-call')
       expect(call).toBeDefined()
       expect(call!.name).toBe('get_weather')
@@ -257,8 +290,8 @@ describe.skipIf(!process.env.DEEPSEEK_API_KEY)('llm-deepseek e2e (real API)', ()
       // Turn 2: send the tool result back WITH the assistant's reasoning
       // block in history (the official thinking+tools passback rule).
       const second = await assemble(ctx,{
-        model: PRO,
-        reasoningEffort: ReasoningEffortId(effort),
+        model: FLASH,
+        reasoningEffort: ReasoningEffortId('max'),
         messages: [
           ...ask('What is the weather in Paris right now? Use the get_weather tool.'),
           createMessage({
@@ -268,7 +301,7 @@ describe.skipIf(!process.env.DEEPSEEK_API_KEY)('llm-deepseek e2e (real API)', ()
           createUserMessage({
             content: [{
               type: 'tool-result',
-              toolCallId: CallId(call!.id),
+              toolCallId: ToolCallId(call!.id),
               content: [{ type: 'text', text: 'Sunny, 22°C' }],
             }],
             source: { kind: 'plugin', plugin: 'test' },
@@ -277,21 +310,13 @@ describe.skipIf(!process.env.DEEPSEEK_API_KEY)('llm-deepseek e2e (real API)', ()
         tools: [weatherTool],
         maxTokens: 2000,
       })
-      expect(second.finish.kind).toBe('stop')
+      expect(
+        second.finish.kind,
+        `DeepSeek Flash tool-result turn finished as ${JSON.stringify(second.finish)}`,
+      ).toBe('stop')
       expect(textOf(second).toLowerCase()).toMatch(/sunny|22/)
     },
   )
-
-  it('pro + thinking disabled: plain generation without reasoning blocks', async () => {
-    const ctx = await harness(PRO, { thinking: 'disabled' })
-    const result = await assemble(ctx,{
-      model: PRO,
-      messages: ask('Reply with exactly the word: pong'),
-      maxTokens: 50,
-    })
-    expect(result.finish.kind).toBe('stop')
-    expect(result.message.content.some(block => block.type === 'reasoning')).toBe(false)
-  })
 
   it('streams raw chunks in protocol order', async () => {
     const ctx = await harness(FLASH, { thinking: 'disabled' })

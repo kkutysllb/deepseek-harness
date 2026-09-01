@@ -1,7 +1,7 @@
 {
   "name": "@qilin/client-ui-sidebar",
   "description": "Sidebar plugin: session multi-level tree, search, grouping, state dots",
-  "version": "0.1.1-rc.2",
+  "version": "0.1.2-alpha.3",
   "publishConfig": {
     "access": "public"
   },
@@ -32,8 +32,11 @@
   "qilin": {
     "client": {
       "inject": [
-        "@qilin/client-runtime",
+        "@qilin/api-workspace-controller",
+        "@qilin/client-ui-renderer",
         "@qilin/client-ui-layout",
+        "@qilin/client-ui-session",
+        "@qilin/client-ui-workspace",
         "@qilin/client-locale"
       ],
       "platform": "web"
@@ -48,19 +51,18 @@
     "clsx": "^2.0.0"
   },
   "peerDependencies": {
-    "@qilin/client-locale": "workspace:^",
-    "@qilin/client-runtime": "workspace:^",
-    "@qilin/invariants": "workspace:^",
-    "@deepseek-ai/cordis": "workspace:^",
-    "@qilin/client-ui-layout": "workspace:^"
+    "@deepseek-ai/cordis": "workspace:^"
   },
   "devDependencies": {
+    "@qilin/api-workspace-controller": "workspace:^",
     "@qilin/client-locale": "workspace:^",
-    "@qilin/client-runtime": "workspace:^",
     "@qilin/client-test-runtime": "workspace:^",
     "@qilin/client-ui-layout": "workspace:^",
     "@qilin/client-ui-primitives": "workspace:^",
+    "@qilin/client-ui-renderer": "workspace:^",
     "@qilin/client-ui-slots": "workspace:^",
+    "@qilin/client-ui-session": "workspace:^",
+    "@qilin/client-ui-workspace": "workspace:^",
     "@qilin/invariants": "workspace:^",
     "@types/react": "~18.3.1",
     "@deepseek-ai/cordis": "workspace:^",

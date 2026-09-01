@@ -1,7 +1,7 @@
 {
   "name": "@qilin/tool-pwsh",
   "description": "Model-facing pwsh tool over the bash executor seam",
-  "version": "0.1.1-rc.2",
+  "version": "0.1.2-alpha.3",
   "publishConfig": {
     "access": "public"
   },
@@ -32,39 +32,42 @@
   ],
   "license": "MIT",
   "peerDependencies": {
+    "@deepseek-ai/cordis": "workspace:^",
     "@qilin/agent": "workspace:^",
-    "@qilin/shell": "workspace:^",
-    "@qilin/shell-env": "workspace:^",
     "@qilin/invariants": "workspace:^",
+    "@qilin/jobs": "workspace:^",
     "@qilin/llm": "workspace:^",
     "@qilin/sandbox": "workspace:^",
     "@qilin/sandbox-policy": "workspace:^",
+    "@qilin/shell": "workspace:^",
+    "@qilin/shell-env": "workspace:^",
     "@qilin/system-prompt": "workspace:^",
-    "@qilin/jobs": "workspace:^",
     "@qilin/tools": "workspace:^",
-    "@qilin/user-approval": "workspace:^",
-    "@deepseek-ai/cordis": "workspace:^"
+    "@qilin/user-approval": "workspace:^"
   },
   "dependencies": {
     "@deepseek-ai/schemastery": "workspace:^"
   },
   "devDependencies": {
+    "@deepseek-ai/cordis": "workspace:^",
     "@qilin/agent": "workspace:^",
-    "@qilin/shell": "workspace:^",
-    "@qilin/shell-env": "workspace:^",
+    "@qilin/agent-loop": "workspace:^",
+    "@qilin/app-boot": "workspace:^",
     "@qilin/invariants": "workspace:^",
+    "@qilin/jobs": "workspace:^",
+    "@qilin/jobs-local": "workspace:^",
     "@qilin/llm": "workspace:^",
     "@qilin/loader-smoke": "workspace:^",
     "@qilin/pwsh-local": "workspace:^",
     "@qilin/sandbox": "workspace:^",
     "@qilin/sandbox-policy": "workspace:^",
+    "@qilin/session-projection": "workspace:^",
+    "@qilin/shell": "workspace:^",
+    "@qilin/shell-env": "workspace:^",
     "@qilin/subprocess-local": "workspace:^",
     "@qilin/system-prompt": "workspace:^",
-    "@qilin/jobs": "workspace:^",
-    "@qilin/jobs-local": "workspace:^",
     "@qilin/tool-jobs": "workspace:^",
     "@qilin/tools": "workspace:^",
-    "@qilin/user-approval": "workspace:^",
-    "@deepseek-ai/cordis": "workspace:^"
+    "@qilin/user-approval": "workspace:^"
   }
 }

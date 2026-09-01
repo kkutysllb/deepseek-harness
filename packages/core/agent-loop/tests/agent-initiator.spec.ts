@@ -2,7 +2,8 @@ import { describe, expect, it } from 'vitest'
 import { Context, type Fiber } from '@deepseek-ai/cordis'
 import AgentRegistry, { type Agent } from '@qilin/agent'
 import AgentLoop from '@qilin/agent-loop'
-import LlmRuntime, { createUserMessage, CallId, LlmAdapter  } from '@qilin/llm'
+import SessionProjectionRegistry from '@qilin/session-projection'
+import LlmRuntime, { createUserMessage, ToolCallId, LlmAdapter  } from '@qilin/llm'
 import type { GenerateOptions, StreamChunk } from '@qilin/llm'
 import SessionStore, { SessionId } from '@qilin/session'
 import SystemPrompt from '@qilin/system-prompt'
@@ -21,6 +22,7 @@ async function harness(adapter: LlmAdapter): Promise<Harness> {
   const ctx = new Context()
   await ctx.plugin(LlmRuntime)
   await ctx.plugin(SessionStore)
+  await ctx.plugin(SessionProjectionRegistry)
   await ctx.plugin(SystemPrompt)
   await ctx.plugin(ToolRuntime)
   const agentsFiber = await ctx.plugin(AgentRegistry)
@@ -121,6 +123,7 @@ describe('AgentLoop initiator scope', () => {
     const adapter = new OverlapAdapter(ctx)
     await ctx.plugin(LlmRuntime)
     await ctx.plugin(SessionStore)
+    await ctx.plugin(SessionProjectionRegistry)
     await ctx.plugin(SystemPrompt)
     await ctx.plugin(ToolRuntime)
     await ctx.plugin(AgentRegistry)
@@ -310,7 +313,7 @@ describe('AgentLoop initiator scope', () => {
 
     const direct = await ctx.tools.execute({
       signal: testToolSignal,
-      callId: CallId('direct'),
+      callId: ToolCallId('direct'),
       name: 'agentless-probe',
       arguments: {},
     })
@@ -380,6 +383,7 @@ describe('AgentLoop initiator scope', () => {
     const adapter = new ReloadAdapter()
     await ctx.plugin(LlmRuntime)
     await ctx.plugin(SessionStore)
+    await ctx.plugin(SessionProjectionRegistry)
     await ctx.plugin(SystemPrompt)
     await ctx.plugin(ToolRuntime)
     await ctx.plugin(AgentRegistry)

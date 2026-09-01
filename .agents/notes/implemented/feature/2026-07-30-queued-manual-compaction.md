@@ -34,7 +34,7 @@ Maintenance does not create a second queue. Later sends keep their `MessageId`, 
 
 ### One parameterized transaction owns every bracket
 
-`dsh-compaction-basic` has one region transaction parameterized by bracket owner (`number | null`), stability rule (whole surface or selected span), and an optional flush. It performs one ordering:
+`qilin-compaction-basic` has one region transaction parameterized by bracket owner (`number | null`), stability rule (whole surface or selected span), and an optional flush. It performs one ordering:
 
 1. validate the selected positional range and inspect the durable tail;
 2. reject a live unmatched compaction marker;

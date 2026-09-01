@@ -38,7 +38,7 @@ async function bootProvider(args: string[]): Promise<{
   values: WebStartupValues | undefined
   observed: Observed
 }> {
-  const dir = mkdtempSync(join(tmpdir(), 'dsh-web-startup-'))
+  const dir = mkdtempSync(join(tmpdir(), 'qilin-web-startup-'))
   const observed: Observed = { exits: [], out: '' }
   writeFileSync(join(dir, 'reader.mjs'), `
 export function apply(_ctx, config) { globalThis.__webStartupObserved.readerConfig = config }

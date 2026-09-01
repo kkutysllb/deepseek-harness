@@ -32,13 +32,6 @@ export interface RbacAuthGate {
   checkRequest(request: IncomingMessage, endpoint: string): RbacAuthVerdict
 }
 
-declare module '@deepseek-ai/cordis' {
-  interface Context {
-    /** Optional /api RBAC fence; present only when the composition mounts the account-rbac plugin. */
-    rbacAuth?: RbacAuthGate
-  }
-}
-
 /**
  * The pre-serialized 500 answer the transport maps ANY thrown gate fault
  * to. A gate that throws is infrastructure damage (a corrupt session row,

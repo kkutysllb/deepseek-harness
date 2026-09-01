@@ -42,7 +42,7 @@ The rule applies to a value that was *provided*; deciding whether one was provid
 
 ### Where the rule lives
 
-`normalizeApiKey` is a module of the `dsh-llm` Service Definition, beside [attribution.ts](../../../../packages/llm/llm/src/attribution.ts), which already owns shared header concerns. Both adapters depend on the seam and both need the rule, so it has two current consumers rather than a speculative one. It returns the trimmed value or a reason (`empty`, `illegalCharacters`).
+`normalizeApiKey` is a module of the `qilin-llm` Service Definition, beside [attribution.ts](../../../../packages/llm/llm/src/attribution.ts), which already owns shared header concerns. Both adapters depend on the seam and both need the rule, so it has two current consumers rather than a speculative one. It returns the trimmed value or a reason (`empty`, `illegalCharacters`).
 
 Both adapters also need the identical "refuse a stored credential" diagnosis, differing only by package prefix. `LlmError` is declared in the Service Definition's `index.ts`, so `assertUsableApiKey(raw, pkg, ref)` lives there beside it and neither adapter carries a local copy. The predicate module stays dependency-free: importing `LlmError` into `api-key.ts` would cycle with `index.ts`'s re-export of it.
 
@@ -52,7 +52,7 @@ The client cannot import any of this: client packages reference only client pack
 
 | Surface | Behavior |
 |---|---|
-| `dsh-llm` | Owns `normalizeApiKey`, `assertUsableApiKey`, and `INVALID_CREDENTIAL_CODE`, which is deliberately outside `DEFAULT_RETRYABLE_CODES`. |
+| `qilin-llm` | Owns `normalizeApiKey`, `assertUsableApiKey`, and `INVALID_CREDENTIAL_CODE`, which is deliberately outside `DEFAULT_RETRYABLE_CODES`. |
 | `llm-deepseek` `resolveApiKey` | Normalizes what the credentials seam or environment returns, rejecting with `INVALID_CREDENTIAL` naming the Models page and never echoing the key. |
 | `llm-pi-ai` `resolveApiKey` | Normalizes the credential and environment paths. A profile naming no credential still returns `undefined`, so ambient and OAuth routes are unaffected. |
 | `llm-pi-ai` `discoverModels` | Normalizes before building the header, so an illegal key is a credential fault rather than an unreachable endpoint. A probe carrying no key stays unauthenticated. |
@@ -98,4 +98,4 @@ The costliest way to get this wrong would have been to treat absence as invalidi
 
 `packages/client/ui-settings-models/tests/` pins `apiKeyFailure` over the same table plus the paste-shape cases, and drives both cards: a blank field submits without writing a credential, a whitespace-only field fails on the field, an illegal or wrapped key blocks submit and the interrogation alike, a padded key is trimmed before `credentials.set` and before an interrogation, and a hand-declared route can be created with no key at all.
 
-The user-visible terminal state is pinned where it is actually assembled: `examples/headless-agent/tests/headless.snapshot.ts` runs the one-shot app against a stored key no header can carry, over the same keyless composition its missing-credential sibling uses, and records that the turn ends on `INVALID_CREDENTIAL` with an actionable message carrying neither the key nor the word `ByteString`. A package test could not have shown that, and the web e2e covers only the browser half.
+The user-visible terminal state is pinned where it is actually assembled: `apps/cli/tests/profiles/headless/tests/headless.expected.e2e.ts` runs the one-shot app against a stored key no header can carry, over the same keyless composition its missing-credential sibling uses, and records that the turn ends on `INVALID_CREDENTIAL` with an actionable message carrying neither the key nor the word `ByteString`. A package test could not have shown that, and the web e2e covers only the browser half.

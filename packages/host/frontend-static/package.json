@@ -1,7 +1,7 @@
 {
   "name": "@qilin/host-frontend-static",
   "description": "SPA dist server for the Web shell: owns the webserver fallback seat, serving explicit index entries and static assets with traversal rejection and 404 misses",
-  "version": "0.1.1-rc.2",
+  "version": "0.1.2-alpha.3",
   "publishConfig": {
     "access": "public"
   },
@@ -34,6 +34,7 @@
   "peerDependencies": {
     "@qilin/host-webserver": "workspace:^",
     "@qilin/invariants": "workspace:^",
+    "@qilin/client-connection": "workspace:^",
     "@deepseek-ai/cordis": "workspace:^"
   },
   "dependencies": {
@@ -41,6 +42,8 @@
   },
   "devDependencies": {
     "@deepseek-ai/cordis-plugin-loader": "workspace:^",
+    "@qilin/client-connection": "workspace:^",
+    "@qilin/credentials-local": "workspace:^",
     "@qilin/host-webserver": "workspace:^",
     "@qilin/invariants": "workspace:^",
     "@deepseek-ai/cordis": "workspace:^"

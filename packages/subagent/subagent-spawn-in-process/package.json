@@ -1,7 +1,7 @@
 {
   "name": "@qilin/subagent-spawn-in-process",
   "description": "In-process spawn subagent backend: runs a fresh child agent on ctx.agents",
-  "version": "0.1.1-rc.2",
+  "version": "0.1.2-alpha.3",
   "publishConfig": {
     "access": "public"
   },
@@ -55,6 +55,7 @@
     "@qilin/subagent-in-process-driver": "workspace:^",
     "@qilin/tool-bash": "workspace:^",
     "@qilin/tool-subagent": "workspace:^",
-    "@deepseek-ai/cordis": "workspace:^"
+    "@deepseek-ai/cordis": "workspace:^",
+    "@qilin/session-projection": "workspace:^"
   }
 }

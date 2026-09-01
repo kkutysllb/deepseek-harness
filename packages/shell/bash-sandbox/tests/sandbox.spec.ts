@@ -11,6 +11,7 @@ import { join, resolve } from 'node:path'
 import { describe, expect, it, vi } from 'vitest'
 import { Context } from '@deepseek-ai/cordis'
 import type { ShellRunResult, CollectedOutput } from '@qilin/shell'
+import SessionProjectionRegistry from '@qilin/session-projection'
 import { SANDBOX_UNAVAILABLE, SandboxProvider, SandboxUnavailableError } from '@qilin/sandbox'
 import type { ConfinedArgv, SandboxExecutionPolicy, SandboxMode, SandboxPolicy } from '@qilin/sandbox'
 import { SandboxPolicyService } from '@qilin/sandbox-policy'
@@ -20,7 +21,7 @@ import type { SubprocessHandle, SubprocessOutputReader } from '@qilin/subprocess
 import { classifyDenial, classifyRunnerFailure, isRunnerSpawnFailure } from '../src/helpers.ts'
 import type { Config } from '@qilin/bash-sandbox'
 
-const spillDir = mkdtempSync(join(tmpdir(), 'dsh-bash-sandbox-spec-'))
+const spillDir = mkdtempSync(join(tmpdir(), 'qilin-bash-sandbox-spec-'))
 
 /** One recorded provider call: the argv handed over and the policy it rode with. */
 interface ConfineCall {
@@ -62,6 +63,7 @@ async function setup(
     }
   }
   const ctx = new Context()
+  await ctx.plugin(SessionProjectionRegistry)
   await ctx.plugin(FakeSandboxProvider)
   await ctx.plugin(SandboxPolicyService, {
     ...mode !== undefined ? { mode } : {},
@@ -110,7 +112,7 @@ describe('the provider hand-off', () => {
   })
 
   it('starts a non-Bash runner before the confined inner Bash evaluates BASH_ENV', async () => {
-    const dir = mkdtempSync(join(tmpdir(), 'dsh-bash-env-order-'))
+    const dir = mkdtempSync(join(tmpdir(), 'qilin-bash-env-order-'))
     const hook = join(dir, 'hook.sh')
     const order = join(dir, 'order.txt')
     writeFileSync(hook, 'printf "hook\\n" >> "$QILIN_ORDER_FILE"\n')
@@ -189,7 +191,7 @@ describe('fail closed', () => {
         denialSignatures: UNIX_SIGNATURES,
         runnerFailureRules: RUNNER_FAILURE,
       }))
-      const parent = mkdtempSync(join(tmpdir(), 'dsh-sandbox-missing-cwd-'))
+      const parent = mkdtempSync(join(tmpdir(), 'qilin-sandbox-missing-cwd-'))
       try {
         const failure = await bash.run(bash.resolve({ command: 'true', workdir: join(parent, 'missing') }))
           .catch((error: unknown) => error)
@@ -203,7 +205,7 @@ describe('fail closed', () => {
 
   it('keeps an invalid workdir ordinary when danger-full-access bypasses the provider', async () => {
     const { bash } = await setup({ mode: 'danger-full-access' })
-    const parent = mkdtempSync(join(tmpdir(), 'dsh-sandbox-missing-cwd-'))
+    const parent = mkdtempSync(join(tmpdir(), 'qilin-sandbox-missing-cwd-'))
     try {
       const failure = await bash.run(bash.resolve({ command: 'true', workdir: join(parent, 'missing') }))
         .catch((error: unknown) => error)
@@ -268,7 +270,7 @@ describe('fail closed', () => {
       denialSignatures: UNIX_SIGNATURES,
       runnerFailureRules: RUNNER_FAILURE,
     }))
-    const parent = mkdtempSync(join(tmpdir(), 'dsh-sandbox-missing-cwd-'))
+    const parent = mkdtempSync(join(tmpdir(), 'qilin-sandbox-missing-cwd-'))
     const workdir = join(parent, 'missing')
     const failure = Object.assign(new Error('spawn ENOENT'), { code: 'ENOENT', syscall: `spawn ${runner}`, path: runner })
     vi.spyOn(ctx.subprocess, 'spawn').mockImplementation(() => { throw failure })
@@ -516,7 +518,7 @@ describe('result facts', () => {
 
   it('reports a real permission failure as a sandbox denial with the mode it ran under', async () => {
     const { bash } = await setup()
-    const lockedDir = join(mkdtempSync(join(tmpdir(), 'dsh-sandbox-denied-')), 'locked')
+    const lockedDir = join(mkdtempSync(join(tmpdir(), 'qilin-sandbox-denied-')), 'locked')
     mkdirSync(lockedDir)
     chmodSync(lockedDir, 0o555)
     const result = await bash.run(bash.resolve({ command: `echo x > ${lockedDir}/f` }))
@@ -539,7 +541,7 @@ describe('background sandbox facts', () => {
       denialSignatures: UNIX_SIGNATURES,
       runnerFailureRules: RUNNER_FAILURE,
     }))
-    const parent = mkdtempSync(join(tmpdir(), 'dsh-sandbox-missing-cwd-'))
+    const parent = mkdtempSync(join(tmpdir(), 'qilin-sandbox-missing-cwd-'))
     try {
       const task = bash.start(bash.resolve({ command: 'true', workdir: join(parent, 'missing') }))
       await task.done

@@ -1,7 +1,7 @@
 import type {
-  ChatConversationViewNode, ConversationLocation, ConversationNodeContext,
-  ConversationNodeDefinition,
-} from '@qilin/client-runtime/client'
+  ConversationLocation, ConversationNodeContext, ConversationNodeDefinition,
+} from '@qilin/client-ui-conversation/client'
+import type { ChatConversationViewNode } from '@qilin/client-ui-chat/client'
 import type { SessionId } from '@qilin/session/types'
 import type {
   ToolWorkflowAgentEndData, ToolWorkflowAgentStartData,
@@ -34,7 +34,7 @@ export interface WorkflowRunChatData {
   readonly phases: readonly WorkflowRunPhaseData[]
 }
 
-declare module '@qilin/client-ui-conversation/client' {
+declare module '@qilin/client-ui-chat/client' {
   interface ChatNodeDataMap {
     /** Durable top-level workflow run and all members that actually started. */
     'workflow-run': WorkflowRunChatData

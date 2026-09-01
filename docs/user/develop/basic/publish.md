@@ -8,7 +8,7 @@ To use a fresh source checkout instead, complete the [run-from-source section](.
 
 ## Two concepts, two manifests
 
-Installation is built on two concepts. Both are described by a `package.json`, but they carry different kinds of manifest under the `dsh` key, and they answer different questions:
+Installation is built on two concepts. Both are described by a `package.json`, but they carry different kinds of manifest under the `qilin` key, and they answer different questions:
 
 - A **bundle** is an npm package that ships a configuration layer. Its manifest declares `qilin.bundle`, answering "what does this package contribute?": a patch file that inserts or overrides plugin rows.
 - A **profile** is a directory under `$QILIN_HOME/profiles/<name>` describing one runnable composition. Its manifest declares `qilin.profile`, answering "which bundles compose this setup, in what order?".
@@ -39,7 +39,7 @@ Create `hello-plugin/package.json`:
   "type": "module",
   "main": "index.js",
   "files": ["index.js", "cordis.patch.yml"],
-  "dsh": { "bundle": { "patch": "./cordis.patch.yml" } }
+  "qilin": { "bundle": { "patch": "./cordis.patch.yml" } }
 }
 ```
 
@@ -53,7 +53,7 @@ export function apply() {
 }
 ```
 
-Create `hello-plugin/cordis.patch.yml`. The patch is a YAML array like the `--patch` overlays you have been writing, except plugin rows reference the package by name instead of a relative source path so Node resolution finds the installed code:
+Create `hello-plugin/cordis.patch.yml`. The patch is a YAML array like the `--patch` overlays you wrote, except plugin rows reference the package by name instead of a relative source path so Node resolution finds the installed code:
 
 ```yaml
 - insert:
@@ -89,7 +89,7 @@ The first use initializes the profile (with `@qilin/base` as its first bundle), 
   "dependencies": {
     "qilin-hello-plugin": "link:/path/to/hello-plugin"
   },
-  "dsh": {
+  "qilin": {
     "profile": {
       "bundles": [
         "@qilin/base",
@@ -170,7 +170,7 @@ But a git install fetches **sources, not built artifacts**: nothing runs your `b
 
   and re-run the `add`.
 
-Treat that allowance as what it is: **permission to execute the package's code on your machine at install time**, outside any sandbox the agent runs under. Only allow packages whose source you trust, and pin a commit (`github:you/hello-plugin#<sha>`) so a later push cannot silently change what runs.
+Treat that allowance as **permission to execute the package's code on your machine at install time**, outside any sandbox the agent runs under. Only allow packages whose source you trust, and pin a commit (`github:you/hello-plugin#<sha>`) so a later push cannot silently change what runs.
 
 If you would rather not ask users for the allowance, distribute built artifacts instead — neither form needs any build permission:
 

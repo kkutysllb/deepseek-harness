@@ -1,0 +1,6 @@
+# Bilingual-pair consistency record (docs/i18n/README.md): the git blob hash of each
+# side as of the last confirmed-consistent state. Both languages carry equal authority;
+# after editing either side, bring the other along and re-record with:
+#   pnpm run verify-translation-pairing --write .agents/notes/implemented/feature/2026-08-21-headless-reasoning-progress.md
+2026-08-21-headless-reasoning-progress.md: f8eeea8ec4299c8b8183c97038867e5e4bc8f681
+2026-08-21-headless-reasoning-progress.zh.md: ae162b5ca56451282931c4d40dbe3e13424f7ddf

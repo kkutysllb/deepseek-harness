@@ -3,6 +3,7 @@ import { describe, expect, it, vi } from 'vitest'
 import { Context } from '@deepseek-ai/cordis'
 import AgentRegistry, { type Agent } from '@qilin/agent'
 import AgentLoop from '@qilin/agent-loop'
+import SessionProjectionRegistry from '@qilin/session-projection'
 import LlmRuntime from '@qilin/llm'
 import SessionStore, { SessionId } from '@qilin/session'
 import SystemPrompt from '@qilin/system-prompt'
@@ -13,6 +14,7 @@ async function harness(adapter: MockAdapter): Promise<Context> {
   const ctx = new Context()
   await ctx.plugin(LlmRuntime)
   await ctx.plugin(SessionStore)
+  await ctx.plugin(SessionProjectionRegistry)
   await ctx.plugin(SystemPrompt)
   await ctx.plugin(ToolRuntime)
   await ctx.plugin(AgentRegistry)

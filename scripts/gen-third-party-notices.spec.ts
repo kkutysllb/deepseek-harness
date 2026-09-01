@@ -81,7 +81,7 @@ describe('tierExternalDeps', () => {
 
 describe('virtualManifest', () => {
   it('resolves a manifest from an ordinary prefix-matching store directory', () => {
-    const root = mkdtempSync(join(tmpdir(), 'dsh-notices-prefix-'))
+    const root = mkdtempSync(join(tmpdir(), 'qilin-notices-prefix-'))
     try {
       const name = '@scope/pkg'
       const version = '1.0.0'
@@ -97,7 +97,7 @@ describe('virtualManifest', () => {
   })
 
   it('falls back to a content scan when pnpm 11 truncates the store directory name', () => {
-    const root = mkdtempSync(join(tmpdir(), 'dsh-notices-truncated-'))
+    const root = mkdtempSync(join(tmpdir(), 'qilin-notices-truncated-'))
     try {
       const name = '@scope/pkg'
       const version = '2.0.0'
@@ -114,8 +114,26 @@ describe('virtualManifest', () => {
     }
   })
 
+  it('selects the requested version when the store retains historical copies', () => {
+    const root = mkdtempSync(join(tmpdir(), 'qilin-notices-version-'))
+    try {
+      const name = '@scope/pkg'
+      const store = join(root, 'store')
+      for (const version of ['1.0.0', '2.0.0']) {
+        const manifestDir = join(store, `${name.replace('/', '+')}@${version}`, 'node_modules', name)
+        mkdirSync(manifestDir, { recursive: true })
+        writeFileSync(join(manifestDir, 'package.json'), JSON.stringify({ name, version, license: 'MIT' }))
+      }
+
+      expect(virtualManifest(store, name, '2.0.0')).toMatchObject({ name, version: '2.0.0' })
+      expect(virtualManifest(store, name, '3.0.0')).toBeUndefined()
+    } finally {
+      rmSync(root, { recursive: true, force: true })
+    }
+  })
+
   it('returns undefined when neither the prefix nor the content scan finds the package', () => {
-    const root = mkdtempSync(join(tmpdir(), 'dsh-notices-miss-'))
+    const root = mkdtempSync(join(tmpdir(), 'qilin-notices-miss-'))
     try {
       const store = join(root, 'store')
       const other = join(store, 'other-pkg@1.0.0', 'node_modules', 'other-pkg')
@@ -339,7 +357,6 @@ describe('manifestPatterns', () => {
       'tools/*/package.json',
       'native/landlock-run/package.json',
       'native/landlock-run/packages/*/package.json',
-      'examples/*/package.json',
     ])
   })
 })

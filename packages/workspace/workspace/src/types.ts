@@ -6,13 +6,21 @@
  */
 
 import type { Branded } from '@qilin/brand'
-import type { SessionId } from '@qilin/session'
+import type { SessionId } from '@qilin/session/types'
+import type {} from '@qilin/typert-protocol'
 
 /**
  * Identifies one workspace record. A generated uuid, never the path: path
  * normalization rewrites paths, and a reference anchor must stay stable.
  */
 export type WorkspaceId = Branded<'WorkspaceId'>
+
+declare module '@qilin/typert-protocol' {
+  interface RemoteErrorDetailsMap {
+    /** No registration carries that Workspace identity. */
+    'workspace/not-found': { readonly workspaceId: WorkspaceId }
+  }
+}
 
 /**
  * One workspace: a stable id over an existing directory, a display title, and

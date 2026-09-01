@@ -1,0 +1,18 @@
+# SDK-profile patch for the deterministic diagnostic child runtime.
+
+- id: llm-deepseek
+  name: '@qilin/llm-deepseek'
+  disabled: true
+
+- id: agent-instructions
+  name: '@qilin/agent-instructions'
+  disabled: true
+
+- id: system-prompt
+  name: '@qilin/system-prompt'
+  config:
+    persona: 'Return the scripted DSH SDK failure.'
+
+- insert:
+    - id: child-mock-llm
+      name: '../../../packages/subagent/subagent-dsh-sdk/tests/fixtures/loader/child-mock-llm.ts'

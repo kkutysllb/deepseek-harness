@@ -11,8 +11,8 @@ import type { Context } from '@deepseek-ai/cordis'
 import { defineTool } from '@qilin/tools'
 import type { Agent } from '@qilin/agent'
 import type { SessionId } from '@qilin/session'
-import { assertNever } from '@qilin/llm'
 import type { SubagentDescendantListEntry, SubagentListEntry } from '@qilin/subagent'
+import { assertNever } from '@qilin/util-values'
 
 export const name = 'tool-subagent-list-agents'
 export const inject = ['tools', 'subagents', 'agents']

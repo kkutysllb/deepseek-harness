@@ -27,20 +27,20 @@ interface SessionPersistence {
 }
 ```
 
-`path` is an absolute local path to the backend's dedicated log for `meta`; `kind` identifies the representation. JSONL returns `{ kind: 'jsonl', path }` using its resolved root and path helpers. SQLite and any backend without an honest local per-session artifact return `undefined`. The query creates and flushes nothing, so it can report a lazy target path before that file exists.
+`path` is an absolute local path to the provider's dedicated log for `meta`; `kind` identifies the representation. JSONL returns `{ kind: 'jsonl', path }` using its resolved root and path helpers. An out-of-tree provider without an honest local per-Session artifact returns `undefined`. The query creates and flushes nothing, so it can report a lazy target path before that file exists.
 
 The model-facing bash package owns a `ctx.shellEnv` registry. A contributor declares its stable name, every `QILIN_*` key it may return, a description for each key, and `resolve(execution: ToolExecution)`. Duplicate contributor names, duplicate key ownership, reserved keys, malformed declarations, undeclared runtime output, and non-string output fail loudly. Registration is a Cordis effect and is removed with the contributing plugin fiber. `list()` exposes declarations without running resolvers, keeping the environment API enumerable for diagnostics and future prompt/UI consumers.
 
 The registry rebuilds a trusted overlay for every foreground and background bash `ToolExecution`:
 
-- `QILIN_HOME` is always the absolute configured Harness home. The standalone [`@qilin/home-paths`](../../../../packages/util/home-paths/README.md) utility owns its precedence: explicit `dshHome`, then ambient `$QILIN_HOME`, then `~/.dsh`.
+- `QILIN_HOME` is always the absolute configured Harness home. The standalone [`@qilin/home-paths`](../../../../packages/util/home-paths/README.md) utility owns its precedence: explicit `dshHome`, then ambient `$QILIN_HOME`, then `~/.qilin`.
 - `QILIN_SHELL=1` is always present and identifies a model bash child managed by DeepSeek Harness.
 - `QILIN_SESSION_ID` is present when the execution has an agent and equals `agent.session.header.id`.
 - The built-in persistence translator contributes `QILIN_SESSION_JSONL` only when `ctx.sessionPersistence.locate(header)` returns `kind: 'jsonl'`.
 
 Session persistence remains the fact owner: JSONL does not depend on tool-bash or register shell variables itself, and hooks continue to consume `locate()` directly. Tool-bash is the translation layer from the persistence fact into a shell convention. Other plugins that need shell-visible facts depend on the registry and register their own keys; they do not modify `process.env`.
 
-The bash seam exports `QILIN_ENV_PREFIX` as the single namespace source and derives `DshEnvironmentKey` from its `typeof`. Tool-bash derives built-in names and model guidance from that constant, while executors use it for ambient filtering. The seam carries the managed overlay separately as `ShellExecRequest.dshEnv` / `ShellExecSpec.dshEnv`: ordinary `env` remains the general in-process plugin surface used by hooks, while `dshEnv` is typed to managed keys. The local executor removes every inherited ambient managed key, applies its ordinary scrub/terminal environment/explicit `env`, and finally merges the trusted `dshEnv` snapshot, so an `env` entry can never displace a managed value. This guarantees that a missing value means absent now rather than inherited from an outer or previous harness. The model-facing tool still ignores model-supplied `env`/`stdin` arguments.
+The bash seam exports `QILIN_ENV_PREFIX` as the single namespace source and derives `QilinEnvironmentKey` from its `typeof`. Tool-bash derives built-in names and model guidance from that constant, while executors use it for ambient filtering. The seam carries the managed overlay separately as `ShellExecRequest.dshEnv` / `ShellExecSpec.dshEnv`: ordinary `env` remains the general in-process plugin surface used by hooks, while `dshEnv` is typed to managed keys. The local executor removes every inherited ambient managed key, applies its ordinary scrub/terminal environment/explicit `env`, and finally merges the trusted `dshEnv` snapshot, so an `env` entry can never displace a managed value. This guarantees that a missing value means absent now rather than inherited from an outer or previous harness. The model-facing tool still ignores model-supplied `env`/`stdin` arguments.
 
 The bash tool description teaches only the durable convention: current harness environment facts are available through managed `$QILIN_*` variables and may be inspected when needed. It does not enumerate persistence-specific keys or add a permanent system-prompt section. Tool schemas are already logged in request headers and tool output is logged as `tool/result`, so no new session event is required.
 
@@ -60,7 +60,7 @@ Resume reuses the loaded header and therefore the same id and location. Fork and
 
 ## Testing
 
-Unit coverage pins registry declaration validation, effect disposal, per-execution collection, the `dshHome` precedence, and the local executor's `QILIN_*` scrub/rebuild order. Request-recording tests cover foreground/background snapshots, no-agent calls, absent/JSONL persistence, ignored model `env`, and parent/child isolation. JSONL/SQLite locator contract tests and both hook bridge suites pin available and unavailable transcript dialects.
+Unit coverage pins registry declaration validation, effect disposal, per-execution collection, the `dshHome` precedence, and the local executor's `QILIN_*` scrub/rebuild order. Request-recording tests cover foreground/background snapshots, no-agent calls, absent/JSONL persistence, ignored model `env`, and parent/child isolation. JSONL and no-artifact locator contract tests plus both hook bridge suites pin available and unavailable transcript dialects.
 
 A keyless full-loop integration drives the real agent loop, JSONL persistence, tool-bash, and bash-local on the first turn. The child prints `QILIN_HOME`, `QILIN_SHELL`, session id, JSONL target, and an inherited stale sentinel; the test verifies current values, absence of the stale variable, pre-flush file absence, and the eventual persisted header. Snapshot coverage pins the generic bash description in the recorded request header. No with-key test is required because the contract is deterministic local execution rather than model choice.
 

@@ -1,14 +1,14 @@
 /**
- * Named wire types for the DeepSeek Harness SDK runtime protocol: the three
+ * Named wire types for the OpenKylin SDK runtime protocol: the three
  * request/result pairs and the four server-to-client notification payloads
  * exchanged over the newline-delimited JSON-RPC stdio transport. The server
  * plugin (`@qilin/sdk-jsonrpc-server`) and SDK clients share these shapes;
- * `serverInfo.name` stays the wire-stable `deepseek-harness-sdk-runtime`.
+ * `serverInfo.name` is the wire-stable `openkylin-sdk-runtime`.
  *
  * @module @qilin/sdk-protocol/types
  */
 
-import type { ContentBlock } from '@qilin/llm'
+import type { ContentBlock, ReasoningEffortId } from '@qilin/llm'
 import type { SessionEvent } from '@qilin/session'
 import type { SubagentStopReason } from '@qilin/subagent'
 
@@ -20,6 +20,8 @@ export interface InitializeParams {
   provider: string
   /** Model name every SDK-created agent runs on (the server may mount a fallback adapter; see `HarnessSdkJsonRpcServer.initialize`). */
   model: string
+  /** Optional adapter-owned reasoning effort for the selected provider/model route. */
+  reasoningEffort?: ReasoningEffortId
   /** Optional positive output-token cap inherited by SDK-created agents and their in-process descendants. */
   maxTokens?: number
 }
@@ -35,8 +37,20 @@ export interface SessionPromptParams {
   /** The SDK-side session id; an unknown id lazily creates the agent+session pair. */
   sessionId: string
   /** The prompt content blocks, sent verbatim as the user message. */
-  contentBlocks: ContentBlock[]
+  contentBlocks: SdkPromptContentBlock[]
 }
+
+/** Inline raster input admitted into the runtime's durable attachment store. */
+export interface SdkEncodedImageBlock {
+  type: 'image'
+  /** Canonical base64-encoded raster bytes. */
+  data: string
+  /** Declared raster MIME type, verified during admission. */
+  mimeType: 'image/png' | 'image/jpeg' | 'image/webp' | 'image/gif'
+}
+
+/** SDK prompt input: ordinary durable blocks plus inline images awaiting admission. */
+export type SdkPromptContentBlock = ContentBlock | SdkEncodedImageBlock
 
 /** Durable enqueue receipt for one prompt. */
 export interface SessionPromptResult {

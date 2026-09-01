@@ -8,7 +8,6 @@ import { createLaunchEnvironmentSnapshot, QILIN_LAUNCH_ENVIRONMENT_KEY } from '@
 import type { CredentialRef } from '@qilin/credentials'
 import { LocalCredentialProvider, resolveSpec } from '../src/index.ts'
 
-/** Credential documents are seeded owner-only, exactly as the provider creates them. */
 function writeCredentials(file: string, text: string): Promise<void> {
   return writeFile(file, text, { mode: 0o600 })
 }
@@ -24,7 +23,7 @@ afterEach(async () => {
 })
 
 async function tempDir(): Promise<string> {
-  const dir = await mkdtemp(join(tmpdir(), 'dsh-credentials-local-'))
+  const dir = await mkdtemp(join(tmpdir(), 'qilin-credentials-local-'))
   cleanups.push(() => rm(dir, { recursive: true, force: true }))
   return dir
 }
@@ -127,7 +126,7 @@ describe('layer ladder', () => {
     await writeCredentials(path, 'version: 1\nrefs:\n  QILIN_CRED_TEST: stored\n')
     const ctx = await bootLayered(path, [
       { source: 'process', values: {} },
-      { source: 'user-env', path: '/home/.dsh/.env', values: { QILIN_CRED_TEST: 'older-user-env' } },
+      { source: 'user-env', path: '/home/.qilin/.env', values: { QILIN_CRED_TEST: 'older-user-env' } },
     ])
     expect(await ctx.credentials.resolve(KEY)).toEqual({ value: 'stored', source: 'file' })
     // A key sitting in the user's .env does not make the stored one
@@ -141,7 +140,7 @@ describe('layer ladder', () => {
     const dir = await tempDir()
     const ctx = await bootLayered(join(dir, '.credentials.yaml'), [
       { source: 'process', values: {} },
-      { source: 'user-env', path: '/home/.dsh/.env', values: { QILIN_CRED_TEST: 'from-user-env' } },
+      { source: 'user-env', path: '/home/.qilin/.env', values: { QILIN_CRED_TEST: 'from-user-env' } },
     ])
     expect(await ctx.credentials.resolve(KEY)).toEqual({ value: 'from-user-env', source: 'user-env' })
     // Writable: storing a key replaces it as the effective one.
@@ -157,7 +156,7 @@ describe('layer ladder', () => {
     const layers = [
       { source: 'process' as const, values: {} },
       { source: 'project-env' as const, path: '/work/.env', values: { QILIN_CRED_TEST: 'from-project' } },
-      { source: 'user-env' as const, path: '/home/.dsh/.env', values: { QILIN_CRED_TEST: 'from-user' } },
+      { source: 'user-env' as const, path: '/home/.qilin/.env', values: { QILIN_CRED_TEST: 'from-user' } },
     ]
     const bare = await bootLayered(path, layers)
     expect(await bare.credentials.resolve(KEY)).toEqual({ value: 'from-project', source: 'project-env' })
@@ -215,7 +214,7 @@ describe('layer ladder', () => {
     await writeCredentials(path, 'version: 1\nrefs:\n  QILIN_CRED_TEST: stored\n')
     const ctx = await bootLayered(path, [
       { source: 'process', values: { QILIN_CRED_TEST: 'from-shell' } },
-      { source: 'user-env', path: '/home/.dsh/.env', values: { QILIN_CRED_TEST: 'from-user-env' } },
+      { source: 'user-env', path: '/home/.qilin/.env', values: { QILIN_CRED_TEST: 'from-user-env' } },
     ])
     expect(await ctx.credentials.resolve(KEY)).toEqual({ value: 'from-shell', source: 'env' })
     expect(await ctx.credentials.describe(KEY)).toEqual({ configured: true, source: 'env', writable: false })

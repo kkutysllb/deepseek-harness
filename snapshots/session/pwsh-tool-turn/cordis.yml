@@ -1,0 +1,77 @@
+# Minimal live counterpart for the pwsh-tool-turn snapshot composition.
+- id: llm-deepseek
+  name: '@qilin/llm-deepseek'
+  config:
+    models:
+      - id: deepseek-v4-pro
+
+- id: subprocess
+  name: '@qilin/subprocess-local'
+
+- id: bash-sandbox
+  name: '@qilin/bash-sandbox'
+  disabled: true
+
+- id: pwsh-sandbox
+  name: '@qilin/pwsh-sandbox'
+  disabled: false
+
+- id: shell-env
+  name: '@qilin/shell-env'
+
+- id: agent-default-model
+  name: '@qilin/agent-default-model'
+  config:
+    provider: deepseek-official
+    model: deepseek-v4-pro
+
+- id: session-persistence-jsonl
+  name: '@qilin/session-persistence-jsonl'
+  config:
+    root: !!js dshHomePath('sessions')
+    compression: !!js 'process.env.QILIN_SNAPSHOT === undefined ? ''zstd'' : ''none'''
+
+- id: agent-instructions
+  name: '@qilin/agent-instructions'
+  disabled: true
+
+- id: system-prompt
+  name: '@qilin/system-prompt'
+  config:
+    persona: You are a concise snapshot agent working in {{cwd}}.
+
+- id: goal
+  name: '@qilin/goal'
+  disabled: true
+
+- id: goal-round-driver
+  name: '@qilin/goal-round-driver'
+  disabled: true
+
+- id: command-goal
+  name: '@qilin/command-goal'
+  disabled: true
+
+- id: tool-goal
+  name: '@qilin/tool-goal'
+  disabled: true
+
+- id: skill
+  name: '@qilin/skill'
+  disabled: true
+
+- id: skill-filesystem
+  name: '@qilin/skill-filesystem'
+  disabled: true
+
+- id: tool-skill
+  name: '@qilin/tool-skill'
+  disabled: true
+
+- id: tool-bash
+  name: '@qilin/tool-bash'
+  disabled: true
+
+- id: tool-pwsh
+  name: '@qilin/tool-pwsh'
+  disabled: false

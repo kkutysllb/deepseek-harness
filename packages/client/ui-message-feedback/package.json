@@ -1,7 +1,7 @@
 {
   "name": "@qilin/client-ui-message-feedback",
   "description": "Per-message feedback controls contributed to the assistant-message action strip, backed by the messageFeedback Host Remote",
-  "version": "0.1.1-rc.2",
+  "version": "0.1.2-alpha.3",
   "publishConfig": {
     "access": "public"
   },
@@ -32,10 +32,10 @@
   "qilin": {
     "client": {
       "inject": [
-        "@qilin/client-runtime",
         "@qilin/api-remotes",
         "@qilin/client-locale",
-        "@qilin/client-ui-conversation"
+        "@qilin/client-ui-conversation",
+        "@qilin/client-ui-renderer"
       ],
       "platform": "web"
     }
@@ -46,34 +46,29 @@
   },
   "license": "MIT",
   "peerDependencies": {
-    "@qilin/api-remotes": "workspace:^",
-    "@qilin/client-connection": "workspace:^",
-    "@qilin/client-locale": "workspace:^",
-    "@qilin/client-runtime": "workspace:^",
-    "@qilin/client-ui-conversation": "workspace:^",
-    "@qilin/invariants": "workspace:^",
-    "@qilin/message-feedback": "workspace:^",
-    "@qilin/typert-protocol": "workspace:^",
     "@deepseek-ai/cordis": "workspace:^"
   },
   "devDependencies": {
     "@qilin/api-remotes": "workspace:^",
     "@qilin/client-connection": "workspace:^",
     "@qilin/client-locale": "workspace:^",
-    "@qilin/client-runtime": "workspace:^",
     "@qilin/client-test-runtime": "workspace:^",
     "@qilin/client-ui-conversation": "workspace:^",
     "@qilin/client-ui-primitives": "workspace:^",
+    "@qilin/client-ui-renderer": "workspace:^",
     "@qilin/client-ui-slots": "workspace:^",
     "@qilin/invariants": "workspace:^",
     "@qilin/message-feedback": "workspace:^",
+    "@qilin/session": "workspace:^",
     "@qilin/typert-protocol": "workspace:^",
     "@deepseek-ai/cordis": "workspace:^",
     "@testing-library/react": "^16.1.0",
     "@types/react": "~18.3.1",
     "@types/react-dom": "~18.3.0",
     "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "react-dom": "^18.2.0",
+    "@qilin/client-ui-chat": "workspace:^",
+    "@qilin/client-ui-session": "workspace:^"
   },
   "files": [
     "lib/index.js",

@@ -6,9 +6,10 @@
 
 import type { Context } from '@deepseek-ai/cordis'
 import z from '@deepseek-ai/schemastery'
-import { createUserMessage, BlockAssembler, deepFreeze } from '@qilin/llm'
+import { createUserMessage, BlockAssembler } from '@qilin/llm'
 import type { FinishReason, GenerateOptions, Message } from '@qilin/llm'
 import { deadline, MAX_TIMER_DELAY_MS } from '@qilin/timeout'
+import { deepFreeze } from '@qilin/util-values'
 import {
   normalizeSessionTitle,
   SessionTitleProviderId,
@@ -245,7 +246,7 @@ export async function generateSessionTitleWithLlm(
   const route = resolveRoute(config, request)
   const messages: Message[] = [createUserMessage({
     content: [{ type: 'text', text: framedInput }],
-    source: { kind: 'plugin', plugin: 'dsh-session-title-llm' },
+    source: { kind: 'plugin', plugin: 'qilin-session-title-llm' },
   })]
   const system = systemPrompt(config)
   using callDeadline = deadline(request.signal, config.timeoutMs, SESSION_TITLE_TIMEOUT_CODE)

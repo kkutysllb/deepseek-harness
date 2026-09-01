@@ -17,19 +17,19 @@ afterEach(() => {
   vi.unstubAllEnvs()
 })
 
-describe('dsh path helpers', () => {
+describe('qilin path helpers', () => {
   it('owns the shared default DSH home directory name', () => {
-    expect(QILIN_HOME_DIR_NAME).toBe('.dsh')
-    expect(DEFAULT_QILIN_HOME_DISPLAY).toBe('~/.dsh')
-    expect(defaultDshHome()).toBe(join(homedir(), '.dsh'))
+    expect(QILIN_HOME_DIR_NAME).toBe('.qilin')
+    expect(DEFAULT_QILIN_HOME_DISPLAY).toBe('~/.qilin')
+    expect(defaultDshHome()).toBe(join(homedir(), '.qilin'))
   })
 
   it('expands tilde paths without changing non-tilde paths', () => {
     expect(expandHomePath('~')).toBe(homedir())
-    expect(expandHomePath('~/.dsh')).toBe(join(homedir(), '.dsh'))
-    expect(expandHomePath('~\\.dsh')).toBe(join(homedir(), '.dsh'))
-    expect(expandHomePath('/tmp/.dsh')).toBe('/tmp/.dsh')
-    expect(expandHomePath('~other/.dsh')).toBe('~other/.dsh')
+    expect(expandHomePath('~/.qilin')).toBe(join(homedir(), '.qilin'))
+    expect(expandHomePath('~\\.qilin')).toBe(join(homedir(), '.qilin'))
+    expect(expandHomePath('/tmp/.qilin')).toBe('/tmp/.qilin')
+    expect(expandHomePath('~other/.qilin')).toBe('~other/.qilin')
   })
 
   it('resolves explicit path before QILIN_HOME and the default', () => {
@@ -52,12 +52,12 @@ describe('dsh path helpers', () => {
   })
 
   it('labels a resolved home by whether it is the default root', () => {
-    expect(dshHomeDisplay(resolve(defaultDshHome()))).toBe('~/.dsh')
+    expect(dshHomeDisplay(resolve(defaultDshHome()))).toBe('~/.qilin')
     expect(dshHomeDisplay('/some/other/root')).toBe('$QILIN_HOME')
   })
 
   it('canonicalizes a watcher ancestor while preserving a missing suffix', async () => {
-    const root = await mkdtemp(join(tmpdir(), 'dsh-watch-path-'))
+    const root = await mkdtemp(join(tmpdir(), 'qilin-watch-path-'))
     const target = join(root, 'target')
     const alias = join(root, 'alias')
     try {

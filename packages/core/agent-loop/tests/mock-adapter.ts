@@ -1,5 +1,5 @@
 import type { GenerateOptions, LlmModelReasoningInfo, LlmResolvedModelInfo, StreamChunk } from '@qilin/llm'
-import { CallId, LlmAdapter } from '@qilin/llm'
+import { ToolCallId, LlmAdapter } from '@qilin/llm'
 
 /** Helpers to write scripted responses tersely. */
 export function textResponse(text: string): StreamChunk[] {
@@ -28,7 +28,7 @@ export function maxTokensResponse(text: string): StreamChunk[] {
 }
 
 export function toolCallResponse(rawCallId: string, name: string, args: object, text?: string): StreamChunk[] {
-  const callId = CallId(rawCallId)
+  const callId = ToolCallId(rawCallId)
   const argumentsJson = JSON.stringify(args)
   const chunks: StreamChunk[] = []
   let index = 0

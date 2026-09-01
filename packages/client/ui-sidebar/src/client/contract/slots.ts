@@ -8,10 +8,10 @@
  * actions in `sidebar.footer.action`.
  */
 import type { PropsLocale, PropsRenderSlots, PropsRuntime } from '@qilin/client-ui-slots'
+import type { WorkspaceId } from '@qilin/api-workspace-controller/client'
 // Type-only: pulls ui-layout's SlotMap merge (the 'sidebar' entry) into every
 // program that sees this contract, so PropsRuntime<'sidebar'> resolves.
 import type {} from '@qilin/client-ui-layout/client'
-import type { WorkspaceId } from '@qilin/client-runtime/client'
 
 declare module '@qilin/client-ui-slots' {
   interface SlotMap {

@@ -5,6 +5,7 @@ import { afterEach, describe, expect, it } from 'vitest'
 import {
   collectPackageInvariantViolations,
 } from './package-invariants.ts'
+import { usesFlattenedPackageDependencies } from './package-dependency-policy.ts'
 
 const roots: string[] = []
 
@@ -28,27 +29,45 @@ export const apply = (ctx: { invariants: { register(name: string, install: typeo
 
 function fixture(options: {
   packageName?: string
+  packageDirectory?: string
   source?: string
+  clientDeclaration?: boolean
+  clientExport?: boolean
   invariantExport?: boolean
   invariantDependency?: boolean
   invariantReference?: boolean
   buildEntry?: boolean
 } = {}): string {
-  const root = mkdtempSync(join(tmpdir(), 'dsh-package-invariants-'))
+  const root = mkdtempSync(join(tmpdir(), 'qilin-package-invariants-'))
   roots.push(root)
-  const dir = join(root, 'packages/core/probe')
+  const packageDirectory = options.packageDirectory ?? 'packages/core/probe'
+  const dir = join(root, packageDirectory)
   mkdirSync(join(dir, 'src'), { recursive: true })
   const packageName = options.packageName ?? '@qilin/probe'
+  const exports = options.invariantExport === false ? {} : {
+    './invariant': {
+      types: './lib/types/invariant.d.ts',
+      default: './lib/invariant.js',
+    },
+    ...(options.clientExport === true ? {
+      './client': {
+        types: './lib/types/client/index.d.ts',
+        default: './lib/client.js',
+      },
+    } : {}),
+  }
+  const qilin = options.clientDeclaration === true ? { client: {} } : undefined
+  const developmentOnlyInvariant = usesFlattenedPackageDependencies(
+    `${packageDirectory}/package.json`,
+    packageName,
+    qilin,
+  )
   const manifest = {
     name: packageName,
-    exports: options.invariantExport === false ? {} : {
-      './invariant': {
-        types: './lib/types/invariant.d.ts',
-        default: './lib/invariant.js',
-      },
-    },
+    ...(qilin === undefined ? {} : { qilin }),
+    exports,
     files: ['lib/index.js', 'lib/invariant.js'],
-    peerDependencies: options.invariantDependency === false ? {} : {
+    peerDependencies: options.invariantDependency === false || developmentOnlyInvariant ? {} : {
       '@qilin/invariants': 'workspace:^',
     },
     devDependencies: options.invariantDependency === false ? {} : {
@@ -70,6 +89,33 @@ function fixture(options: {
 describe('package invariant gate', () => {
   it('accepts a hand-owned checking companion with publication metadata', () => {
     expect(collectPackageInvariantViolations(fixture())).toEqual([])
+  })
+
+  it('accepts development-only invariants for configured Host dependencies', () => {
+    expect(collectPackageInvariantViolations(fixture({ packageName: '@qilin/llm' }))).toEqual([])
+  })
+
+  it('accepts development-only invariants for client packages', () => {
+    expect(collectPackageInvariantViolations(fixture({
+      packageName: '@qilin/client-probe',
+      packageDirectory: 'packages/client/probe',
+    }))).toEqual([])
+  })
+
+  it('accepts development-only invariants for packages with a qilin.client entry', () => {
+    expect(collectPackageInvariantViolations(fixture({ clientDeclaration: true, clientExport: true }))).toEqual([])
+  })
+
+  it('keeps invariant peers for packages that only export a Client API', () => {
+    expect(collectPackageInvariantViolations(fixture({ clientExport: true }))).toEqual([])
+  })
+
+  it('keeps invariant peers for experimental packages with a qilin.client entry', () => {
+    expect(collectPackageInvariantViolations(fixture({
+      packageDirectory: 'packages/experimental/probe',
+      clientDeclaration: true,
+      clientExport: true,
+    }))).toEqual([])
   })
 
   it('accepts an invariant reference owned by a package-local leaf project', () => {

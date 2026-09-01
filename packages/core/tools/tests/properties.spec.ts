@@ -7,7 +7,7 @@
 
 import { describe, expect, it } from 'vitest'
 import fc from 'fast-check'
-import { isJsonValue } from '@qilin/session'
+import { isJsonValue } from '@qilin/util-values'
 import { parameterSchemaSpecToJsonSchema, validateArgs } from '@qilin/tools'
 import type { ParameterPropertySpec, ParameterSchemaSpec, ValueSchemaSpec } from '@qilin/tools'
 

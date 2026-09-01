@@ -8,6 +8,7 @@ import { Context } from '@deepseek-ai/cordis'
 import { launcherPath } from '@deepseek-ai/node-addon-landlock-run'
 import { LocalSandboxProvider } from '@qilin/sandbox-local'
 import { SandboxPolicyService } from '@qilin/sandbox-policy'
+import SessionProjectionRegistry from '@qilin/session-projection'
 import { SandboxBashExecutor } from '@qilin/bash-sandbox'
 import LocalSubprocessRuntime from '@qilin/subprocess-local'
 
@@ -38,7 +39,7 @@ afterEach(async () => {
 })
 
 async function tempDir(base: string): Promise<string> {
-  const dir = await mkdtemp(join(base, 'dsh-landlock-e2e-'))
+  const dir = await mkdtemp(join(base, 'qilin-landlock-e2e-'))
   tempDirs.push(dir)
   return dir
 }
@@ -47,6 +48,7 @@ async function sandboxedBash(workspace: string, mode: 'read-only' | 'workspace-w
   ctx = new Context()
   await ctx.plugin(LocalSandboxProvider, {})
   ;(ctx.sandbox as LocalSandboxProvider).internals = { probeBwrap: () => false }
+  await ctx.plugin(SessionProjectionRegistry)
   await ctx.plugin(SandboxPolicyService, { mode, workspaceRoot: workspace })
   await ctx.plugin(LocalSubprocessRuntime)
   await ctx.plugin(SandboxBashExecutor, { cwd: workspace, timeoutMs: 30_000 })

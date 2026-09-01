@@ -13,9 +13,10 @@
 
 import { randomUUID } from 'node:crypto'
 import type { Context } from '@deepseek-ai/cordis'
+import { brandString } from '@qilin/brand'
 import { foldConsumedWork } from '@qilin/agent'
 import type { Agent, AgentHandle } from '@qilin/agent'
-import { SessionId, type SessionEvent, type TurnEndReason } from '@qilin/session'
+import type { SessionEvent, SessionId, TurnEndReason } from '@qilin/session'
 import { createUserMessage, type ContentBlock } from '@qilin/llm'
 import {
   appendDelegatedPolicyOverrides,
@@ -108,7 +109,7 @@ export async function startInProcessRun(
   const parent = request.parent
   const childDepth = resolveChildDepth(parent, request.maxDepth)
 
-  const childId = SessionId(randomUUID())
+  const childId = brandString<SessionId>(randomUUID())
   const seed = options.seed
   const activationBoundary = seed?.length ?? 0
 

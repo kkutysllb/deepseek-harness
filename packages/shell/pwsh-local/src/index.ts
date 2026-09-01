@@ -13,19 +13,19 @@
  * @module @qilin/pwsh-local
  */
 
-/* jscpd:ignore-start -- this executor mirrors dsh-bash-local call-for-call by
+/* jscpd:ignore-start -- this executor mirrors qilin-bash-local call-for-call by
    design (see this package's README), so the two import the same seam surface */
 import { Context } from '@deepseek-ai/cordis'
 import z from '@deepseek-ai/schemastery'
 import { SHELL_SETTINGS_NAMESPACE, ShellExecutor } from '@qilin/shell'
 import type { ShellExecRequest, ShellExecSpec, ShellProcess, ShellProcessRead, ShellRunResult, CollectedOutput } from '@qilin/shell'
 import type { SubprocessCollect, SubprocessHandle, SubprocessOutputReader, SubprocessSpawnSpec } from '@qilin/subprocess'
-import { installSettingsSection } from '@qilin/settings'
+import type {} from '@qilin/settings'
 import { clampTimeout, deadline, MAX_TIMER_DELAY_MS, timeoutOf } from '@qilin/timeout'
 /* jscpd:ignore-end */
 import { resolvePwshPath } from './resolve.ts'
 
-/* jscpd:ignore-start -- deliberate call-for-call mirror of dsh-bash-local (Agent Note: pwsh-tool-and-executor). */
+/* jscpd:ignore-start -- deliberate call-for-call mirror of qilin-bash-local (Agent Note: pwsh-tool-and-executor). */
 /**
  * Model-friendly environment overrides for PowerShell: disable colors and
  * pagers that would garble tool output. `TERM=dumb` is a POSIX concept and is
@@ -165,19 +165,21 @@ export class PwshLocalExecutor extends ShellExecutor {
     this.source = () => entry
     this.declaredPwshPath = entry.pwshPath
     this.resolvedPwshPath = resolvePwshPath(entry.pwshPath)
-    installSettingsSection(ctx, SHELL_SETTINGS_NAMESPACE, PwshLocalExecutor.Config, entry, {
-      validate: assertServiceablePwshConfig,
-      setSource: (current) => {
-        this.source = current as () => ResolvedConfig
-      },
-      // Probing the filesystem is the one fact derived from the source: every
-      // other field is read through the getter at each command.
-      onChange: () => {
-        const declared = this.source().pwshPath
-        if (declared === this.declaredPwshPath) return
-        this.declaredPwshPath = declared
-        this.resolvedPwshPath = resolvePwshPath(declared)
-      },
+    ctx.inject(['settings'], (settingsCtx) => {
+      settingsCtx.settings.installSection(ctx, SHELL_SETTINGS_NAMESPACE, PwshLocalExecutor.Config, entry, {
+        validate: assertServiceablePwshConfig,
+        setSource: (current) => {
+          this.source = current as () => ResolvedConfig
+        },
+        // Probing the filesystem is the one fact derived from the source: every
+        // other field is read through the getter at each command.
+        onChange: () => {
+          const declared = this.source().pwshPath
+          if (declared === this.declaredPwshPath) return
+          this.declaredPwshPath = declared
+          this.resolvedPwshPath = resolvePwshPath(declared)
+        },
+      })
     })
   }
 
@@ -211,7 +213,7 @@ export class PwshLocalExecutor extends ShellExecutor {
   /**
    * The pwsh invocation argv for one resolved spec — the argv-level seam a
    * confining subclass wraps through `ctx.sandbox.confine` (the pwsh twin of
-   * `dsh-bash-local`'s `runArgv`/`startArgv` hooks; see
+   * `qilin-bash-local`'s `runArgv`/`startArgv` hooks; see
    * `@qilin/pwsh-sandbox`).
    */
   protected argv(spec: ShellExecSpec): string[] {
@@ -349,7 +351,7 @@ export class PwshLocalExecutor extends ShellExecutor {
   /**
    * Settlement hook for subclasses that attach execution facts to a process.
    * The base implementation is intentionally empty. Mirrored from
-   * `dsh-bash-local` (whose sandboxing subclass consumes the same hook); the
+   * `qilin-bash-local` (whose sandboxing subclass consumes the same hook); the
    * pwsh-confining consumer is `@qilin/pwsh-sandbox`.
    * @param _proc - the settled process handle.
    * @param _stderr - the process's retained stderr tail used by subclasses for settlement classification.

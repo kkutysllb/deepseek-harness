@@ -40,7 +40,7 @@ function signature(markdown: string) {
     'counterpart.zh.md',
     {
       repoRoot: process.cwd(), sourcePath: 'counterpart.md',
-      isTranslationPairSource: fixturePairSource, markdown,
+      isTranslationPairSource: fixturePairSource, repositoryFileExists: () => true, markdown,
     },
   )
 }
@@ -59,7 +59,7 @@ function fixtureSignature(
 }
 
 function gitSupportsObjectFormat(format: 'sha256'): boolean {
-  const root = mkdtempSync(join(tmpdir(), 'dsh-git-object-format-'))
+  const root = mkdtempSync(join(tmpdir(), 'qilin-git-object-format-'))
   try {
     return spawnSync('git', ['init', '--quiet', `--object-format=${format}`, root], {
       stdio: 'ignore',
@@ -73,7 +73,7 @@ const supportsSha256ObjectFormat = gitSupportsObjectFormat('sha256')
 
 describe('translation pairing snapshots', () => {
   it('stores exact uncommitted bytes for later recovery by object ID', () => {
-    const root = mkdtempSync(join(tmpdir(), 'dsh-translation-pairing-'))
+    const root = mkdtempSync(join(tmpdir(), 'qilin-translation-pairing-'))
     try {
       execFileSync('git', ['init', '--quiet', root], {
         env: { ...process.env, GIT_DEFAULT_HASH: 'sha1' },
@@ -94,7 +94,7 @@ describe('translation pairing snapshots', () => {
   })
 
   it('fails before a sidecar can reference an unavailable object', () => {
-    const root = mkdtempSync(join(tmpdir(), 'dsh-translation-pairing-'))
+    const root = mkdtempSync(join(tmpdir(), 'qilin-translation-pairing-'))
     try {
       expect(() => storeGitBlob(root, Buffer.from('snapshot'))).toThrow('git hash-object -w --stdin failed')
     } finally {
@@ -113,7 +113,7 @@ describe('translation pairing snapshots', () => {
   })
 
   it('reads staged bytes independently of the working tree', () => {
-    const root = mkdtempSync(join(tmpdir(), 'dsh-translation-pairing-index-'))
+    const root = mkdtempSync(join(tmpdir(), 'qilin-translation-pairing-index-'))
     try {
       execFileSync('git', ['init', '--quiet', root], {
         env: { ...process.env, GIT_DEFAULT_HASH: 'sha1' },
@@ -135,7 +135,7 @@ describe('translation pairing snapshots', () => {
   })
 
   it('lists exact index files without treating a directory prefix as one entry', () => {
-    const root = mkdtempSync(join(tmpdir(), 'dsh-translation-pairing-index-'))
+    const root = mkdtempSync(join(tmpdir(), 'qilin-translation-pairing-index-'))
     try {
       execFileSync('git', ['init', '--quiet', root], {
         env: { ...process.env, GIT_DEFAULT_HASH: 'sha1' },
@@ -155,7 +155,7 @@ describe('translation pairing snapshots', () => {
   })
 
   it.skipIf(!supportsSha256ObjectFormat)('rejects an object format that pairing records cannot represent', () => {
-    const root = mkdtempSync(join(tmpdir(), 'dsh-translation-pairing-'))
+    const root = mkdtempSync(join(tmpdir(), 'qilin-translation-pairing-'))
     try {
       execFileSync('git', ['init', '--quiet', '--object-format=sha256', root])
       expect(() => storeGitBlob(root, Buffer.from('snapshot'))).toThrow('returned unexpected object ID')
@@ -231,7 +231,7 @@ describe('translation pairing switchers', () => {
   })
 
   it('excludes only the header switcher from the structural links', () => {
-    const root = mkdtempSync(join(tmpdir(), 'dsh-translation-switcher-'))
+    const root = mkdtempSync(join(tmpdir(), 'qilin-translation-switcher-'))
     try {
       writeFileSync(join(root, 'guide.md'), '# Guide\n')
       writeFileSync(join(root, 'guide.zh.md'), '# 指南\n')
@@ -243,10 +243,34 @@ describe('translation pairing switchers', () => {
           repoRoot: root, sourcePath: 'guide.zh.md',
           isTranslationPairSource: fixturePairSource, markdown,
         },
-      ).links).toEqual(['dsh-translation-target:guide.md'])
+      ).links).toEqual(['qilin-translation-target:guide.md'])
     } finally {
       rmSync(root, { recursive: true, force: true })
     }
+  })
+})
+
+describe('translation pairing link language parity', () => {
+  it('compares a .zh.md target and its .md sibling as the same document', () => {
+    const en = 'See [docs](persistence.md) and [notes](note.md#anchor).'
+    const zh = '参见[文档](persistence.zh.md)与[笔记](note.zh.md#anchor)。'
+    expect(
+      translationStructureDiff(
+        signature(en),
+        signature(zh),
+      ),
+    ).toEqual([])
+  })
+
+  it('still rejects a genuinely different target', () => {
+    const en = 'See [docs](persistence.md).'
+    const zh = '参见[文档](other.md)。'
+    expect(
+      translationStructureDiff(
+        signature(en),
+        signature(zh),
+      ),
+    ).not.toEqual([])
   })
 })
 
@@ -285,6 +309,9 @@ describe('translation scope discovery', () => {
     'BRAND_GUIDELINES.md',
     'BRAND_GUIDELINES.zh.md',
     'BRAND_GUIDELINES.i18n.yaml',
+    'SAFETY.md',
+    'SAFETY.zh.md',
+    'SAFETY.i18n.yaml',
     'apps/cli/README.md',
     'future/subtree/readme.md',
     'packages/example/README.zh.md',
@@ -300,15 +327,15 @@ describe('translation scope discovery', () => {
     'packages/example/guide.md',
     'packages/example/CONTRIBUTING.md',
     'packages/example/BRAND_GUIDELINES.md',
-    'examples/tutorial.md',
+    'other/tutorial.md',
     'website/reference.md',
     'packages/example/README.txt',
     'vendor/example/README.md',
     'packages/example/node_modules/dependency/README.md',
     'packages/example/lib/README.md',
     'coverage/report/README.md',
-    'python/sdk-runtime/src/deepseek_harness_runtime/runtime/dsh-jsonrpc-agent-macos-arm64/README.md',
-    'python/sdk-runtime/src/deepseek_harness_runtime/runtime/node/README.md',
+    'python/sdk-runtime/src/openkylin_runtime/runtime/openkylin-sdk-runtime-macos-arm64/README.md',
+    'python/sdk-runtime/src/openkylin_runtime/runtime/node/README.md',
   ])('excludes non-source or non-README path %s', (file) => {
     expect(isTranslationScopeFile(file)).toBe(false)
   })
@@ -330,7 +357,7 @@ describe('translation structural signature', () => {
   })
 
   it('treats target-locale siblings as one semantic link target', () => {
-    const root = mkdtempSync(join(tmpdir(), 'dsh-translation-structure-'))
+    const root = mkdtempSync(join(tmpdir(), 'qilin-translation-structure-'))
     try {
       writeFileSync(join(root, 'reference.md'), '# Reference\n')
       writeFileSync(join(root, 'reference.zh.md'), '# 参考\n')
@@ -345,7 +372,7 @@ describe('translation structural signature', () => {
   })
 
   it('includes reference-style document links but excludes image-only definitions', () => {
-    const root = mkdtempSync(join(tmpdir(), 'dsh-translation-structure-'))
+    const root = mkdtempSync(join(tmpdir(), 'qilin-translation-structure-'))
     try {
       writeFileSync(join(root, 'reference.md'), '# Reference\n')
       writeFileSync(join(root, 'reference.zh.md'), '# 参考\n')
@@ -365,14 +392,14 @@ describe('translation structural signature', () => {
           repoRoot: root, sourcePath: 'guide.md',
           isTranslationPairSource: fixturePairSource, markdown,
         },
-      ).links).toEqual(['dsh-translation-target:reference.md'])
+      ).links).toEqual(['qilin-translation-target:reference.md'])
     } finally {
       rmSync(root, { recursive: true, force: true })
     }
   })
 
   it('compares the first duplicate reference definition that CommonMark resolves', () => {
-    const root = mkdtempSync(join(tmpdir(), 'dsh-translation-structure-'))
+    const root = mkdtempSync(join(tmpdir(), 'qilin-translation-structure-'))
     try {
       for (const name of ['reference', 'different', 'other']) {
         writeFileSync(join(root, `${name}.md`), `# ${name}\n`)
@@ -383,7 +410,7 @@ describe('translation structural signature', () => {
       const source = fixtureSignature(root, 'guide.md', sourceMarkdown, 'guide.zh.md')
       const counterpart = fixtureSignature(root, 'guide.zh.md', counterpartMarkdown, 'guide.md')
       expect(translationStructureDiff(source, counterpart)).toEqual([
-        'link target #1 diverges between the pair: "dsh-translation-target:reference.md" vs "dsh-translation-target:different.md"',
+        'link target #1 diverges between the pair: "qilin-translation-target:reference.md" vs "qilin-translation-target:different.md"',
       ])
     } finally {
       rmSync(root, { recursive: true, force: true })

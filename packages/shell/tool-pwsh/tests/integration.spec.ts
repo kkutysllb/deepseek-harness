@@ -15,7 +15,7 @@ import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { spawnSync } from 'node:child_process'
 import { Context } from '@deepseek-ai/cordis'
-import { CallId } from '@qilin/llm'
+import { ToolCallId } from '@qilin/llm'
 import SystemPrompt from '@qilin/system-prompt'
 import ToolRuntime, { TOOL_ABORTED } from '@qilin/tools'
 import LocalJobRegistry from '@qilin/jobs-local'
@@ -41,7 +41,7 @@ let callCounter = 0
 function call(name: string, args: unknown, agentObj?: object, signal?: AbortSignal) {
   return ctx.tools.execute({
     signal: signal ?? testToolSignal,
-    callId: CallId(`it-${++callCounter}`),
+    callId: ToolCallId(`it-${++callCounter}`),
     name,
     arguments: args,
     ...agentObj ? { agent: agentObj as never } : {},
@@ -54,7 +54,7 @@ function text(result: { content: { type: string; text?: string }[] }): string {
 
 describe.skipIf(!hasPwsh)('pwsh tool over the real pwsh executor', () => {
   beforeEach(async () => {
-    dir = await mkdtemp(join(tmpdir(), 'dsh-tool-pwsh-'))
+    dir = await mkdtemp(join(tmpdir(), 'qilin-tool-pwsh-'))
     await writeFile(join(dir, 'greeting.txt'), 'hello pwsh\n')
 
     ctx = new Context()

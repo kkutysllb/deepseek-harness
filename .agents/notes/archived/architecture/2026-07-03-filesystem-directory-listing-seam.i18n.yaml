@@ -2,5 +2,5 @@
 # side as of the last confirmed-consistent state. Both languages carry equal authority;
 # after editing either side, bring the other along and re-record with:
 #   pnpm run verify-translation-pairing --write
-2026-07-03-filesystem-directory-listing-seam.md: bc5feafee8a7544d95640c97e6cf74a96192a3e6
-2026-07-03-filesystem-directory-listing-seam.zh.md: 5c1c01864d7e75efbce731252cbfb500cb1724ef
+2026-07-03-filesystem-directory-listing-seam.md: eb2650daf567d4bd98ed8553a4b743f5a01d945c
+2026-07-03-filesystem-directory-listing-seam.zh.md: 4bcda9f093f22c06348d4c69c4de3bd62f216f8e

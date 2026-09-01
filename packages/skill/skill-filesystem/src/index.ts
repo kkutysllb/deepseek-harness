@@ -47,11 +47,11 @@ export const inject = ['skills']
 
 /** Local filesystem skill provider configuration. */
 export interface Config {
-  /** Unique provider name. Defaults to `local`. */
+  /** Unique provider name. Defaults to `filesystem`. */
   providerName?: string
   /** Whether project and user roots are included around custom roots. */
   includeDefaultRoots?: boolean
-  /** DeepSeek Harness config root. Defaults to `$QILIN_HOME` or `~/.dsh`. */
+  /** DeepSeek Harness config root. Defaults to `$QILIN_HOME` or `~/.qilin`. */
   dshHome?: string
   /** Shared agent config root. Defaults to `$QILIN_AGENTS_HOME` or `~/.agents`. */
   agentsHome?: string
@@ -243,7 +243,7 @@ export class FileSystemSkillProvider implements SkillProvider {
     if (this.includeDefaultRoots && cwd !== undefined) {
       const projectRoot = await findProjectRoot(resolve(cwd), optionalFileSystem(this.ctx))
       roots.push(
-        { path: join(projectRoot, '.dsh/skills'), source: 'project-dsh', rank: PROJECT_QILIN_RANK, projectRoot },
+        { path: join(projectRoot, '.qilin/skills'), source: 'project-dsh', rank: PROJECT_QILIN_RANK, projectRoot },
         { path: join(projectRoot, '.agents/skills'), source: 'project-agents', rank: PROJECT_AGENTS_RANK, projectRoot },
       )
     }

@@ -2,8 +2,8 @@
 import { Context } from '@deepseek-ai/cordis'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import { cleanup, fireEvent, render, screen, waitFor } from '@testing-library/react'
-import { SlotRegistry } from '@qilin/client-runtime/client'
-import type { DirectoryListing } from '@qilin/client-runtime/client'
+import type { DirectoryListing } from '@qilin/api-remotes/client'
+import { SlotRegistry } from '@qilin/client-ui-renderer/client'
 import { LocaleRuntime } from '@qilin/client-locale/client'
 import { usePinnedBrowserLanguages } from '@qilin/client-test-runtime'
 import type { DirectoryFlowOwnerProps } from '@qilin/client-ui-workspace/client'
@@ -34,7 +34,7 @@ async function bench() {
   ctx.provide('locale', new LocaleRuntime(ctx))
   const listDirectory = vi.fn(async (): Promise<DirectoryListing> => homeListing)
   const createDirectory = vi.fn(async (path: string, name: string) => `${path}/${name}`)
-  ctx.provide('workspaces', { listDirectory, createDirectory } as never)
+  ctx.provide('uiWorkspace', { listDirectory, createDirectory } as never)
   const slots = ctx.get('slots') as SlotRegistry
   const declare = () => slots.register({
     name: 'root',
@@ -53,7 +53,7 @@ function owner(overrides: Partial<DirectoryFlowOwnerProps> = {}): DirectoryFlowO
 
 describe('directory-picker-browse client half', () => {
   it('declares the services it drives', () => {
-    expect(inject).toEqual(['slots', 'workspaces', 'locale'])
+    expect(inject).toEqual(['slots', 'uiWorkspace', 'locale'])
   })
 
   it('fills both directory-flow holes for declarations before or after apply, and leaves with its fiber', async () => {

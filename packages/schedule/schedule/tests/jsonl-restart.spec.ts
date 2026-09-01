@@ -7,6 +7,7 @@ import { afterEach, describe, expect, it } from 'vitest'
 import { Context } from '@deepseek-ai/cordis'
 import AgentLoop from '@qilin/agent-loop'
 import { mountAgentLoopTestDependencies } from '@qilin/agent-loop-testkit'
+import SessionProjectionRegistry from '@qilin/session-projection'
 import { LlmAdapter, type GenerateOptions, type StreamChunk } from '@qilin/llm'
 import SessionStore, { SessionId } from '@qilin/session'
 import JsonlSessionPersistence from '@qilin/session-persistence-jsonl'
@@ -51,6 +52,7 @@ async function mountRuntime(root: string, adapter: RecordingAdapter): Promise<Co
   const ctx = new Context()
   contexts.push(ctx)
   await mountAgentLoopTestDependencies(ctx)
+  await ctx.plugin(SessionProjectionRegistry)
   await ctx.plugin(AgentLoop, { agents: [] })
   await ctx.plugin(JsonlSessionPersistence, { root, compression: 'none' })
   ctx.llm.registerAdapter(['mock'], adapter)
@@ -82,7 +84,7 @@ async function settleCurrentTasks(): Promise<void> {
 
 describe('Schedule production JSONL restart', () => {
   it('resumes one overdue reminder exactly once across fresh runtime mounts', async () => {
-    const root = await mkdtemp(join(tmpdir(), 'dsh-schedule-jsonl-'))
+    const root = await mkdtemp(join(tmpdir(), 'qilin-schedule-jsonl-'))
     roots.push(root)
     const sessionId = SessionId('schedule-jsonl-restart')
     const first = await mountPersistence(root)

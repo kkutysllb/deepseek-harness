@@ -9,7 +9,7 @@ import {
 import type { InjectFace, PropsLocale, PropsRuntime } from '@qilin/client-ui-slots'
 import type {} from '@qilin/client-ui-sidebar/client'
 import type { CordisRunActivity } from '@qilin/cordis-client-runner/client'
-import type { SessionId } from '@qilin/client-connection/client'
+import type { SessionId } from '@qilin/api-remotes/client'
 import type { CordisInventoryRow } from './dynamic-port.ts'
 import type { CordisPanelFace } from './slots.ts'
 import type { CordisKey } from './locales.ts'

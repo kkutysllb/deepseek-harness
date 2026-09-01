@@ -12,6 +12,7 @@ import type { TerminalSendOperation } from '@qilin/terminal'
 import SandboxProvider from '@qilin/sandbox'
 import type { ConfinedArgv, SandboxPolicy } from '@qilin/sandbox'
 import SandboxPolicyService from '@qilin/sandbox-policy'
+import SessionProjectionRegistry from '@qilin/session-projection'
 import LocalSubprocessRuntime from '@qilin/subprocess-local'
 import { resolvePwshPath } from '@qilin/pwsh-local/src/resolve.ts'
 import * as ptyLocal from '@qilin/terminal-bash'
@@ -53,13 +54,14 @@ async function harness(
   timing: { idleSilenceMs?: number; handoffGraceMs?: number; timeoutMs?: number } = {},
   dialect: 'bash' | 'pwsh' = 'bash',
 ) {
-  const root = mkdtempSync(join(tmpdir(), 'dsh-pty-local-'))
+  const root = mkdtempSync(join(tmpdir(), 'qilin-pty-local-'))
   roots.push(root)
   const ctx = new Context()
   contexts.push(ctx)
   await ctx.plugin(AgentRegistry)
   await ctx.plugin(TerminalSessionService)
   await ctx.plugin(PassthroughSandbox)
+  await ctx.plugin(SessionProjectionRegistry)
   await ctx.plugin(SandboxPolicyService, { mode, workspaceRoot: root })
   await ctx.plugin(LocalSubprocessRuntime)
   const fiber = await ctx.plugin(ptyLocal, {
@@ -118,6 +120,17 @@ function processIsRunning(pid: number): boolean {
   }
 }
 
+function canReadLinuxProcessSyscall(pid: number): boolean {
+  try {
+    readFileSync(`/proc/${pid}/task/${pid}/syscall`, 'utf8')
+    return true
+  } catch (error) {
+    const code = (error as NodeJS.ErrnoException).code
+    if (code === 'EACCES' || code === 'EPERM') return false
+    throw error
+  }
+}
+
 // The real-shell suite drives a POSIX bash over the actual node-pty terminal;
 // Windows has no bash, and its pwsh counterpart lives in the describe below.
 describe.skipIf(process.platform === 'win32')('terminal-bash real shell', () => {
@@ -127,7 +140,7 @@ describe.skipIf(process.platform === 'win32')('terminal-bash real shell', () => 
     try {
       const { ctx, root, agent } = await harness('danger-full-access')
       const created = await ctx.terminals.spawn(agent, { type: 'shell', name: 'main', cwd: root })
-      expect(created.motd).toContain('dsh> ')
+      expect(created.motd).toContain('qilin> ')
 
       const first = ctx.terminals.startSend(agent, created.sessionId, { text: 'export KEEP=ok; cd /', submit: true })
       expect((await first.done).waitReason).toBe('stdin_read')
@@ -159,7 +172,32 @@ describe.skipIf(process.platform === 'win32')('terminal-bash real shell', () => 
     const after = ctx.terminals.startSend(agent, created.sessionId, { text: 'printf "healed=[%s]\\n" "$PS1"', submit: true })
     const result = await after.done
     expect(result.waitReason).toBe('stdin_read')
-    expect(result.viewport).toContain('healed=[dsh> ]')
+    expect(result.viewport).toContain('healed=[qilin> ]')
+    await ctx.terminals.kill(agent, created.sessionId)
+  }, 20_000)
+
+  it.skipIf(process.platform !== 'linux')('recognizes a foreground read opened through /dev/tty', async () => {
+    const { ctx, root, agent } = await harness('danger-full-access', {
+      idleSilenceMs: 5_000,
+      timeoutMs: 8_000,
+    })
+    const created = await ctx.terminals.spawn(agent, { type: 'shell' })
+    const readerPidFile = join(root, 'tty-reader.pid')
+
+    const waiting = ctx.terminals.startSend(agent, created.sessionId, {
+      text: `bash -c 'exec </dev/tty; printf "%s" "$BASHPID" > "$1"; printf "WAITING\\n"; read -r answer; printf "ANSWER=%s\\n" "$answer"' qilin "${readerPidFile}"`,
+      submit: true,
+    })
+    await waitForOutput(waiting, 'WAITING')
+    const result = await waiting.done
+    const readerPid = Number(readFileSync(readerPidFile, 'utf8'))
+    expect(readerPid).toBeGreaterThan(0)
+    expect(result.waitReason).toBe(canReadLinuxProcessSyscall(readerPid) ? 'stdin_read' : 'inferred_idle')
+
+    const answer = ctx.terminals.startSend(agent, created.sessionId, { text: 'accepted', submit: true })
+    const answered = await answer.done
+    expect(answered.waitReason).toBe('stdin_read')
+    expect(answered.viewport).toContain('ANSWER=accepted')
     await ctx.terminals.kill(agent, created.sessionId)
   }, 20_000)
 
@@ -205,7 +243,7 @@ describe.skipIf(process.platform === 'win32')('terminal-bash real shell', () => 
     let pid: number | undefined
     try {
       const background = ctx.terminals.startSend(agent, created.sessionId, {
-        text: `sh -c 'trap "" TERM; printf "%s" "$$" > "$1"; sleep 60' dsh "${pidFile}" & disown`,
+        text: `sh -c 'trap "" TERM; printf "%s" "$$" > "$1"; sleep 60' qilin "${pidFile}" & disown`,
         submit: true,
       })
       await background.done
@@ -290,7 +328,7 @@ describe.skipIf(!hasPwsh)('terminal-bash pwsh real shell', () => {
         timeoutMs: 8_000,
       }, 'pwsh')
       const created = await ctx.terminals.spawn(agent, { type: 'shell', name: 'main', cwd: root })
-      expect(created.motd).toContain('dsh> ')
+      expect(created.motd).toContain('qilin> ')
 
       const first = ctx.terminals.startSend(agent, created.sessionId, {
         text: '$env:KEEP = "ok"; Set-Location /',

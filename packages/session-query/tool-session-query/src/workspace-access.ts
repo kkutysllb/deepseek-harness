@@ -5,24 +5,28 @@
  */
 
 import type { Context } from '@deepseek-ai/cordis'
+import { brandString } from '@qilin/brand'
 import { HarnessError } from '@qilin/llm'
 import {
-  SessionId,
   type SessionEvent,
   type SessionHeader,
   type SessionId as SessionIdValue,
 } from '@qilin/session'
+import type { TurnBoundaryProjection } from '@qilin/agent'
 import type {
   SessionLineageNode,
   SessionRecord,
 } from '@qilin/session-query'
 import type { ToolRunContext } from '@qilin/tools'
+import type {} from '@qilin/session-projection'
 import { serviceBoundary } from './service-boundary.ts'
 
 interface Caller {
   readonly id: SessionIdValue
   readonly header: SessionHeader
   readonly events: readonly SessionEvent[]
+  /** The caller's own-session boundary fold (the `turnBoundary` projection). */
+  readonly boundary: TurnBoundaryProjection | undefined
 }
 
 interface TitleView {
@@ -51,7 +55,7 @@ interface DescendantVisit {
   readonly next: DescendantVisit | undefined
 }
 
-function callerOf(exec: ToolRunContext): Caller {
+function callerOf(exec: ToolRunContext, ctx: Context): Caller {
   const agent = exec.agent
   if (agent === undefined) {
     throw new HarnessError(
@@ -63,11 +67,12 @@ function callerOf(exec: ToolRunContext): Caller {
     id: agent.session.id,
     header: agent.session.header,
     events: agent.session.events,
+    boundary: ctx.sessionProjections.stateOf(agent.session, 'turnBoundary'),
   }
 }
 
 function targetId(args: { readonly session_id?: string }, caller: Caller): SessionIdValue {
-  return args.session_id === undefined ? caller.id : SessionId(args.session_id)
+  return args.session_id === undefined ? caller.id : brandString<SessionIdValue>(args.session_id)
 }
 
 async function authorizeTarget(

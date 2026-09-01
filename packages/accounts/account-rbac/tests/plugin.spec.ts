@@ -152,7 +152,8 @@ async function mountCatalog(rbacConfig?: Config): Promise<Context> {
 function userRbacPrincipal(): RbacPrincipal {
   return {
     kind: 'session',
-    user: { id: 'u1', email: 'kid@example.com', systemRole: 'user', needsSetup: false, oauthProvider: null, oauthId: null, sessionVersion: 1, createdAt: 0, updatedAt: 0 },
+    user: { id: 'u1', email: 'kid@example.com', systemRole: 'user', needsSetup: false, oauthProvider: null, oauthId: null, disabledAt: null,
+      sessionVersion: 1, createdAt: 0, updatedAt: 0 },
     session: null,
   }
 }

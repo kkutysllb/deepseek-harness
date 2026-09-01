@@ -7,6 +7,7 @@ import LlmRuntime from '@qilin/llm'
 import SessionStore, { SessionId } from '@qilin/session'
 import SystemPrompt from '@qilin/system-prompt'
 import ToolRuntime from '@qilin/tools'
+import SessionProjectionRegistry from '@qilin/session-projection'
 import AgentRegistry, { assembleContextFor } from '@qilin/agent'
 import AgentLoop from '@qilin/agent-loop'
 import InvariantRegistry from '@qilin/invariants'
@@ -30,8 +31,9 @@ async function harness(roster: Partial<Config> = {}): Promise<Context> {
   await ctx.plugin(SystemPrompt, { persona: '' })
   await ctx.plugin(ToolRuntime)
   await ctx.plugin(AgentRegistry)
+  await ctx.plugin(SessionProjectionRegistry)
   await ctx.plugin(AgentLoop, { agents: [] })
-  await ctx.plugin(AgentPresets, { default: 'standard', roots: ROOTS, includeUserRoot: false, ...roster })
+  await ctx.plugin(AgentPresets, { default: 'standard', roots: ROOTS, includeShippedRoot: false, includeUserRoot: false, ...roster })
   await ctx.plugin(InvariantRegistry)
   await ctx.plugin(AgentPresetsInvariant)
   return ctx

@@ -12,7 +12,7 @@ import type {
   HostObservable, InjectFace, PropsLocale, PropsRuntime,
 } from '@qilin/client-ui-slots'
 import type {} from '@qilin/client-ui-conversation/client'
-import type { MessageId } from '@qilin/client-connection/client'
+import type { MessageId } from '@qilin/api-remotes/client'
 import type { MessageFeedbackRating } from '@qilin/message-feedback/types'
 // Type-only: pulls this package's LocaleNamespaceMap merge (the 'feedback' seat).
 import type {} from './locales.ts'

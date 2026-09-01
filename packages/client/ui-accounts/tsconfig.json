@@ -18,9 +18,6 @@
       "path": "../locale"
     },
     {
-      "path": "../runtime"
-    },
-    {
       "path": "../ui-settings"
     },
     {
@@ -31,6 +28,9 @@
     },
     {
       "path": "../../runtime-diagnostics/invariants"
+    },
+    {
+      "path": "../ui-renderer"
     }
   ]
 }

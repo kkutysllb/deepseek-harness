@@ -12,11 +12,11 @@ The user id is transport metadata, not model input. It must not enter the reques
 
 ## Decision
 
-`dsh-llm-deepseek` sends `x-deepseek-harness-user-id` on every provider request sent after successful credential resolution. The value comes from `@qilin/anonymous-user-id` and therefore matches the OpenTelemetry Resource `user.id` and `/feedback` acknowledgement for the same `$QILIN_HOME`. The adapter continues to send `x-deepseek-harness-session-id` only when `GenerateOptions.sessionId` is present; the agent loop supplies the current durable `Session.id` for ordinary agent, title-generation, and compaction requests.
+`qilin-llm-deepseek` sends `x-deepseek-harness-user-id` on every provider request sent after successful credential resolution. The value comes from `@qilin/anonymous-user-id` and therefore matches the OpenTelemetry Resource `user.id` and `/feedback` acknowledgement for the same `$QILIN_HOME`. The adapter continues to send `x-deepseek-harness-session-id` only when `GenerateOptions.sessionId` is present; the agent loop supplies the current durable `Session.id` for ordinary agent, title-generation, and compaction requests.
 
 The plugin resolves the user id lazily after credentials succeed and memoizes it for that plugin instance. A missing credential therefore does not create `.anonymous-user-id`, while the first authorized provider request can create it even when `QILIN_TELEMETRY_DISABLED` is set. The direct adapter constructor accepts a `resolveUserId` dependency so wire behavior remains deterministic in unit tests.
 
-Both headers are model-hidden HTTP metadata sent to the resolved `baseURL`. They are absent from the JSON request body and do not become model-visible inputs or session events. A configured gateway receives them. SessionTelemetryBackend sharing controls only telemetry export and does not disable provider request identity.
+Both headers are model-hidden HTTP metadata sent to the resolved `baseURL`. The identity values are absent from the JSON request body and do not become model-visible inputs or session events. A configured gateway receives them. Provider-specific body extensions are owned separately by the [DeepSeek LLM API extension decision](../architecture/2026-08-21-deepseek-llm-api-request-extensions.md). SessionTelemetryBackend sharing controls only telemetry export and does not disable provider request identity.
 
 ## Verification
 
@@ -41,4 +41,4 @@ Both headers are model-hidden HTTP metadata sent to the resolved `baseURL`. They
 - DeepSeek support can correlate requests across sessions by one anonymous harness-home id and within a conversation by the durable session id.
 - The first authorized DeepSeek request may create `$QILIN_HOME/.anonymous-user-id` independently of telemetry export.
 - Custom DeepSeek gateways receive the stable user id and any available session id, so operators must treat the configured `baseURL` as an identity recipient.
-- The request body, prompt, token count, KV-cache identity, and session log remain unchanged.
+- The identity headers do not alter the request body, prompt, token count, KV-cache identity, or session log; separately registered DeepSeek body extensions retain their own contracts.

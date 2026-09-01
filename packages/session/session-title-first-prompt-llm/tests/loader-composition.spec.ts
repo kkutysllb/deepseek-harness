@@ -9,6 +9,7 @@ import { pathToFileURL } from 'node:url'
 import LlmRuntime, { createUserMessage, LlmAdapter  } from '@qilin/llm'
 import type { GenerateOptions, StreamChunk } from '@qilin/llm'
 import SessionStore, { SessionId } from '@qilin/session'
+import SessionProjectionRegistry from '@qilin/session-projection'
 import SessionTitleService from '@qilin/session-title'
 import * as providerPlugin from '@qilin/session-title-first-prompt-llm'
 
@@ -33,11 +34,12 @@ afterEach(async () => {
 })
 
 async function loadComposition(): Promise<Context> {
-  root = await mkdtemp(join(tmpdir(), 'dsh-title-loader-'))
+  root = await mkdtemp(join(tmpdir(), 'qilin-title-loader-'))
   const configPath = join(root, 'cordis.yml')
   await writeFile(configPath, [
     "- name: '@qilin/llm'",
     "- name: '@qilin/session'",
+    "- name: '@qilin/session-projection'",
     "- name: '@qilin/session-title'",
     '  config:',
     '    fallbackMaxWords: 5',
@@ -62,6 +64,7 @@ async function loadComposition(): Promise<Context> {
   const modules = new Map<string, unknown>([
     ['@qilin/llm', LlmRuntime],
     ['@qilin/session', SessionStore],
+    ['@qilin/session-projection', SessionProjectionRegistry],
     ['@qilin/session-title', SessionTitleService],
     ['@qilin/session-title-first-prompt-llm', providerPlugin],
   ])

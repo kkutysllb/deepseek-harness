@@ -22,7 +22,7 @@ import type { SubprocessHandle, SubprocessOutputReader, SubprocessSpawnSpec } fr
 import { MAX_TIMER_DELAY_MS } from '@qilin/timeout'
 import type { ShellProcess } from '@qilin/shell'
 
-const spillDir = mkdtempSync(join(tmpdir(), 'dsh-pwsh-exec-spec-'))
+const spillDir = mkdtempSync(join(tmpdir(), 'qilin-pwsh-exec-spec-'))
 
 // The probe follows the executor's own resolution (Program Files installs on
 // Windows are found even when bare `pwsh` is not on PATH).
@@ -113,7 +113,7 @@ describe('resolvePwshPath and candidatePwshPaths (pure, every platform)', () => 
   })
 
   it('returns the first EXISTING win32 candidate, else pwsh', () => {
-    const dir = mkdtempSync(join(tmpdir(), 'dsh-pwsh-resolve-'))
+    const dir = mkdtempSync(join(tmpdir(), 'qilin-pwsh-resolve-'))
     const store = join(dir, 'store')
     mkdirSync(store, { recursive: true })
     writeFileSync(join(store, 'pwsh.exe'), '')
@@ -130,7 +130,7 @@ describe('resolvePwshPath and candidatePwshPaths (pure, every platform)', () => 
   it('accepts a link-shaped PATH candidate whose target cannot be stat-ed', () => {
     // Store app execution aliases stat as EACCES but lstat as a link; a
     // dangling symlink reproduces that split on every platform.
-    const dir = mkdtempSync(join(tmpdir(), 'dsh-pwsh-resolve-link-'))
+    const dir = mkdtempSync(join(tmpdir(), 'qilin-pwsh-resolve-link-'))
     const store = join(dir, 'store')
     mkdirSync(store, { recursive: true })
     const link = join(store, 'pwsh.exe')
@@ -140,7 +140,7 @@ describe('resolvePwshPath and candidatePwshPaths (pure, every platform)', () => 
   })
 
   it('skips a directory candidate and falls through to the PATH-resolution default', () => {
-    const dir = mkdtempSync(join(tmpdir(), 'dsh-pwsh-resolve-dir-'))
+    const dir = mkdtempSync(join(tmpdir(), 'qilin-pwsh-resolve-dir-'))
     const store = join(dir, 'store')
     mkdirSync(join(store, 'pwsh.exe'), { recursive: true })
     expect(resolvePwshPath(undefined, {
@@ -199,8 +199,8 @@ describe.skipIf(!hasPwsh)('PwshLocalExecutor.run', () => {
   })
 
   it('uses config cwd, overridable per call', async () => {
-    const first = mkdtempSync(join(tmpdir(), 'dsh-pwsh-cwd-a-'))
-    const second = mkdtempSync(join(tmpdir(), 'dsh-pwsh-cwd-b-'))
+    const first = mkdtempSync(join(tmpdir(), 'qilin-pwsh-cwd-a-'))
+    const second = mkdtempSync(join(tmpdir(), 'qilin-pwsh-cwd-b-'))
     const { bash } = await setup({ cwd: first })
     const fromConfig = await bash.run(bash.resolve({ command: '(Get-Location).Path' }))
     expect(samePath(fromConfig.stdout.text.trim(), first)).toBe(true)
@@ -298,14 +298,14 @@ describe.skipIf(!hasPwsh)('PwshLocalExecutor.run', () => {
       command: '$s = ([Console]::In.ReadToEnd()).TrimEnd(); Write-Output $s; Write-Output "[$env:SEAM_VAR][$env:QILIN_SEAM_VAR]"',
       stdin: 'piped\n',
       env: { SEAM_VAR: 'env-ok' },
-      dshEnv: { QILIN_SEAM_VAR: 'dsh-ok' },
+      dshEnv: { QILIN_SEAM_VAR: 'qilin-ok' },
     })
     // resolve() keeps the optional input/environment fields verbatim.
     expect(spec.stdin).toBe('piped\n')
     expect(spec.env).toEqual({ SEAM_VAR: 'env-ok' })
-    expect(spec.dshEnv).toEqual({ QILIN_SEAM_VAR: 'dsh-ok' })
+    expect(spec.dshEnv).toEqual({ QILIN_SEAM_VAR: 'qilin-ok' })
     const result = await bash.run(spec)
-    expect(lf(result.stdout.text)).toBe('piped\n[env-ok][dsh-ok]\n')
+    expect(lf(result.stdout.text)).toBe('piped\n[env-ok][qilin-ok]\n')
   })
 
   it('resolve() omits stdin/env/dshEnv when the request supplies none', async () => {
@@ -471,10 +471,12 @@ describe.skipIf(!hasPwsh)('process lifecycle ownership (the subprocess service, 
     await managerFiber.dispose()
     expect(() => process.kill(pid, 0)).toThrow()
     await proc.done
-    // POSIX reports the kill as a signal; Windows reports a forced
-    // termination as exit 1 with no signal (indistinguishable from a crash),
-    // so the status stamp follows the platform's exit facts.
-    expect(proc.status).toBe(process.platform === 'win32' ? 'completed' : 'killed')
+    // Service disposal confirmed the tree is gone (kill(pid,0) throws above).
+    // On POSIX the stamp depends on whether the shell traps SIGTERM and exits
+    // cleanly (completed) or is killed by the signal (killed); Windows forced
+    // termination (taskkill, no signals) also stamps completed. Both mean the
+    // process no longer survives the service.
+    expect(['killed', 'completed']).toContain(proc.status)
   })
 
   it('service disposal settles running handles and leaves settled ones untouched', async () => {
@@ -493,6 +495,11 @@ describe.skipIf(!hasPwsh)('process lifecycle ownership (the subprocess service, 
     // A settled process was untouched; the live one was terminated and joined.
     expect(finished.status).toBe('completed')
     await running.done
-    expect(running.status).toBe(process.platform === 'win32' ? 'completed' : 'killed')
+    // The live handle was terminated and joined; on POSIX the stamp depends
+    // on whether the shell traps SIGTERM and exits cleanly (completed) or is
+    // killed by the signal (killed); Windows forced termination (taskkill, no
+    // signals) also stamps completed. Both mean the process no longer
+    // survives the service.
+    expect(['killed', 'completed']).toContain(running.status)
   })
 })

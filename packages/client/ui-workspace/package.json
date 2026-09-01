@@ -1,7 +1,7 @@
 {
   "name": "@qilin/client-ui-workspace",
   "description": "Workspace picker plugin: one WorkspacePicker registered into the sidebar and empty-state workspace slots",
-  "version": "0.1.1-rc.2",
+  "version": "0.1.2-alpha.3",
   "publishConfig": {
     "access": "public"
   },
@@ -32,10 +32,14 @@
   "qilin": {
     "client": {
       "inject": [
+        "@qilin/api-remotes",
+        "@qilin/api-session-controller",
+        "@qilin/api-workspace-controller",
         "@qilin/client-connection",
         "@qilin/client-locale",
-        "@qilin/client-runtime",
         "@qilin/client-ui-conversation",
+        "@qilin/client-ui-renderer",
+        "@qilin/client-ui-session",
         "@qilin/client-ui-sidebar"
       ],
       "platform": "web"
@@ -50,24 +54,27 @@
     "clsx": "^2.0.0"
   },
   "peerDependencies": {
-    "@qilin/client-connection": "workspace:^",
-    "@qilin/client-locale": "workspace:^",
-    "@qilin/client-runtime": "workspace:^",
-    "@qilin/invariants": "workspace:^",
-    "@deepseek-ai/cordis": "workspace:^",
-    "@qilin/client-ui-conversation": "workspace:^",
-    "@qilin/client-ui-sidebar": "workspace:^"
+    "@deepseek-ai/cordis": "workspace:^"
   },
   "devDependencies": {
+    "@qilin/api-remotes": "workspace:^",
+    "@qilin/api-session-controller": "workspace:^",
+    "@qilin/api-workspace-controller": "workspace:^",
     "@qilin/client-connection": "workspace:^",
     "@qilin/client-locale": "workspace:^",
-    "@qilin/client-runtime": "workspace:^",
+    "@qilin/client-store": "workspace:^",
     "@qilin/client-test-runtime": "workspace:^",
     "@qilin/client-ui-conversation": "workspace:^",
     "@qilin/client-ui-primitives": "workspace:^",
+    "@qilin/client-ui-renderer": "workspace:^",
+    "@qilin/client-ui-session": "workspace:^",
     "@qilin/client-ui-sidebar": "workspace:^",
     "@qilin/client-ui-slots": "workspace:^",
     "@qilin/invariants": "workspace:^",
+    "@qilin/schedule": "workspace:^",
+    "@qilin/typert-protocol": "workspace:^",
+    "@qilin/session": "workspace:^",
+    "@qilin/util-workspace-path": "workspace:^",
     "@types/react": "~18.3.1",
     "@deepseek-ai/cordis": "workspace:^",
     "react": "^18.2.0"

@@ -1,7 +1,7 @@
 {
   "name": "@qilin/account-rbac",
   "description": "Account RBAC: request Principal resolution, role baseline permissions, config-driven resource policy with deny-wins evaluation, assembly-time catalog filtering, and the optional rbacAuth /api gate service",
-  "version": "0.1.1-rc.2",
+  "version": "0.1.2-alpha.3",
   "publishConfig": {
     "access": "public"
   },

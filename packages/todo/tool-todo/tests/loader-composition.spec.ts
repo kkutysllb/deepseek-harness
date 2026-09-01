@@ -9,12 +9,13 @@ import { afterEach, describe, expect, it } from 'vitest'
 import { Context } from '@deepseek-ai/cordis'
 import Loader from '@deepseek-ai/cordis-plugin-loader'
 import Include from '@deepseek-ai/cordis-plugin-include'
-import { CallId } from '@qilin/llm'
+import { ToolCallId } from '@qilin/llm'
 import { Session, SessionId } from '@qilin/session'
 import AgentRegistry, { Inbox } from '@qilin/agent'
 import type { Agent } from '@qilin/agent'
 import SystemPrompt from '@qilin/system-prompt'
 import ToolRuntime from '@qilin/tools'
+import SessionProjectionRegistry from '@qilin/session-projection'
 import * as ToolTodo from '@qilin/tool-todo'
 
 let root: string | undefined
@@ -52,12 +53,13 @@ function resultText(result: { content: { type: string; text?: string }[] }): str
  * @returns the booted context.
  */
 async function boot(configLines: readonly string[]): Promise<Context> {
-  root = await mkdtemp(join(tmpdir(), 'dsh-todo-loader-'))
+  root = await mkdtemp(join(tmpdir(), 'qilin-todo-loader-'))
   const configPath = join(root, 'cordis.yml')
   await writeFile(configPath, [
     "- name: '@qilin/agent'",
     "- name: '@qilin/system-prompt'",
     "- name: '@qilin/tools'",
+    "- name: '@qilin/session-projection'",
     "- name: '@qilin/tool-todo'",
     ...configLines.length > 0 ? ['  config:', ...configLines] : [],
     '',
@@ -72,6 +74,7 @@ async function boot(configLines: readonly string[]): Promise<Context> {
     ['@qilin/agent', AgentRegistry],
     ['@qilin/system-prompt', SystemPrompt],
     ['@qilin/tools', ToolRuntime],
+    ['@qilin/session-projection', SessionProjectionRegistry],
     ['@qilin/tool-todo', ToolTodo],
   ])
   ctx.loader.internal = {
@@ -101,7 +104,7 @@ describe('tool-todo real Loader composition through cordis.yml', () => {
     const owner = agent(ctx)
     const result = await ctx.tools.execute({
       signal: new AbortController().signal,
-      callId: CallId('parallel'),
+      callId: ToolCallId('parallel'),
       name: 'todo_write',
       arguments: { todos: PARALLEL_TODOS },
       agent: owner,
@@ -119,7 +122,7 @@ describe('tool-todo real Loader composition through cordis.yml', () => {
     const owner = agent(ctx)
     const result = await ctx.tools.execute({
       signal: new AbortController().signal,
-      callId: CallId('parallel-enabled'),
+      callId: ToolCallId('parallel-enabled'),
       name: 'todo_write',
       arguments: { todos: PARALLEL_TODOS },
       agent: owner,

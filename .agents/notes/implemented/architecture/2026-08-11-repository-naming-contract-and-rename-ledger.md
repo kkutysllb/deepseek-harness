@@ -72,7 +72,7 @@ Do not invent a `process sandbox` concept. The current `sandbox` family already 
 
 Use title case for initialisms inside PascalCase identifiers: `Ui`, `Llm`, `JsonRpc`, and `ApiProxy`. Use the conventional uppercase form in prose and package names where applicable: UI, LLM, JSON-RPC, and API. `Typert` is the exact product spelling in identifiers and prose; do not write `TypeRT`, `TypeRt`, or `Typert` with another internal split.
 
-Do not remove an intentional vendor qualifier to avoid repetition. `dsh-subagent-dsh-sdk` names the DeepSeek Harness SDK provider and avoids confusion with another SDK. Its private class becomes `SdkSubagentProvider` because the class also needs to say what it provides.
+Do not remove an intentional vendor qualifier to avoid repetition. `qilin-subagent-dsh-sdk` names the DeepSeek Harness SDK provider and avoids confusion with another SDK. Its private class becomes `SdkSubagentProvider` because the class also needs to say what it provides.
 
 ### Put the rule in project documentation
 
@@ -171,7 +171,7 @@ Keep `@qilin/tools` and `ctx.tools`. Keep `@qilin/api-gateway`, its `gateway/` f
 | `TelemetryBackend` | `SessionTelemetrySink` | This lower layer receives emitted records. `Sink` distinguishes it from the coordinating backend service. |
 | `TelemetryCoordinator`, `TelemetryRecord`, `TelemetrySeverity`, `TelemetrySharingStatus`, and `TelemetryCapture` | Corresponding `SessionTelemetry*` names | These public types belong only to session telemetry. |
 | `telemetry/record` | `session-telemetry/record` | The event name must state its owning domain. |
-| `TelemetryOtel`, `TelemetryMode`, plugin `telemetry-otel` | `OpenTelemetrySessionBackend`, `SessionTelemetryMode`, plugin `session-telemetry-otel` | The provider name states both the OpenTelemetry mechanism and session scope. Keep the package names `dsh-session-telemetry` and `dsh-session-telemetry-otel`. |
+| `TelemetryOtel`, `TelemetryMode`, plugin `telemetry-otel` | `OpenTelemetrySessionBackend`, `SessionTelemetryMode`, plugin `session-telemetry-otel` | The provider name states both the OpenTelemetry mechanism and session scope. Keep the package names `qilin-session-telemetry` and `qilin-session-telemetry-otel`. |
 | `docs/subsystems/telemetry.md` | `docs/subsystems/session-telemetry.md` | The page documents session telemetry, not repository-wide observability. |
 | `session/user-id/`, `@qilin/user-id` | `identity/anonymous-user-id/`, `@qilin/anonymous-user-id` | The value is a random correlation id shared by telemetry, feedback, and DeepSeek requests. It is neither a Session concern nor an authenticated user identity. |
 | `USER_ID_FILE_NAME`, `.userid`, feedback label `User` | `ANONYMOUS_USER_ID_FILE_NAME`, `.anonymous-user-id`, feedback label `Anonymous user` | The file and UI must not imply account identity. Keep the existing `AnonymousUserId` functions and the standard OTel attribute `user.id`. |
@@ -243,11 +243,11 @@ Keep the complete session projection family and `SessionProjection*` vocabulary.
 | `@qilin/subagent-spawn`, `SpawnProvider` | `@qilin/subagent-spawn-in-process`, `SpawnInProcessProvider` | This provider starts a child agent in the current process. The configured provider id remains `spawn`. |
 | `@qilin/subagent-fork`, `ForkProvider` | `@qilin/subagent-fork-in-process`, `ForkInProcessProvider` | This provider forks an agent in the current process. The configured provider id remains `fork`. |
 | `@qilin/subagent-inprocess`, `subagent-inprocess/` | `@qilin/subagent-in-process-driver`, `subagent-in-process-driver/` | The package contains common in-process driving logic, not a third provider. |
-| Private `SdkProvider` in `dsh-subagent-dsh-sdk` | `SdkSubagentProvider` | The repeated package qualifier is intentional, and the class must say that it provides subagents through the SDK. |
+| Private `SdkProvider` in `qilin-subagent-dsh-sdk` | `SdkSubagentProvider` | The repeated package qualifier is intentional, and the class must say that it provides subagents through the SDK. |
 | `WebService`, `WebServiceConfig` | `WebRuntime`, `WebRuntimeConfig` | The object selects providers and runs live search and fetch operations. Keep the package, key, provider packages, and model tool. |
 | `@qilin/web-fetch-local`, `LocalFetchProvider`, `LocalFetchLimits`, provider id `local-http` | `@qilin/web-fetch-http`, `HttpFetchProvider`, `HttpFetchLimits`, provider id `http` | This provider performs direct HTTP fetches. `local` says where code happens to run, not which mechanism it provides. |
 
-Keep `@qilin/subagent-dsh-sdk`, its provider id `dsh-sdk`, external ACP, Codex, and Claude Code provider families, the subagent tool package names, the main filesystem package and backends, filesystem tools and events, and the skill badge and tool packages.
+Keep `@qilin/subagent-dsh-sdk`, its provider id `qilin-sdk`, external ACP, Codex, and Claude Code provider families, the subagent tool package names, the main filesystem package and backends, filesystem tools and events, and the skill badge and tool packages.
 
 ### Hooks, guards, plan mode, extensions, and diagnostics
 
@@ -274,10 +274,14 @@ Keep MCP, Todo, and the Plan Mode package, key, events, and tool names. This dec
 | `E2BSandboxService` | `E2BRuntime` | The class creates, reuses, and disposes the E2B execution environment used by filesystem and subprocess adapters. It is broader than one sandbox handle and narrower than a generic owner. Keep `@qilin/e2b`, `ctx.e2b`, and the `e2b/` group. |
 | `@qilin/frontend-static` | `@qilin/host-frontend-static` | The package is the Host plugin that serves the frontend assets. The prefix distinguishes it from frontend application code. |
 | `PluginInventoryService` | `PluginInventoryGateway` | The class is a Remote-only adapter from the live Loader tree to the `pluginInventory/list` RPC. It owns no same-process service, cache, history, or mutation path. `Gateway` states the role that exists. |
-| `@qilin/jsonrpc-demo` | `@qilin/sdk-jsonrpc-demo` | The example demonstrates the runtime SDK over JSON-RPC. It belongs to the one SDK meaning. |
+| `@qilin/jsonrpc-demo`, `@qilin/sdk-jsonrpc-demo`, `@qilin/sdk-python-runtime` | removed | The Python runtime packages the existing `@qilin/cli` CLI and its `sdk` profile; a private application package would recreate a second launcher. |
+| `packages/examples/jsonrpc-demo/`, `packages/sdk/python-runtime/` | removed | The Python runtime wheel's closure manifest owns packaging without a separate application package. |
+| `examples/jsonrpc-agent/` | `python/sdk/examples/` | The example demonstrates Python use of the `sdk` profile and ordered patches. |
+| `@qilin/acp-demo` | `@qilin/acp-app` | The package is the ACP profile's application bundle, not a standalone demo bin. |
+| Deploy-root manifests `qilin-jsonrpc-agent-pkg`, `qilin-sdk-python-runtime-closure` | `qilin-python-runtime-closure` | The zero-code manifest defines the Python runtime wheel's complete `qilin` dependency closure without naming a separate SDK application. |
 | `@qilin/frontend` | `@qilin/web-frontend` | The application is the web frontend. Keep its physical `apps/web/` folder. |
 
-Keep atomic-write, brand, native-command, timeout utility, directory-picker, `qilin-base`, `qilin-web-app`, app boot, CLI names, and the `headless` package, bundle, and example identity. `headless` is the intended product essence and may later support more than one-shot execution.
+Keep atomic-write, brand, native-command, timeout utility, directory-picker, `qilin-base`, `qilin-web-app`, `qilin-sdk-app`, `qilin-acp-app`, app boot, CLI names, and the `headless` package, bundle, and example identity. `headless` is the intended product essence and may later support more than one-shot execution.
 
 ### Client runtime and UI
 
@@ -309,7 +313,7 @@ Keep atomic-write, brand, native-command, timeout utility, directory-picker, `qi
 | `ConversationService` | `ConversationController` | The object controls the active conversation state and user actions. |
 | `InputService` | `SessionInputResolver` | The interface resolves the input facade for one session scope. It is neither a global input registry nor an execution service. Keep `InputHub` as the concrete hub and `ctx.conversation.input` as the published face. |
 
-Use `Ui`, not `UI`, inside PascalCase identifiers. Keep the remaining client package names unless this ledger names them. Keep the deprecated client connection and Host `ApiProxy` vocabulary for now; the API plane will replace them, and a rename would add churn to a surface scheduled for removal.
+Use `Ui`, not `UI`, inside PascalCase identifiers. Keep the remaining client package names unless this ledger names them. Retain the deprecated client connection and Host `ApiProxy` vocabulary until the API plane removes those surfaces; renaming them earlier would add churn without establishing a lasting name.
 
 ## Explicit non-renames
 
@@ -324,7 +328,7 @@ The following debated names stay unchanged because the current scope is accurate
 - Keep `PermissionPresetSettingsController` even though it is long. Every word limits the role.
 - Keep `ModelsSettingsStore`; its main contract is one settings data model with store operations.
 - Keep `InputHub`; it is the concrete hub that backs `SessionInputResolver`.
-- Keep `dsh-subagent-dsh-sdk` and provider id `dsh-sdk`; the repeated qualifier prevents ambiguity.
+- Keep `qilin-subagent-dsh-sdk` and provider id `qilin-sdk`; the repeated qualifier prevents ambiguity.
 - Keep `headless`; the product identity is accurate even if the runtime later supports more than one-shot use.
 - Keep deprecated Host `ApiProxy` and client connection names until the API replacement removes them.
 - Keep `Web` for the Host server and the provider-neutral web capability. Use `HTTP` only for the direct fetch provider.
@@ -355,7 +359,7 @@ The following debated names stay unchanged because the current scope is accurate
 
 **Use broad names for possible future features.** Rejected. Name the stable current role. A future boundary change can rename the object again before release or use a new proposal after release. Vague names charge every current reader for an unbuilt future.
 
-**Rename `dsh-compact-basic` to `dsh-compaction-llm`.** Rejected. `LLM` adds no distinction in the current backend family. `basic` is less ambitious and does not claim an algorithm that does not exist.
+**Rename `qilin-compact-basic` to `qilin-compaction-llm`.** Rejected. `LLM` adds no distinction in the current backend family. `basic` is less ambitious and does not claim an algorithm that does not exist.
 
 **Rename session projections to reducers.** Rejected. Reduction is how a projection is built. The package also owns the read-model value, cache, and lookup contract.
 

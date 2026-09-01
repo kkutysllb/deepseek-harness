@@ -10,7 +10,7 @@ const ROOT = resolve(import.meta.dirname, '..')
 const QILIN_PACKAGE_NAME = /^@qilin\//
 
 /** Result of checking every QiLin package reachable through the root workspace list. */
-export interface DshPackageLicenseReport {
+export interface QilinPackageLicenseReport {
   /** Number of QiLin package manifests checked. */
   packageCount: number
   /** Repository-relative diagnostics for non-MIT declarations. */
@@ -54,7 +54,7 @@ function printable(value: unknown): string {
  * @param root - absolute repository root containing the workspace package.json.
  * @returns the checked package count and every non-MIT declaration.
  */
-export function inspectQilinPackageLicenses(root: string): DshPackageLicenseReport {
+export function inspectQilinPackageLicenses(root: string): QilinPackageLicenseReport {
   let packageCount = 0
   const failures: string[] = []
 

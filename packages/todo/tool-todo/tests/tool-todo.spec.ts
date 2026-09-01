@@ -1,11 +1,12 @@
 import { describe, expect, it } from 'vitest'
 import { Context } from '@deepseek-ai/cordis'
 import Loader from '@deepseek-ai/cordis-plugin-loader'
-import { CallId } from '@qilin/llm'
+import { createUserMessage, ToolCallId } from '@qilin/llm'
 import SystemPrompt from '@qilin/system-prompt'
 import ToolRuntime from '@qilin/tools'
+import SessionProjectionRegistry from '@qilin/session-projection'
 import { Session, SessionId } from '@qilin/session'
-import type { TodoItem } from '@qilin/session'
+import type { TodoItem } from '@qilin/tool-todo'
 import { type Agent } from '@qilin/agent'
 
 import * as tool from '../src/index.ts'
@@ -13,7 +14,7 @@ import * as tool from '../src/index.ts'
 const testToolSignal = new AbortController().signal
 
 /**
- * Drives the REAL plugin body: mounts `dsh-tool-todo` on a real `ToolRuntime`
+ * Drives the REAL plugin body: mounts `qilin-tool-todo` on a real `ToolRuntime`
  * and invokes the registered `todo_write` tool through `ctx.tools.execute`,
  * with a fake parent Agent carrying a real `Session` — so the append the tool
  * makes is observable on a genuine session log (only the agent wrapper is a
@@ -30,6 +31,7 @@ async function setup(allowParallelInProgress: boolean): Promise<Context> {
   const ctx = new Context()
   await ctx.plugin(SystemPrompt)
   await ctx.plugin(ToolRuntime)
+  await ctx.plugin(SessionProjectionRegistry)
   await ctx.plugin(tool, { allowParallelInProgress })
   return ctx
 }
@@ -39,7 +41,7 @@ function callTodo(ctx: Context, args: unknown, over: { agent?: Agent | undefined
   const agent = 'agent' in over ? over.agent : agentWithSession()
   return ctx.tools.execute({
     signal: testToolSignal,
-    callId: CallId(`call-${++callCounter}`),
+    callId: ToolCallId(`call-${++callCounter}`),
     name: 'todo_write',
     arguments: args,
     ...agent ? { agent } : {},
@@ -50,7 +52,7 @@ function text(result: { content: { type: string; text?: string }[] }): string {
   return result.content.filter(b => b.type === 'text').map(b => b.text).join('')
 }
 
-describe('dsh-tool-todo', () => {
+describe('qilin-tool-todo', () => {
   it('registers a `todo_write` tool whose schema is an array of {content,status}', async () => {
     const ctx = await setup(true)
     const schema = ctx.tools.schemas().find(s => s.name === 'todo_write')
@@ -213,6 +215,7 @@ describe('dsh-tool-todo', () => {
     const ctx = new Context()
     await ctx.plugin(SystemPrompt)
     await ctx.plugin(ToolRuntime)
+    await ctx.plugin(SessionProjectionRegistry)
     const fiber = await ctx.plugin(tool, { allowParallelInProgress: true })
     expect(ctx.tools.schemas().some(s => s.name === 'todo_write')).toBe(true)
     await fiber.dispose()
@@ -223,13 +226,78 @@ describe('dsh-tool-todo', () => {
     // A default export would make Loader unwrap only apply and drop `inject`.
     expect('default' in tool).toBe(false)
     expect(tool.name).toBe('tool-todo')
-    expect(tool.inject).toEqual(['tools'])
+    expect(tool.inject).toEqual(['tools', 'sessionProjections'])
 
     const loader = Object.create(Loader.prototype) as Loader
     const unwrapped = loader.unwrapExports(tool) as Record<string, unknown>
     expect(unwrapped).toBe(tool)
     expect(unwrapped.name).toBe('tool-todo')
-    expect(unwrapped.inject).toEqual(['tools'])
+    expect(unwrapped.inject).toEqual(['tools', 'sessionProjections'])
     expect(typeof unwrapped.apply).toBe('function')
+  })
+})
+
+describe('todo/write event', () => {
+  it('appends the whole-list snapshot and isolates the log from later mutation', () => {
+    const session = Session.create(SessionId('t1'))
+    session.append('turn/start', { turn: 1 })
+    const todos: TodoItem[] = [
+      { content: 'plan the work', status: 'in_progress' },
+      { content: 'write the code', status: 'pending' },
+    ]
+    session.append('todo/write', { todos })
+
+    const event = session.events.findLast(e => e.type === 'todo/write')!
+    expect(event.type).toBe('todo/write')
+    expect(event.data.todos).toEqual(todos)
+
+    todos.push({ content: 'sneak in', status: 'pending' })
+    todos[0]!.status = 'completed'
+    expect(event.data.todos).toEqual([
+      { content: 'plan the work', status: 'in_progress' },
+      { content: 'write the code', status: 'pending' },
+    ])
+  })
+
+  it('is last-write-wins: the current list is the most recent todo/write', () => {
+    const session = Session.create(SessionId('t2'))
+    session.append('turn/start', { turn: 1 })
+    session.append('todo/write', { todos: [{ content: 'first', status: 'pending' }] })
+    session.append('todo/write', { todos: [
+      { content: 'first', status: 'completed' },
+      { content: 'second', status: 'in_progress' },
+    ] })
+
+    const current = session.events.findLast(e => e.type === 'todo/write')!.data.todos
+    expect(current).toEqual([
+      { content: 'first', status: 'completed' },
+      { content: 'second', status: 'in_progress' },
+    ])
+  })
+
+  it('does not add a derived message or surface node', () => {
+    const session = Session.create(SessionId('t3'))
+    session.append('turn/start', { turn: 1 })
+    session.append('user/message', createUserMessage({
+      content: [{ type: 'text', text: 'q' }], source: { kind: 'user' },
+    }), { surfaceOp: 'append' })
+    const before = session.deriveMessages().length
+    session.append('todo/write', { todos: [{ content: 'a task', status: 'pending' }] })
+
+    expect(session.deriveMessages()).toHaveLength(before)
+    expect(session.surface.nodes).not.toContain(session.seq - 1)
+  })
+
+  it('round-trips through a seeded replay identically without surface metadata', () => {
+    const original = Session.create(SessionId('t4'))
+    original.append('turn/start', { turn: 1 })
+    original.append('todo/write', { todos: [{ content: 'only', status: 'completed' }] })
+    original.append('turn/end', { turn: 1, reason: { kind: 'completed' } })
+    const replayed = Session.create(SessionId('t4-replay'), [...original.events])
+
+    expect(replayed.events.findLast(e => e.type === 'todo/write')!.data.todos)
+      .toEqual([{ content: 'only', status: 'completed' }])
+    expect(replayed.events.slice(0, original.seq)).toEqual(original.events)
+    expect(replayed.firstLiveSeq).toBe(original.seq)
   })
 })

@@ -2,5 +2,5 @@
 # side as of the last confirmed-consistent state. Both languages carry equal authority;
 # after editing either side, bring the other along and re-record with:
 #   pnpm run verify-translation-pairing --write .agents/notes/implemented/feature/2026-08-10-durable-workflow-runs-in-chat.md
-2026-08-10-durable-workflow-runs-in-chat.md: d82c973ce7e6962629d9b7f52a69b3576140426d
-2026-08-10-durable-workflow-runs-in-chat.zh.md: a91c51b17b5ee05d770b15b16f1862202eea8f7a
+2026-08-10-durable-workflow-runs-in-chat.md: 903c976551cb476762ca185cde8c76715022c661
+2026-08-10-durable-workflow-runs-in-chat.zh.md: 6316fd4ce6a942dac243718ed03b6b5293048643

@@ -1,7 +1,7 @@
 /** Tests for the documentation website projection adapter. */
 
 import { execFileSync } from 'node:child_process'
-import { existsSync, globSync, mkdirSync, mkdtempSync, readFileSync, realpathSync, rmSync, symlinkSync, writeFileSync } from 'node:fs'
+import { existsSync, globSync, mkdirSync, mkdtempSync, readFileSync, realpathSync, rmSync, symlinkSync, unlinkSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { basename, dirname, join, resolve } from 'node:path'
 import { fromMarkdown } from 'mdast-util-from-markdown'
@@ -9,6 +9,7 @@ import { gfmFromMarkdown } from 'mdast-util-gfm'
 import { gfm } from 'micromark-extension-gfm'
 import type { Nodes } from 'mdast'
 import { afterAll, afterEach, beforeAll, describe, expect, it } from 'vitest'
+import { cleanDocSiteOutput, docSiteBuildOptions } from '../website/build.ts'
 import { docsPages, landingLink, routeLink, sectionSpec, type DocsPage } from '../website/docs.ts'
 import {
   addProjectionFrontmatter, emitRawMarkdownPages, llmsTxt, projectedPageContent, publishableImage,
@@ -27,7 +28,7 @@ afterEach(() => {
 })
 
 function fixture(): { root: string; pages: DocsPage[] } {
-  const root = mkdtempSync(join(tmpdir(), 'dsh-doc-site-'))
+  const root = mkdtempSync(join(tmpdir(), 'qilin-doc-site-'))
   roots.push(root)
   mkdirSync(join(root, 'docs'), { recursive: true })
   mkdirSync(join(root, 'packages'), { recursive: true })
@@ -70,6 +71,78 @@ describe('website source layout', () => {
   })
 })
 
+describe('documentation site build', () => {
+  it.each([
+    { mode: 'SPA', mpa: false, expectedMpa: undefined },
+    { mode: 'MPA', mpa: true, expectedMpa: 'true' },
+  ])('$mode build removes stale output before writing', async ({ mpa, expectedMpa }) => {
+    const root = mkdtempSync(join(tmpdir(), 'qilin-doc-build-'))
+    roots.push(root)
+    const outDir = join(root, '.dist')
+    const stale = join(outDir, 'stale.md')
+    mkdirSync(outDir)
+    writeFileSync(stale, 'stale\n')
+
+    const options = docSiteBuildOptions(root, mpa)
+    expect(options.mpa).toBe(expectedMpa)
+    expect(existsSync(stale)).toBe(true)
+    await options.onAfterConfigResolve?.({ outDir } as never)
+    expect(existsSync(outDir)).toBe(false)
+  })
+
+  it('refuses to remove the site root or an outside directory', () => {
+    const root = mkdtempSync(join(tmpdir(), 'qilin-doc-build-root-'))
+    const outside = mkdtempSync(join(tmpdir(), 'qilin-doc-build-outside-'))
+    roots.push(root, outside)
+    writeFileSync(join(root, 'keep'), 'root\n')
+    writeFileSync(join(outside, 'keep'), 'outside\n')
+
+    expect(() => {
+      cleanDocSiteOutput(root, root)
+    }).toThrow('must be a child of site root')
+    expect(() => {
+      cleanDocSiteOutput(root, outside)
+    }).toThrow('must be a child of site root')
+    expect(readFileSync(join(root, 'keep'), 'utf8')).toBe('root\n')
+    expect(readFileSync(join(outside, 'keep'), 'utf8')).toBe('outside\n')
+  })
+
+  it('unlinks a link-shaped output without removing its target', () => {
+    const root = mkdtempSync(join(tmpdir(), 'qilin-doc-build-link-root-'))
+    const outside = mkdtempSync(join(tmpdir(), 'qilin-doc-build-link-target-'))
+    roots.push(root, outside)
+    const outDir = join(root, '.dist')
+    const keep = join(outside, 'keep')
+    writeFileSync(keep, 'outside\n')
+    symlinkSync(outside, outDir, 'junction')
+
+    cleanDocSiteOutput(root, outDir)
+
+    expect(existsSync(outDir)).toBe(false)
+    expect(readFileSync(keep, 'utf8')).toBe('outside\n')
+  })
+
+  it('refuses output whose nearest existing parent resolves outside the site root', () => {
+    const root = mkdtempSync(join(tmpdir(), 'qilin-doc-build-parent-link-root-'))
+    const outside = mkdtempSync(join(tmpdir(), 'qilin-doc-build-parent-link-target-'))
+    roots.push(root, outside)
+    const linkedParent = join(root, 'linked')
+    const outDir = join(linkedParent, 'missing', '.dist')
+    const keep = join(outside, 'keep')
+    writeFileSync(keep, 'outside\n')
+    symlinkSync(outside, linkedParent, 'junction')
+
+    try {
+      expect(() => {
+        cleanDocSiteOutput(root, outDir)
+      }).toThrow('must resolve inside site root')
+      expect(readFileSync(keep, 'utf8')).toBe('outside\n')
+    } finally {
+      unlinkSync(linkedParent)
+    }
+  })
+})
+
 describe('publishableImage', () => {
   it('accepts a regular file inside the repository', () => {
     const { root } = fixture()
@@ -81,7 +154,7 @@ describe('publishableImage', () => {
     // Publication copies the bytes onto the site, so a reference reaching a
     // build-machine file must not be treated as an image the repository owns.
     const { root } = fixture()
-    const outside = mkdtempSync(join(tmpdir(), 'dsh-doc-site-outside-'))
+    const outside = mkdtempSync(join(tmpdir(), 'qilin-doc-site-outside-'))
     roots.push(outside)
     writeFileSync(join(outside, 'secret.png'), 'not really a png\n')
     symlinkSync(join(outside, 'secret.png'), join(root, 'packages/linked.png'))
@@ -362,7 +435,7 @@ describe('docsPages locale routes', () => {
     }
   })
 
-  it('places the shared todo fragment anchor on the translated todo section', () => {
+  it('places the shared todo fragment alias on the translated todo section', () => {
     const catalog = readFileSync(resolve(repositoryRoot, 'docs/tool-catalog.zh.md'), 'utf8')
     expect(catalog.match(/<a id="qilintool-todo"><\/a>/g)).toHaveLength(1)
     expect(catalog).toContain(
@@ -377,7 +450,7 @@ describe('docsPages locale routes', () => {
     const translated = rootPages.filter(page => page.contentLocale === 'zh-CN')
     const fallbacks = rootPages.filter(page => page.contentLocale === 'en-US')
 
-    expect(translated).toHaveLength(43)
+    expect(translated).toHaveLength(46)
     expect(translated.every(page => page.source.endsWith('.zh.md'))).toBe(true)
     expect(fallbacks).toEqual([])
   })
@@ -587,7 +660,7 @@ describe('rawMarkdownPageContent', () => {
 
 describe('emitRawMarkdownPages', () => {
   function mirrorDir(): string {
-    const out = mkdtempSync(join(tmpdir(), 'dsh-doc-mirror-'))
+    const out = mkdtempSync(join(tmpdir(), 'qilin-doc-mirror-'))
     roots.push(out)
     return out
   }
@@ -673,7 +746,7 @@ describe('raw Markdown projection of the published manifest', () => {
   // Coverage instrumentation on a loaded CI runner stretches the full-manifest
   // emission and the 181-file link walk past vitest's 5s default.
   beforeAll(() => {
-    mirror = mkdtempSync(join(tmpdir(), 'dsh-doc-mirror-real-'))
+    mirror = mkdtempSync(join(tmpdir(), 'qilin-doc-mirror-real-'))
     emitRawMarkdownPages(mirror, { pages: docsPages, repoRoot: repositoryRoot, repositoryRef: 'master' })
   }, 60_000)
 

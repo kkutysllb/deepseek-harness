@@ -8,7 +8,7 @@
 
 ## 两个概念，两种 manifest
 
-安装机制建立在两个概念之上。二者都由一份 `package.json` 描述，但它们在 `dsh` 键下携带的 manifest（元数据清单）种类不同，回答的问题也不同：
+安装机制建立在两个概念之上。二者都由一份 `package.json` 描述，但它们在 `qilin` 键下携带的 manifest（元数据清单）种类不同，回答的问题也不同：
 
 - **组合包**是附带一个配置层的 npm 包。它的 manifest 声明 `qilin.bundle`，回答的是"这个包贡献什么？"：一个插入或覆盖插件行的 patch 文件。
 - **profile** 是位于 `$QILIN_HOME/profiles/<name>` 下、描述一份可启动组合的目录。它的 manifest 声明 `qilin.profile`，回答的是"这套配置由哪些组合包按什么顺序组成？"。
@@ -39,7 +39,7 @@ hello-plugin/
   "type": "module",
   "main": "index.js",
   "files": ["index.js", "cordis.patch.yml"],
-  "dsh": { "bundle": { "patch": "./cordis.patch.yml" } }
+  "qilin": { "bundle": { "patch": "./cordis.patch.yml" } }
 }
 ```
 
@@ -53,7 +53,7 @@ export function apply() {
 }
 ```
 
-创建 `hello-plugin/cordis.patch.yml`。这个 patch 与一直在写的 `--patch` overlay 一样，是一个 patch 条目的 YAML 数组；区别是插件行按包名而不是相对源码路径引用这个包，这样 Node 的模块解析才能找到已安装的代码：
+创建 `hello-plugin/cordis.patch.yml`。这个 patch 与你写过的 `--patch` overlay 一样，是一个 patch 条目的 YAML 数组；区别是插件行按包名而不是相对源码路径引用这个包，这样 Node 的模块解析才能找到已安装的代码：
 
 ```yaml
 - insert:
@@ -89,7 +89,7 @@ qilin plugin --profile demo add ./hello-plugin
   "dependencies": {
     "qilin-hello-plugin": "link:/path/to/hello-plugin"
   },
-  "dsh": {
+  "qilin": {
     "profile": {
       "bundles": [
         "@qilin/base",
@@ -170,7 +170,7 @@ qilin plugin --profile demo add github:you/hello-plugin
 
   然后重新执行 `add`。
 
-请如实看待这项授权：**允许该包的代码在安装时于你的机器上执行**，且不在 agent 运行的任何沙箱之内。只对源码可信的包授权，并锁定 commit（`github:you/hello-plugin#<sha>`），让后续推送无法悄悄改变实际运行的内容。
+请把这项授权视为**允许该包的代码在安装时于你的机器上执行**，且不在 agent 运行的任何沙箱之内。只对源码可信的包授权，并锁定 commit（`github:you/hello-plugin#<sha>`），让后续推送无法悄悄改变实际运行的内容。
 
 如果不想让用户做这项授权，就改为分发构建产物——以下两种形式都不需要任何构建权限：
 

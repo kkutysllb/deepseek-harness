@@ -16,13 +16,13 @@ Two further gaps followed from the same missing plane. A provider's own ambient 
 
 Three seams, each owning one question, and every pi-ai concept behind an adapter inside `llm-pi-ai`.
 
-**`dsh-credentials` grows a second key space.** A `CredentialRef` answers *what is behind this environment-variable name*; a `CredentialKey` answers *what credential does this plugin hold for this id*. The record union is `{ kind: 'api-key', key?, env? } | { kind: 'grant', payload }` — the api-key half structural because the seam can describe it, the grant half opaque because a library that owns a token format keeps owning it. The only constraint on a payload is that it survives a JSON round trip, enforced on the way in and on the way out.
+**`qilin-credentials` grows a second key space.** A `CredentialRef` answers *what is behind this environment-variable name*; a `CredentialKey` answers *what credential does this plugin hold for this id*. The record union is `{ kind: 'api-key', key?, env? } | { kind: 'grant', payload }` — the api-key half structural because the seam can describe it, the grant half opaque because a library that owns a token format keeps owning it. The only constraint on a payload is that it survives a JSON round trip, enforced on the way in and on the way out.
 
 The key is `<scope>/<id>` where the scope is the **owning plugin's registered name**, not the provider's. A user knows `openai-codex`; which adapter family answers for the bytes inside that record is exactly what a bare provider name loses. Two plugins serving the same provider name would read each other's payload, and a record left by an uninstalled plugin could not be told from a live one. The `/` also keeps the two grammars disjoint, so the key spaces cannot collide. This assumes one adapter registers a given provider route, which the LLM registry already enforces.
 
 Records do not layer. There is no environment an authorization grant could be read from, so presence of the record is the whole fact, and the empty-value rule that governs references does not apply: an `api-key` record carrying neither a key nor env states that its owner confirmed ambient authentication, which is configured.
 
-**`dsh-authorization` owns the conversation, never the protocol.** A plugin that knows how to obtain its own credential registers a flow under the `CredentialKey` that flow writes. The seam runs one attempt per key, routes a neutral vocabulary of notices and prompts, and settles. A second authorization protocol arrives as another flow rather than as another seam, and a surface that renders one flow renders all of them.
+**`qilin-authorization` owns the conversation, never the protocol.** A plugin that knows how to obtain its own credential registers a flow under the `CredentialKey` that flow writes. The seam runs one attempt per key, routes a neutral vocabulary of notices and prompts, and settles. A second authorization protocol arrives as another flow rather than as another seam, and a surface that renders one flow renders all of them.
 
 Two choices carry the weight:
 
@@ -53,7 +53,7 @@ Withdrawal settles an attempt whether or not its flow reacts to the signal. A fl
 
 `.credentials.yaml` gains a version and two sections. A boot upgrades the recognized pre-release flat layout in place — an all-string flat mapping nests verbatim under `refs:` under the writer lock — because a key stored through the Models page by an earlier internal build must survive the layout change without a hand edit and without its model requests failing. Any flat shape the recognizer cannot prove it understands keeps the by-name refusal with the hand migration stated in the message; the parser itself still reads exactly one layout, and the migration step retires with the pre-release stance at the first tagged release. Every fixture in the repo that wrote the flat document was rewritten; the llm suites' fixtures were missed by the record change itself and fixed here.
 
-`openai-codex` returns to the provider picker and to the Models page directory. Signing in is offered for every installed provider that ships a login, which today is all 38 — 31 collect a key through pi-ai's own prompt, six offer that beside a subscription login, and Codex offers only the subscription login.
+`openai-codex` returns to the provider picker and to the Models page directory. All 38 installed providers offer sign-in: 31 collect a key through pi-ai's own prompt, six offer that beside a subscription login, and Codex offers only the subscription login.
 
 What this does not yet include is the surface: the wire contract that carries notices and prompts to the browser, and the Models-page control that starts a login. Until that lands, the flows are reachable only in-process, and a deployment still configures a key by typing it into the settings form.
 
@@ -65,4 +65,4 @@ The seam's suite pins the lifecycle it owns: single-flight refusal and release, 
 
 `llm-pi-ai` covers the three translations against a real `$QILIN_HOME` document — an api-key credential field by field, an OAuth credential verbatim including its refresh half, a foreign plugin's record skipped by scope, and the write refusal without a credentials service — plus every `AuthEvent` and `AuthPrompt` member restated, with `Models.login()` mocked at the collection boundary since a real one opens a browser. Two real-composition tests boot the plugin with and without the authorization seam.
 
-The `models-settings` and `onboarding-usable-provider` web e2e goldens regain exactly the `openai-codex` option line they lost when it was withheld — the whole assembled-application difference this change makes today, because the Models page has no login control yet to record.
+The `models-settings` and `onboarding-usable-provider` web e2e goldens regain exactly the `openai-codex` option line they lost when it was withheld — the only assembled-application difference this decision records, because the Models page has no login control yet to record.

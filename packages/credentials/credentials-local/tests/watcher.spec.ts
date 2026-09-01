@@ -25,7 +25,6 @@ vi.mock('node:fs/promises', async (importOriginal) => {
   }
 })
 
-/** Credential documents are seeded owner-only, exactly as the provider creates them. */
 function writeCredentials(file: string, text: string): Promise<void> {
   return writeFile(file, text, { mode: 0o600 })
 }
@@ -73,7 +72,7 @@ afterEach(async () => {
 })
 
 async function tempDir(): Promise<string> {
-  const dir = await mkdtemp(join(tmpdir(), 'dsh-credentials-watch-'))
+  const dir = await mkdtemp(join(tmpdir(), 'qilin-credentials-watch-'))
   cleanups.push(() => rm(dir, { recursive: true, force: true }))
   return dir
 }

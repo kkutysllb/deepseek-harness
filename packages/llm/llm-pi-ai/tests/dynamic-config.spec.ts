@@ -6,14 +6,13 @@ import { join } from 'node:path'
 import LlmRuntime, { LlmAdapter } from '@qilin/llm'
 import { credentialRef } from '@qilin/credentials'
 import { LocalCredentialProvider } from '@qilin/credentials-local'
-import { settingsNamespace } from '@qilin/settings'
 import { FileSettingsProvider } from '@qilin/settings-file'
 import * as LlmPiAi from '@qilin/llm-pi-ai'
 import AuthorizationService from '@qilin/authorization'
 import { assemble } from './assemble.ts'
 import { closeMockServers, mockServer, textEvents } from './mock-server.ts'
 
-const NS = settingsNamespace('llm-pi-ai')
+const NS = 'llm-pi-ai'
 
 /** Minimal foreign adapter: only needs to own a route the pi-ai plugin then wants. */
 class StubAdapter extends LlmAdapter {
@@ -32,12 +31,11 @@ afterEach(async () => {
 })
 
 async function home(): Promise<string> {
-  const dir = await mkdtemp(join(tmpdir(), 'dsh-pi-dynamic-'))
+  const dir = await mkdtemp(join(tmpdir(), 'qilin-pi-dynamic-'))
   cleanups.push(() => rm(dir, { recursive: true, force: true }))
   return dir
 }
 
-/** Real dynamic composition mirroring the deepseek twin's harness. */
 async function boot(
   dir: string,
   config: LlmPiAi.Config,

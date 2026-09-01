@@ -8,7 +8,8 @@ import { Context } from '@deepseek-ai/cordis'
 import { mkdirSync, mkdtempSync, realpathSync, rmSync, symlinkSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { join, resolve, sep } from 'node:path'
-import { CallId } from '@qilin/llm'
+import { turnBoundaryProjectionDefinition } from '@qilin/agent-loop'
+import { ToolCallId } from '@qilin/llm'
 import SystemPrompt, { renderPrompt } from '@qilin/system-prompt'
 import ToolRuntime, { type ToolResult } from '@qilin/tools'
 import { FileSystem, FsError, FsTargetKey, FsVersion } from '@qilin/fs'
@@ -31,6 +32,7 @@ import { sessionCwd } from '../src/session-cwd.ts'
 import ApprovalService from '@qilin/user-approval'
 import type { SandboxExecutionPolicy, SandboxMode } from '@qilin/sandbox'
 import SandboxPolicyService from '@qilin/sandbox-policy'
+import SessionProjectionRegistry from '@qilin/session-projection'
 
 const testToolSignal = new AbortController().signal
 
@@ -113,7 +115,7 @@ let callCounter = 0
 function call(ctx: Context, name: string, args: unknown, agent?: object) {
   return ctx.tools.execute({
     signal: testToolSignal,
-    callId: CallId(`call-${++callCounter}`),
+    callId: ToolCallId(`call-${++callCounter}`),
     name,
     arguments: args,
     ...agent ? { agent: agent as never } : {},
@@ -136,7 +138,7 @@ describe('session cwd resolution', () => {
     expect(sessionCwd(execution(cwd) as never, 'file.txt')).toBe(cwd)
     expect(sessionCwd(execution(throughParent) as never, 'file.txt')).toBe(realpathSync.native(throughParent))
 
-    const root = mkdtempSync(join(tmpdir(), 'dsh-tool-fs-session-cwd-'))
+    const root = mkdtempSync(join(tmpdir(), 'qilin-tool-fs-session-cwd-'))
     const physical = join(root, 'physical')
     const link = join(root, 'link')
     try {
@@ -158,11 +160,11 @@ describe('registration', () => {
 
   it('declares read parallel-safe while write/edit remain exclusive', async () => {
     const { ctx } = await setup()
-    expect(ctx.tools.executionMode({ signal: testToolSignal, callId: CallId('read-safe'), name: 'read', arguments: { file_path: 'a.txt' } }))
+    expect(ctx.tools.executionMode({ signal: testToolSignal, callId: ToolCallId('read-safe'), name: 'read', arguments: { file_path: 'a.txt' } }))
       .toEqual({ kind: 'parallel' })
-    expect(ctx.tools.executionMode({ signal: testToolSignal, callId: CallId('write-exclusive'), name: 'write', arguments: { file_path: 'a.txt', content: 'x' } }))
+    expect(ctx.tools.executionMode({ signal: testToolSignal, callId: ToolCallId('write-exclusive'), name: 'write', arguments: { file_path: 'a.txt', content: 'x' } }))
       .toEqual({ kind: 'exclusive' })
-    expect(ctx.tools.executionMode({ signal: testToolSignal, callId: CallId('edit-exclusive'), name: 'edit', arguments: { file_path: 'a.txt', old_string: 'x', new_string: 'y' } }))
+    expect(ctx.tools.executionMode({ signal: testToolSignal, callId: ToolCallId('edit-exclusive'), name: 'edit', arguments: { file_path: 'a.txt', old_string: 'x', new_string: 'y' } }))
       .toEqual({ kind: 'exclusive' })
   })
 
@@ -792,6 +794,8 @@ describe('sandbox escalation API (write/edit)', () => {
     const ctx = new Context()
     await ctx.plugin(SystemPrompt)
     await ctx.plugin(ToolRuntime)
+    await ctx.plugin(SessionProjectionRegistry)
+    ctx.sessionProjections.register(turnBoundaryProjectionDefinition)
     await ctx.plugin(SandboxPolicyService, { mode: 'workspace-write' })
     await ctx.plugin(SandboxingFakeFs)
     await ctx.plugin(FsPolicy)
@@ -806,7 +810,7 @@ describe('sandbox escalation API (write/edit)', () => {
       id: 'agent-fs-esc',
       session: {
         header: { version: 0, id: 'sess-fs-esc', createdAt: 0, cwd: '/session-project' },
-        events: [{ type: 'turn/start' }, ...events],
+        events: [{ type: 'turn/start', data: { turn: 1 } }, ...events],
         append: (type: string, data: Record<string, unknown>) => { events.push({ type, data }) },
       },
     }
@@ -881,7 +885,7 @@ describe('sandbox escalation API (write/edit)', () => {
     // Pass a signal so the escalation ask forwards it to the approval request
     // (the request rides the tool-execution abort signal).
     await ctx.tools.execute({
-      callId: CallId('call-fs-esc-grant'),
+      callId: ToolCallId('call-fs-esc-grant'),
       name: 'write',
       arguments: { file_path: 'a.txt', content: 'x', sandbox_permissions: 'danger-full-access', justification: 'the test needs it' },
       agent: escalationAgent() as never,

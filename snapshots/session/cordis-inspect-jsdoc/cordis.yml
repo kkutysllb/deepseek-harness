@@ -1,0 +1,37 @@
+# Add PTC mode and Cordis tools to the base spawn/workflow stack, exercising
+# all four boundaries in one ACP snapshot.
+- id: agent-default-model
+  name: '@qilin/agent-default-model'
+  config:
+    provider: deepseek-official
+    model: deepseek-v4-pro
+
+- id: session-persistence-jsonl
+  name: '@qilin/session-persistence-jsonl'
+  config:
+    root: !!js dshHomePath('sessions')
+    compression: !!js 'process.env.QILIN_SNAPSHOT === undefined ? ''zstd'' : ''none'''
+
+- id: agent-instructions
+  name: '@qilin/agent-instructions'
+  config:
+    maxBytes: 65536
+
+- id: tools
+  name: '@qilin/tools'
+  config:
+    mode: both
+
+- id: system-prompt
+  name: '@qilin/system-prompt'
+  config:
+    persona: |
+      You are a coding assistant powered by the {{model}} model. Your working directory is {{cwd}}.
+
+      Verify your work by running the code or tests. Keep answers brief and factual.
+
+- insert:
+    - id: cordis-host-runner
+      name: '@qilin/cordis-host-runner'
+    - id: tool-cordis
+      name: '@qilin/tool-cordis'

@@ -14,7 +14,7 @@ import { describe, expect, it } from 'vitest'
 import Loader from '@deepseek-ai/cordis-plugin-loader'
 import * as mcpClient from '@qilin/mcp-client'
 
-describe('dsh-mcp-client real-load-path guard', () => {
+describe('qilin-mcp-client real-load-path guard', () => {
   it('has no default export and keeps name/inject/Config through unwrapExports', () => {
     expect('default' in mcpClient).toBe(false)
 

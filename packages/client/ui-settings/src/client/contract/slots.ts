@@ -9,6 +9,7 @@
  * ui-settings-general too.
  */
 
+import type {} from '@qilin/client-ui-slots'
 
 declare module '@qilin/client-ui-slots' {
   interface SlotMap {

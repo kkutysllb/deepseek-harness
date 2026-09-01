@@ -2,7 +2,7 @@
 
 English | [中文](spill.zh.md)
 
-The spill storage seam — a [capability seam](../../.agents/notes/implemented/architecture/2026-07-08-tool-output-spill-files.md) that persists a tool's oversized text and returns a model-facing locator plus retrieval guidance, split across packages: Service Definition ([dsh-spill](../../packages/spill/spill), `ctx.spillStore`), Service Provider ([dsh-spill-local](../../packages/spill/spill-local), private session-scoped files on the host filesystem), and Consumer ([dsh-spill-policy](../../packages/spill/spill-policy), the `tools/post-execute` policy). Spill is **one optional capability**, not part of the agent-loop spine — so its vocabulary lives here, not in [core.md](core.md). Preview mechanics stay in [dsh-output-retention](../../packages/util/output-retention); this seam only saves the final text the policy hands it.
+The spill storage seam — a [capability seam](../../.agents/notes/implemented/architecture/2026-07-08-tool-output-spill-files.md) that persists a tool's oversized text and returns a model-facing locator plus retrieval guidance, split across packages: Service Definition ([qilin-spill](../../packages/spill/spill), `ctx.spillStore`), Service Provider ([qilin-spill-local](../../packages/spill/spill-local), private session-scoped files on the host filesystem), and Consumer ([qilin-spill-policy](../../packages/spill/spill-policy), the `tools/post-execute` policy). Spill is **one optional capability**, not part of the agent-loop spine — so its vocabulary lives here, not in [core.md](core.md). Preview mechanics stay in [qilin-output-retention](../../packages/util/output-retention); this seam only saves the final text the policy hands it.
 
 Source: [`packages/spill/spill/src/types.ts`](../../packages/spill/spill/src/types.ts)
 
@@ -38,7 +38,7 @@ interface SpillOwner {
 }
 ```
 
-`SpillOwner.sessionId` is the save-time storage namespace. Forked sessions inherit existing spill locators from the seeded log; those artifacts are not copied or re-owned, and spills produced after the fork use the child session id. A retention-period cleanup may expire old locators with other old session artifacts; the spill seam does not define a per-session cleanup policy.
+A retention-period cleanup may expire old locators with other old session artifacts; the spill seam does not define a per-session cleanup policy.
 
 ```ts type-equiv
 /**
@@ -50,7 +50,7 @@ interface SpillSource {
   /** The tool whose result was spilled (e.g. `web_fetch`). */
   toolName: string
   /** The model-issued call id the result belongs to. */
-  callId: CallId
+  callId: ToolCallId
   /** A short human label for the artifact (e.g. `result`). */
   label: string
 }
@@ -82,7 +82,7 @@ type SpillLocator = Branded<'SpillLocator'>
 
 `SpillStore` (`ctx.spillStore`, defined in [`packages/spill/spill/src/index.ts`](../../packages/spill/spill/src/index.ts)) is a one-method abstract service: `saveText(input) → Promise<SpillRef>`. It persists the FULL `content` and REJECTS on a real storage failure (permissions, ENOSPC, backend unavailable). The seam owns storage only: no retention policy, no tool-result replacement, no retrieval/search API.
 
-The local backend ([dsh-spill-local](../../packages/spill/spill-local)) writes under `<root>/session-<hash>/<random>-<safeName>` — a configured or lazily-created private (0700) root, a `sha256(sessionId)` session subdir, and an exclusive owner-only (`open(path, 'wx', 0o600)`) write so a planted symlink cannot redirect it. Its `locator` is the local path and its `retrievalHint` tells the model to use `read` or `grep` on that path. The policy consumer ([dsh-spill-policy](../../packages/spill/spill-policy)) replaces an over-`maxInlineBytes` plain-text final result with a retention-library head/tail preview plus the spill reference, best-effort: a save failure keeps the original inline result rather than turning a successful call into an `isError`.
+The local backend ([qilin-spill-local](../../packages/spill/spill-local)) writes under `<root>/session-<hash>/<random>-<safeName>` — a configured or lazily-created private (0700) root, a `sha256(sessionId)` session subdir, and an exclusive owner-only (`open(path, 'wx', 0o600)`) write so a planted symlink cannot redirect it. Its `locator` is the local path and its `retrievalHint` tells the model to use `read` or `grep` on that path. The policy consumer ([qilin-spill-policy](../../packages/spill/spill-policy)) replaces an over-`maxInlineBytes` plain-text final result with a retention-library head/tail preview plus the spill reference, best-effort: a save failure keeps the original inline result rather than turning a successful call into an `isError`.
 
 <!-- BEGIN GENERATED cordis-surface (gen-cordis-catalog.ts) — do not edit between markers -->
 

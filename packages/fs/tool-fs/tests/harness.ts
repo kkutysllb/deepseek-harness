@@ -1,6 +1,7 @@
 import { Context } from '@deepseek-ai/cordis'
 import type { Agent } from '@qilin/agent'
 import AgentLoop from '@qilin/agent-loop'
+import SessionProjectionRegistry from '@qilin/session-projection'
 import { mountAgentLoopTestDependencies } from '@qilin/agent-loop-testkit'
 import LocalFileSystem from '@qilin/fs-local'
 import * as FsPolicy from '@qilin/fs-observation-policy'
@@ -14,6 +15,7 @@ import * as LlmDeepSeek from '@qilin/llm-deepseek'
  */
 export async function fsHarness(fsCwd: string, persona = ''): Promise<Context> {
   const ctx = new Context()
+  await ctx.plugin(SessionProjectionRegistry)
   await mountAgentLoopTestDependencies(ctx, { systemPrompt: { persona } })
   await ctx.plugin(AgentLoop, { agents: [] })
   await ctx.plugin(LlmDeepSeek)

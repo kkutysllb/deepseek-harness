@@ -12,7 +12,7 @@ import type {
   LspRange,
 } from '@qilin/lsp'
 import { LspError } from '@qilin/lsp'
-import { assertNever } from '@qilin/llm'
+import { assertNever } from '@qilin/util-values'
 import type {
   WireHover,
   WireLocation,

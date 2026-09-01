@@ -1,8 +1,10 @@
 /** Account surface: shell sign-in/initialize overlay and the accounts settings section. */
 
 import type {} from '@qilin/client-locale/client'
-import type { ClientContext } from '@qilin/client-runtime/client'
+import type { Context as ClientContext } from '@deepseek-ai/cordis'
 import type { ConnectionHandle } from '@qilin/client-connection/client'
+// Type-only: pulls the renderer-owned slots service (ctx.slots) merge through the Client assembly boundary.
+import type {} from '@qilin/client-ui-renderer/client'
 import type {} from '@qilin/client-ui-layout/client'
 import type {} from '@qilin/client-ui-settings/client'
 import { AccountOverlay, type AccountOverlayInjected } from './AccountOverlay.tsx'

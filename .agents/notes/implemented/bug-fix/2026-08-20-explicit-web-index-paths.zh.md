@@ -10,7 +10,7 @@ Status: implemented
 
 ## 决策
 
-`dsh-host-frontend-static` 只在规范化目标为 dist 根目录或配置的 index 路径时渲染 `index.html`。当前 Web 客户端没有 History API pathname 路由；查询字符串不会改变 pathname 匹配，URL 片段也不会到达服务器。现有文件照常提供，而 `ENOENT`、`EISDIR` 和 `ENOTDIR` 读取产生不带内容类型的空 404 响应。其他文件系统失败会重新抛给 webserver 的请求失败处理，不会被错误标记为缺失。
+`qilin-host-frontend-static` 只在规范化目标为 dist 根目录或配置的 index 路径时渲染 `index.html`。当前 Web 客户端没有 History API pathname 路由；查询字符串不会改变 pathname 匹配，URL 片段也不会到达服务器。现有文件照常提供，而 `ENOENT`、`EISDIR` 和 `ENOTDIR` 读取产生不带内容类型的空 404 响应。其他文件系统失败会重新抛给 webserver 的请求失败处理，不会被错误标记为缺失。
 
 GET 与 HEAD 对 index 入口、文件和未命中项使用相同的状态码与内容类型。具名路由仍先于回退匹配，越出 dist 根目录的遍历仍返回 403，到达回退的非 GET/HEAD 请求仍返回 405。
 
@@ -20,7 +20,7 @@ GET 与 HEAD 对 index 入口、文件和未命中项使用相同的状态码与
 
 **把 `Accept: text/html` 请求头作为回退规则。** 该请求头表达的是内容表示偏好，而不是 pathname 是否为已声明的客户端路由。浏览器 fetch、机器人和监控都可能为无效路径请求 HTML，因此仍会产生同样的假成功行为。
 
-**立即添加可配置的 pathname 允许列表。** 当前没有客户端路由消费这项配置。未来的 History API 路由可以在引入所需路由时，同时添加显式服务器规则或配置字段，无需现在保留推测性的公开选项。
+**添加可配置的 pathname 允许列表。** 当前没有客户端路由消费这项配置。未来的 History API 路由可以在引入所需路由时，同时添加显式服务器规则或配置字段，无需保留推测性的公开选项。
 
 ## 后果
 

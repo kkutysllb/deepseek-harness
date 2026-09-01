@@ -2,6 +2,7 @@ import { createUserMessage, createMessage } from '@qilin/llm'
 import { describe, expect, it } from 'vitest'
 import { Context } from '@deepseek-ai/cordis'
 import SessionStore, { SESSION_FORMAT_VERSION, SessionId } from '@qilin/session'
+import SessionProjectionRegistry from '@qilin/session-projection'
 import type { Session, SessionEvent, SessionHeader, SessionId as SessionIdType } from '@qilin/session'
 import SessionPersistence from '@qilin/session-persistence'
 import { type SessionQueryErrorCode } from '@qilin/session-query'
@@ -54,6 +55,10 @@ class TracePersistence extends SessionPersistence {
     return undefined
   }
 
+  borrowSession(_id: SessionIdType, _signal?: AbortSignal): ReturnType<SessionPersistence['borrowSession']> {
+    return Promise.reject(new Error('not used'))
+  }
+
   create(meta: SessionHeader): Promise<void> {
     TracePersistence.entries.set(meta.id, { meta: structuredClone(meta), events: [] })
     return Promise.resolve()
@@ -99,6 +104,7 @@ class TracePersistence extends SessionPersistence {
 async function queryContext(): Promise<Context> {
   const ctx = new Context()
   await ctx.plugin(SessionStore)
+  await ctx.plugin(SessionProjectionRegistry)
   await ctx.plugin(TestSessionQueryEngine)
   return ctx
 }

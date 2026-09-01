@@ -12,7 +12,7 @@ Status: implemented
 
 ## 决策
 
-`dsh-sandbox-policy` 为每个 agent（智能体）会话贡献一项不依赖具体能力的 `sandbox:policy` 上下文。上下文文本只根据 `resolve({ session })` 派生；不存在后端或工具家族注册 API、贡献映射、排序规则，也不会因注册变化而使提示词失效。
+`qilin-sandbox-policy` 为每个 agent（智能体）会话贡献一项不依赖具体能力的 `sandbox:policy` 上下文。上下文文本只根据 `resolve({ session })` 派生；不存在后端或工具家族注册 API、贡献映射、排序规则，也不会因注册变化而使提示词失效。
 
 该文本将能力声明限定于 DSH 文件沙箱所强制执行的可用操作。在 `read-only` 下，它说明这类操作在常驻模式下无法修改文件，并指示模型正常尝试可用工具，随后遵循该工具返回的任何拒绝与升权引导。在 `workspace-write` 下，它说明规范化的会话工作区，以及带有适用条件的临时区域写入许可。在 `danger-full-access` 下，它说明 DSH 文件沙箱不会限制可用操作修改文件。
 

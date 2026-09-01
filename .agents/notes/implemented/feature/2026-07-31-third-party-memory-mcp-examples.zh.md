@@ -12,7 +12,7 @@ Status: implemented
 
 ## 决策
 
-在 `examples/mcp-memory` 下交付三份默认关闭的 Cordis overlay 示例：Memorix、MCP Reference Memory 和 Engram。每个文件只插入一个 `@qilin/mcp-client` 配置项。交付组合不会引用这些文件；CLI（命令行界面）仅声明通用桥接器，使用户显式选择 overlay 时可以解析它。
+在 `apps/cli/config/examples/mcp-memory` 下交付三份默认关闭的 Cordis overlay 示例：Memorix、MCP Reference Memory 和 Engram。每个文件只插入一个 `@qilin/mcp-client` 配置项。默认组合不会引用这些文件；CLI（命令行界面）声明通用桥接器，使显式选择的 overlay 能在安装后与源码启动中解析。[记忆 MCP 指南](../../../../docs/user/guide/mcp-memory.zh.md)负责安装与验证步骤。
 
 这些第三方配置仅作为互操作参考；收录不代表 DeepSeek 的认可、推荐、合作关系或持续支持承诺。系统没有记忆预设注册表、提供方专属 DSH 插件、通用记忆服务、安装 UI、迁移层、健康检查器或重连控制器。其他记忆 MCP 服务器可以使用同一份文档中的 stdio 或 Streamable HTTP 配置项。
 
@@ -37,7 +37,7 @@ Status: implemented
 | MCP Reference Memory | npm `2026.7.4`，package commit `6dd0a683e198783e30feabf7abaf42f925bd18b1` |
 | Engram | tag `v1.20.0`，commit `ba9e46ced152c37a7cb9e576153c41995873e2fc` |
 
-存储仍由提供方负责。Memorix 默认使用 `~/.memorix/data`，Engram 默认使用 `~/.engram`。Reference Memory 示例设置稳定的 `$HOME/.dsh-mcp-reference-memory.jsonl` 路径，而不是写入已安装的 npm 包目录。每个提供方自己的环境变量都可以在 DSH 启动前覆盖这些位置。
+存储仍由提供方负责。Memorix 默认使用 `~/.memorix/data`，Engram 默认使用 `~/.engram`。Reference Memory 示例设置稳定的 `$HOME/.qilin-mcp-reference-memory.jsonl` 路径，而不是写入已安装的 npm 包目录。每个提供方自己的环境变量都可以在 DSH 启动前覆盖这些位置。
 
 项目身份仍由提供方负责：Memorix 和 Engram 使用 DSH 工作目录中的 Git 项目，其中 Engram 还可以选择接受 `ENGRAM_PROJECT`。
 

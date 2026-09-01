@@ -42,7 +42,7 @@ Status: implemented
 
 ### 规则住在哪里
 
-`normalizeApiKey` 是 `dsh-llm` Service Definition 的一个模块，与已经承担共享 header 事务的 [attribution.ts](../../../../packages/llm/llm/src/attribution.ts) 并列。两个适配器都依赖该 seam 且都需要这条规则，因此它拥有两个当前消费方而非一个预设消费方。它返回 trim 后的值，或一个原因（`empty`、`illegalCharacters`）。
+`normalizeApiKey` 是 `qilin-llm` Service Definition 的一个模块，与已经承担共享 header 事务的 [attribution.ts](../../../../packages/llm/llm/src/attribution.ts) 并列。两个适配器都依赖该 seam 且都需要这条规则，因此它拥有两个当前消费方而非一个预设消费方。它返回 trim 后的值，或一个原因（`empty`、`illegalCharacters`）。
 
 两个适配器同样都需要那句完全相同的「拒绝一个已存储凭据」的诊断，差别仅在包名前缀。`LlmError` 声明在 Service Definition 的 `index.ts` 中，因此 `assertUsableApiKey(raw, pkg, ref)` 就住在它旁边，两个适配器都不再各留一份。断言模块本身保持零依赖：把 `LlmError` 引入 `api-key.ts` 会与 `index.ts` 对它的再导出成环。
 
@@ -52,7 +52,7 @@ Status: implemented
 
 | 位置 | 行为 |
 |---|---|
-| `dsh-llm` | 拥有 `normalizeApiKey`、`assertUsableApiKey` 与 `INVALID_CREDENTIAL_CODE`，后者刻意不进 `DEFAULT_RETRYABLE_CODES`。 |
+| `qilin-llm` | 拥有 `normalizeApiKey`、`assertUsableApiKey` 与 `INVALID_CREDENTIAL_CODE`，后者刻意不进 `DEFAULT_RETRYABLE_CODES`。 |
 | `llm-deepseek` `resolveApiKey` | 归一化凭据 seam 或环境返回的值，以 `INVALID_CREDENTIAL` 拒绝，消息指明模型设置页，绝不回显 Key。 |
 | `llm-pi-ai` `resolveApiKey` | 归一化凭据与环境路径。不指定任何凭据的 profile 仍返回 `undefined`，ambient 与 OAuth 路由不受影响。 |
 | `llm-pi-ai` `discoverModels` | 在构造 header 之前归一化，使非法 Key 成为凭据故障而非端点不可达。不带 Key 的探测保持未鉴权。 |
@@ -98,4 +98,4 @@ Status: implemented
 
 `packages/client/ui-settings-models/tests/` 以同一张表加上形状用例钉住 `apiKeyFailure`，并驱动两张卡片：留空的输入框可提交且不写入凭据、只含空白的输入框在字段上失败、非法或被包裹的 Key 同时拦截提交与探测、带首尾空白的 Key 在 `credentials.set` 与探测之前被 trim，以及手工声明的路由可以完全不带 Key 创建。
 
-用户可见的终态则钉在它真正被组装的位置：`examples/headless-agent/tests/headless.snapshot.ts` 让 one-shot 应用在一个 HTTP 标头无法承载的已存密钥下运行，复用其 missing-credential 兄弟场景的同一套无密钥 composition，并记录该轮次以 `INVALID_CREDENTIAL` 结束、消息可操作且既不含密钥也不含 `ByteString` 字样。包级测试无法证明这一点，而 web e2e 只覆盖了浏览器那一半。
+用户可见的终态则钉在它真正被组装的位置：`apps/cli/tests/profiles/headless/tests/headless.expected.e2e.ts` 让 one-shot 应用在一个 HTTP 标头无法承载的已存密钥下运行，复用其 missing-credential 兄弟场景的同一套无密钥 composition，并记录该轮次以 `INVALID_CREDENTIAL` 结束、消息可操作且既不含密钥也不含 `ByteString` 字样。包级测试无法证明这一点，而 web e2e 只覆盖了浏览器那一半。

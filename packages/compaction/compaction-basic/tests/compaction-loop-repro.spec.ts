@@ -3,7 +3,7 @@ import { Context } from '@deepseek-ai/cordis'
 import { toolPairingBalancedAfter, toolPairingBalancedBefore } from '@qilin/compaction'
 import { createUserMessage, CONTEXT_WINDOW_EXCEEDED_CODE, LlmError, resolveRetryPolicy , createMessage } from '@qilin/llm'
 import type { ContentBlock, GenerateOptions, LlmResolvedModelInfo, ResolvedRetryPolicy, StreamChunk } from '@qilin/llm'
-import { CallId, LlmAdapter } from '@qilin/llm'
+import { ToolCallId, LlmAdapter } from '@qilin/llm'
 import { defineContentToolFixture } from '@qilin/tools'
 import type { Agent } from '@qilin/agent'
 import AgentLoop from '@qilin/agent-loop'
@@ -13,6 +13,7 @@ import * as SessionInvariant from '@qilin/session/invariant'
 import * as AgentInvariant from '@qilin/agent/invariant'
 import * as AgentLoopInvariant from '@qilin/agent-loop/invariant'
 import { BasicCompactionEngine } from '@qilin/compaction-basic'
+import SessionProjectionRegistry from '@qilin/session-projection'
 import TokenMeter from '@qilin/token-meter'
 import * as LlmRetry from '@qilin/llm-retry'
 import { Session, SessionId, type SessionEvent, type SurfaceEvent } from '@qilin/session'
@@ -54,7 +55,7 @@ class StepwiseToolAdapter extends LlmAdapter {
     const n = this.calls
     this.calls += 1
     if (n < this.toolSteps) {
-      const id = CallId(`c${n}`)
+      const id = ToolCallId(`c${n}`)
       const args = `{"i":${n}}`
       yield { type: 'block-start', index: 0, blockType: 'text' }
       yield { type: 'block-end', index: 0, block: { type: 'text', text: `step ${n}` } }
@@ -150,6 +151,9 @@ async function harness(toolSteps: number): Promise<{ ctx: Context; compact: Repr
   const ctx = new Context()
   await mountAgentLoopTestDependencies(ctx)
   await mountInvariants(ctx)
+  // AgentLoop and TokenMeter both declare the registry as a required
+  // injection; mount it before either activates.
+  await ctx.plugin(SessionProjectionRegistry)
   await ctx.plugin(AgentLoop, { agents: [] })
   await ctx.plugin(TokenMeter)
   ctx.llm.registerAdapter(['mock'], new StepwiseToolAdapter(toolSteps))
@@ -312,6 +316,7 @@ describe('context-overflow recovery across the real loop and compaction-basic', 
       const adapter = new OverflowRecoveryAdapter(delivery)
       await mountAgentLoopTestDependencies(ctx)
       await mountInvariants(ctx)
+      await ctx.plugin(SessionProjectionRegistry)
       await ctx.plugin(AgentLoop, { agents: [] })
       await ctx.plugin(TokenMeter)
       ctx.llm.registerAdapter(['mock'], adapter)
@@ -390,6 +395,7 @@ describe('context-overflow recovery across the real loop and compaction-basic', 
     const adapter = new OverflowRecoveryAdapter('thrown', true)
     await mountAgentLoopTestDependencies(ctx)
     await mountInvariants(ctx)
+    await ctx.plugin(SessionProjectionRegistry)
     await ctx.plugin(LlmRetry)
     await ctx.plugin(AgentLoop, { agents: [] })
     await ctx.plugin(TokenMeter)

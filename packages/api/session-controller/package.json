@@ -1,0 +1,154 @@
+{
+  "name": "@qilin/api-session-controller",
+  "description": "Session Remote commands, cold reads, and live control transport",
+  "version": "0.1.2-alpha.3",
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/deepseek-ai/deepseek-harness.git",
+    "directory": "packages/api/session-controller"
+  },
+  "type": "module",
+  "main": "lib/index.js",
+  "types": "lib/types/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./lib/types/index.d.ts",
+      "default": "./lib/index.js"
+    },
+    "./invariant": {
+      "types": "./lib/types/invariant.d.ts",
+      "default": "./lib/invariant.js"
+    },
+    "./types": {
+      "types": "./lib/types/types.d.ts",
+      "default": "./lib/types/types.js"
+    },
+    "./remote-events": {
+      "types": "./lib/types/remote-events.d.ts",
+      "default": "./lib/types/remote-events.js"
+    },
+    "./client": {
+      "types": "./lib/types/client/index.d.ts",
+      "default": "./lib/client.js"
+    },
+    "./typert": {
+      "types": "./lib/typert.host.d.ts",
+      "default": "./lib/typert.host.js"
+    },
+    "./remote": {
+      "types": "./lib/typert.remote-client.d.ts",
+      "default": "./lib/typert.remote-client.js"
+    },
+    "./src/*": "./src/*",
+    "./package.json": "./package.json"
+  },
+  "qilin": {
+    "client": {
+      "external": [
+        "@qilin/api-gateway/client"
+      ],
+      "inject": [
+        "@qilin/api-gateway"
+      ],
+      "platform": "web"
+    }
+  },
+  "scripts": {
+    "bundle": "tsdown",
+    "watch": "tsdown --watch"
+  },
+  "files": [
+    "lib/index.js",
+    "lib/invariant.js",
+    "lib/client.js",
+    "lib/types/**/*.js",
+    "lib/types/**/*.d.ts",
+    "lib/typert.host.js",
+    "lib/typert.host.d.ts",
+    "lib/typert.remote-client.js",
+    "lib/typert.remote-client.d.ts"
+  ],
+  "license": "MIT",
+  "dependencies": {
+    "@qilin/brand": "workspace:^",
+    "@qilin/deque": "workspace:^",
+    "@deepseek-ai/schemastery": "workspace:^",
+    "zod": "^4.4.3"
+  },
+  "peerDependencies": {
+    "@deepseek-ai/cordis": "workspace:^",
+    "@qilin/agent": "workspace:^",
+    "@qilin/agent-default-model": "workspace:^",
+    "@qilin/agent-presets": "workspace:^",
+    "@qilin/api-gateway": "workspace:^",
+    "@qilin/attachment": "workspace:^",
+    "@qilin/client-connection": "workspace:^",
+    "@qilin/file-reference": "workspace:^",
+    "@qilin/invariants": "workspace:^",
+    "@qilin/jobs": "workspace:^",
+    "@qilin/llm": "workspace:^",
+    "@qilin/native-command": "workspace:^",
+    "@qilin/scope": "workspace:^",
+    "@qilin/session": "workspace:^",
+    "@qilin/session-persistence": "workspace:^",
+    "@qilin/session-projection": "workspace:^",
+    "@qilin/session-projection-cache": "workspace:^",
+    "@qilin/session-query": "workspace:^",
+    "@qilin/session-title": "workspace:^",
+    "@qilin/skill": "workspace:^",
+    "@qilin/subagent": "workspace:^",
+    "@qilin/typert-protocol": "workspace:^",
+    "@qilin/typert-registry": "workspace:^",
+    "@qilin/util-time": "workspace:^",
+    "@qilin/util-workspace-path": "workspace:^",
+    "@qilin/workspace": "workspace:^"
+  },
+  "peerDependenciesMeta": {
+    "@qilin/jobs": {
+      "optional": true
+    },
+    "@qilin/session-persistence": {
+      "optional": true
+    },
+    "@qilin/session-projection-cache": {
+      "optional": true
+    }
+  },
+  "devDependencies": {
+    "@deepseek-ai/cordis": "workspace:^",
+    "@qilin/agent": "workspace:^",
+    "@qilin/agent-default-model": "workspace:^",
+    "@qilin/agent-presets": "workspace:^",
+    "@qilin/api-gateway": "workspace:^",
+    "@qilin/attachment": "workspace:^",
+    "@qilin/client-connection": "workspace:^",
+    "@qilin/client-store": "workspace:^",
+    "@qilin/file-reference": "workspace:^",
+    "@qilin/invariants": "workspace:^",
+    "@qilin/jobs": "workspace:^",
+    "@qilin/llm": "workspace:^",
+    "@qilin/native-command": "workspace:^",
+    "@qilin/permission-presets": "workspace:^",
+    "@qilin/scope": "workspace:^",
+    "@qilin/session": "workspace:^",
+    "@qilin/session-persistence": "workspace:^",
+    "@qilin/session-projection": "workspace:^",
+    "@qilin/session-projection-cache": "workspace:^",
+    "@qilin/session-query": "workspace:^",
+    "@qilin/session-title": "workspace:^",
+    "@qilin/skill": "workspace:^",
+    "@qilin/storage": "workspace:^",
+    "@qilin/storage-domain": "workspace:^",
+    "@qilin/storage-json": "workspace:^",
+    "@qilin/subagent": "workspace:^",
+    "@qilin/typert-protocol": "workspace:^",
+    "@qilin/typert-registry": "workspace:^",
+    "@qilin/util-crypto": "workspace:^",
+    "@qilin/util-time": "workspace:^",
+    "@qilin/util-workspace-path": "workspace:^",
+    "@qilin/workspace": "workspace:^"
+  }
+}

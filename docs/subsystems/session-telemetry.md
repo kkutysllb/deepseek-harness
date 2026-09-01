@@ -2,7 +2,7 @@
 
 English | [中文](session-telemetry.zh.md)
 
-Outbound session reporting is split as a [capability seam](../capability-seams.md): the Service Definition and capture coordinator ([dsh-session-telemetry](../../packages/session/session-telemetry), `ctx.sessionTelemetry`) own the capture points, fixed chunk projection, `session-telemetry/record` redaction waterfall, handoff cursor, and minimal backend contract; the Service Provider a deployment loads ([dsh-session-telemetry-otel](../../packages/session/session-telemetry-otel)) is the OpenTelemetry JS SDK's log pipeline configured verbatim. It is one optional capability, not part of the agent-loop spine, and nothing here reaches a model request. The boundary axiom — the harness's aspect ends at `emit()`; batching, retry, queueing, and loss policy belong to the reporting SDK — and the rejected alternatives are pinned in the [revival Agent Note](../../.agents/notes/implemented/feature/2026-07-23-session-telemetry-otel-revival.md); the capture points, cursor, and projection contracts live in the [Service Definition README](../../packages/session/session-telemetry/README.md).
+Outbound session reporting is split as a [capability seam](../capability-seams.md): the Service Definition and capture coordinator ([qilin-session-telemetry](../../packages/session/session-telemetry), `ctx.sessionTelemetry`) own the capture points, fixed chunk projection, `session-telemetry/record` redaction waterfall, handoff cursor, and minimal backend contract; the Service Provider a deployment loads ([qilin-session-telemetry-otel](../../packages/session/session-telemetry-otel)) is the OpenTelemetry JS SDK's log pipeline configured verbatim. It is one optional capability, not part of the agent-loop spine, and nothing here reaches a model request. The boundary axiom — the harness's aspect ends at `emit()`; batching, retry, queueing, and loss policy belong to the reporting SDK — and the rejected alternatives are pinned in the [revival Agent Note](../../.agents/notes/implemented/feature/2026-07-23-session-telemetry-otel-revival.md); the capture points, cursor, and projection contracts live in the [Service Definition README](../../packages/session/session-telemetry/README.md).
 
 Source: [`packages/session/session-telemetry/src/index.ts`](../../packages/session/session-telemetry/src/index.ts)
 
@@ -64,9 +64,8 @@ The seam's acknowledgement contract (owned by the [Service Definition README's s
 /**
  * Deployment-selected session-sharing policy disclosed by a mounted
  * {@link SessionTelemetryBackend} backend to human-facing acknowledgement surfaces (the
- * `/feedback` command's confirmation text). The seam owns the vocabulary so
- * any backend can disclose a policy without depending on the OTel package;
- * the values mirror the OTel backend's serialized `SessionTelemetryMode` choices.
+ * `/feedback` command's confirmation text). The Service Definition owns the
+ * vocabulary so consumers and backends do not depend on a specific provider.
  */
 type SessionTelemetrySharingStatus = 'full' | 'feedback-only' | 'disabled'
 ```

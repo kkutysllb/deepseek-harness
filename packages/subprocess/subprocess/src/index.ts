@@ -16,8 +16,8 @@ import type { SubprocessTerminalHandle, SubprocessTerminalSpawnSpec } from './ty
 export { QILIN_ENV_PREFIX } from './types.ts'
 export type {
   CollectedOutput,
-  DshEnvironment,
-  DshEnvironmentKey,
+  QilinEnvironment,
+  QilinEnvironmentKey,
   SubprocessCollect,
   SubprocessCollectedOutputs,
   SubprocessHandle,

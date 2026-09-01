@@ -1,5 +1,5 @@
 /**
- * Generate dsh-scope's invariant resolver map from the repository TypeScript
+ * Generate qilin-scope's invariant resolver map from the repository TypeScript
  * Program.
  *
  * A scoped event declares `this: Scoped<Base>`. Real `scopeTarget(base, key)`
@@ -81,7 +81,7 @@ class ScopedEventGenerator {
     }
     return [
       '/**',
-      ' * Generated scoped-event routing-subject resolvers for dsh-scope invariants.',
+      ' * Generated scoped-event routing-subject resolvers for qilin-scope invariants.',
       ' * Do not edit by hand; run `pnpm run gen-scoped-events`.',
       ' *',
       ' * @module @qilin/scope/scoped-events.generated',
@@ -377,7 +377,7 @@ export function renderScopedEvents(projectRoot: string = root): string {
   return new ScopedEventGenerator(new TypeScriptProject(projectRoot)).render()
 }
 
-/** Generate or freshness-check the fixed dsh-scope source file. */
+/** Generate or freshness-check the fixed qilin-scope source file. */
 function main(): void {
   const content = renderScopedEvents()
   const output = resolve(root, OUT)

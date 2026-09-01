@@ -13,6 +13,7 @@ import { mountAgentLoopTestDependencies } from '@qilin/agent-loop-testkit'
 import { LocalBashExecutor } from '@qilin/bash-local'
 import LocalSubprocessRuntime from '@qilin/subprocess-local'
 import * as HooksCodex from '@qilin/hooks-codex'
+import SessionProjectionRegistry from '@qilin/session-projection'
 import { MockAdapter, textResponse, toolCallResponse } from '../../../core/agent-loop/tests/mock-adapter.ts'
 
 /**
@@ -25,7 +26,7 @@ const dirs: string[] = []
 afterEach(() => { for (const d of dirs.splice(0)) rmSync(d, { recursive: true, force: true }) })
 
 function configDir(): string {
-  const dir = mkdtempSync(join(tmpdir(), 'dsh-hooks-codex-'))
+  const dir = mkdtempSync(join(tmpdir(), 'qilin-hooks-codex-'))
   dirs.push(dir)
   return dir
 }
@@ -42,6 +43,7 @@ function writeHooks(dir: string, hooks: unknown): void {
 async function harness(dir: string, adapter: MockAdapter, beforeHooks?: (ctx: Context) => void): Promise<Context> {
   const ctx = new Context()
   await mountAgentLoopTestDependencies(ctx)
+  await ctx.plugin(SessionProjectionRegistry)
   await ctx.plugin(AgentLoop, { agents: [] })
   await ctx.plugin(LocalSubprocessRuntime)
   await ctx.plugin(LocalBashExecutor, { timeoutMs: 10_000 })
@@ -182,6 +184,7 @@ describe('hooks-codex bridge', () => {
     const adapter = new MockAdapter([textResponse('ok')])
     const ctx = new Context()
     await mountAgentLoopTestDependencies(ctx)
+    await ctx.plugin(SessionProjectionRegistry)
     await ctx.plugin(AgentLoop, { agents: [] })
     await ctx.plugin(LocalSubprocessRuntime)
     await ctx.plugin(LocalBashExecutor, { timeoutMs: 10_000 })
@@ -205,6 +208,7 @@ describe('hooks-codex bridge', () => {
     writeHooks(dir, { SessionStart: [{ hooks: [{ type: 'command', command: slow }] }] })
     const ctx = new Context()
     await mountAgentLoopTestDependencies(ctx)
+    await ctx.plugin(SessionProjectionRegistry)
     await ctx.plugin(AgentLoop, { agents: [] })
     await ctx.plugin(LocalSubprocessRuntime)
     await ctx.plugin(LocalBashExecutor, { timeoutMs: 10_000 })
@@ -227,12 +231,12 @@ describe('hooks-codex bridge', () => {
   it('has the namespace-plugin export shape (no stray default) so the Loader keeps name/inject/apply', () => {
     expect('default' in HooksCodex).toBe(false)
     expect(HooksCodex.name).toBe('hooks-codex')
-    expect(HooksCodex.inject).toEqual(['shell'])
+    expect(HooksCodex.inject).toEqual(['shell', 'sessionProjections'])
     const loader = Object.create(Loader.prototype) as Loader
     const unwrapped = loader.unwrapExports(HooksCodex) as Record<string, unknown>
     expect(unwrapped).toBe(HooksCodex)
     expect(unwrapped.name).toBe('hooks-codex')
-    expect(unwrapped.inject).toEqual(['shell'])
+    expect(unwrapped.inject).toEqual(['shell', 'sessionProjections'])
     expect(typeof unwrapped.apply).toBe('function')
   })
 })

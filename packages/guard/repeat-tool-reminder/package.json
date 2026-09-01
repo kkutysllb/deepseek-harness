@@ -1,7 +1,7 @@
 {
   "name": "@qilin/repeat-tool-reminder",
   "description": "Repeat-tool-call guard plugin: advisory reminders when an agent loops on identical tool calls",
-  "version": "0.1.1-rc.2",
+  "version": "0.1.2-alpha.3",
   "publishConfig": {
     "access": "public"
   },
@@ -48,6 +48,7 @@
     "@qilin/llm": "workspace:^",
     "@qilin/session": "workspace:^",
     "@qilin/tools": "workspace:^",
-    "@deepseek-ai/cordis": "workspace:^"
+    "@deepseek-ai/cordis": "workspace:^",
+    "@qilin/session-projection": "workspace:^"
   }
 }

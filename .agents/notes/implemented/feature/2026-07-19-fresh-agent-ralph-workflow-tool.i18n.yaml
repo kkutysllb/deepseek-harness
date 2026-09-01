@@ -2,5 +2,5 @@
 # side as of the last confirmed-consistent state. Both languages carry equal authority;
 # after editing either side, bring the other along and re-record with:
 #   pnpm run verify-translation-pairing --write .agents/notes/implemented/feature/2026-07-19-fresh-agent-ralph-workflow-tool.md
-2026-07-19-fresh-agent-ralph-workflow-tool.md: c3cb83233f22cbbc0872713d23b7371cbf409292
-2026-07-19-fresh-agent-ralph-workflow-tool.zh.md: 5e654e37d747be3457b2574f35178cc6ec6128af
+2026-07-19-fresh-agent-ralph-workflow-tool.md: 9660679bfefa7eae9b7858abe3a95df3ceb3ae4c
+2026-07-19-fresh-agent-ralph-workflow-tool.zh.md: 8ccbfb31ab9ea23b112f67a74b15cc3f39786f4f

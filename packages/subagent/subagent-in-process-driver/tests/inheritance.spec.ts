@@ -18,6 +18,7 @@ import { SessionId, type SessionEvent } from '@qilin/session'
 import * as ToolFs from '@qilin/tool-fs'
 import ApprovalService from '@qilin/user-approval'
 import { snapshotSubagentDescriptor } from '@qilin/subagent'
+import SessionProjectionRegistry from '@qilin/session-projection'
 import { MockAdapter, textResponse, toolCallResponse } from '../../../core/agent-loop/tests/mock-adapter.ts'
 import { startInProcessRun } from '../src/index.ts'
 
@@ -28,7 +29,7 @@ const contexts: Context[] = []
 let workspace: string
 
 beforeEach(async () => {
-  workspace = await realpath(await mkdtemp(join(tmpdir(), 'dsh-inherit-')))
+  workspace = await realpath(await mkdtemp(join(tmpdir(), 'qilin-inherit-')))
 })
 
 afterEach(async () => {
@@ -40,6 +41,7 @@ async function setupWalled(script: Script): Promise<{ ctx: Context; parent: Agen
   const ctx = new Context()
   contexts.push(ctx)
   await mountAgentLoopTestDependencies(ctx)
+  await ctx.plugin(SessionProjectionRegistry)
   await ctx.plugin(SandboxPolicyService, { mode: 'workspace-write', workspaceRoot: workspace })
   await ctx.plugin(SandboxedFileSystem, { cwd: workspace })
   await ctx.plugin(ToolFs)

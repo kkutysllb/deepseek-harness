@@ -10,7 +10,7 @@ import type { Context, Events } from '@deepseek-ai/cordis'
 import { scopeTarget } from '@qilin/scope'
 import type { Scoped } from '@qilin/scope'
 import type { AssembleContext } from '@qilin/system-prompt'
-import type { Agent } from './runtime-types.ts'
+import type { Agent } from './types.ts'
 
 /** Extract the parameter tuple from an event handler type (its `this` is not part of the tuple). */
 type Params<F> = F extends (...args: infer P) => unknown ? P : never

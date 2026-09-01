@@ -30,13 +30,13 @@ Host-side `session.create(workspaceId)` produces Session + Agent + cwd in one pi
 
 ### Agent scope: the actx is the sole session carrier in the client-side cordis world
 
-The runtime's `agents/scope.ts` matches the host's `dsh-scope` at the mechanism layer (fiber + tag + filter; no value import: the host package carries the scoped-events `Events` merge, which would collide with the Context merge inside the client program):
+The runtime's `agents/scope.ts` matches the host's `qilin-scope` at the mechanism layer (fiber + tag + filter; no value import: the host package carries the scoped-events `Events` merge, which would collide with the Context merge inside the client program):
 
 - `createScope(ctx, key)`: a no-op plugin fiber plus `extend({[kScope]: key, [Context.filter]: …})` — the filter lives directly on the actx: untagged listeners receive globally, tagged ones receive only their own scope.
 - Dispatch is the cordis primitives with thisArg = the actx itself: `actx.bail(actx, event, req)` / `actx.emit(actx, event, payload)`.
 - `Session.bindScope(actx)`: paired exactly once when resolve mints the scope (rebinding throws; dropScope unbinds), mirroring the host's `Agent.loopCtx` — the Session uses it to dispatch its own scoped events. The reverse actx→Session direction is one hop through `sessions.sessionOf(actx)` (mirroring host plugins' `agent.session` usage).
 
-Three deliberate divergences from the host dsh-scope:
+Three deliberate divergences from the host qilin-scope:
 
 - The filter lives on the actx itself rather than a separate carrier: the host wrapper layer guards the business Agent subject against drifting from the scope key (host events inject the Agent itself as the first argument), while client event payloads carry only an id — there is no subject to protect.
 - Keys compare by branded `SessionId` value rather than object identity: on the host, agent.id === session id (1:1 on the same axis), agent identity directly reuses the `SessionId` brand, and a client scope's identity is its wire id.
@@ -61,7 +61,7 @@ Session instances share the scope's lifecycle; liveness eligibility = host-liste
 
 A session "materialized but with no first prompt" is governed by the summary-derived bit `blank` (a derived column, not a header field; SessionHeader stays immutable):
 
-- The host criterion: `session.events.length === 0` (zero log events = no user message yet). A live session reads `summarize()` straight from memory; a cold session is always `false` — the lazy-create contract guarantees a never-appended session never enters `persistence.list()` at all (both the JSONL and SQLite backends are verified truly lazy), so blank never touches disk.
+- The host criterion: `session.events.length === 0` (zero log events = no user message yet). A live session reads `summarize()` straight from memory; a cold session is always `false` — the JSONL provider's lazy-create contract guarantees a never-appended Session never enters `persistence.list()`, so blank never touches disk.
 - The wire carries it in two places: the required `SessionSummary.blank` column, and the required `blank` field on the `host/session-added` frame (always true at creation, letting other tabs enter the same blank-session state into their mirrors).
 - The client mirror only lowers, never raises (monotonic), flipped from three sources, all reusing existing wire signals:
   - The sender's own tab: the **successful response** to the first `prompt()` flips false (acceptance proves the user/message is already in the host log — this flip is confirmation, not optimism; `onEngaged` synchronously updates the list mirror, converting the current `New Session` row in place to an ordinary title, adding no list row). A rejected first prompt keeps the session blank: aligned with host authority, still shown as `New Session`, keeping its connectWorkspace reuse eligibility while it remains a Workspace member.
@@ -107,7 +107,7 @@ Slot scope is the closed set `root | session-maybe | session`:
 
 - The summary `blank` column and the `host/session-added` frame's `blank` field (see the blank bit above).
 - The SSE frame `host/commands-changed` (a pure invalidation signal); the client routes it into the typed events `commands/changed` and `connection/reset` (broadcast after each connection generation is established; wire-derived caches uniformly treat prior state as stale). The commands frame and its typed client event were later replaced by verbatim forwarding of `commands/change` through `ctx.remote.$on` ([forwarded Remote events](2026-08-10-remote-event-delivery.md)); `connection/reset` is unchanged, and the invalidation-not-diffing contract this bullet states still holds.
-- `command.list/execute` and `skill.list` are uniformly single-addressed by `sessionId` (a session always has an Agent; `agentFor`'s resume semantics come ready-made); the command-surface narrative lives in the [command surfaces note](2026-07-25-web-command-surfaces-and-assembly.md).
+- `command.list/execute` and `skills/list` are uniformly single-addressed by `sessionId` (a session always has an Agent; `agentFor`'s resume semantics come ready-made); the command-surface narrative lives in the [command surfaces note](2026-07-25-web-command-surfaces-and-assembly.md).
 - The `session.create` request shape: workspaceId/cwd as either-or, plus an optional caller-preallocated sessionId (a same-id same-cwd retry is idempotent; a different cwd reports `session-conflict`).
 
 ## Alternatives considered
@@ -118,7 +118,7 @@ Slot scope is the closed set `root | session-maybe | session`:
 | Host-reserved IDs (a draft Map) | The host merely acknowledges a number; the state machine stays on the client untouched |
 | A host draft Session (a Session without an Agent) | Every host surface that looks up the Agent must fork for drafts; core would need an `attachAgent` API plus late-written header cwd |
 | Binding an Agent before cwd (ungrouped) | Overturns the readonly header.cwd "created in" invariant, plus the launch-dir side-effect product trap |
-| Passing session context down through React Context | Plugins should hold one mental model across host and client; the scope mechanism is isomorphic to the host dsh-scope |
+| Passing session context down through React Context | Plugins should hold one mental model across host and client; the scope mechanism is isomorphic to the host qilin-scope |
 | A `scopeTarget` carrier + fused dispatcher (mirroring the host `agentEvents`) | The host wrapper layer guards the business Agent subject against drifting from the scope key; client events have no subject to guard — the filter on the actx plus cordis primitives covers every need |
 | Sessions not holding a ctx (a cordis-free object layer) | A red line born only so the filtering unit tests avoid importing cordis, at the cost of two-hop contribute callbacks plus mutable public fields; the host Agent already holds loopCtx |
 | Resident Session instances (resident-instance) | The host session log is the durable truth; residency is mere identity convenience, and its misalignment with the scope lifecycle is a source of complexity |
@@ -132,5 +132,5 @@ Slot scope is the closed set `root | session-maybe | session`:
 - Plugins gain session context isomorphic to the host's: per-session state hangs on the actx and mounts/tears down in one piece with the scope fiber, making leaks structurally impossible; two-session isolation is structurally guaranteed by the scope filter.
 - The client object layer converges to a wire mirror: session identity, lifecycle, and capability adjudication all defer to the host entity — the input system (the next layer) always faces a session with a real Agent, and providers like slash/skill uniformly address by sessionId directly.
 - Blank-session governance takes zero dedicated mechanisms: state rides one derived bit, visibility rides the unified list projection (only the current blank shows, as `New Session`), reclamation rides lazy persistence's existing contract (evaporation on restart), and the ordinary ceiling rides same-Workspace reuse.
-- The cost: the id→ctx handoff discipline and provide's Concurrent discipline are conventions rather than type-enforced, pinned by review and tests. The single state axis still withholds machine faces until a Session exists; the resident card routes activation to the Workspace picker during that interval ([decision](../feature/2026-08-07-workspace-picker-composer-entry.md)).
+- The cost: the id→ctx handoff discipline and provide's Concurrent discipline are conventions rather than type-enforced, pinned by review and tests. The single state axis still withholds machine faces until a Session exists; the [resident conversation shell](../../../../packages/client/ui-conversation/README.md) routes activation to the Workspace picker during that interval.
 - Known gaps: approval/question recovery across prune (TODO); model selection returns in live-mutation shape (the host `selectModel` trio is ready-made, its client consumer not yet built).

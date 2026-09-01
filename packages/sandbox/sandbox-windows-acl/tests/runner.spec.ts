@@ -48,10 +48,10 @@ describe.skipIf(!isWin32 || !pwshAvailable())('windows-acl runner', () => {
   let publicProbeDir: string | undefined
 
   beforeAll(() => {
-    scratchRoot = mkdtempSync(join(tmpdir(), 'dsh-acl-runner-'))
+    scratchRoot = mkdtempSync(join(tmpdir(), 'qilin-acl-runner-'))
     writableDir = join(scratchRoot, 'writable')
     mkdirSync(writableDir)
-    isolatedTemp = mkdtempSync(join(tmpdir(), 'dsh-acl-runner-temp-'))
+    isolatedTemp = mkdtempSync(join(tmpdir(), 'qilin-acl-runner-temp-'))
     secretFile = join(scratchRoot, 'secret.txt')
     writeFileSync(secretFile, 'top secret - must stay readable to prove the read boundary')
     escapeFile = join(scratchRoot, 'escaped.txt')
@@ -62,7 +62,7 @@ describe.skipIf(!isWin32 || !pwshAvailable())('windows-acl runner', () => {
       throw new Error(`icacls Everyone grant failed: ${worldGrant.stdout}\n${worldGrant.stderr}`)
     }
     try {
-      publicProbeDir = mkdtempSync(join(process.env.PUBLIC ?? 'C:\\Users\\Public', 'dsh-acl-public-'))
+      publicProbeDir = mkdtempSync(join(process.env.PUBLIC ?? 'C:\\Users\\Public', 'qilin-acl-public-'))
     } catch {
       publicProbeDir = undefined
     }
@@ -331,9 +331,9 @@ describe.skipIf(!isWin32 || !pwshAvailable())('windows-acl runner', () => {
     // workspace-write keeps the ACE standing for the server lifetime. After
     // switching to read-only, the restricted token's read-only list must carry NO
     // capability SID — the standing ACE stays but the pass-2 check cannot use
-    // it, so the workspace write is denied (previously it LEAKED). The
-    // switch back reuses the SAME standing ACE: the re-upgrade write lands
-    // without any re-grant.
+    // it, so the workspace write is denied instead of leaking through the
+    // standing ACE. The switch back reuses the SAME standing ACE: the
+    // re-upgrade write lands without any re-grant.
     const writeSid = workspaceWriteSid(writableDir)
     const privateTemp = join(isolatedTemp, 'mode-switch-temp')
     mkdirSync(privateTemp)

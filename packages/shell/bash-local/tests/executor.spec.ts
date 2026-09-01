@@ -8,7 +8,7 @@ import LocalSubprocessRuntime from '@qilin/subprocess-local'
 import { MAX_TIMER_DELAY_MS } from '@qilin/timeout'
 import type { ShellProcess } from '@qilin/shell'
 
-const spillDir = mkdtempSync(join(tmpdir(), 'dsh-bash-exec-spec-'))
+const spillDir = mkdtempSync(join(tmpdir(), 'qilin-bash-exec-spec-'))
 
 async function setup(config: ConstructorParameters<typeof LocalBashExecutor>[1] = {}) {
   const ctx = new Context()
@@ -139,14 +139,14 @@ describe('LocalBashExecutor.run', () => {
       command: 'cat; echo "[$SEAM_VAR][$QILIN_SEAM_VAR]"',
       stdin: 'piped\n',
       env: { SEAM_VAR: 'env-ok' },
-      dshEnv: { QILIN_SEAM_VAR: 'dsh-ok' },
+      dshEnv: { QILIN_SEAM_VAR: 'qilin-ok' },
     })
     // resolve() keeps the optional input/environment fields verbatim.
     expect(spec.stdin).toBe('piped\n')
     expect(spec.env).toEqual({ SEAM_VAR: 'env-ok' })
-    expect(spec.dshEnv).toEqual({ QILIN_SEAM_VAR: 'dsh-ok' })
+    expect(spec.dshEnv).toEqual({ QILIN_SEAM_VAR: 'qilin-ok' })
     const result = await bash.run(spec)
-    expect(result.stdout.text).toBe('piped\n[env-ok][dsh-ok]\n')
+    expect(result.stdout.text).toBe('piped\n[env-ok][qilin-ok]\n')
   })
 
   it('resolve() omits stdin/env/dshEnv when the request supplies none', async () => {

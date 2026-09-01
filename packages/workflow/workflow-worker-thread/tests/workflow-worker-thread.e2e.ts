@@ -7,6 +7,7 @@ import ToolRuntime from '@qilin/tools'
 import AgentRegistry from '@qilin/agent'
 
 import AgentLoop from '@qilin/agent-loop'
+import SessionProjectionRegistry from '@qilin/session-projection'
 import * as LlmDeepSeek from '@qilin/llm-deepseek'
 import SubagentRuntime from '@qilin/subagent'
 import * as Spawn from '@qilin/subagent-spawn-in-process'
@@ -32,6 +33,7 @@ async function harness(): Promise<Context> {
   const built = new Context()
   await built.plugin(LlmRuntime)
   await built.plugin(SessionStore)
+  await built.plugin(SessionProjectionRegistry)
   await built.plugin(SystemPrompt)
   await built.plugin(ToolRuntime)
   await built.plugin(AgentRegistry)

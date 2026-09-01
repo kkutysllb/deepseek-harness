@@ -14,8 +14,8 @@ function req(method: string, url: string, headers: Record<string, string> = {}, 
   Object.defineProperty(r, 'socket', { value: { remoteAddress: '127.0.0.1' } })
   return r
 }
-function res(): { response: ServerResponse; state: { status?: number; body?: string } } {
-  const state: { status?: number; body?: string } = {}
+function res(): { response: ServerResponse; state: { status: number | undefined; body: string | undefined } } {
+  const state: { status: number | undefined; body: string | undefined } = { status: undefined, body: undefined }
   let sent = false
   const response = Object.assign(new EventEmitter(), {
     setHeader() { return response },
@@ -28,7 +28,7 @@ function res(): { response: ServerResponse; state: { status?: number; body?: str
 async function call(
   handler: ReturnType<typeof createAdminUsersRouteHandler>,
   request: IncomingMessage,
-): Promise<{ status?: number; body: Record<string, unknown> }> {
+): Promise<{ status: number | undefined; body: Record<string, unknown> }> {
   const out = res()
   await handler(request, out.response)
   let parsed: Record<string, unknown> = {}

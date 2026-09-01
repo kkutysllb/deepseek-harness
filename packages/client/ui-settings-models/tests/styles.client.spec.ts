@@ -37,7 +37,7 @@ describe('ModelsSection theme styles', () => {
     // Every theme-variable prefix the sheets actually use, not just `--dsw-`:
     // a `--dsh-` name reads as a plausible sibling and would otherwise slip
     // past this gate into a fallback literal.
-    const named = [...css.matchAll(/var\((--(?:dsw|dsh|ds)-[a-z0-9-]+)/g)].map(match => match[1])
+    const named = [...css.matchAll(/var\((--(?:dsw|qilin|ds)-[a-z0-9-]+)/g)].map(match => match[1])
     const undeclared = [...new Set(named)].filter(name => !tokens.includes(`  ${String(name)}:`))
     expect(undeclared).toEqual([])
     expect(css).not.toMatch(/var\(--(?:surface|text-|border|accent-strong)/)

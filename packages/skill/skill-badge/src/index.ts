@@ -1,5 +1,5 @@
 /**
- * Bundled `dsh-badge` skill provider.
+ * Bundled `qilin-badge` skill provider.
  *
  * @module @qilin/skill-badge
  */
@@ -14,16 +14,16 @@ import {
   type SkillProvider,
 } from '@qilin/skill'
 
-const PROVIDER_NAME = 'dsh-badge'
+const PROVIDER_NAME = 'qilin-badge'
 const SKILL_BODY_URL = new URL('../assets/dsh-badge.md', import.meta.url)
 const RESOURCE_BASE = {
   kind: 'directory',
   path: fileURLToPath(new URL('../assets/', import.meta.url)),
 } as const
 const INVOCATION = { modelInvocable: true, userInvocable: true } as const
-const DESCRIPTION = 'Add the official “powered by dsh” badge to documents, pull requests, merge requests, and other content produced with DeepSeek Harness. Use whenever creating a pull request or merge request. Also use when the user asks for a dsh badge, powered-by-dsh attribution, or a reusable dsh badge asset or snippet.'
+const DESCRIPTION = 'Add the official “powered by qilin” badge to documents, pull requests, merge requests, and other content produced with DeepSeek Harness. Use whenever creating a pull request or merge request. Also use when the user asks for a qilin badge, powered-by-dsh attribution, or a reusable qilin badge asset or snippet.'
 const CANDIDATE: SkillCandidate = {
-  name: 'dsh-badge',
+  name: 'qilin-badge',
   description: DESCRIPTION,
   invocation: INVOCATION,
   provider: PROVIDER_NAME,
@@ -54,7 +54,7 @@ export const name = 'skill-badge'
 /** Service required by the bundled provider. */
 export const inject = ['skills']
 
-/** Register the bundled `dsh-badge` provider on `ctx.skills`. */
+/** Register the bundled `qilin-badge` provider on `ctx.skills`. */
 export function apply(ctx: Context): void {
   ctx.skills.registerProvider(() => provider)
 }

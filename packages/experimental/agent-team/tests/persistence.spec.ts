@@ -9,30 +9,35 @@ import AgentLoop from '@qilin/agent-loop'
 import { mountAgentLoopTestDependencies } from '@qilin/agent-loop-testkit'
 import { createUserMessage } from '@qilin/llm'
 import { SessionId } from '@qilin/session'
+import SessionProjectionRegistry from '@qilin/session-projection'
 import JsonlSessionPersistence from '@qilin/session-persistence-jsonl'
-import SqliteSessionPersistence from '@qilin/session-persistence-sqlite'
 import SubagentService, { seedDescriptorTurn, snapshotSubagentDescriptor } from '@qilin/subagent'
 import * as SubagentSpawn from '@qilin/subagent-spawn-in-process'
 import { MockAdapter, textResponse } from '../../../core/agent-loop/tests/mock-adapter.ts'
-import TeamService, { foldTeam, TeamId, TeamMessageId } from '../src/index.ts'
+import TeamService, { TeamId, TeamMessageId } from '../src/index.ts'
+import { teamProjectionDefinition } from '../src/projection.ts'
 import type { TeamMemberSnapshot, TeamMessageSnapshot, TeamTaskSnapshot } from '../src/index.ts'
+import { TestSessionQuery } from './test-session-query.ts'
 
 const SIGNAL = new AbortController().signal
 const PERSISTENCE_TEST_TIMEOUT_MS = 15_000
 const roots: string[] = []
 const contexts = new Set<Context>()
 
-/** Detached durable Team read: the service exposes views, so assertions fold the Lead log. */
+/** Detached durable Team read through the same projection definition as the service. */
 function durable(agent: Agent): {
   members: TeamMemberSnapshot[]
   tasks: TeamTaskSnapshot[]
   pendingMessages: TeamMessageSnapshot[]
 } {
-  const state = foldTeam(agent.id, agent.session.events)
+  let projected = teamProjectionDefinition.init(agent.session.header)
+  for (const event of agent.session.events) projected = teamProjectionDefinition.apply(projected, event)
+  if (projected.failure !== undefined) throw new Error(projected.failure)
+  const state = projected
   return {
-    members: [...state.members.values()],
-    tasks: [...state.tasks.values()],
-    pendingMessages: [...state.messages.values()].filter(message => !state.delivered.has(message.id)),
+    members: state.members,
+    tasks: state.tasks,
+    pendingMessages: state.messages.filter(message => !state.delivered.includes(message.id)),
   }
 }
 
@@ -76,13 +81,6 @@ const backends: PersistenceMount[] = [
       compression: 'none',
     }),
   },
-  {
-    name: 'SQLite',
-    mount: async (ctx, root) => await ctx.plugin(SqliteSessionPersistence, {
-      path: join(root, 'sessions.sqlite'),
-      journalMode: 'delete',
-    }),
-  },
 ]
 
 async function stack(
@@ -93,7 +91,9 @@ async function stack(
   const ctx = new Context()
   contexts.add(ctx)
   await mountAgentLoopTestDependencies(ctx)
+  await ctx.plugin(SessionProjectionRegistry)
   await backend.mount(ctx, root)
+  await ctx.plugin(TestSessionQuery)
   await ctx.plugin(AgentLoop, { agents: [] })
   await ctx.plugin(SubagentService)
   await ctx.plugin(SubagentSpawn, { providerName: 'spawn' })
@@ -148,7 +148,7 @@ for (const backend of backends) {
     it('reconciles a persisted child to active and a missing child to durable failed', {
       timeout: PERSISTENCE_TEST_TIMEOUT_MS,
     }, async () => {
-      const storageRoot = mkdtempSync(join(tmpdir(), `dsh-team-${backend.name.toLowerCase()}-`))
+      const storageRoot = mkdtempSync(join(tmpdir(), `qilin-team-${backend.name.toLowerCase()}-`))
       roots.push(storageRoot)
       const first = await stack(backend, storageRoot, [textResponse('initial child answer')])
       const activeRootId = SessionId(`${backend.name.toLowerCase()}-active-root`)
@@ -224,7 +224,7 @@ for (const backend of backends) {
     it('reconciles a provisioning child whose initial prompt is durably pending', {
       timeout: PERSISTENCE_TEST_TIMEOUT_MS,
     }, async () => {
-      const storageRoot = mkdtempSync(join(tmpdir(), `dsh-team-pending-${backend.name.toLowerCase()}-`))
+      const storageRoot = mkdtempSync(join(tmpdir(), `qilin-team-pending-${backend.name.toLowerCase()}-`))
       roots.push(storageRoot)
       const rootId = SessionId(`${backend.name.toLowerCase()}-pending-root`)
       const childId = SessionId(`${backend.name.toLowerCase()}-pending-child`)
@@ -268,7 +268,7 @@ for (const backend of backends) {
     it('replays queued-minus-delivered mail in FIFO order without waking for quiet mail', {
       timeout: PERSISTENCE_TEST_TIMEOUT_MS,
     }, async () => {
-      const storageRoot = mkdtempSync(join(tmpdir(), `dsh-team-mail-${backend.name.toLowerCase()}-`))
+      const storageRoot = mkdtempSync(join(tmpdir(), `qilin-team-mail-${backend.name.toLowerCase()}-`))
       roots.push(storageRoot)
       const rootId = SessionId(`${backend.name.toLowerCase()}-mail-root`)
 
@@ -328,7 +328,7 @@ for (const backend of backends) {
     it('acknowledges target-recorded mail after restart without delivering it twice', {
       timeout: PERSISTENCE_TEST_TIMEOUT_MS,
     }, async () => {
-      const storageRoot = mkdtempSync(join(tmpdir(), `dsh-team-dedup-${backend.name.toLowerCase()}-`))
+      const storageRoot = mkdtempSync(join(tmpdir(), `qilin-team-dedup-${backend.name.toLowerCase()}-`))
       roots.push(storageRoot)
       const rootId = SessionId(`${backend.name.toLowerCase()}-dedup-root`)
       const messageId = TeamMessageId(`${backend.name.toLowerCase()}-recorded-message`)
@@ -407,7 +407,7 @@ for (const backend of backends) {
     it('acknowledges durably pending target mail without cold-resume duplication', {
       timeout: PERSISTENCE_TEST_TIMEOUT_MS,
     }, async () => {
-      const storageRoot = mkdtempSync(join(tmpdir(), `dsh-team-inbox-${backend.name.toLowerCase()}-`))
+      const storageRoot = mkdtempSync(join(tmpdir(), `qilin-team-inbox-${backend.name.toLowerCase()}-`))
       roots.push(storageRoot)
       const rootId = SessionId(`${backend.name.toLowerCase()}-inbox-root`)
       const childId = SessionId(`${backend.name.toLowerCase()}-inbox-child`)

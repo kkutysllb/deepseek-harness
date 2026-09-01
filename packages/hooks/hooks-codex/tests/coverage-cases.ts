@@ -13,13 +13,14 @@ import { mountAgentLoopTestDependencies } from '@qilin/agent-loop-testkit'
 import { LocalBashExecutor } from '@qilin/bash-local'
 import LocalSubprocessRuntime from '@qilin/subprocess-local'
 import * as HooksCodex from '@qilin/hooks-codex'
+import SessionProjectionRegistry from '@qilin/session-projection'
 import { MockAdapter, textResponse, toolCallResponse } from '../../../core/agent-loop/tests/mock-adapter.ts'
 
 const testToolSignal = new AbortController().signal
 
 const dirs: string[] = []
 afterEach(() => { for (const d of dirs.splice(0)) rmSync(d, { recursive: true, force: true }) })
-function dir(): string { const d = mkdtempSync(join(tmpdir(), 'dsh-hx-cov-')); dirs.push(d); return d }
+function dir(): string { const d = mkdtempSync(join(tmpdir(), 'qilin-hx-cov-')); dirs.push(d); return d }
 function sh(d: string, name: string, body: string): string {
   const p = join(d, name); writeFileSync(p, body); chmodSync(p, 0o755); return p
 }
@@ -31,6 +32,7 @@ type HarnessOpts = { stderrSummaryMaxChars?: number; sessionRoot?: string }
 async function harness(configPath: string, adapter: MockAdapter, opts: HarnessOpts = {}): Promise<Context> {
   const ctx = new Context()
   await mountAgentLoopTestDependencies(ctx)
+  await ctx.plugin(SessionProjectionRegistry)
   if (opts.sessionRoot !== undefined) await ctx.plugin(JsonlSessionPersistence, { root: opts.sessionRoot })
   await ctx.plugin(AgentLoop, { agents: [] })
   await ctx.plugin(LocalSubprocessRuntime)
@@ -314,6 +316,7 @@ export function defineCoverageCases(groups: CoverageGroup | readonly CoverageGro
       const adapter = new MockAdapter([textResponse('ok')])
       const ctx = new Context()
       await mountAgentLoopTestDependencies(ctx)
+      await ctx.plugin(SessionProjectionRegistry)
       await ctx.plugin(AgentLoop, { agents: [] })
       await ctx.plugin(LocalSubprocessRuntime)
       await ctx.plugin(LocalBashExecutor, { timeoutMs: 10_000 })
@@ -458,8 +461,8 @@ export function defineCoverageCases(groups: CoverageGroup | readonly CoverageGro
       const ctx = await harness(join(d, 'hooks.json'), new MockAdapter([]))
       let ran = false
       ctx.tools.register(defineContentToolFixture({ name: 'Bash', description: 'b', parameters: { command: { type: 'string' } }, async execute() { ran = true; return [{ type: 'text', text: 'x' }] } }))
-      const { CallId } = await import('@qilin/llm')
-      const result = await ctx.tools.execute({ signal: testToolSignal, callId: CallId('c1'), name: 'Bash', arguments: { command: 'x' } })
+      const { ToolCallId } = await import('@qilin/llm')
+      const result = await ctx.tools.execute({ signal: testToolSignal, callId: ToolCallId('c1'), name: 'Bash', arguments: { command: 'x' } })
       expect(ran).toBe(false) // denied
       expect(result.isError).toBe(true)
     })
@@ -469,8 +472,8 @@ export function defineCoverageCases(groups: CoverageGroup | readonly CoverageGro
       hooks(d, { PostToolUse: [{ hooks: [{ type: 'command', command: sh(d, 'pc.sh', '#!/usr/bin/env bash\necho \'{"hookSpecificOutput":{"hookEventName":"PostToolUse","additionalContext":"x"}}\'\n') }] }] })
       const ctx = await harness(join(d, 'hooks.json'), new MockAdapter([]))
       ctx.tools.register(defineContentToolFixture({ name: 'Bash', description: 'b', parameters: { command: { type: 'string' } }, async execute() { return [{ type: 'text', text: 'ok' }] } }))
-      const { CallId } = await import('@qilin/llm')
-      const result = await ctx.tools.execute({ signal: testToolSignal, callId: CallId('c1'), name: 'Bash', arguments: { command: 'x' } })
+      const { ToolCallId } = await import('@qilin/llm')
+      const result = await ctx.tools.execute({ signal: testToolSignal, callId: ToolCallId('c1'), name: 'Bash', arguments: { command: 'x' } })
       expect(result.isError).toBeFalsy()
       expect(result.additionalContexts?.[0]?.content.some(b => b.type === 'text' && b.text === 'x')).toBe(true)
     })
@@ -624,6 +627,7 @@ export function defineCoverageCases(groups: CoverageGroup | readonly CoverageGro
       const adapter = new MockAdapter([toolCallResponse('c1', 'Bash', { command: 'x' }), textResponse('done')])
       const ctx = new Context()
       await mountAgentLoopTestDependencies(ctx)
+      await ctx.plugin(SessionProjectionRegistry)
       await ctx.plugin(AgentLoop, { agents: [] })
       await ctx.plugin(LocalSubprocessRuntime)
       await ctx.plugin(LocalBashExecutor, { timeoutMs: 10_000, cwd: serverDir })

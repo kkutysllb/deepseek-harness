@@ -2,7 +2,7 @@
 
 import { describe, expect, expectTypeOf, it } from 'vitest'
 import { Context } from '@deepseek-ai/cordis'
-import { CallId } from '@qilin/llm'
+import { ToolCallId } from '@qilin/llm'
 import SystemPrompt from '@qilin/system-prompt'
 import ToolRuntime, {
   defineContentToolFixture,
@@ -21,7 +21,7 @@ async function setup() {
 }
 
 function exec(name: string, args: unknown): ToolExecutionInput {
-  return { signal: testToolSignal, callId: CallId('c1'), name, arguments: args }
+  return { signal: testToolSignal, callId: ToolCallId('c1'), name, arguments: args }
 }
 
 describe('ToolRuntime.executionMode', () => {

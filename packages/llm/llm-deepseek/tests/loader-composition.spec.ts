@@ -8,7 +8,7 @@
  * behavior — the documented optional-inject fallback.
  */
 
-import { mkdtemp, rm, writeFile } from 'node:fs/promises'
+import { mkdir, mkdtemp, rm, writeFile } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { pathToFileURL } from 'node:url'
@@ -17,16 +17,20 @@ import { Context } from '@deepseek-ai/cordis'
 import Loader from '@deepseek-ai/cordis-plugin-loader'
 import Include from '@deepseek-ai/cordis-plugin-include'
 import LlmRuntime from '@qilin/llm'
+import AgentRegistry from '@qilin/agent'
+import SessionStore, { SessionId } from '@qilin/session'
 import { credentialRef } from '@qilin/credentials'
 import LocalCredentialProvider from '@qilin/credentials-local'
-import { settingsNamespace } from '@qilin/settings'
 import FileSettingsProvider from '@qilin/settings-file'
 import { getOrCreateAnonymousUserId } from '@qilin/anonymous-user-id'
+import DeepSeekLlmApiExtensionRegistry from '@qilin/deepseek-llm-api-extensions'
+import * as SessionLogDeepSeek from '@qilin/session-log-deepseek'
+import * as DeepSeekPluginPackageInventory from '@qilin/plugin-package-inventory-deepseek'
 import * as LlmDeepSeek from '@qilin/llm-deepseek'
 import { assemble } from './assemble.ts'
 import { closeMockServers, mockServer, textEvents } from './mock-server.ts'
 
-const NS = settingsNamespace('llm-deepseek')
+const NS = 'llm-deepseek'
 const KEY_REF = credentialRef('DEEPSEEK_API_KEY')
 
 let root: string | undefined
@@ -42,12 +46,12 @@ afterEach(async () => {
 })
 
 async function loadComposition(
-  options: { withDynamic: boolean; baseURL: string; reuseRoot?: string },
+  options: { withDynamic: boolean; baseURL: string; reuseRoot?: string; enableSessionLog?: boolean },
 ): Promise<{ ctx: Context; settingsPath: string; credentialsPath: string }> {
   // A reused root is the restart case: the same harness home, its documents
   // exactly as the previous process left them.
   const fresh = options.reuseRoot === undefined
-  root = options.reuseRoot ?? await mkdtemp(join(tmpdir(), 'dsh-llm-composition-'))
+  root = options.reuseRoot ?? await mkdtemp(join(tmpdir(), 'qilin-llm-composition-'))
   vi.stubEnv('QILIN_HOME', root)
   const settingsPath = join(root, 'settings.yaml')
   const credentialsPath = join(root, '.credentials.yaml')
@@ -59,7 +63,20 @@ async function loadComposition(
   const configPath = join(root, 'cordis.yml')
   await writeFile(configPath, [
     '- id: llm',
-    "  name: 'test-llm-service'",
+    "  name: '@qilin/llm'",
+    '- id: session',
+    "  name: '@qilin/session'",
+    '- id: agents',
+    "  name: '@qilin/agent'",
+    '- id: deepseek-llm-api-extensions',
+    "  name: '@qilin/deepseek-llm-api-extensions'",
+    '- id: session-log-deepseek',
+    "  name: '@qilin/session-log-deepseek'",
+    ...options.enableSessionLog === true
+      ? ['  config:', '    enabled: true']
+      : [],
+    '- id: plugin-package-inventory-deepseek',
+    "  name: '@qilin/plugin-package-inventory-deepseek'",
     ...options.withDynamic
       ? [
         '- id: settings',
@@ -87,11 +104,27 @@ async function loadComposition(
   await ctx.plugin(Loader)
   ctx.loader.builtins.include = Include
   const modules = new Map<string, unknown>([
-    ['test-llm-service', LlmRuntime],
+    ['@qilin/llm', LlmRuntime],
+    ['@qilin/session', SessionStore],
+    ['@qilin/agent', AgentRegistry],
+    ['@qilin/deepseek-llm-api-extensions', DeepSeekLlmApiExtensionRegistry],
+    ['@qilin/session-log-deepseek', SessionLogDeepSeek],
+    ['@qilin/plugin-package-inventory-deepseek', DeepSeekPluginPackageInventory],
     ['@qilin/settings-file', FileSettingsProvider],
     ['@qilin/credentials-local', LocalCredentialProvider],
     ['@qilin/llm-deepseek', LlmDeepSeek],
   ])
+  // The custom importer bypasses Node resolution; mirror the package manifests
+  // a deployed cordis.yml has beside its declared dependencies.
+  await Promise.all([...modules.keys()].map(async (packageName) => {
+    const packageDir = join(root!, 'node_modules', ...packageName.split('/'))
+    await mkdir(packageDir, { recursive: true })
+    await writeFile(join(packageDir, 'package.json'), `${JSON.stringify({
+      name: packageName,
+      version: '0.1.0-rc.8',
+      type: 'module',
+    })}\n`)
+  }))
   ctx.loader.internal = {
     version: 'v2',
     async import(specifier: string) {
@@ -108,6 +141,56 @@ async function loadComposition(
 }
 
 describe('llm-deepseek real dynamic composition', () => {
+  it('keeps session upload off and package inventory on by default in the real Loader composition', async () => {
+    vi.stubEnv('DEEPSEEK_API_KEY', 'entry-key')
+    const server = await mockServer([{ kind: 'sse', events: textEvents }])
+    const { ctx } = await loadComposition({ withDynamic: false, baseURL: server.url })
+    const session = ctx.sessions.create(SessionId('extension-composition'))
+    session.append('turn/start', { turn: 1 })
+
+    await assemble(ctx, { model: 'deepseek-v4-flash', messages: [], sessionId: session.id })
+    const request = server.requests[0] as { dsh_plugin_packages: { version: number; packages: unknown[] } }
+    expect(request).not.toHaveProperty('dsh_session_log')
+    expect(request.dsh_plugin_packages.packages).toEqual(expect.arrayContaining([
+      { name: '@qilin/deepseek-llm-api-extensions', version: '0.1.0-rc.8' },
+      { name: '@qilin/llm-deepseek', version: '0.1.0-rc.8' },
+      { name: '@qilin/session-log-deepseek', version: '0.1.0-rc.8' },
+    ]))
+    expect(request.dsh_plugin_packages.version).toBe(1)
+    expect(SessionLogDeepSeek.acceptedThrough(session)).toBe(-1)
+  })
+
+  it('sends the canonical session suffix when the Loader composition explicitly enables upload', async () => {
+    vi.stubEnv('DEEPSEEK_API_KEY', 'entry-key')
+    const server = await mockServer([{ kind: 'sse', events: textEvents }])
+    const { ctx } = await loadComposition({
+      withDynamic: false,
+      baseURL: server.url,
+      enableSessionLog: true,
+    })
+    const session = ctx.sessions.create(SessionId('extension-composition-enabled'))
+    session.append('turn/start', { turn: 1 })
+
+    await assemble(ctx, { model: 'deepseek-v4-flash', messages: [], sessionId: session.id })
+    const request = server.requests[0] as {
+      dsh_session_log?: {
+        version: number
+        session: { id: string }
+        afterSeq: number
+        throughSeq: number
+        events: Array<{ type: string; seq: number }>
+      }
+    }
+    expect(request.dsh_session_log).toMatchObject({
+      version: 1,
+      session: { id: 'extension-composition-enabled' },
+      afterSeq: -1,
+      throughSeq: 0,
+      events: [{ type: 'turn/start', seq: 0 }],
+    })
+    expect(SessionLogDeepSeek.acceptedThrough(session)).toBe(0)
+  })
+
   it('boots from cordis.yml and routes the next request after external settings and credential edits', async () => {
     vi.stubEnv('DEEPSEEK_API_KEY', '')
     const serverA = await mockServer([{ kind: 'sse', events: textEvents }])

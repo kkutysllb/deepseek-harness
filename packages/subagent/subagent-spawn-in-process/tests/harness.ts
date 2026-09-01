@@ -1,6 +1,7 @@
 import { Context } from '@deepseek-ai/cordis'
 import type { Agent } from '@qilin/agent'
 import AgentLoop from '@qilin/agent-loop'
+import SessionProjectionRegistry from '@qilin/session-projection'
 import { mountAgentLoopTestDependencies } from '@qilin/agent-loop-testkit'
 import { LocalBashExecutor } from '@qilin/bash-local'
 import * as BashEnvPlugin from '@qilin/shell-env'
@@ -24,6 +25,7 @@ export async function spawnHarness(workdir: string): Promise<Context> {
   // spawned children render it. It stays neutral for both roles; the
   // delegation nudge lives in the e2e's user prompt and the subagent tool's
   // own description.
+  await ctx.plugin(SessionProjectionRegistry)
   await mountAgentLoopTestDependencies(ctx, {
     systemPrompt: { persona: 'You are a coding agent. Report only when the requested work is done.' },
   })

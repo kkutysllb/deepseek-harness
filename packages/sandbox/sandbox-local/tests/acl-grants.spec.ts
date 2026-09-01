@@ -74,7 +74,7 @@ async function setup() {
 }
 
 function workspaceRoot(): string {
-  return mkdtempSync(join(tmpdir(), 'dsh-acl-grants-ws-'))
+  return mkdtempSync(join(tmpdir(), 'qilin-acl-grants-ws-'))
 }
 
 function flag(argv: readonly string[], name: string): string | undefined {

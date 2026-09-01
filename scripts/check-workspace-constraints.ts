@@ -54,13 +54,13 @@ const experimentalPackageDirectory = /^packages\/experimental\/[^/]+$/
 const experimentalPackageNamePrefix = '@qilin/experimental-'
 /** Directories whose packages this repository publishes: one release member each. */
 const releaseMemberDirectory = /^(?:packages\/(?!experimental\/)[^/]+\/[^/]+|apps\/[^/]+|vendor\/[^/]+)$/
-
 const localArtifactDirs = new Set(['node_modules'])
 const appPackageFiles: Readonly<Record<string, readonly string[]>> = {
-  '@qilin/cli': ['lib/*.js', 'config'],
-  // The Web build emits sourcemaps for browser debugging; publishing them is
-  // what the payload policy forbids, so the bundle ships without them.
-  '@qilin/web-frontend': ['dist', '!dist/**/*.map'],
+  '@qilin/cli': ['lib/*.js'],
+  // Sourcemaps stay out by payload policy; the worker-preview surface
+  // (dist/preview.html and dist/preview/) backs private experimental
+  // packages and is not published.
+  '@qilin/web-frontend': ['dist', '!dist/**/*.map', '!dist/preview.html', '!dist/preview'],
 }
 
 /** The subset of package.json fields this constraint check cares about. */
@@ -151,16 +151,20 @@ const packageFileExtras: Readonly<Record<string, readonly string[]>> = {
   '@qilin/client-ui-theme': ['lib/styles'],
   // The CPython side ships as source .py files, published as-is rather than built.
   '@qilin/code-runtime-python': ['py/**/*.py'],
-  // The Python runtime uses a distinct closed-resolution bin; the public CLI
-  // keeps config-owned bare-package resolution through lib/bin.js.
-  '@qilin/sdk-jsonrpc-demo': ['lib/packaged-bin.js'],
+  // The shipped preset compositions travel inside the roster package.
+  '@qilin/agent-presets': ['presets'],
+  // The Web Host mounts the default-off settings owner independently of each
+  // Agent-scoped delegation-tool instance.
+  '@qilin/tool-subagent': ['lib/model-selection-settings.js'],
   // The argv-prefix runner entry ships beside the lib as its own bundle;
   // sandbox-local resolves it through the package's ./runner export. tsdown
   // also shares its generated FFI code through a hashed runtime chunk.
   '@qilin/sandbox-windows-acl': ['lib/runner.js', 'lib/types-*.js'],
-  // SQLite loads every statement from immutable package resources at runtime.
-  '@qilin/session-persistence-sqlite': ['resources/sql/**/*.sql'],
   '@qilin/skill-badge': ['assets'],
+  // tsdown shares the repository/pack code between the lib entry and the bin
+  // through a hashed chunk. The committed bin.js is the link target pnpm can
+  // resolve at install time, before the build produces lib/bin.js.
+  '@qilin/experimental-webworker-packer': ['bin.js', 'lib/repository-*.js'],
   '@qilin/subprocess-local': ['scripts/ensure-spawn-helper.mjs'],
 }
 
@@ -168,7 +172,7 @@ function sameStringList(actual: readonly string[] | undefined, expected: readonl
   return !!actual && actual.length === expected.length && actual.every((value, index) => value === expected[index])
 }
 
-function expectedDshPackageFiles(manifest: PackageManifest): readonly string[] {
+export function expectedDshPackageFiles(manifest: PackageManifest): readonly string[] {
   const declaredPatch = manifest.qilin?.bundle?.patch
   const bundleFiles = declaredPatch === undefined ? [] : [declaredPatch.replace(/^\.\//, '')]
   const extras = [
@@ -181,10 +185,14 @@ function expectedDshPackageFiles(manifest: PackageManifest): readonly string[] {
     // bundle; the package-invariant gate validates the companion itself.
     'lib/invariant.js',
     ...manifest.bin ? ['lib/bin.js'] : [],
-    ...manifest.exports?.['./worker'] ? ['lib/worker.cjs'] : [],
+    // Worker-thread packages ship a CJS worker entry; the browser worker
+    // bundle is an ES module a page loads with `new Worker(type: 'module')`.
+    // Keyed on the artifact path, like ./client below.
+    ...exportDefault(manifest, './worker') === './lib/worker.cjs' ? ['lib/worker.cjs'] : [],
+    ...exportDefault(manifest, './worker') === './lib/worker.js' ? ['lib/worker.js'] : [],
     // UI plugin packages ship their browser bundle beside the node lib
     // (single-artifact ruling: dist/ retired, ./client resolves lib/client.js).
-    // Keyed on the artifact path, not the subpath name: apiproxy's ./client is
+    // Keyed on the artifact path, not the subpath name: a package's ./client is
     // a browser-safe source channel, not a bundle.
     ...exportDefault(manifest, './client') === './lib/client.js' ? ['lib/client.js'] : [],
     // runtime's shell-held loader subpath ships as its own bundle beside the client half.
@@ -254,7 +262,12 @@ export function checkExperimentalManifest({ dir, manifest }: WorkspaceManifest):
   return errors
 }
 
-function checkWorkspace({ dir, manifest }: WorkspaceManifest): string[] {
+/**
+ * Check one workspace manifest against publication and qilin-package policy.
+ * @param workspace - package directory and parsed manifest.
+ * @returns path-qualified policy violations.
+ */
+export function checkWorkspaceManifest({ dir, manifest }: WorkspaceManifest): string[] {
   const errors = checkExperimentalManifest({ dir, manifest })
   const label = manifest.name ?? dir
   const isLandlockPackageDir = dir.startsWith('native/landlock-run/packages/')
@@ -282,7 +295,7 @@ function checkWorkspace({ dir, manifest }: WorkspaceManifest): string[] {
     //
     // Access is per release sequence, not per scope: the vendored framework and
     // the Landlock packages publish publicly because outside consumers install
-    // them, while the dsh family stays restricted until its own sequence goes
+    // them, while the qilin family stays restricted until its own sequence goes
     // public. A mixed scope is why no publish path passes `--access` — one flag
     // cannot serve both, so each packed manifest decides
     // ([rationale](../.agents/notes/implemented/process/2026-08-13-public-vendor-and-native-sequences.md)).
@@ -408,7 +421,7 @@ function checkHierarchyShape(): string[] {
 }
 
 function checkRepositoryVersion(): string[] {
-  // The root carries the dsh release family's version, so a prerelease such as
+  // The root carries the qilin release family's version, so a prerelease such as
   // 0.0.1-rc.1 is a valid state between `release:qilin` and its publication.
   if (repositoryVersion && /^\d+\.\d+\.\d+(?:-[0-9A-Za-z.-]+)?$/.test(repositoryVersion)) return []
   return ['package.json: version must be X.Y.Z with an optional prerelease segment']
@@ -475,7 +488,7 @@ export function main(): void {
   ]
   const errors = [
     ...checkRepositoryVersion(),
-    ...manifests.flatMap(checkWorkspace),
+    ...manifests.flatMap(checkWorkspaceManifest),
     ...checkWorkspaceProtocol(manifests),
     ...checkExperimentalDependencyIsolation(dependencyManifests),
     ...checkHierarchyShape(),

@@ -1,7 +1,7 @@
 {
   "name": "@qilin/session-telemetry-otel",
   "description": "OpenTelemetry backend for the DeepSeek Harness telemetry seam: hands captured session records to the OTel JS SDK's log pipeline",
-  "version": "0.1.1-rc.2",
+  "version": "0.1.2-alpha.3",
   "publishConfig": {
     "access": "public"
   },
@@ -50,12 +50,19 @@
     "@deepseek-ai/cordis": "workspace:^"
   },
   "devDependencies": {
+    "@deepseek-ai/cordis-plugin-logger-console": "workspace:^",
     "@deepseek-ai/cordis-plugin-loader": "workspace:^",
+    "@qilin/app-boot": "workspace:^",
+    "@qilin/bash-local": "workspace:^",
     "@qilin/command-feedback": "workspace:^",
     "@qilin/invariants": "workspace:^",
     "@qilin/llm": "workspace:^",
+    "@qilin/loader-smoke": "workspace:^",
     "@qilin/session": "workspace:^",
+    "@qilin/session-checkpoint-policy": "workspace:^",
+    "@qilin/session-persistence-jsonl": "workspace:^",
     "@qilin/session-telemetry": "workspace:^",
+    "@qilin/subprocess-local": "workspace:^",
     "@qilin/anonymous-user-id": "workspace:^",
     "@deepseek-ai/cordis": "workspace:^"
   }

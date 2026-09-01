@@ -1,7 +1,7 @@
 /**
  * The writable root is this package's own, not an assembly fact each app must
  * remember: a roster configured with only a `system` root still discovers and
- * authors into `<dshHome>/.agent-presets`, the way `dsh-skill-filesystem` owns
+ * authors into `<dshHome>/.agent-presets`, the way `qilin-skill-filesystem` owns
  * `<dshHome>/skills`. `includeUserRoot: false` is how a deployment — or a test
  * pinning an exact roster — opts out.
  *
@@ -18,6 +18,7 @@ import { fileURLToPath, pathToFileURL } from 'node:url'
 import { Context } from '@deepseek-ai/cordis'
 import Loader from '@deepseek-ai/cordis-plugin-loader'
 import Include from '@deepseek-ai/cordis-plugin-include'
+import SessionProjectionRegistry from '@qilin/session-projection'
 import { afterEach, beforeEach, describe, expect, it } from 'vitest'
 import AgentPresets, { COMPOSITION_FILE, type Config } from '@qilin/agent-presets'
 
@@ -31,7 +32,7 @@ let home: string
 let previousHome: string | undefined
 
 beforeEach(async () => {
-  home = await mkdtemp(join(tmpdir(), 'dsh-preset-home-'))
+  home = await mkdtemp(join(tmpdir(), 'qilin-preset-home-'))
   previousHome = process.env.QILIN_HOME
   process.env.QILIN_HOME = home
 })
@@ -47,9 +48,12 @@ async function roster(config: Partial<Config> = {}): Promise<Context> {
   ctx.baseUrl = pathToFileURL(FIXTURES).href + '/'
   await ctx.plugin(Loader)
   ctx.loader.builtins.include = Include
+  await ctx.plugin(SessionProjectionRegistry)
   await ctx.plugin(AgentPresets, {
     default: 'standard',
     roots: [{ path: SYSTEM_ROOT, trust: 'system' as const }],
+    // The package's shipped presets would shadow this file's fixture ids.
+    includeShippedRoot: false,
     includeUserRoot: true,
     ...config,
   })
@@ -115,7 +119,7 @@ describe('the harness-home preset root', () => {
   })
 
   it('yields to a configured user root for authoring, which writableRoot takes first', async () => {
-    const explicit = await mkdtemp(join(tmpdir(), 'dsh-preset-explicit-'))
+    const explicit = await mkdtemp(join(tmpdir(), 'qilin-preset-explicit-'))
     const ctx = await roster({
       roots: [
         { path: SYSTEM_ROOT, trust: 'system' as const },

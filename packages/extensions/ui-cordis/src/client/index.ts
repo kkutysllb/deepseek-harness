@@ -1,10 +1,13 @@
 /** Cordis dynamic-plugin cards, inventory panel, business-view host, and `@pluginId` source. */
 
-import type { ClientContext, SessionId } from '@qilin/client-runtime/client'
+import type { Context as ClientContext } from '@deepseek-ai/cordis'
+import type { SessionId } from '@qilin/session/types'
 import type {} from '@qilin/client-ui-tool/client'
 import type {} from '@qilin/client-locale/client'
 import type {} from '@qilin/client-ui-sidebar/client'
 import type {} from '@qilin/api-remotes/client'
+import type {} from '@qilin/client-ui-renderer/client'
+import type {} from '@qilin/client-ui-session/client'
 import type { InputTriggerService, InputTriggerSource } from '@qilin/client-ui-input-trigger/client'
 import type {} from './events.ts'
 import { CordisActionRow } from './CordisActionRow.tsx'

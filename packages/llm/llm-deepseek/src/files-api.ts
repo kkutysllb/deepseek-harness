@@ -1,4 +1,4 @@
-/** OpenAI-compatible DeepSeek Files API transport. @module dsh-llm-deepseek/files-api */
+/** OpenAI-compatible DeepSeek Files API transport. @module qilin-llm-deepseek/files-api */
 
 import { attributionHeaders, LlmError } from '@qilin/llm'
 import type { ImageMediaType } from '@qilin/attachment'

@@ -2,5 +2,5 @@
 # side as of the last confirmed-consistent state. Both languages carry equal authority;
 # after editing either side, bring the other along and re-record with:
 #   pnpm run verify-translation-pairing --write .agents/notes/implemented/architecture/2026-07-12-scoped-layers-store.md
-2026-07-12-scoped-layers-store.md: 93dcadd102ab4b7c412429e546101d2c4f4042ff
-2026-07-12-scoped-layers-store.zh.md: 1bc4d21acf667e5aa6daedabeb52beb825199c8f
+2026-07-12-scoped-layers-store.md: 6961563c2f9de74e0ebf69fb50e0ce1ec75f1410
+2026-07-12-scoped-layers-store.zh.md: 8e95905de2547cb05f6c7639a27dfa1d40d560d7

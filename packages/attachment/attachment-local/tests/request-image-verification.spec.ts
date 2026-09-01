@@ -29,7 +29,7 @@ afterEach(async () => {
 
 describe('request image verification', () => {
   it('rejects an encoded request whose decoded facts disagree with the encoder result', async () => {
-    const dshHome = await mkdtemp(join(tmpdir(), 'dsh-request-verification-'))
+    const dshHome = await mkdtemp(join(tmpdir(), 'qilin-request-verification-'))
     homes.push(dshHome)
     const attachments = new LocalAttachmentStore(new Context(), { dshHome })
     const source = new Uint8Array(await sharp({

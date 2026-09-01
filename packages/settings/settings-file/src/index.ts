@@ -15,13 +15,14 @@ import { dirname, extname, join, resolve } from 'node:path'
 import { Document, parseDocument } from 'yaml'
 import { withFileLock, writeFileAtomic } from '@qilin/atomic-write'
 import { canonicalizeWatchPath, resolveDshHome } from '@qilin/home-paths'
-import { SettingsProvider, deepEqualJson, type SettingsNamespace } from '@qilin/settings'
+import { SettingsProvider, type SettingsNamespace } from '@qilin/settings'
+import { deepEqualJson } from '@qilin/util-values'
 
 /** Plugin config: file location and hot-reload behavior. */
 export interface Config {
   /** Settings document path; defaults to `settings.yaml` under the harness home. */
   path?: string
-  /** Harness home used when `path` is omitted; defaults to `$QILIN_HOME` or `~/.dsh`. */
+  /** Harness home used when `path` is omitted; defaults to `$QILIN_HOME` or `~/.qilin`. */
   dshHome?: string
   /** Watch the document and hot-publish external edits; defaults to true. */
   watch?: boolean

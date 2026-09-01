@@ -8,7 +8,7 @@ import { homedir } from 'node:os'
 import { join, resolve } from 'node:path'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import { Context } from '@deepseek-ai/cordis'
-import { CallId } from '@qilin/llm'
+import { ToolCallId } from '@qilin/llm'
 import type { Agent } from '@qilin/agent'
 import type { ToolExecution } from '@qilin/tools'
 import { ShellEnvRegistry } from '@qilin/shell-env'
@@ -22,8 +22,8 @@ function execution(sessionId?: string): ToolExecution {
   return {
     signal: testToolSignal,
     token: Symbol('bash-env-test') as ToolExecution['token'],
-    callId: CallId('bash-env-call'),
-    rootCallId: CallId('bash-env-call'),
+    callId: ToolCallId('bash-env-call'),
+    rootCallId: ToolCallId('bash-env-call'),
     name: 'bash',
     arguments: { command: 'true' },
     ...(sessionId === undefined
@@ -55,7 +55,7 @@ describe('ShellEnvRegistry', () => {
 
     vi.stubEnv('QILIN_HOME', undefined)
     const fromDefault = new ShellEnvRegistry(new Context())
-    expect(fromDefault.collect(execution()).QILIN_HOME).toBe(join(homedir(), '.dsh'))
+    expect(fromDefault.collect(execution()).QILIN_HOME).toBe(join(homedir(), '.qilin'))
   })
 
   it('collects declared contributor variables and omits unavailable values', () => {

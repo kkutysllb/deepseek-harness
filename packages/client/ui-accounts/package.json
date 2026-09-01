@@ -34,7 +34,7 @@
       "inject": [
         "@qilin/client-connection",
         "@qilin/client-locale",
-        "@qilin/client-runtime",
+        "@qilin/client-ui-renderer",
         "@qilin/client-ui-settings",
         "@qilin/client-ui-slots"
       ],
@@ -50,7 +50,6 @@
     "@deepseek-ai/cordis": "workspace:^",
     "@qilin/client-connection": "workspace:^",
     "@qilin/client-locale": "workspace:^",
-    "@qilin/client-runtime": "workspace:^",
     "@qilin/client-ui-layout": "workspace:^",
     "@qilin/client-ui-settings": "workspace:^",
     "@qilin/client-ui-slots": "workspace:^",
@@ -60,10 +59,10 @@
     "@deepseek-ai/cordis": "workspace:^",
     "@qilin/client-connection": "workspace:^",
     "@qilin/client-locale": "workspace:^",
-    "@qilin/client-runtime": "workspace:^",
     "@qilin/client-test-runtime": "workspace:^",
     "@qilin/client-ui-layout": "workspace:^",
     "@qilin/client-ui-primitives": "workspace:^",
+    "@qilin/client-ui-renderer": "workspace:^",
     "@qilin/client-ui-settings": "workspace:^",
     "@qilin/client-ui-slots": "workspace:^",
     "@qilin/invariants": "workspace:^",

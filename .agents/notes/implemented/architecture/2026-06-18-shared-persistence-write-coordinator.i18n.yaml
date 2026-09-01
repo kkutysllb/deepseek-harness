@@ -2,5 +2,5 @@
 # side as of the last confirmed-consistent state. Both languages carry equal authority;
 # after editing either side, bring the other along and re-record with:
 #   pnpm run verify-translation-pairing --write .agents/notes/implemented/architecture/2026-06-18-shared-persistence-write-coordinator.md
-2026-06-18-shared-persistence-write-coordinator.md: 286bbb7d5cd3720109db0d0abc0bb72ddbfcbdcd
-2026-06-18-shared-persistence-write-coordinator.zh.md: 70db616b0a71826c648072228fff936ad423ad8f
+2026-06-18-shared-persistence-write-coordinator.md: da4b935363e830a1bcda286b87b61fb4aba9363f
+2026-06-18-shared-persistence-write-coordinator.zh.md: 4ab1925e7d17c1cf3a872bb0b6c34a816877244b

@@ -1,6 +1,6 @@
 /** Session-local ownership index for Package business views on `cordis_run` cards. */
 
-import type { SessionId } from '@qilin/client-connection/client'
+import type { SessionId } from '@qilin/api-remotes/client'
 import type { HostObservable } from '@qilin/client-ui-slots'
 import type {
   CordisDynamicPackageId, CordisDynamicPluginId, CordisDynamicPluginRunId,

@@ -2,7 +2,7 @@
 
 English | [中文](subprocess.zh.md)
 
-The subprocess seam is split across a Service Definition ([dsh-subprocess](../../packages/subprocess/subprocess), `ctx.subprocess`) and Service Provider ([dsh-subprocess-local](../../packages/subprocess/subprocess-local)); its Consumers are other capability seams and out-of-process backends: the [bash executor family](shell.md) uses collected batch output, LSP uses raw protocol pipes, the PTY backend uses the terminal primitive, and the ACP subagent backend uses piped ndjson plus inherited stderr. This seam owns the managed `QILIN_*` environment namespace, the shared credential scrub (`scrubbedParentEnv`), and the `CollectedOutput` shape; [dsh-shell](../../packages/shell/shell) re-exports the vocabulary so bash consumers keep one import root.
+The subprocess seam is split across a Service Definition ([qilin-subprocess](../../packages/subprocess/subprocess), `ctx.subprocess`) and Service Provider ([qilin-subprocess-local](../../packages/subprocess/subprocess-local)); its Consumers are other capability seams and out-of-process backends: the [bash executor family](shell.md) uses collected batch output, LSP uses raw protocol pipes, the PTY backend uses the terminal primitive, and the ACP subagent backend uses piped ndjson plus inherited stderr. This seam owns the managed `QILIN_*` environment namespace, the shared credential scrub (`scrubbedParentEnv`), and the `CollectedOutput` shape; [qilin-shell](../../packages/shell/shell) re-exports the vocabulary so bash consumers keep one import root.
 
 Source: [`packages/subprocess/subprocess/src/types.ts`](../../packages/subprocess/subprocess/src/types.ts) and [`packages/subprocess/subprocess/src/index.ts`](../../packages/subprocess/subprocess/src/index.ts)
 
@@ -16,12 +16,12 @@ One provider's spawn working directories, executable paths, ordinary processes, 
 
 ```ts type-equiv
 /** One environment key inside the managed {@link QILIN_ENV_PREFIX} namespace. */
-type DshEnvironmentKey = `${typeof QILIN_ENV_PREFIX}${string}`
+type QilinEnvironmentKey = `${typeof QILIN_ENV_PREFIX}${string}`
 ```
 
 ```ts type-equiv
 /** Trusted DeepSeek Harness variables for one child-process execution. */
-type DshEnvironment = Readonly<Record<DshEnvironmentKey, string>>
+type QilinEnvironment = Readonly<Record<QilinEnvironmentKey, string>>
 ```
 
 ```ts type-equiv
@@ -94,7 +94,7 @@ The seam applies no defaults: every disposition, limit, and directory is explici
 /**
  * A fully-specified spawn request. This seam applies no defaults: every
  * disposition, limit, and directory is explicit, so the caller's own config —
- * not a hidden subprocess-service default — decides them (the `dsh-shell`
+ * not a hidden subprocess-service default — decides them (the `qilin-shell`
  * request/spec split is the owning template).
  */
 interface SubprocessSpawnSpec {
@@ -246,7 +246,7 @@ The terminal spec fully specifies argv, cwd, environment overrides, dimensions, 
 
 ## Service behavior
 
-The abstract [`SubprocessRuntime`](../../packages/subprocess/subprocess/src/index.ts) Service Definition specifies execution-world coordinates, executable lookup, ordinary `spawn`, and `spawnTerminal`. [`LocalSubprocessRuntime`](../../packages/subprocess/subprocess-local/src/index.ts) provides them with detached process trees, per-disposition wiring, credential scrubbing, `node-pty`, platform process inspection, and terminate-and-join disposal. See [`dsh-subprocess`](../../packages/subprocess/subprocess/README.md) for the Service Definition contract and [`dsh-subprocess-local`](../../packages/subprocess/subprocess-local/README.md) for local mechanics.
+The abstract [`SubprocessRuntime`](../../packages/subprocess/subprocess/src/index.ts) Service Definition specifies execution-world coordinates, executable lookup, ordinary `spawn`, and `spawnTerminal`. [`LocalSubprocessRuntime`](../../packages/subprocess/subprocess-local/src/index.ts) provides them with detached process trees, per-disposition wiring, credential scrubbing, `node-pty`, platform process inspection, and terminate-and-join disposal. See [`qilin-subprocess`](../../packages/subprocess/subprocess/README.md) for the Service Definition contract and [`qilin-subprocess-local`](../../packages/subprocess/subprocess-local/README.md) for local mechanics.
 
 <!-- BEGIN GENERATED cordis-surface (gen-cordis-catalog.ts) — do not edit between markers -->
 

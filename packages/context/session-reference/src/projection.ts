@@ -2,8 +2,8 @@
 
 import { isCompactCheckpointSource } from '@qilin/compaction'
 import type { SessionSurfaceSnapshot } from '@qilin/session-query'
-import { assertNever } from '@qilin/llm'
 import { TextRetainer } from '@qilin/output-retention'
+import { assertNever } from '@qilin/util-values'
 import { stringifyTagSafeJson } from './serialization.ts'
 import type { ReferencedConversationItem } from './types.ts'
 

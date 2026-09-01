@@ -17,6 +17,7 @@ import { Context } from '@deepseek-ai/cordis'
 import { FsError, FsTargetKey } from '@qilin/fs'
 import type { FsTarget } from '@qilin/fs'
 import SandboxPolicyService from '@qilin/sandbox-policy'
+import SessionProjectionRegistry from '@qilin/session-projection'
 import type { SandboxMode } from '@qilin/sandbox'
 import { SandboxedFileSystem } from '@qilin/fs-sandbox'
 
@@ -29,6 +30,7 @@ let fiber: Awaited<ReturnType<Context['plugin']>>
 
 async function boot(mode: SandboxMode): Promise<void> {
   ctx = new Context()
+  await ctx.plugin(SessionProjectionRegistry)
   await ctx.plugin(SandboxPolicyService, { mode, workspaceRoot: workspace })
   fiber = await ctx.plugin(SandboxedFileSystem, { cwd: workspace })
   fs = ctx.fs as SandboxedFileSystem
@@ -40,7 +42,7 @@ beforeEach(async () => {
   // would be legitimately writable. Sibling dirs under HOME are outside every
   // grant, so containment failures are real denials. (The bwrap e2e roots its
   // workspaces under HOME for the same reason.)
-  base = await mkdtemp(join(homedir(), '.dsh-fssbx-'))
+  base = await mkdtemp(join(homedir(), '.qilin-fssbx-'))
   workspace = join(base, 'ws')
   outside = join(base, 'out')
   await mkdir(workspace)
@@ -98,7 +100,7 @@ describe('workspace-write containment', () => {
   })
 
   it('a write to the platform temp area lands (parity with the bash runner grant)', async () => {
-    const path = join(await mkdtemp(join(tmpdir(), 'dsh-fssbx-tmp-')), 'temp.txt')
+    const path = join(await mkdtemp(join(tmpdir(), 'qilin-fssbx-tmp-')), 'temp.txt')
     await fs.writeText(await target(path), 'temp')
     expect(await readFile(path, 'utf8')).toBe('temp')
   })
@@ -171,6 +173,7 @@ describe('workspace-write with the filesystem root as the workspace (a root endi
     // A degenerate but valid config: the filesystem root containing the target.
     // It exercises the separator-suffixed-root branch on POSIX and Windows.
     const rootCtx = new Context()
+    await rootCtx.plugin(SessionProjectionRegistry)
     await rootCtx.plugin(SandboxPolicyService, { mode: 'workspace-write', workspaceRoot: parse(base).root })
     const rootFiber = await rootCtx.plugin(SandboxedFileSystem, { cwd: workspace })
     const rootFs = rootCtx.fs as SandboxedFileSystem

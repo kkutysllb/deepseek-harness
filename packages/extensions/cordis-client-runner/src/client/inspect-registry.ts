@@ -3,9 +3,9 @@
 import type { Context } from '@deepseek-ai/cordis'
 import type {
   CordisInspectProviderManifest, CordisInspectQueryRequest, CordisInspectQueryResolution,
-  CordisInspectRequestId, JsonValue,
+  CordisInspectRequestId, SessionId,
 } from '@qilin/api-remotes/client'
-import type { SessionId } from '@qilin/client-connection/client'
+import type { JsonValue } from '@qilin/util-values'
 
 /** Context supplied to a Client inspect provider query. */
 export interface ClientCordisInspectQueryContext {

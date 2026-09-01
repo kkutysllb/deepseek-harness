@@ -1,7 +1,7 @@
 /**
- * Built-artifact guard for the scope carrier shared by `dsh-subagent` and
- * `dsh-sdk-jsonrpc-server`. The carrier registry is module-local, so both bundles must
- * externalize `dsh-scope`; source-mode tests cannot expose an accidentally
+ * Built-artifact guard for the scope carrier shared by `qilin-subagent` and
+ * `qilin-sdk-jsonrpc-server`. The carrier registry is module-local, so both bundles must
+ * externalize `qilin-scope`; source-mode tests cannot expose an accidentally
  * inlined second registry. This test runs the real `lib/index.js` bundles in a
  * plain Node subprocess, disposes the child before settlement, and requires the
  * SDK completion notification to retain the delegating parent.
@@ -26,14 +26,18 @@ import { pathToFileURL } from "node:url";
 const load = (path) => import(pathToFileURL(resolve(path)).href);
 const [
   { Context },
-  agentCore,
+  { default: AgentLoop },
+  { mountAgentLoopTestDependencies },
+  { default: SessionProjectionRegistry },
   { default: SubagentRuntime },
   { default: JsonlSessionPersistence },
   { HarnessSdkJsonRpcServer },
   { SessionId },
 ] = await Promise.all([
   load("vendor/cordis/lib/index.js"),
-  load("packages/examples/agent-spine-demo/lib/index.js"),
+  load("packages/core/agent-loop/lib/index.js"),
+  load("packages/test-support/agent-loop-testkit/lib/index.js"),
+  load("packages/session/session-projection/lib/index.js"),
   load("packages/subagent/subagent/lib/index.js"),
   load("packages/session/session-persistence-jsonl/lib/index.js"),
   load("packages/sdk/server/lib/index.js"),
@@ -43,7 +47,9 @@ const [
 const storageRoot = await mkdtemp(join(tmpdir(), "jsonrpc-built-scope-"));
 const ctx = new Context();
 try {
-  await ctx.plugin(agentCore, { workspaceContext: false });
+  await mountAgentLoopTestDependencies(ctx);
+  await ctx.plugin(SessionProjectionRegistry);
+  await ctx.plugin(AgentLoop, { agents: [] });
   await ctx.plugin(SubagentRuntime);
   await ctx.plugin(JsonlSessionPersistence, { root: storageRoot });
   await new Promise((ready) => setTimeout(ready, 50));
@@ -66,7 +72,7 @@ try {
   const result = Promise.withResolvers();
   const unregister = ctx.subagents.registerProvider({
     name: "built-local",
-    capabilities: { outputSchema: false, depthLimit: false, toolFilter: false, persona: false },
+    capabilities: { agentOptions: false, outputSchema: false, depthLimit: false, toolFilter: false, persona: false },
     inheritsParentContext: false,
     start() {
       return Promise.resolve({
@@ -98,7 +104,7 @@ try {
 }
 `
 
-describe.skipIf(!existsSync(jsonrpcBundle))('dsh-sdk-jsonrpc-server BUILT scope carrier', () => {
+describe.skipIf(!existsSync(jsonrpcBundle))('qilin-sdk-jsonrpc-server BUILT scope carrier', () => {
   it('preserves parent-scoped completion after child disposal', async () => {
     const { stdout, stderr } = await execFileAsync(process.execPath, ['--input-type=module', '-e', builtRuntimeProbe], {
       cwd: repoRoot,

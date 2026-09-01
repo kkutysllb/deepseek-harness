@@ -11,6 +11,7 @@ import AgentLoop from '@qilin/agent-loop'
 import LlmRuntime, { createUserMessage, LlmAdapter, LlmError, resolveRetryPolicy  } from '@qilin/llm'
 import type { GenerateOptions, ResolvedRetryPolicy, StreamChunk } from '@qilin/llm'
 import SessionStore, { SessionId } from '@qilin/session'
+import SessionProjectionRegistry from '@qilin/session-projection'
 import SystemPrompt from '@qilin/system-prompt'
 import ToolRuntime from '@qilin/tools'
 import * as retry from '../src/index.ts'
@@ -49,7 +50,7 @@ afterEach(async () => {
 })
 
 async function loadYaml(lines: readonly string[]): Promise<Context> {
-  root = await mkdtemp(join(tmpdir(), 'dsh-llm-retry-loader-'))
+  root = await mkdtemp(join(tmpdir(), 'qilin-llm-retry-loader-'))
   const configPath = join(root, 'cordis.yml')
   await writeFile(configPath, [...lines, ''].join('\n'))
 
@@ -60,6 +61,7 @@ async function loadYaml(lines: readonly string[]): Promise<Context> {
   const modules = new Map<string, unknown>([
     ['@qilin/llm', LlmRuntime],
     ['@qilin/session', SessionStore],
+    ['@qilin/session-projection', SessionProjectionRegistry],
     ['@qilin/system-prompt', SystemPrompt],
     ['@qilin/tools', ToolRuntime],
     ['@qilin/agent', AgentRegistry],
@@ -89,6 +91,7 @@ describe('real Loader composition', () => {
     const loaded = await loadYaml([
       "- name: '@qilin/llm'",
       "- name: '@qilin/session'",
+      "- name: '@qilin/session-projection'",
       "- name: '@qilin/system-prompt'",
       "- name: '@qilin/tools'",
       "- name: '@qilin/agent'",

@@ -1,7 +1,7 @@
 {
   "name": "@qilin/client-ui-settings-plugin-inventory",
   "description": "Read-only Cordis Loader inventory tab in Web Plugins settings",
-  "version": "0.1.1-rc.2",
+  "version": "0.1.2-alpha.3",
   "publishConfig": {
     "access": "public"
   },
@@ -33,9 +33,9 @@
     "client": {
       "inject": [
         "@qilin/api-remotes",
-        "@qilin/client-runtime",
         "@qilin/client-ui-settings",
-        "@qilin/client-locale"
+        "@qilin/client-locale",
+        "@qilin/client-ui-agent-preset"
       ],
       "platform": "web"
     }
@@ -46,18 +46,13 @@
   },
   "license": "MIT",
   "peerDependencies": {
-    "@qilin/api-remotes": "workspace:^",
-    "@qilin/client-locale": "workspace:^",
-    "@qilin/client-runtime": "workspace:^",
-    "@qilin/client-ui-settings": "workspace:^",
-    "@qilin/invariants": "workspace:^",
     "@deepseek-ai/cordis": "workspace:^"
   },
   "devDependencies": {
     "@qilin/api-remotes": "workspace:^",
     "@qilin/client-locale": "workspace:^",
-    "@qilin/client-runtime": "workspace:^",
     "@qilin/client-test-runtime": "workspace:^",
+    "@qilin/client-ui-agent-preset": "workspace:^",
     "@qilin/client-ui-primitives": "workspace:^",
     "@qilin/client-ui-settings": "workspace:^",
     "@qilin/client-ui-slots": "workspace:^",
@@ -66,7 +61,9 @@
     "@types/react": "~18.3.1",
     "@deepseek-ai/cordis": "workspace:^",
     "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "react-dom": "^18.2.0",
+    "@qilin/client-ui-renderer": "workspace:^",
+    "@qilin/agent-presets": "workspace:^"
   },
   "files": [
     "lib/index.js",

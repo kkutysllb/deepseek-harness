@@ -132,7 +132,7 @@ describe('LocalSubprocessRuntime', () => {
       .rejects.toThrow('is a relative path')
     await expect(ctx.subprocess.resolveExecutable('node_modules/.bin/server'))
       .rejects.toThrow('is a relative path')
-    await expect(ctx.subprocess.resolveExecutable('dsh-command-that-does-not-exist', { PATH: '' }))
+    await expect(ctx.subprocess.resolveExecutable('qilin-command-that-does-not-exist', { PATH: '' }))
       .rejects.toThrow('was not found on PATH')
     await expect(ctx.subprocess.resolveExecutable('/dsh-absolute-command-that-does-not-exist'))
       .rejects.toThrow('is not an executable file')
@@ -302,8 +302,7 @@ describe('LocalSubprocessRuntime', () => {
     const inspector = {
       foregroundPgid: () => undefined,
       isStdinWaiting: () => false,
-      processTree: () => [],
-      processSession: () => [],
+      snapshot: () => ({ tree: () => [], session: () => [], alive: () => false }),
       isAlive: () => false,
       signalGroup: () => {},
       signalProcess: () => {},
@@ -369,8 +368,11 @@ describe('LocalSubprocessRuntime', () => {
       ;(ctx.subprocess as InstanceType<typeof IsolatedLocalSubprocessRuntime>).terminalInspector = {
         foregroundPgid: () => 123,
         isStdinWaiting: () => false,
-        processTree: () => [{ pid: 123, started: 'shell' }, { pid: 124, started: 'child' }],
-        processSession: () => [],
+        snapshot: () => ({
+          tree: () => [{ pid: 123, started: 'shell' }, { pid: 124, started: 'child' }],
+          session: () => [],
+          alive: identity => alive.has(identity.pid),
+        }),
         isAlive: identity => alive.has(identity.pid),
         signalGroup: () => {},
         signalProcess: () => {},

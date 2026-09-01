@@ -19,6 +19,7 @@ export function sessionPrincipal(role: SessionUser['systemRole'], userId: string
       needsSetup: false,
       oauthProvider: null,
       oauthId: null,
+      disabledAt: null,
       sessionVersion: 1,
       createdAt: 0,
       updatedAt: 0,

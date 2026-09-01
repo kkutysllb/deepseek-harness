@@ -17,7 +17,7 @@ function writeManifest(root: string, file: string, manifest: Record<string, unkn
 }
 
 function createWorkspace(): string {
-  const root = mkdtempSync(join(tmpdir(), 'dsh-package-licenses-'))
+  const root = mkdtempSync(join(tmpdir(), 'qilin-package-licenses-'))
   roots.push(root)
   writeManifest(root, 'package.json', {
     name: '@qilin/engine-root',
@@ -28,7 +28,7 @@ function createWorkspace(): string {
 }
 
 describe('QiLin package license gate', () => {
-  it('checks root, unhyphenated CLI, and dsh-prefixed package names while ignoring other families', () => {
+  it('checks root, unhyphenated CLI, and qilin-prefixed package names while ignoring other families', () => {
     const root = createWorkspace()
     writeManifest(root, 'apps/cli/package.json', { name: '@qilin/cli', license: 'MIT' })
     writeManifest(root, 'packages/core/agent/package.json', {

@@ -1,0 +1,6 @@
+# Private Agent Teams Web layer. Apply after qilin-web-app and the host-side
+# qilin-agent-team-profile so the browser mounts only when the Team service is present.
+
+- insert:
+    - id: ui-agent-team
+      name: '@qilin/experimental-client-ui-agent-team'

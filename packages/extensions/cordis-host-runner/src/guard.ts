@@ -19,7 +19,7 @@ import { scopeOf } from '@qilin/scope'
 import { assertSupportedJsonSchema, defineTool } from '@qilin/tools'
 import type { ToolDefinition } from '@qilin/tools'
 import type { ContentBlock } from '@qilin/llm'
-import type { JsonValue } from '@qilin/session'
+import type { JsonValue } from '@qilin/util-values'
 
 const DYNAMIC_TOOL = Symbol('cordis-host-runner.dynamic-tool')
 const SCHEMA_TYPES = new Set<unknown>(['string', 'number', 'integer', 'boolean', 'null', 'object', 'array', 'json'])

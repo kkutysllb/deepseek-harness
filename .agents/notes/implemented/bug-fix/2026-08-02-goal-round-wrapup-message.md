@@ -14,7 +14,7 @@ A goal-round `complete` or `blocked` success no longer calls `concludeTurn()`. I
 
 The instruction wording was selected by A/B sampling on `deepseek-v4-pro` with a reconstructed goal-round transcript: a structured instruction (outcome, verification, artifacts, next steps) consistently beat a minimal "summarize" one on completeness; adding a session-grounding clause shifted unsupported detail from asserted fact to hedged suggestion; and the no-instruction control produced high-variance closings, including confidently fabricated file-level detail.
 
-Scripting the keyless proof required one snapshot-harness addition: `dsh-llm-replay` resolves `{{fromRequest:<regex>}}` placeholders in scripted entries against the live request, because a static sidecar cannot know the randomly minted goal id the model must echo into `update_goal`.
+Scripting the keyless proof required one snapshot-harness addition: `qilin-llm-replay` resolves `{{fromRequest:<regex>}}` placeholders in scripted entries against the live request, because a static sidecar cannot know the randomly minted goal id the model must echo into `update_goal`.
 
 ## Verification
 
@@ -22,7 +22,7 @@ Scripting the keyless proof required one snapshot-harness addition: `dsh-llm-rep
 
 ## Alternatives considered
 
-- **Surface the completion text on the `update_goal` UI card** — rejected: `complete` carries no free text today, and adding a `summary` argument would route a user-facing report through tool arguments while still cutting off the model's natural post-result message.
+- **Surface the completion text on the `update_goal` UI card** — rejected: `complete` carries no free text, and adding a `summary` argument would route a user-facing report through tool arguments while still cutting off the model's natural post-result message.
 - **Keep `concludeTurn()` and add a "one more text-only step" loop primitive** — rejected: new `agent-loop` machinery for behavior the ordinary stop already provides once nothing concludes the turn.
 - **Instruct inside the tool result content** — rejected: the goal tools' canonical output is compact JSON consumed programmatically; a prose instruction block inside it would mix the model-facing contract with the tool's replayable value.
 

@@ -1,7 +1,7 @@
 {
   "name": "@qilin/client-ui-brand-official",
-  "description": "Official DeepSeek Harness brand occupants for the Web client's sidebar and conversation Hero slots",
-  "version": "0.1.1-rc.2",
+  "description": "Official DeepSeek Harness brand occupants for the Web client's sidebar slots",
+  "version": "0.1.2-alpha.3",
   "publishConfig": {
     "access": "public"
   },
@@ -32,8 +32,7 @@
   "qilin": {
     "client": {
       "inject": [
-        "@qilin/client-runtime",
-        "@qilin/client-ui-conversation",
+        "@qilin/client-ui-renderer",
         "@qilin/client-ui-sidebar"
       ],
       "platform": "web"
@@ -45,16 +44,11 @@
   },
   "license": "MIT",
   "peerDependencies": {
-    "@qilin/client-runtime": "workspace:^",
-    "@qilin/client-ui-conversation": "workspace:^",
-    "@qilin/client-ui-sidebar": "workspace:^",
-    "@qilin/invariants": "workspace:^",
     "@deepseek-ai/cordis": "workspace:^"
   },
   "devDependencies": {
-    "@qilin/client-runtime": "workspace:^",
-    "@qilin/client-ui-conversation": "workspace:^",
     "@qilin/client-ui-primitives": "workspace:^",
+    "@qilin/client-ui-renderer": "workspace:^",
     "@qilin/client-ui-sidebar": "workspace:^",
     "@qilin/invariants": "workspace:^",
     "@deepseek-ai/cordis": "workspace:^",

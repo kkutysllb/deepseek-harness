@@ -14,7 +14,7 @@ Goal Round 的 `complete` 或 `blocked` 成功不再调用 `concludeTurn()`。�
 
 指令措辞通过在 `deepseek-v4-pro` 上用重构的 Goal Round 转录做 A/B 采样选定：结构化指令（结果、验证、产物、后续）在完整度上稳定优于极简“总结一下”；补充“以会话内证据为准”的 grounding 条款让无依据细节从断言事实退为带保留的建议；而无指令对照组的收尾方差很大，包括言之凿凿的文件级细节编造。
 
-为让 keyless 证明可脚本化，快照设施补了一项能力：`dsh-llm-replay` 会针对实时请求解析脚本条目中的 `{{fromRequest:<regex>}}` 占位符，因为静态伴随文件不可能预知模型必须回填进 `update_goal` 的随机生成 goal id。
+为让 keyless 证明可脚本化，快照设施补了一项能力：`qilin-llm-replay` 会针对实时请求解析脚本条目中的 `{{fromRequest:<regex>}}` 占位符，因为静态伴随文件不可能预知模型必须回填进 `update_goal` 的随机生成 goal id。
 
 ## 验证
 
@@ -22,7 +22,7 @@ Goal Round 的 `complete` 或 `blocked` 成功不再调用 `concludeTurn()`。�
 
 ## 曾考虑的替代方案
 
-- **在 `update_goal` 的 UI 卡片上展示完成文本** — 拒绝：`complete` 如今不携带任何自由文本；新增 `summary` 参数会让面向用户的汇报走工具参数通道，而且依然砍掉了模型在结果之后的自然发言。
+- **在 `update_goal` 的 UI 卡片上展示完成文本** — 拒绝：`complete` 不携带任何自由文本；新增 `summary` 参数会让面向用户的汇报走工具参数通道，而且依然砍掉了模型在结果之后的自然发言。
 - **保留 `concludeTurn()` 并新增“再多一步纯文本”的 loop 原语** — 拒绝：为常规停止路径已经能提供的行为（只要没有结果终结轮次）增加新的 `agent-loop` 机制。
 - **把指令写进工具结果内容** — 拒绝：goal 工具的规范输出是被程序化消费的紧凑 JSON；在其中混入散文指令会把模型侧约定和工具的可回放值搅在一起。
 

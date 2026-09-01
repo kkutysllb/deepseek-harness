@@ -1,7 +1,7 @@
 {
   "name": "@qilin/client-ui-layout",
   "description": "Shell plugin: three-column AppFrame with drag handles, ctx.layout viewing-state service (navigation + panels)",
-  "version": "0.1.1-rc.2",
+  "version": "0.1.2-alpha.3",
   "publishConfig": {
     "access": "public"
   },
@@ -32,7 +32,9 @@
   "qilin": {
     "client": {
       "inject": [
-        "@qilin/client-runtime",
+        "@qilin/client-locale",
+        "@qilin/client-ui-renderer",
+        "@qilin/client-ui-session",
         "@qilin/client-ui-theme"
       ],
       "platform": "web"
@@ -44,14 +46,13 @@
   },
   "license": "MIT",
   "peerDependencies": {
-    "@qilin/client-runtime": "workspace:^",
-    "@qilin/client-ui-theme": "workspace:^",
-    "@qilin/invariants": "workspace:^",
     "@deepseek-ai/cordis": "workspace:^"
   },
   "devDependencies": {
     "@qilin/client-locale": "workspace:^",
-    "@qilin/client-runtime": "workspace:^",
+    "@qilin/client-store": "workspace:^",
+    "@qilin/client-ui-renderer": "workspace:^",
+    "@qilin/client-ui-session": "workspace:^",
     "@qilin/client-ui-slots": "workspace:^",
     "@qilin/client-ui-theme": "workspace:^",
     "@qilin/invariants": "workspace:^",

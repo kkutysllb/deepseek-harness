@@ -10,14 +10,15 @@
 import { mkdtempSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
+import { pathToFileURL } from 'node:url'
 import { describe, expect, it, vi } from 'vitest'
 import * as yaml from 'js-yaml'
 import { entryListSchema } from '@deepseek-ai/cordis-plugin-include'
 import { loadOverlayPatches, renderConfigDump } from '../src/index.ts'
 
-const NAME = 'dsh-test-bin'
+const NAME = 'qilin-test-bin'
 
-const tmp = (): string => mkdtempSync(join(tmpdir(), 'dsh-config-dump-'))
+const tmp = (): string => mkdtempSync(join(tmpdir(), 'qilin-config-dump-'))
 
 function writeBase(dir: string): string {
   const base = join(dir, 'base.yml')
@@ -74,7 +75,11 @@ describe('renderConfigDump', () => {
         config: { value: 'surface', key: { __jsExpr: 'process.env.QILIN_DUMP_SPEC' } },
       },
       { id: 'untouched', name: './noop.mjs' },
-      { id: 'surface-extra', name: './noop.mjs', config: { value: 'user' } },
+      {
+        id: 'surface-extra',
+        name: pathToFileURL(join(dir, 'noop.mjs')).href,
+        config: { value: 'user' },
+      },
     ])
     // Unevaluated: the expression text round-trips as a !!js scalar.
     expect(dump).toContain('!!js process.env.QILIN_DUMP_SPEC')

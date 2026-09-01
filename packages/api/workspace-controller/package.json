@@ -1,0 +1,99 @@
+{
+  "name": "@qilin/api-workspace-controller",
+  "description": "Workspace Remote commands and reconnect-safe state transport",
+  "version": "0.1.2-alpha.3",
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/deepseek-ai/deepseek-harness.git",
+    "directory": "packages/api/workspace-controller"
+  },
+  "type": "module",
+  "main": "lib/index.js",
+  "types": "lib/types/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./lib/types/index.d.ts",
+      "default": "./lib/index.js"
+    },
+    "./invariant": {
+      "types": "./lib/types/invariant.d.ts",
+      "default": "./lib/invariant.js"
+    },
+    "./types": {
+      "types": "./lib/types/types.d.ts",
+      "default": "./lib/types/types.js"
+    },
+    "./client": {
+      "types": "./lib/types/client/index.d.ts",
+      "default": "./lib/client.js"
+    },
+    "./typert": {
+      "types": "./lib/typert.host.d.ts",
+      "default": "./lib/typert.host.js"
+    },
+    "./remote": {
+      "types": "./lib/typert.remote-client.d.ts",
+      "default": "./lib/typert.remote-client.js"
+    },
+    "./src/*": "./src/*",
+    "./package.json": "./package.json"
+  },
+  "qilin": {
+    "client": {
+      "external": [
+        "@qilin/api-gateway/client"
+      ],
+      "inject": [
+        "@qilin/api-gateway",
+        "@qilin/client-connection"
+      ],
+      "platform": "web"
+    }
+  },
+  "scripts": {
+    "bundle": "tsdown",
+    "watch": "tsdown --watch"
+  },
+  "files": [
+    "lib/index.js",
+    "lib/invariant.js",
+    "lib/client.js",
+    "lib/types/**/*.js",
+    "lib/types/**/*.d.ts",
+    "lib/typert.host.js",
+    "lib/typert.host.d.ts",
+    "lib/typert.remote-client.js",
+    "lib/typert.remote-client.d.ts"
+  ],
+  "license": "MIT",
+  "dependencies": {
+    "@qilin/deque": "workspace:^",
+    "zod": "^4.4.3"
+  },
+  "peerDependencies": {
+    "@deepseek-ai/cordis": "workspace:^",
+    "@qilin/api-gateway": "workspace:^",
+    "@qilin/client-connection": "workspace:^",
+    "@qilin/host-directory-picker": "workspace:^",
+    "@qilin/invariants": "workspace:^",
+    "@qilin/session": "workspace:^",
+    "@qilin/storage-domain": "workspace:^",
+    "@qilin/typert-protocol": "workspace:^",
+    "@qilin/workspace": "workspace:^"
+  },
+  "devDependencies": {
+    "@deepseek-ai/cordis": "workspace:^",
+    "@qilin/api-gateway": "workspace:^",
+    "@qilin/client-connection": "workspace:^",
+    "@qilin/client-store": "workspace:^",
+    "@qilin/host-directory-picker": "workspace:^",
+    "@qilin/invariants": "workspace:^",
+    "@qilin/session": "workspace:^",
+    "@qilin/storage-domain": "workspace:^",
+    "@qilin/typert-protocol": "workspace:^",
+    "@qilin/workspace": "workspace:^"
+  }
+}

@@ -30,7 +30,7 @@ afterEach(async () => {
 })
 
 async function tempDir(base: string): Promise<string> {
-  const dir = await mkdtemp(join(base, 'dsh-seatbelt-e2e-'))
+  const dir = await mkdtemp(join(base, 'qilin-seatbelt-e2e-'))
   tempDirs.push(dir)
   return dir
 }

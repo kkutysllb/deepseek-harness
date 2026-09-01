@@ -37,10 +37,3 @@ export interface ApiAuthGate {
    */
   checkUpgrade(request: IncomingMessage): boolean
 }
-
-declare module '@deepseek-ai/cordis' {
-  interface Context {
-    /** Optional /api authentication gate; present only when the composition mounts the accounts HTTP plugin. */
-    apiAuth?: ApiAuthGate
-  }
-}

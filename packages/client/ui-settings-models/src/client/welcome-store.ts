@@ -5,8 +5,8 @@
  * stays process-local here.
  */
 
-import type { SettingsScope, SnapshotStore } from '@qilin/client-runtime/client'
-import { createSnapshotStore } from '@qilin/client-runtime/client'
+import { createSnapshotStore, type SnapshotStore } from '@qilin/client-store'
+import type { SettingsScope } from '@qilin/client-ui-settings/client'
 import {
   WELCOME_NOTICE_ACK_FIELD, WELCOME_NOTICE_VERSION,
 } from '../onboarding-copy.ts'

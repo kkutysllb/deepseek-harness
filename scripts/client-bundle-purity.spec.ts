@@ -1,7 +1,10 @@
 /**
- * Pins shared client-bundle preset rules: the module-edge purity gate and
- * the physical watch dependencies hidden behind virtual CSS Modules.
+ * Pins shared client-bundle preset rules: module-edge purity, source-map
+ * chaining, and physical watch dependencies hidden behind virtual CSS Modules.
  */
+import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs'
+import { tmpdir } from 'node:os'
+import { join } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { describe, expect, it, vi } from 'vitest'
 import { clientBundle, requestedExternals } from '../packages/client/tsdown.client.ts'
@@ -12,6 +15,11 @@ interface CssModulePlugin {
   name: string
   resolveId?: (source: string, importer: string | undefined) => null | string
   load?: (this: { addWatchFile: (id: string) => void }, id: string) => Promise<unknown>
+}
+
+interface SourceMapPlugin {
+  name: string
+  load?: (id: string) => Promise<unknown>
 }
 
 /** A representative dynamic bundle using the shared client baseline. */
@@ -44,7 +52,7 @@ function purityResolveId(id = REQUESTING_PACKAGE): ResolveId {
   // package-invariants text check can see the invariant entry per package.
   const configs = clientConfigs(id)
   const plugins = (configs[0] as { plugins: { name: string; resolveId?: unknown }[] }).plugins
-  const gate = plugins.find(p => p.name === 'dsh-client-bundle-purity')
+  const gate = plugins.find(p => p.name === 'qilin-client-bundle-purity')
   if (gate?.resolveId === undefined) throw new Error('purity plugin missing from client config')
   return gate.resolveId as ResolveId
 }
@@ -52,10 +60,18 @@ function purityResolveId(id = REQUESTING_PACKAGE): ResolveId {
 function cssModulePlugin(): CssModulePlugin {
   const configs = clientConfigs()
   const plugins = (configs[0] as { plugins: CssModulePlugin[] }).plugins
-  const plugin = plugins.find(candidate => candidate.name === 'dsh-css-modules-inline')
+  const plugin = plugins.find(candidate => candidate.name === 'qilin-css-modules-inline')
   if (plugin?.resolveId === undefined || plugin.load === undefined) {
     throw new Error('CSS Modules plugin missing from client config')
   }
+  return plugin
+}
+
+function sourceMapPlugin(): SourceMapPlugin {
+  const configs = clientConfigs()
+  const plugins = (configs[0] as { plugins: SourceMapPlugin[] }).plugins
+  const plugin = plugins.find(candidate => candidate.name === 'qilin-tsc-sourcemap')
+  if (plugin?.load === undefined) throw new Error('tsc sourcemap plugin missing from client config')
   return plugin
 }
 
@@ -63,9 +79,9 @@ describe('client bundle purity gate', () => {
   const resolveId = purityResolveId()
 
   it('leaves default externals and non-scoped specifiers alone', () => {
+    expect(resolveId('@qilin/client-store')).toBeNull()
     expect(resolveId('@qilin/client-ui-slots')).toBeNull()
     expect(resolveId('@qilin/client-ui-primitives')).toBeNull()
-    expect(resolveId('@qilin/client-runtime/client')).toBeNull()
     expect(resolveId('react')).toBeNull()
     expect(resolveId('zod')).toBeNull()
   })
@@ -75,10 +91,14 @@ describe('client bundle purity gate', () => {
     expect(() => resolveId('@qilin/client-web-react/store')).toThrow(/purity/)
   })
 
-  it('lets inline-safe wire layers inline', () => {
-    expect(resolveId('@qilin/host-apiproxy/api')).toBeNull()
+  it('lets inline-safe libraries inline', () => {
     expect(resolveId('@qilin/session/surface')).toBeNull()
     expect(resolveId('@qilin/brand')).toBeNull()
+    expect(resolveId('@qilin/deque')).toBeNull()
+    expect(resolveId('@qilin/util-values')).toBeNull()
+    expect(resolveId('@qilin/token-meter/client')).toBeNull()
+    expect(() => resolveId('@qilin/token-meter')).toThrow(/purity/)
+    expect(() => resolveId('@qilin/token-meter/client/internal')).toThrow(/purity/)
   })
 
   it('lets exact generated Remote contributions inline without admitting their package implementation', () => {
@@ -88,21 +108,21 @@ describe('client bundle purity gate', () => {
     expect(() => resolveId('@qilin/goal/remote/nested')).toThrow(/purity/)
   })
 
-  it('throws on any other @deepseek-ai leak', () => {
+  it('throws on any other @qilin leak', () => {
     expect(() => resolveId('@qilin/agent')).toThrow(/purity/)
     expect(() => resolveId('@qilin/client-web')).toThrow(/purity/)
   })
 
   it('throws on cross-plugin value imports — bare plugin names and /client subpaths alike', () => {
     expect(() => resolveId('@qilin/client-connection')).toThrow(/purity/)
-    expect(() => resolveId('@qilin/client-runtime')).toThrow(/purity/)
+    expect(() => resolveId('@qilin/client-ui-session')).toThrow(/purity/)
     expect(() => resolveId('@qilin/client-ui-layout/client')).toThrow(/purity/)
   })
 
-  it('admits the parser-preloaded runtime for every dynamic bundle', () => {
-    expect(resolveId('@qilin/client-runtime/client')).toBeNull()
-    const withoutRequest = purityResolveId('@qilin/client-ui-goal')
-    expect(withoutRequest('@qilin/client-runtime/client')).toBeNull()
+  it('admits package-specific requests only for the declaring bundle', () => {
+    const requesting = purityResolveId('@qilin/api-session-controller')
+    expect(requesting('@qilin/api-gateway/client')).toBeNull()
+    expect(() => resolveId('@qilin/api-gateway/client')).toThrow(/purity/)
   })
 
   it('externalizes the baseline independently of each package manifest', () => {
@@ -114,7 +134,7 @@ describe('client bundle purity gate', () => {
     expect(requesting.neverBundle('react')).toBe(true)
     expect(requesting.neverBundle('zod')).toBe(false)
     expect(plain.neverBundle('react')).toBe(true)
-    expect(plain.neverBundle('@qilin/client-runtime/client')).toBe(true)
+    expect(plain.neverBundle('@qilin/client-store')).toBe(true)
   })
 })
 
@@ -143,6 +163,28 @@ describe('client bundle debug artifacts', () => {
   it('emits source maps for plugin TS and TSX outside the Vite module graph', () => {
     const configs = clientConfigs()
     expect(configs[0]?.sourcemap).toBe(true)
+    expect(configs[0]?.outputOptions).toMatchObject({ sourcemapExcludeSources: false })
+  })
+
+  it('chains emitted tsc maps when the production Client build consumes lib/types', async () => {
+    const root = mkdtempSync(join(tmpdir(), 'qilin-client-sourcemap-'))
+    try {
+      const entry = join(root, 'lib', 'types', 'client', 'index.js')
+      const source = join(root, 'src', 'client', 'index.ts')
+      const map = { version: 3, names: [], mappings: 'AAAA', sources: ['../../../src/client/index.ts'] }
+      mkdirSync(join(root, 'lib', 'types', 'client'), { recursive: true })
+      mkdirSync(join(root, 'src', 'client'), { recursive: true })
+      writeFileSync(entry, 'export const marker = true\n//# sourceMappingURL=index.js.map\n')
+      writeFileSync(`${entry}.map`, JSON.stringify(map))
+      writeFileSync(source, 'export const marker: true = true\n')
+
+      await expect(sourceMapPlugin().load!(entry)).resolves.toEqual({
+        code: 'export const marker = true',
+        map: { ...map, sourcesContent: ['export const marker: true = true\n'] },
+      })
+    } finally {
+      rmSync(root, { recursive: true, force: true })
+    }
   })
 
   it('maps first-party sources to their repository package paths', () => {
@@ -177,10 +219,10 @@ describe('client bundle debug artifacts', () => {
     if (transform === undefined) throw new Error('client sourcemap path transform missing')
 
     const sourceMapPath = clientSourceMapPath('client/connection')
-    const workspaceSource = transform('../../../host/apiproxy/src/api/rpc.ts', sourceMapPath)
-    expect(workspaceSource).toBe('../../../packages/host/apiproxy/src/api/rpc.ts')
+    const workspaceSource = transform('../src/rpc.ts', sourceMapPath)
+    expect(workspaceSource).toBe('../../../packages/client/connection/src/rpc.ts')
     const resolved = new URL(workspaceSource, 'https://dsh.test/plugins/@qilin/client-connection/client.js.map')
-    expect(resolved.pathname).toBe('/packages/host/apiproxy/src/api/rpc.ts')
+    expect(resolved.pathname).toBe('/packages/client/connection/src/rpc.ts')
 
     const dependencySource = '../../../../node_modules/.pnpm/zod@4.4.3/node_modules/zod/index.js'
     expect(transform(dependencySource, sourceMapPath)).toBe(dependencySource)

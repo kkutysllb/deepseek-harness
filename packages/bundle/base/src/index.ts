@@ -1,5 +1,5 @@
 /**
- * @qilin/base — the shared dsh core as a profile bundle. The
+ * @qilin/base — the shared qilin core as a profile bundle. The
  * package's substance is `cordis.patch.yml`, declared by the `qilin.bundle.patch`
  * manifest field and resolved by the profile composer through that field;
  * this module carries no runtime API.

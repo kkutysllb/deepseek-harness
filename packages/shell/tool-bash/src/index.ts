@@ -15,7 +15,6 @@ import { defineTool, TOOL_ABORTED } from '@qilin/tools'
 import type { GenericCallView, TerminalCallView, ToolExecution, ToolResult, ToolResultView } from '@qilin/tools'
 import { HarnessError } from '@qilin/llm'
 import type { Agent } from '@qilin/agent'
-import type {} from '@qilin/system-prompt'
 import type {} from '@qilin/jobs'
 import type {} from '@qilin/user-approval'
 import type {} from '@qilin/shell-env'
@@ -235,7 +234,7 @@ export function apply(ctx: Context, config: Config = {}): void {
   // Cross-call guidance belongs in the prompt rather than one-call schema prose.
   ctx.systemPrompt.section({
     name: 'tool:bash',
-    order: 105,
+    order: ctx.systemPrompt.getSectionOrder('TOOL_BASH'),
     text: 'Check the [exit code: N] marker on every bash result; investigate failures before moving on.',
   })
 

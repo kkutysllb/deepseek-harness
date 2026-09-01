@@ -6,13 +6,13 @@
  * The koffi bindings load lazily so
  * non-Windows processes never touch Win32 libraries; all decision logic takes
  * an injectable internals boundary so suites can pin it on any host.
- * @module dsh-subprocess-local/windows-inspector
+ * @module qilin-subprocess-local/windows-inspector
  */
 
 import { spawnSync } from 'node:child_process'
 import koffi from 'koffi'
 import type { SubprocessTerminalSignal } from '@qilin/subprocess'
-import type { ProcessIdentity, ProcessInspector } from './process-inspector.ts'
+import type { ProcessIdentity, ProcessInspector, ProcessSnapshot } from './process-inspector.ts'
 
 /** One Toolhelp32 process-table row. */
 export interface ProcessEntry {
@@ -93,21 +93,30 @@ export class WindowsProcessInspector implements ProcessInspector {
     return shellPid
   }
 
-  isStdinWaiting(_pgid: number): boolean {
+  isStdinWaiting(_pgid: number, _shellPid: number): boolean {
     return false
-  }
-
-  processTree(rootPid: number): ProcessIdentity[] {
-    return windowsProcessTree(this.internals.snapshot(), rootPid, pid => this.internals.processState(pid)?.started)
-  }
-
-  processSession(_sessionId: number): ProcessIdentity[] {
-    return []
   }
 
   isAlive(identity: ProcessIdentity): boolean {
     const state = this.internals.processState(identity.pid)
     return state?.active === true && state.started === identity.started
+  }
+
+  snapshot(): ProcessSnapshot {
+    // Enumerated on the first question that reads the table. Liveness never
+    // does — wait state is a per-handle question here — so the Windows
+    // teardown poll, which asks only for liveness, pays no Toolhelp32 walk.
+    let entries: ProcessEntry[] | undefined
+    return {
+      tree: rootPid => windowsProcessTree(
+        entries ??= this.internals.snapshot(),
+        rootPid,
+        pid => this.internals.processState(pid)?.started,
+      ),
+      // Windows has no POSIX sessions; the shell pid stands in as a pseudo group.
+      session: () => [],
+      alive: identity => this.isAlive(identity),
+    }
   }
 
   signalGroup(pgid: number, signal: SubprocessTerminalSignal): void {

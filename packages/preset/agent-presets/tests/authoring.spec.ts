@@ -14,9 +14,10 @@ import { fileURLToPath, pathToFileURL } from 'node:url'
 import { Context } from '@deepseek-ai/cordis'
 import Loader from '@deepseek-ai/cordis-plugin-loader'
 import Include from '@deepseek-ai/cordis-plugin-include'
+import SessionProjectionRegistry from '@qilin/session-projection'
 import { beforeEach, describe, expect, it } from 'vitest'
 import AgentPresets, {
-  COMPOSITION_FILE, copyComposition, METADATA_FILE,
+  COMPOSITION_FILE, copyComposition, METADATA_FILE, type Config,
 } from '@qilin/agent-presets'
 
 const FIXTURES = join(dirname(fileURLToPath(import.meta.url)), 'fixtures')
@@ -24,6 +25,12 @@ const VALID = '- id: tool-alpha\n  name: ../../plugins/contribute.js\n  config:\
 
 let ctx: Context
 let userRoot: string
+
+/** Mount the required projection seam before the roster service. */
+async function mountAgentPresets(context: Context, config: Config): Promise<void> {
+  await context.plugin(SessionProjectionRegistry)
+  await context.plugin(AgentPresets, config)
+}
 
 /** Hand-craft a preset directory (tests cannot author text through the service). */
 async function seedPreset(
@@ -41,20 +48,22 @@ async function seedPreset(
 }
 
 beforeEach(async () => {
-  userRoot = await mkdtemp(join(tmpdir(), 'dsh-preset-authoring-'))
+  userRoot = await mkdtemp(join(tmpdir(), 'qilin-preset-authoring-'))
   ctx = new Context()
   ctx.baseUrl = pathToFileURL(FIXTURES).href + '/'
   await ctx.plugin(Loader)
   ctx.loader.builtins.include = Include
-  await ctx.plugin(AgentPresets, {
+  await mountAgentPresets(ctx, {
     default: 'standard',
     roots: [
       { path: join(FIXTURES, 'system'), trust: 'system' as const },
       { path: userRoot, trust: 'user' as const },
     ],
-    // Every roster in this file pins its own roots: the derived harness-home
-    // root would add the developer's real presets to what these assertions
-    // count, and `copy` would write into it.
+    // Every roster in this file pins its own roots: the package's shipped
+    // presets would shadow the fixture ids, and the derived harness-home root
+    // would add the developer's real presets to what these assertions count —
+    // and `copy` would write into it.
+    includeShippedRoot: false,
     includeUserRoot: false,
   })
 })
@@ -191,18 +200,19 @@ describe('deleting a preset', () => {
 
 describe('a deployment with more than one user root', () => {
   it('refuses to delete a preset the writable root does not own', async () => {
-    const second = await mkdtemp(join(tmpdir(), 'dsh-preset-second-'))
+    const second = await mkdtemp(join(tmpdir(), 'qilin-preset-second-'))
     await seedPreset(second, 'elsewhere')
     const layered = new Context()
     layered.baseUrl = pathToFileURL(FIXTURES).href + '/'
     await layered.plugin(Loader)
     layered.loader.builtins.include = Include
-    await layered.plugin(AgentPresets, {
+    await mountAgentPresets(layered, {
       default: 'standard',
       roots: [
         { path: userRoot, trust: 'user' as const },
         { path: second, trust: 'user' as const },
       ],
+      includeShippedRoot: false,
       includeUserRoot: false,
     })
 
@@ -221,9 +231,10 @@ describe('a deployment with no writable root', () => {
     readOnly.baseUrl = pathToFileURL(FIXTURES).href + '/'
     await readOnly.plugin(Loader)
     readOnly.loader.builtins.include = Include
-    await readOnly.plugin(AgentPresets, {
+    await mountAgentPresets(readOnly, {
       default: 'standard',
       roots: [{ path: join(FIXTURES, 'system'), trust: 'system' as const }],
+      includeShippedRoot: false,
       includeUserRoot: false,
     })
 
@@ -235,17 +246,18 @@ describe('a deployment with no writable root', () => {
 
 describe('a user root that does not exist yet', () => {
   it('is created by the first copy', async () => {
-    const absent = join(await mkdtemp(join(tmpdir(), 'dsh-preset-absent-')), 'nested', 'preset')
+    const absent = join(await mkdtemp(join(tmpdir(), 'qilin-preset-absent-')), 'nested', 'preset')
     const fresh = new Context()
     fresh.baseUrl = pathToFileURL(FIXTURES).href + '/'
     await fresh.plugin(Loader)
     fresh.loader.builtins.include = Include
-    await fresh.plugin(AgentPresets, {
+    await mountAgentPresets(fresh, {
       default: 'standard',
       roots: [
         { path: join(FIXTURES, 'system'), trust: 'system' as const },
         { path: absent, trust: 'user' as const },
       ],
+      includeShippedRoot: false,
       includeUserRoot: false,
     })
 
@@ -298,6 +310,11 @@ describe('a ghost directory under the user root', () => {
     await ctx.agentPresets.remove('ghost')
     expect(existsSync(join(userRoot, 'ghost'))).toBe(false)
     await ctx.agentPresets.copy('standard', 'ghost')
-    expect((await ctx.agentPresets.list()).find(preset => preset.id === 'ghost')?.broken).toBeUndefined()
+    expect((await ctx.agentPresets.list()).map(preset => preset.id)).toContain('ghost')
+    // A copy carries the whole preset directory, so a preset's own files
+    // travel with it. This fixture's rows reach OUTSIDE that directory, which
+    // no real preset does and which no copy can carry — so the claim here is
+    // the reclaimed id and the restored composition, not the rows' targets.
+    expect(existsSync(join(userRoot, 'ghost', COMPOSITION_FILE))).toBe(true)
   })
 })

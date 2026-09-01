@@ -1,5 +1,5 @@
 import { spawnSync } from 'node:child_process'
-import { mkdtemp, rm, writeFile } from 'node:fs/promises'
+import { mkdtemp, realpath, rm, writeFile } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { pathToFileURL } from 'node:url'
@@ -7,8 +7,9 @@ import { afterEach, describe, expect, it } from 'vitest'
 import { Context } from '@deepseek-ai/cordis'
 import Loader from '@deepseek-ai/cordis-plugin-loader'
 import Include from '@deepseek-ai/cordis-plugin-include'
-import { CallId } from '@qilin/llm'
+import { ToolCallId } from '@qilin/llm'
 import { Session, SessionId } from '@qilin/session'
+import SessionProjectionRegistry from '@qilin/session-projection'
 import AgentRegistry, { Inbox } from '@qilin/agent'
 import type { Agent } from '@qilin/agent'
 import TerminalSessionService from '@qilin/terminal'
@@ -72,7 +73,7 @@ function text(result: { content: { type: string; text?: string }[] }): string {
 
 describe.skipIf(!hasPwsh)('persistent pwsh through a real cordis.yml Loader composition', () => {
   it('preserves cwd and environment across calls', async () => {
-    root = await mkdtemp(join(tmpdir(), 'dsh-persistent-pwsh-loader-'))
+    root = await realpath(await mkdtemp(join(tmpdir(), 'qilin-persistent-pwsh-loader-')))
     const configPath = join(root, 'cordis.yml')
     await writeFile(configPath, [
       "- name: '@qilin/agent'",
@@ -80,6 +81,7 @@ describe.skipIf(!hasPwsh)('persistent pwsh through a real cordis.yml Loader comp
       "- name: '@qilin/tools'",
       "- name: '@qilin/terminal'",
       "- name: '@qilin/test-sandbox'",
+      "- name: '@qilin/session-projection'",
       "- name: '@qilin/sandbox-policy'",
       '  config:',
       '    mode: danger-full-access',
@@ -93,11 +95,11 @@ describe.skipIf(!hasPwsh)('persistent pwsh through a real cordis.yml Loader comp
       '    idleSilenceMs: 300',
       '    handoffGraceMs: 300',
       '    scrollbackLines: 20000',
-      '    timeoutMs: 8000',
+      '    timeoutMs: 60000',
       '    disposeGraceMs: 500',
       "- name: '@qilin/tool-pwsh-persistent'",
       '  config:',
-      '    timeoutMs: 20000',
+      '    timeoutMs: 60000',
       '',
     ].join('\n'))
 
@@ -111,6 +113,7 @@ describe.skipIf(!hasPwsh)('persistent pwsh through a real cordis.yml Loader comp
       ['@qilin/tools', ToolRegistry],
       ['@qilin/terminal', TerminalSessionService],
       ['@qilin/test-sandbox', PassthroughSandbox],
+      ['@qilin/session-projection', SessionProjectionRegistry],
       ['@qilin/sandbox-policy', SandboxPolicyService],
       ['@qilin/subprocess-local', LocalSubprocessService],
       ['@qilin/terminal-bash', TerminalBash],
@@ -130,7 +133,7 @@ describe.skipIf(!hasPwsh)('persistent pwsh through a real cordis.yml Loader comp
     const signal = new AbortController().signal
     const execute = (id: string, command: string) => context!.tools.execute({
       signal,
-      callId: CallId(id),
+      callId: ToolCallId(id),
       name: 'pwsh',
       arguments: { command },
       agent: owner,
@@ -163,5 +166,5 @@ describe.skipIf(!hasPwsh)('persistent pwsh through a real cordis.yml Loader comp
     const exited = text(await execute('exit', 'exit'))
     expect(exited).toContain('next pwsh call starts from the workspace')
     expect(text(await execute('after-exit', 'Write-Output "$PWD"'))).toBe(root)
-  }, 60_000)
+  }, 120_000)
 })

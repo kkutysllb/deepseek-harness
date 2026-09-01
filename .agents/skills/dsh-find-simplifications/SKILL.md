@@ -1,6 +1,6 @@
 ---
-name: dsh-find-simplifications
-description: 'Use when working in the deepseek-harness repo to find non-obvious simplification candidates, write proposed Agent Notes or inline TODO/FIXME/XXX notes, audit or coalesce superseded Agent Notes, or fold worthwhile simplification ideas from another PR; especially for dead, duplicated, speculative, over-built, added-then-removed, or hand-rolled-where-a-dependency-exists surfaces.'
+name: qilin-find-simplifications
+description: 'Use when working in the deepseek-harness repo to find non-obvious simplification candidates, remove redundant comments or implementation-heavy documentation, write proposed Agent Notes or inline TODO/FIXME/XXX notes, audit or coalesce superseded Agent Notes, or fold worthwhile simplification ideas from another PR; especially for dead, duplicated, speculative, over-built, added-then-removed, or hand-rolled-where-a-dependency-exists surfaces.'
 ---
 
 # Finding DeepSeek Harness Simplifications
@@ -11,8 +11,8 @@ This skill helps turn a broad "find things to simplify" request into evidence-ba
 
 - Read `AGENTS.md`, especially the pre-release stance and the conventions (including the tests-are-not-golden-truth and Agent Notes-are-not-golden-truth doctrines), plus [docs/defensive-patterns.md](../../../docs/defensive-patterns.md) and [docs/testing.md](../../../docs/testing.md).
 - Skim [docs/architecture.md](../../../docs/architecture.md) before judging anything under `packages/`; simplifications that fight the service map or event taxonomy need extra evidence.
-- Use the Agent Note tree and its [rules](../../notes/README.md) to understand intentional architecture. The most relevant implemented examples are [drop mutable session summary](../../notes/implemented/simplification/2026-06-19-drop-mutable-session-summary.md), [shared persistence write coordinator](../../notes/implemented/architecture/2026-06-18-shared-persistence-write-coordinator.md), [capability seams](../../notes/implemented/architecture/2026-06-13-capability-seams.md), and the twin adapter / dual persistence backend Agent Notes.
-- Treat dual LLM adapters and dual persistence backends as intentional by default. Do not propose deleting either twin/backend as "low effort" unless the user explicitly overrides that constraint. Removing an unused method or hook inside a protected seam can still be valid if it does not collapse the protected design.
+- Use the Agent Note tree and its [rules](../../notes/README.md) to understand intentional architecture. The most relevant implemented examples are [drop mutable session summary](../../notes/implemented/simplification/2026-06-19-drop-mutable-session-summary.md), [shared persistence write coordinator](../../notes/implemented/architecture/2026-06-18-shared-persistence-write-coordinator.md), [JSONL-only first-party Session persistence](../../notes/implemented/simplification/2026-08-30-jsonl-only-session-persistence.md), [capability seams](../../notes/implemented/architecture/2026-06-13-capability-seams.md), and the twin-adapter Agent Notes.
+- Treat dual LLM adapters as intentional by default. Session persistence is different: JSONL is the sole first-party provider, while the backend-neutral service remains available to out-of-tree providers. Do not propose deleting an LLM twin or the persistence seam as "low effort" unless the user explicitly overrides that constraint. Removing an unused method or hook inside a protected seam can still be valid if it does not collapse the protected design.
 
 ## What Counts As A Strong Candidate
 
@@ -28,7 +28,7 @@ A strong simplification removes, folds, or demotes something real and has clear 
 - Hand-rolled code reimplements what a well-maintained external package or a Node builtin at the engine floor already provides, and the swap would delete the implementation plus its dedicated tests ([dependency policy](../../notes/implemented/process/2026-07-26-dependencies-over-hand-rolling.md)).
 - The simplified behavior may differ slightly, but the new behavior is still reasonable and easier to explain.
 
-Thin candidates are usually not enough for an Agent Note: deleting one typo, running `knip` once, removing an intentionally documented backend/adapter, or flagging "this looks complex" without call-site proof.
+Thin candidates are not enough for an Agent Note: deleting one typo, running `knip` once, removing an intentionally documented backend/adapter, or flagging "this looks complex" without call-site proof.
 
 ## Survey Broadly
 
@@ -43,6 +43,13 @@ Use parallel subagents when the user asks for breadth or many candidates. Give e
 If subagents are unavailable, simulate the same breadth yourself. Do not let the first good candidate stop the survey.
 
 Start with the largest production-code deltas. A broad simplification audit that stops after obvious unused symbols can miss the files where duplicated lifecycle or defensive machinery carries most of the cost.
+
+## Simplify Prose With The Code
+
+Treat comments and documentation as maintained surface area. Apply [qilin-prose-standard](../dsh-prose-standard/SKILL.md) when a survey includes prose.
+
+- Delete comments that restate code or explain behavior owned elsewhere; keep required local contracts.
+- Keep docs at their owning level; omit implementation details and rare cases unless they change a maintained contract.
 
 ## Audit Trust And Lifecycle Boundaries
 
@@ -69,7 +76,7 @@ For every symbol or behavior, classify consumers before writing:
 - Non-production corpus: tests, README/docs, Agent Notes, snapshots, generated expected outputs, and comments.
 - Ambiguous corpus: examples and scripts that may be product smoke paths. Inspect usage before classifying.
 
-Use `rg` first. Good searches include the exact symbol, event name, package name, config key, method name with both `.name(` and `name(`, and any wire strings. Then read the call sites. `knip` can help, but it is not a substitute for understanding public interfaces, dynamic event names, tests, docs, and Cordis loader paths.
+Use `rg` first. Good searches include the exact symbol, event name, package name, config key, method name with both `.name(` and `name(`, and any wire strings. Then read the call sites, public interfaces, dynamic event names, tests, docs, and Cordis loader paths.
 
 Reject or downgrade a candidate when:
 
@@ -82,7 +89,7 @@ Reject or downgrade a candidate when:
 
 Audit the Agent Note tree when the user asks to reduce or coalesce it, or when the simplification being implemented makes an owning note obsolete. Do not expand every code-simplification survey into a repository-wide note audit.
 
-Use [`dsh-archive-agent-notes`](../dsh-archive-agent-notes/SKILL.md) for retention judgment and archive mechanics. Low-future-value implemented notes move as frozen triplets to `archived/{kind}`; proposed notes are never archived; rejected notes that no longer prevent a tempting mistake are deleted. Do not edit an archived note while simplifying current prose or code.
+Use [`qilin-archive-agent-notes`](../dsh-archive-agent-notes/SKILL.md) for retention judgment and archive mechanics. Low-future-value implemented notes move as frozen triplets to `archived/{kind}`; proposed notes are never archived; rejected notes that no longer prevent a tempting mistake are deleted. Do not edit an archived note while simplifying current prose or code.
 
 Follow the deletion rule in the [Agent Note rules](../../notes/README.md#when-to-write-one); do not duplicate or weaken it here. For each candidate chain:
 

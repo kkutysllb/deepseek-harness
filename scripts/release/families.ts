@@ -1,7 +1,7 @@
 /**
  * The three independent publish sequences this repository releases from
  * (`packages/` + `apps/`, `vendor/`, and `native/`) and the two this module
- * owns: 'qilin' and 'vendor'. Each family carries its own version baseline, tag
+ * owns: `qilin` and `vendor`. Each family carries its own version baseline, tag
  * naming, and publish set, so releasing one never republishes another
  * ([rationale](../../.agents/notes/implemented/process/2026-08-10-npm-release-sequences.md)).
  *
@@ -38,7 +38,6 @@ const WORKSPACE_ROOT_PACKAGE = '@qilin/engine-root'
 
 /** One peer declaration the publish order leaves unordered. */
 interface DroppedPeerEdge {
-  /** Package declaring the peer. */
   readonly consumer: string
   /** The declared peer, which publishes after `consumer` or alongside it in a cycle. */
   readonly peer: string
@@ -52,7 +51,6 @@ interface DroppedPeerEdge {
  * log is the only one who can judge whether a newly dropped edge is expected.
  */
 export interface PublishPlan {
-  /** Members in publish order. */
   readonly order: readonly ReleaseMember[]
   /** Peer declarations left unordered, in the order the traversal reached them. */
   readonly droppedPeerEdges: readonly DroppedPeerEdge[]
@@ -60,13 +58,9 @@ export interface PublishPlan {
 
 /** One publishable package of a release family. */
 export interface ReleaseMember {
-  /** Repository-relative package directory, for example `packages/core/session`. */
   readonly directory: string
-  /** Package name from its manifest. */
   readonly name: string
-  /** Package version from its manifest. */
   readonly version: string
-  /** The parsed manifest, for payload policy and publication checks. */
   readonly manifest: Readonly<Record<string, unknown>>
 }
 
@@ -98,25 +92,20 @@ function requireString(manifest: Record<string, unknown>, field: string, context
 
 /** The executable a family's installed artifacts are driven through. */
 export interface InstalledEntry {
-  /** Package that carries the executable. */
   readonly packageName: string
-  /** Path to the executable inside that package. */
   readonly binPath: string
 }
 
 /** A release sequence: its members, its version baseline, and its tag naming. */
 export abstract class ReleaseFamily {
-  /** Workflow-facing identifier, also the `--family` argument. */
+  /** Workflow-facing `--family` identifier. */
   abstract readonly id: string
 
-  /** Glob patterns, relative to the repository root, that select this family's manifests. */
+  /** Repository-relative glob patterns selecting this family's manifests. */
   abstract readonly patterns: readonly string[]
 
   /** Git tag prefix this family publishes from. */
   abstract readonly tagPrefix: string
-
-  /** The npm scope every manifest this family selects must name. */
-  abstract readonly nameScope: string
 
   /**
    * Assert that built artifacts match this release family's required profile.
@@ -142,7 +131,7 @@ export abstract class ReleaseFamily {
       const name = requireString(manifest, 'name', normalized)
       const version = requireString(manifest, 'version', normalized)
       if (name === WORKSPACE_ROOT_PACKAGE) throw new Error(`${normalized} selected the workspace root`)
-      if (!name.startsWith(this.nameScope)) throw new Error(`${normalized} must name an ${this.nameScope} package`)
+      if (!name.startsWith('@qilin/')) throw new Error(`${normalized} must name an @deepseek-ai package`)
       if (seen.has(name)) throw new Error(`${name} appears twice in release family ${this.id}`)
       seen.add(name)
       members.push({
@@ -297,6 +286,15 @@ export abstract class ReleaseFamily {
   abstract tagPrefixFor(member: ReleaseMember): string
 
   /**
+   * The npm dist-tag assigned while publishing a version.
+   * @param version - package version from the packed manifest.
+   * @returns `next` for a prerelease, or undefined so npm uses `latest`.
+   */
+  distTagForVersion(version: string): string | undefined {
+    return version.includes('-') ? 'next' : undefined
+  }
+
+  /**
    * The tag a member publishes from.
    * @param member - the member being published.
    * @returns The full tag name, without `refs/tags/`.
@@ -324,7 +322,6 @@ class QilinFamily extends ReleaseFamily {
   readonly id = 'qilin'
   readonly patterns = ['packages/!(experimental)/*/package.json', 'apps/*/package.json'] as const
   readonly tagPrefix = 'qilin-v'
-  readonly nameScope = '@qilin/'
 
   /** Require current artifacts from a complete official client build. */
   override verifyBuildArtifacts(root: string): void {
@@ -351,6 +348,14 @@ class QilinFamily extends ReleaseFamily {
     return this.tagPrefix
   }
 
+  override distTagForVersion(version: string): string | undefined {
+    const separator = version.indexOf('-')
+    if (separator === -1) return undefined
+    const [channel] = version.slice(separator + 1).split('.')
+    if (channel === 'alpha' || channel === 'canary') return channel
+    return 'next'
+  }
+
   /**
    * Reject source and declaration-map members, the repository's publication policy.
    * @param member - the packed member.
@@ -368,7 +373,6 @@ class VendorFamily extends ReleaseFamily {
   readonly id = 'vendor'
   readonly patterns = ['vendor/*/package.json'] as const
   readonly tagPrefix = 'vendor-'
-  readonly nameScope = '@deepseek-ai/'
 
   /**
    * Accept independent versions; only reject a version this repository cannot publish.

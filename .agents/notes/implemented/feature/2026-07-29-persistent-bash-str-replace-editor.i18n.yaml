@@ -2,5 +2,5 @@
 # side as of the last confirmed-consistent state. Both languages carry equal authority;
 # after editing either side, bring the other along and re-record with:
 #   pnpm run verify-translation-pairing --write .agents/notes/implemented/feature/2026-07-29-persistent-bash-str-replace-editor.md
-2026-07-29-persistent-bash-str-replace-editor.md: 97f3a9b0e67603ac8a57a4fe4fd17d48ab2a19b7
-2026-07-29-persistent-bash-str-replace-editor.zh.md: c14dd88fca4abb6c10b00971e971906871a409ec
+2026-07-29-persistent-bash-str-replace-editor.md: a36e1de2d3741a116c225d3e9f999f52f8f8d81d
+2026-07-29-persistent-bash-str-replace-editor.zh.md: 7e1e3e2fc7a2f59da7c6073e98102c5e623dbfea

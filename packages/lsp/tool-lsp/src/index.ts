@@ -3,7 +3,7 @@
  * (`goToDefinition`/`findReferences`/`goToImplementation`/`hover`); it converts one-based UTF-16
  * cursor coordinates to the seam's zero-based positions, requires the session workspace with no
  * fallback, caps and renders results, and attaches a configurable timeout budget for
- * `dsh-tool-call-timeout-policy` to enforce. It runtime-injects only `tools`, `lsp`, and `systemPrompt` and
+ * `qilin-tool-call-timeout-policy` to enforce. It runtime-injects only `tools`, `lsp`, and `systemPrompt` and
  * imports no provider.
  *
  * Namespace plugin (named exports, no default export).
@@ -13,11 +13,10 @@
 import type { Context } from '@deepseek-ai/cordis'
 import z from '@deepseek-ai/schemastery'
 import { defineTool } from '@qilin/tools'
-import { assertNever } from '@qilin/llm'
 import { LspError } from '@qilin/lsp'
 import type {} from '@qilin/lsp'
-import type {} from '@qilin/system-prompt'
 import { MAX_TIMER_DELAY_MS } from '@qilin/timeout'
+import { assertNever } from '@qilin/util-values'
 import {
   DEFAULT_MAX_LOCATIONS,
   DEFAULT_MAX_RESULT_CHARS,
@@ -101,7 +100,11 @@ export function apply(ctx: Context, config: Config): void {
   assertPositiveInteger('maxResultChars', resolved.maxResultChars)
   assertTimer('timeoutMs', resolved.timeoutMs)
 
-  ctx.systemPrompt.section({ name: 'tool:lsp', order: 112, text: LSP_PROMPT_TEXT })
+  ctx.systemPrompt.section({
+    name: 'tool:lsp',
+    order: ctx.systemPrompt.getSectionOrder('TOOL_LSP'),
+    text: LSP_PROMPT_TEXT,
+  })
 
   ctx.tools.register(defineTool({
     name: 'lsp',

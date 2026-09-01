@@ -15,6 +15,7 @@ import { Context } from '@deepseek-ai/cordis'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import type { Agent } from '@qilin/agent'
 import SubagentRuntime from '@qilin/subagent'
+import SessionProjectionRegistry from '@qilin/session-projection'
 import type { SubprocessHandle } from '@qilin/subprocess'
 import LocalSubprocessRuntime from '@qilin/subprocess-local'
 import * as codex from '../src/index.ts'
@@ -55,7 +56,7 @@ describe.skipIf(!process.env.DEEPSEEK_API_KEY)(
     it('returns one unique nonce through the production provider and real Codex', async () => {
       const apiKey = process.env.DEEPSEEK_API_KEY
       if (apiKey === undefined) throw new Error('e2e ran without DEEPSEEK_API_KEY')
-      const root = mkdtempSync(join(tmpdir(), 'dsh-codex-deepseek-e2e-'))
+      const root = mkdtempSync(join(tmpdir(), 'qilin-codex-deepseek-e2e-'))
       roots.push(root)
       const workspace = join(root, 'workspace')
       const codexHome = join(root, 'codex-home')
@@ -96,6 +97,7 @@ describe.skipIf(!process.env.DEEPSEEK_API_KEY)(
       }
       const ctx = new Context()
       contexts.push(ctx)
+      await ctx.plugin(SessionProjectionRegistry)
       await ctx.plugin(SubagentRuntime)
       await ctx.plugin(LocalSubprocessRuntime)
       const handles: SubprocessHandle[] = []
@@ -109,8 +111,8 @@ describe.skipIf(!process.env.DEEPSEEK_API_KEY)(
       const version = await execFileAsync(process.execPath, [codexEntry, '--version'], {
         env: { ...process.env, ...env },
       })
-      expect(codexPackage.version).toBe('0.147.0')
-      expect(version.stdout.trim()).toBe('codex-cli 0.147.0')
+      expect(codexPackage.version).toBe('0.149.1')
+      expect(version.stdout.trim()).toBe('codex-cli 0.149.1')
 
       const parent = {
         id: 'deepseek-e2e-parent',

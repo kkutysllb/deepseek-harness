@@ -13,7 +13,7 @@ import ToolRuntime from '@qilin/tools'
 import WebRuntime from '@qilin/web'
 import * as toolWeb from '@qilin/tool-web'
 
-describe('dsh-tool-web real-load-path guard', () => {
+describe('qilin-tool-web real-load-path guard', () => {
   it('has no default export and keeps name/inject/Config through unwrapExports', () => {
     expect('default' in toolWeb).toBe(false)
 

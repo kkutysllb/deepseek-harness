@@ -4,12 +4,14 @@ import { mkdtemp, rm } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import type { Agent } from '@qilin/agent'
-import { createUserMessage, CallId  } from '@qilin/llm'
+import { createUserMessage, ToolCallId  } from '@qilin/llm'
 import SessionStore, {
   SESSION_FORMAT_VERSION,
   SessionId,
   type Session,
 } from '@qilin/session'
+import SessionProjectionRegistry from '@qilin/session-projection'
+import { turnBoundaryProjectionDefinition } from '@qilin/agent-loop'
 import JsonlSessionPersistence from '@qilin/session-persistence-jsonl'
 import SqliteSessionQueryEngine from '@qilin/session-query-sqlite'
 import SystemPrompt from '@qilin/system-prompt'
@@ -30,13 +32,19 @@ function fakeAgent(session: Session): Agent {
   return { id: session.id, session } as unknown as Agent
 }
 
+function registerTurnBoundary(ctx: Context): void {
+  ctx.sessionProjections.register(turnBoundaryProjectionDefinition)
+}
+
 describe('tool-session-query with the real SQLite provider', () => {
   it('searches live prior-step history and a persisted same-workspace log', { timeout: 20_000 }, async () => {
-    const root = await mkdtemp(join(tmpdir(), 'dsh-tool-session-query-'))
+    const root = await mkdtemp(join(tmpdir(), 'qilin-tool-session-query-'))
     temporaryDirectories.push(root)
     const ctx = new Context()
     contexts.push(ctx)
     await ctx.plugin(SessionStore)
+    await ctx.plugin(SessionProjectionRegistry)
+    registerTurnBoundary(ctx)
     await ctx.plugin(SystemPrompt)
     await ctx.plugin(ToolRuntime)
     await ctx.plugin(JsonlSessionPersistence, { root, compression: 'none' })
@@ -78,7 +86,7 @@ describe('tool-session-query with the real SQLite provider', () => {
     const execute = (name: string, args: unknown) => ctx.tools.execute({
       name,
       arguments: args,
-      callId: CallId(`integration-${++call}`),
+      callId: ToolCallId(`integration-${++call}`),
       signal: new AbortController().signal,
       agent: fakeAgent(caller),
     })
@@ -101,11 +109,13 @@ describe('tool-session-query with the real SQLite provider', () => {
   })
 
   it('passes finite fractional epoch-millisecond bounds through SQLite comparisons', async () => {
-    const root = await mkdtemp(join(tmpdir(), 'dsh-tool-session-query-fractional-'))
+    const root = await mkdtemp(join(tmpdir(), 'qilin-tool-session-query-fractional-'))
     temporaryDirectories.push(root)
     const ctx = new Context()
     contexts.push(ctx)
     await ctx.plugin(SessionStore)
+    await ctx.plugin(SessionProjectionRegistry)
+    registerTurnBoundary(ctx)
     await ctx.plugin(SystemPrompt)
     await ctx.plugin(ToolRuntime)
     await ctx.plugin(JsonlSessionPersistence, { root, compression: 'none' })
@@ -170,7 +180,7 @@ describe('tool-session-query with the real SQLite provider', () => {
     const execute = (args: unknown) => ctx.tools.execute({
       name: 'session_event_search',
       arguments: args,
-      callId: CallId(`fractional-integration-${++call}`),
+      callId: ToolCallId(`fractional-integration-${++call}`),
       signal: new AbortController().signal,
       agent: fakeAgent(caller),
     })

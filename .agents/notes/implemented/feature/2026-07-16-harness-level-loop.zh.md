@@ -27,7 +27,7 @@ Status: implemented
 
 全新 agent 层级是 **Ralph Run → Ralph Round → 全新子 agent 轮次 → 步骤**。一个 Ralph Round 创建一个子会话。父 transcript 和此前子 transcript 都不是种子上下文；共享工作区与一份有界结构化报告承载跨 Round 状态。
 
-因此，「Round」是外层策略迭代，不是每个会话轮次的同义词。具体 `dsh-agent-loop` 仍是轮次/步骤引擎。同会话驱动器使用公开 agent 与会话事件；它对核心唯一的新增项是通用的取消前观察通知 `agent/cancel-requested`，任何需要安全收敛取消的生命周期策略都可以使用它。
+因此，「Round」是外层策略迭代，不是每个会话轮次的同义词。具体 `qilin-agent-loop` 仍是轮次/步骤引擎。同会话驱动器使用公开 agent 与会话事件；它对核心唯一的新增项是通用的取消前观察通知 `agent/cancel-requested`，任何需要安全收敛取消的生命周期策略都可以使用它。
 
 基于时间的 `/loop` 或定时执行是第三种策略，本决策不实现它。它应归属于调度器，而不是任一目标包族。
 
@@ -70,11 +70,11 @@ Goal Round 驱动器为每个特定的实时 agent 至多拥有一个待定预�
 
 模型只接收 `get_goal`、`create_goal` 和 `update_goal`。当直接人类请求清楚要求大量多 Round 工作时，模型可以创建目标，并且可以从任何语言推断该意图。它不得把日常单轮次工作变成目标。代码要求当前实时根 agent 轮次中有一条人类直接发送的消息；语义解释仍是模型判断。自治目标 Round 可以为确切的当前 Goal Round 报告 `complete` 或 `blocked`，但不能编辑、暂停、恢复或替换人类目标。
 
-TUI 默认挂载共享命令注册表和完整目标栈，并通过一个生产方暴露 `/goal`。ACP（Agent Client Protocol）挂载目标领域、模型工具和同会话驱动器，但有意省略人类命令平面。每条有效已注册命令都能被每个已组合的命令适配器发现和调用；若插件与某应用不兼容，该应用组合会省略其命令生产方，而不是依赖注册表层面的表面掩码。无 UI 的 agent 主干要求显式选择加入，以免单次调用方静默变成多 Round 操作。无头 CLI（命令行界面）与 JSON-RPC 运行入口不消费命令平面；挂载目标栈后，普通人类文本仍可授权模型目标工具。
+基于 base 的 profile 默认挂载共享命令注册表和完整目标栈，并通过一个生产方暴露 `/goal`。ACP（Agent Client Protocol）挂载目标领域、模型工具和同会话驱动器，但有意省略人类命令平面。每条有效已注册命令都能被每个已组合的命令适配器发现和调用；若插件与某应用不兼容，该应用组合会省略其命令生产方，而不是依赖注册表层面的表面掩码。独立的 `sdk-minimal` 配置树省略完整 goal 栈，以免单次调用方静默变成多 Round 操作。无头 CLI（命令行界面）与 JSON-RPC 运行入口不消费命令平面；挂载 goal 栈后，普通人类文本仍可授权模型 goal 工具。
 
 ### 全新 agent Ralph 执行
 
-Ralph 是位于自有插件中的一等模型工具，展示了复杂固定执行策略可以在没有新 loop 核心的情况下组合完成。该插件拥有构建在 `ctx.workflowEngine` 与 `ctx.subagents` 之上的固定工作流脚本；它不会创建会话目标状态，也不会为 `dsh-agent-loop` 增加分支。
+Ralph 是位于自有插件中的一等模型工具，展示了复杂固定执行策略可以在没有新 loop 核心的情况下组合完成。该插件拥有构建在 `ctx.workflowEngine` 与 `ctx.subagents` 之上的固定工作流脚本；它不会创建会话目标状态，也不会为 `qilin-agent-loop` 增加分支。
 
 每个 Round 都使用显式 `WorkflowStartRequest.subagentProvider`，默认为 `spawn`。该提供方必须存在、支持结构化输出，并声明不继承父上下文。Ralph 还会把解析后的 Round 上限作为 `WorkflowStartRequest.maxTotalAgents` 传递；工作线程引擎会在发布工作前验证两项每次运行策略，因此提供方配置错误或低于所请求 Ralph 规模的引擎上限会在运行创建前失败。子 agent 继承 cwd 与谱系，但只接收不可变目标、当前 Round/上限、以工作区为权威的指令和上一份规范化报告。
 

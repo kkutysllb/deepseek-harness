@@ -1,7 +1,7 @@
 {
   "name": "@qilin/client-locale",
-  "description": "Locale plugin: Host-backed zh/en preference, browser-derived fallback, locale snapshots, and typed namespace dictionaries",
-  "version": "0.1.1-rc.2",
+  "description": "Locale plugin: Host-backed preference, extensible language catalog, browser fallback, and typed built-in dictionaries",
+  "version": "0.1.2-alpha.3",
   "publishConfig": {
     "access": "public"
   },
@@ -33,7 +33,7 @@
     "client": {
       "inject": [
         "@qilin/client-connection",
-        "@qilin/client-runtime",
+        "@qilin/client-ui-renderer",
         "@qilin/client-ui-settings",
         "@qilin/api-remotes"
       ],
@@ -43,20 +43,15 @@
   },
   "license": "MIT",
   "peerDependencies": {
-    "@deepseek-ai/cordis": "workspace:^",
-    "@qilin/api-remotes": "workspace:^",
-    "@qilin/client-connection": "workspace:^",
-    "@qilin/client-runtime": "workspace:^",
-    "@qilin/client-ui-settings": "workspace:^",
-    "@qilin/invariants": "workspace:^",
-    "@qilin/settings": "workspace:^"
+    "@deepseek-ai/cordis": "workspace:^"
   },
   "devDependencies": {
     "@deepseek-ai/cordis": "workspace:^",
     "@qilin/api-remotes": "workspace:^",
-    "@qilin/client-runtime": "workspace:^",
+    "@qilin/client-store": "workspace:^",
     "@qilin/client-test-runtime": "workspace:^",
     "@qilin/client-ui-primitives": "workspace:^",
+    "@qilin/client-ui-renderer": "workspace:^",
     "@qilin/client-ui-settings": "workspace:^",
     "@qilin/client-ui-slots": "workspace:^",
     "@qilin/invariants": "workspace:^",

@@ -18,10 +18,10 @@ import type { Context } from '@deepseek-ai/cordis'
 import type { Loader } from '@deepseek-ai/cordis-plugin-loader'
 import type {
   CordisDynamicPackageId, CordisDynamicPluginId, CordisDynamicPluginRunId, DynamicCordisPackage,
+  SessionId,
 } from '@qilin/api-remotes/client'
-import type { SessionId } from '@qilin/client-connection/client'
 import type { ClientModuleSystem } from '@qilin/client-modules/client'
-import type { SlotRegistry } from '@qilin/client-runtime/client'
+import type { SlotRegistry } from '@qilin/client-ui-renderer/client'
 import { DynamicCordisStyles, evaluateClientHalf, DYNAMIC_CLIENT_REDIRECTS } from './evaluator.ts'
 import type { DynamicCordisEvaluatedPlugin } from './evaluator.ts'
 import { dynamicCordisContext } from './guard.ts'

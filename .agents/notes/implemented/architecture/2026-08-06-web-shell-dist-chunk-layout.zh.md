@@ -24,14 +24,14 @@ apps/web 的壳此前打成单一约 1.2 MB（minified）的 index 分片，其�
 
 - `assets/` 根只留 index 与 vendor 的 js（含随行 sourcemap）与 css。
 - 语法 chunk 归 `assets/langs/`。判据是 chunk 的 `moduleIds` 含 `@shikijs/langs` 成员，而非 facade：内嵌语法共享 chunk（php/ruby/mdx 内嵌 html+javascript，被 rollup 拆出共享）**没有 facade**，facade 判据会漏；index/vendor 按名排除，因 vendor 合法携带 boot 三语法。
-- 字体归 `assets/fonts/`（`FONT_EXTENSIONS`：woff2/woff/ttf；今日全部为 vendor.css 引用的 KaTeX 字体面——katex.min.css 虽由 index 侧组件 import，css 模块同样经 manualChunks 归属、随 `katex` 落入 vendor.css；浏览器按需只拉 woff2，且仅在公式渲染时）。
+- 字体归 `assets/fonts/`（`FONT_EXTENSIONS`：woff2/woff/ttf；所有已交付文件都是 vendor.css 引用的 KaTeX 字体面——katex.min.css 虽由 index 侧组件 import，css 模块同样经 manualChunks 归属、随 `katex` 落入 vendor.css；浏览器按需只拉 woff2，且仅在公式渲染时）。
 - sourcemap 无需安排：rollup 把 `.map` 写在各自 js 旁并以裸相对文件名引用，分片挪目录时 map 自动跟随。
 
 跨目录引用（index 的动态 import 指向 `langs/`、语法 chunk 间同目录相对引用、vendor.css 相对引用 `fonts/`）均由构建器生成，运行时零配套改动；host 侧 webserver 按静态前缀原样服务嵌套路径。
 
 ## Alternatives considered
 
-- **react 等 vendor 走 CDN**：dsh web 面向本机/内网主机（常无外网），CDN 直接不可用；react 是全部插件 bundle 的 platform seed external（壳是唯一供给方），改 CDN 全局变量形态需牵动 platform 清单/seed/模块表三处；缓存收益由 vendor 切分即可取得。
+- **react 等 vendor 走 CDN**：qilin web 面向本机/内网主机（常无外网），CDN 直接不可用；react 是全部插件 bundle 的 platform seed external（壳是唯一供给方），改 CDN 全局变量形态需牵动 platform 清单/seed/模块表三处；缓存收益由 vendor 切分即可取得。
 - **反向兜底规则（node_modules 除 react 族全归 vendor）**：成员从配置上读不出来，且把 anser/clsx 类小件错归 vendor；被正向精确包名清单取代。
 - **正则家族匹配**：可读性差；精确包名 + rollup 对传递依赖的自动着色使模式匹配没有必要。
 - **以 facadeModuleId 识别语法 chunk**：无 facade 的内嵌语法共享 chunk 会漏检落回根目录；`moduleIds` 成员判据覆盖两种形态。

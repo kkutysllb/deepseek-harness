@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useRef } from 'react'
 import type { ReactNode } from 'react'
-import type { SnapshotStore } from '@qilin/client-runtime/client'
+import type { SnapshotStore } from '@qilin/client-store'
 import type { InjectFace, PropsRuntime } from '@qilin/client-ui-slots'
 import { Button } from '@qilin/client-ui-primitives'
 import type { WelcomeNoticeState, WelcomeNoticeStore } from './welcome-store.ts'

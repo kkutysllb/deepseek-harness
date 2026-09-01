@@ -2,7 +2,7 @@ import { describe, expect, expectTypeOf, it, vi } from 'vitest'
 import { Context } from '@deepseek-ai/cordis'
 import { type Agent } from '@qilin/agent'
 
-import { HarnessError } from '@qilin/llm'
+import { HarnessError, ReasoningEffortId } from '@qilin/llm'
 import { carrierKeyOf } from '@qilin/scope'
 import SubagentRuntime, {
   foldSubagentDescriptor,
@@ -19,13 +19,14 @@ import SubagentRuntime, {
   type SubagentStartRequest,
 } from '@qilin/subagent'
 import { SessionId, type SessionEvent } from '@qilin/session'
+import SessionProjectionRegistry from '@qilin/session-projection'
 
 function fakeParent(id = 'parent-1'): Agent {
   return { id: SessionId(id) } as unknown as Agent
 }
 
-const ALL_CAPS: SubagentCapabilities = { outputSchema: true, depthLimit: true, toolFilter: true, persona: true }
-const NO_CAPS: SubagentCapabilities = { outputSchema: false, depthLimit: false, toolFilter: false, persona: false }
+const ALL_CAPS: SubagentCapabilities = { agentOptions: true, outputSchema: true, depthLimit: true, toolFilter: true, persona: true }
+const NO_CAPS: SubagentCapabilities = { agentOptions: false, outputSchema: false, depthLimit: false, toolFilter: false, persona: false }
 
 function baseRequest(overrides: Partial<SubagentStartRequest> = {}): SubagentStartRequest {
   return {
@@ -64,6 +65,9 @@ class StubProvider implements SubagentProvider {
 
 async function service(): Promise<{ ctx: Context; subagents: SubagentRuntime }> {
   const ctx = new Context()
+  // The registry is a required injection of SubagentRuntime (its projection
+  // units register in the constructor).
+  await ctx.plugin(SessionProjectionRegistry)
   await ctx.plugin(SubagentRuntime)
   return { ctx, subagents: ctx.subagents }
 }
@@ -162,6 +166,7 @@ describe('SubagentRuntime', () => {
   })
 
   it.each([
+    ['agentOptions', { agentOptions: { model: 'child-model' } }],
     ['outputSchema', { outputSchema: { type: 'object', properties: {} } }],
     ['depthLimit', { maxDepth: 1 }],
     ['toolFilter', { toolFilter: { deny: ['bash'] } }],
@@ -348,6 +353,7 @@ describe('subagent descriptors', () => {
       label: 'complete child',
       agentProvider: 'deepseek',
       agentModel: 'chat',
+      agentReasoningEffort: ReasoningEffortId('high'),
       persona: 'reviewer',
       toolFilter: { allow: ['read'], deny: ['bash'] },
     }
@@ -357,6 +363,7 @@ describe('subagent descriptors', () => {
       label: complete.label,
       agentProvider: complete.agentProvider,
       agentModel: complete.agentModel,
+      agentReasoningEffort: complete.agentReasoningEffort,
       persona: complete.persona,
       toolFilter: complete.toolFilter,
     })).toEqual(complete)
@@ -448,6 +455,13 @@ describe('subagent descriptors', () => {
       label: 'l',
       agentModel: [],
     }, 'agentModel must be a string'],
+    ['invalid agent reasoning effort', {
+      version: SUBAGENT_DESCRIPTOR_VERSION,
+      mode: 'continuable',
+      provider: 'spawn',
+      label: 'l',
+      agentReasoningEffort: 7,
+    }, 'agentReasoningEffort must be a string'],
     ['invalid persona', {
       version: SUBAGENT_DESCRIPTOR_VERSION,
       mode: 'continuable',

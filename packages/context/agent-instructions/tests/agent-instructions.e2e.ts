@@ -11,6 +11,7 @@ import ToolRuntime from '@qilin/tools'
 import AgentRegistry from '@qilin/agent'
 import type { Agent } from '@qilin/agent'
 import AgentLoop from '@qilin/agent-loop'
+import SessionProjectionRegistry from '@qilin/session-projection'
 import * as LlmDeepSeek from '@qilin/llm-deepseek'
 import * as WorkspaceContext from '@qilin/agent-instructions'
 import { candidateScopeKey } from '../src/render.ts'
@@ -33,12 +34,13 @@ afterEach(async () => {
 })
 
 async function harness(): Promise<{ ctx: Context; agent: Agent }> {
-  workdir = await mkdtemp(join(tmpdir(), 'dsh-workspace-context-e2e-'))
+  workdir = await mkdtemp(join(tmpdir(), 'qilin-workspace-context-e2e-'))
   await mkdir(join(workdir, '.git'), { recursive: true })
   await writeFile(join(workdir, 'AGENTS.md'), `If the user asks for the workspace context handshake, reply with exactly this string and nothing else: ${PROBE}.\n`)
   ctx = new Context()
   await ctx.plugin(LlmRuntime)
   await ctx.plugin(SessionStore)
+  await ctx.plugin(SessionProjectionRegistry)
   await ctx.plugin(SystemPrompt, { persona: 'Answer the user exactly and concisely.' })
   await ctx.plugin(ToolRuntime)
   await ctx.plugin(AgentRegistry)

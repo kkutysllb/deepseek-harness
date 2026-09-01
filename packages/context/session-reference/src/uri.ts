@@ -1,16 +1,17 @@
 /** Canonical session URI and inline mention encoding. */
 
-import { SessionId, type SessionId as SessionIdType } from '@qilin/session'
+import { brandString } from '@qilin/brand'
+import type { SessionId as SessionIdType } from '@qilin/session'
 import { SessionReferenceError } from './config.ts'
 import type { SessionReferenceInput } from './types.ts'
 
 /** URI scheme reserved for DeepSeek Harness session snapshots. */
-export const SESSION_REFERENCE_SCHEME = 'dsh-session:'
+export const SESSION_REFERENCE_SCHEME = 'qilin-session:'
 
 /**
  * Encode any JavaScript session-id string as a canonical lossless URI.
  * @param sessionId - opaque session id to serialize.
- * @returns canonical `dsh-session:` URI.
+ * @returns canonical `qilin-session:` URI.
  */
 export function encodeSessionReferenceUri(sessionId: SessionIdType): string {
   const payload = Buffer.from(JSON.stringify(sessionId), 'utf8').toString('base64url')
@@ -31,7 +32,7 @@ export function decodeSessionReferenceUri(uri: string): SessionIdType {
   try {
     const parsed: unknown = JSON.parse(Buffer.from(payload, 'base64url').toString('utf8'))
     if (typeof parsed !== 'string') throw new TypeError('decoded session id is not a string')
-    const sessionId = SessionId(parsed)
+    const sessionId = brandString<SessionIdType>(parsed)
     if (encodeSessionReferenceUri(sessionId) !== uri) throw new TypeError('URI is not canonical')
     return sessionId
   } catch (error: unknown) {
@@ -67,7 +68,7 @@ export interface ParsedSessionReferenceText {
  */
 export function parseSessionReferenceText(text: string): ParsedSessionReferenceText {
   const references: SessionReferenceInput[] = []
-  const pattern = /@\[((?:\\.|[^\\\]])*)\]\((dsh-session:[^\s)]*)\)|(dsh-session:[A-Za-z0-9_-]+)/gu
+  const pattern = /@\[((?:\\.|[^\\\]])*)\]\((qilin-session:[^\s)]*)\)|(qilin-session:[A-Za-z0-9_-]+)/gu
   const rendered = text.replace(pattern, (
     _match,
     rawLabel: string | undefined,

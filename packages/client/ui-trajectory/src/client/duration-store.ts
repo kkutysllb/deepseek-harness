@@ -1,6 +1,6 @@
 import {
   createSnapshotStore, type SnapshotStore,
-} from '@qilin/client-runtime/client'
+} from '@qilin/client-store'
 
 /**
  * Create the browser-wide trajectory duration preference source.
@@ -8,6 +8,6 @@ import {
  */
 export function createTrajectoryDurationStore(): SnapshotStore<boolean> {
   return createSnapshotStore(false, {
-    persist: { name: 'dsh.trajectory.duration' },
+    persist: { name: 'qilin.trajectory.duration' },
   })
 }

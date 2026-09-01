@@ -13,8 +13,9 @@
  */
 
 import * as vm from 'node:vm'
+import { brandString } from '@qilin/brand'
 import type { ContentBlock } from '@qilin/llm'
-import { SessionId } from '@qilin/session'
+import type { SessionId } from '@qilin/session'
 import { assertObjectJsonSchema, JsonSchemaError } from '@qilin/tools'
 import type { ObjectJsonSchema } from '@qilin/tools'
 import { isFatalWorkflowError, WorkflowError } from '@qilin/workflow'
@@ -295,7 +296,7 @@ export class WorkflowExecution {
         await run.dispose()
         throw this.cancelledError()
       }
-      const info: WorkflowAgentInfo = { seq, label, ...phase !== undefined ? { phase } : {}, childId: SessionId(run.id) }
+      const info: WorkflowAgentInfo = { seq, label, ...phase !== undefined ? { phase } : {}, childId: brandString<SessionId>(run.id) }
       this.observer.agentStart(info)
       try {
         let result

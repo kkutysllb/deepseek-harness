@@ -142,6 +142,10 @@ class TestPersistence extends SessionPersistence {
       : Promise.resolve(stored)
   }
 
+  borrowSession(_id: SessionId, _signal?: AbortSignal): ReturnType<SessionPersistence['borrowSession']> {
+    return Promise.reject(new Error('not used'))
+  }
+
   async readFrom(
     id: SessionId,
     fromSeq: number,
@@ -185,7 +189,7 @@ export interface TestHarness {
 
 /** Compose the service over the real storage hub/domain/JSON backend. */
 export async function setupHarness(maxNoteBytes = 64): Promise<TestHarness> {
-  const root = await mkdtemp(join(tmpdir(), 'dsh-message-feedback-test-'))
+  const root = await mkdtemp(join(tmpdir(), 'qilin-message-feedback-test-'))
   const ctx = new Context()
   let disposeFeedback: (() => Promise<void>) | undefined
   try {

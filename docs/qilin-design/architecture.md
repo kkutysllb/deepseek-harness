@@ -1,5 +1,8 @@
 # QiLin 引擎整体技术架构
 
+> [!WARNING]
+> 历史参考，非现行架构。本文与 `modules/`、`diagrams/` 描述的是 QiLin 早期基于 LangGraph 的 Python 引擎（`qilin/` + `app/`，已退役）。现行引擎是本仓库的 TypeScript 插件树（`@qilin/*`，架构见 [architecture.md](../architecture.md)）；本文仅作设计谱系与决策追溯使用。
+
 > QiLin Engine — Overall Technical Architecture
 >
 > 版本 / Version: 2.0.0 · 更新 / Updated: 2026-08

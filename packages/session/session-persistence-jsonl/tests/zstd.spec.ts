@@ -34,7 +34,7 @@ type HeaderRead = (
   position: number | null,
 ) => Promise<{ bytesRead: number; buffer: Buffer }>
 
-async function freshRoot(prefix = 'dsh-jsonl-zstd-'): Promise<string> {
+async function freshRoot(prefix = 'qilin-jsonl-zstd-'): Promise<string> {
   const root = await mkdtemp(join(tmpdir(), prefix))
   roots.push(root)
   return root
@@ -113,7 +113,7 @@ afterEach(async () => {
 })
 
 runPersistenceContract('jsonl-zstd', async () => {
-  const root = await mkdtemp(join(tmpdir(), 'dsh-jsonl-zstd-contract-'))
+  const root = await mkdtemp(join(tmpdir(), 'qilin-jsonl-zstd-contract-'))
   const ctx = new Context()
   await ctx.plugin(SessionStore)
   const fiber = await ctx.plugin(JsonlSessionPersistence, { root })
@@ -127,7 +127,7 @@ runPersistenceContract('jsonl-zstd', async () => {
 })
 
 runCoordinatorContract('jsonl-zstd', async (): Promise<CoordinatorFixture> => {
-  const root = await mkdtemp(join(tmpdir(), 'dsh-jsonl-zstd-coordinator-'))
+  const root = await mkdtemp(join(tmpdir(), 'qilin-jsonl-zstd-coordinator-'))
   return {
     mount: async ctx => ctx.plugin(JsonlSessionPersistence, { root }),
     corruptTail: async (id, cwd) => {
@@ -332,6 +332,19 @@ describe('Zstandard frame structure', () => {
 })
 
 describe('JsonlSessionPersistence: default Zstandard encoding', () => {
+  it('materializes an explicitly durable empty session as one header frame', async () => {
+    const root = await freshRoot()
+    const ctx = await mount(root)
+    const session = ctx.sessions.create(SessionId('empty-zstd'), { meta: { cwd: '/work' } })
+
+    await ctx.sessionPersistence.ensureMaterialized(session)
+
+    const buffer = await readFile(logPath(root, '/work', session.id, 'zstd'))
+    expect(scanZstdFrames(buffer).frames).toHaveLength(1)
+    expect((await decodeCompleteFrames(buffer)).toString()).toBe(`${JSON.stringify(toHeaderLine(session.header))}\n`)
+    await expect(ctx.sessionPersistence.load(session.id)).resolves.toEqual({ meta: session.header, events: [] })
+  })
+
   it('writes .jsonl.zstd by default with one header frame and one first-batch frame', async () => {
     const root = await freshRoot()
     const ctx = await mount(root)
@@ -539,6 +552,7 @@ describe('JsonlSessionPersistence: default Zstandard encoding', () => {
     const root = await freshRoot()
     const ctx = await mount(root)
     const header = meta('recover-torn', '/proj')
+    const warn = vi.spyOn(ctx.logger, 'warn').mockImplementation(() => undefined)
     await ctx.sessionPersistence.create(header)
     await ctx.sessionPersistence.append(header.id, oneTurnLog())
     const path = logPath(root, header.cwd, header.id, 'zstd')
@@ -562,6 +576,7 @@ describe('JsonlSessionPersistence: default Zstandard encoding', () => {
     expect(loaded.events.some(event => event.type === 'assistant/chunk' && event.seq === 8)).toBe(false)
     expect(loaded.events[8]?.type).toBe('step/end')
     expect(loaded.events[9]?.type).toBe('turn/end')
+    expect(warn).toHaveBeenCalledWith('session-persistence-jsonl: session "recover-torn" recovered from a torn tail; incomplete tail bytes were discarded')
 
     const repaired = await readFile(path)
     expect(repaired.subarray(0, committed.length)).toEqual(committed)
@@ -697,7 +712,7 @@ describe('JsonlSessionPersistence: default Zstandard encoding', () => {
 
 describe('JsonlSessionPersistence: encoding selection', () => {
   it('rejects roots owned by the opposite encoding in both directions', async () => {
-    const rawRoot = await freshRoot('dsh-jsonl-raw-mismatch-')
+    const rawRoot = await freshRoot('qilin-jsonl-raw-mismatch-')
     const raw = await mount(rawRoot, 'none')
     const rawHeader = meta('raw-log')
     await raw.sessionPersistence.create(rawHeader)
@@ -705,7 +720,7 @@ describe('JsonlSessionPersistence: encoding selection', () => {
     const defaultBackend = await mount(rawRoot)
     await expect(defaultBackend.sessionPersistence.list()).rejects.toThrow(/configured for compression "zstd"/)
 
-    const zstdRoot = await freshRoot('dsh-jsonl-zstd-mismatch-')
+    const zstdRoot = await freshRoot('qilin-jsonl-zstd-mismatch-')
     const zstd = await mount(zstdRoot)
     const zstdHeader = meta('zstd-log')
     await zstd.sessionPersistence.create(zstdHeader)

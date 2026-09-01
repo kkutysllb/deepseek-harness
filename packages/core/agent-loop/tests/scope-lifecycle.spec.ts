@@ -10,6 +10,7 @@ import AgentRegistry, { agentEvents, assembleContextFor } from '@qilin/agent'
 import type { Agent } from '@qilin/agent'
 import { scopeOf } from '@qilin/scope'
 import AgentLoop from '@qilin/agent-loop'
+import SessionProjectionRegistry from '@qilin/session-projection'
 import type { ContentBlock } from '@qilin/llm'
 import { MockAdapter, textResponse } from './mock-adapter.ts'
 
@@ -17,6 +18,7 @@ async function harnessWithLoop(adapter: MockAdapter = new MockAdapter([textRespo
   const ctx = new Context()
   await ctx.plugin(LlmRuntime)
   await ctx.plugin(SessionStore)
+  await ctx.plugin(SessionProjectionRegistry)
   await ctx.plugin(SystemPrompt, { persona: 'You are the deployment.' })
   await ctx.plugin(ToolRuntime)
   await ctx.plugin(AgentRegistry)

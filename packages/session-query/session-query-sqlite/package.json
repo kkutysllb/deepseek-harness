@@ -1,7 +1,7 @@
 {
   "name": "@qilin/session-query-sqlite",
   "description": "Concrete ctx.sessionQuery backend with SQLite FTS5 search",
-  "version": "0.1.1-rc.2",
+  "version": "0.1.2-alpha.3",
   "publishConfig": {
     "access": "public"
   },
@@ -51,8 +51,9 @@
     "@qilin/invariants": "workspace:^",
     "@qilin/session": "workspace:^",
     "@qilin/session-persistence": "workspace:^",
-    "@qilin/session-persistence-sqlite": "workspace:^",
+    "@qilin/session-persistence-jsonl": "workspace:^",
     "@qilin/session-query": "workspace:^",
-    "@deepseek-ai/cordis": "workspace:^"
+    "@deepseek-ai/cordis": "workspace:^",
+    "@qilin/session-projection": "workspace:^"
   }
 }

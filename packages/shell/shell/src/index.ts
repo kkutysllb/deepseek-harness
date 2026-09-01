@@ -6,7 +6,6 @@
  */
 
 import { Context, Service } from '@deepseek-ai/cordis'
-import { settingsNamespace } from '@qilin/settings'
 import type { SandboxMode } from '@qilin/sandbox'
 import type { ShellExecRequest, ShellExecSpec, ShellProcess, ShellRunResult } from './types.ts'
 
@@ -19,7 +18,7 @@ import type { ShellExecRequest, ShellExecSpec, ShellProcess, ShellRunResult } fr
  * registering it twice, and a settings document carried between platforms
  * keeps resolving on both.
  */
-export const SHELL_SETTINGS_NAMESPACE = settingsNamespace('shell')
+export const SHELL_SETTINGS_NAMESPACE = 'shell'
 
 export { QILIN_ENV_PREFIX } from './types.ts'
 export type {
@@ -31,8 +30,8 @@ export type {
   ShellRunResult,
   ShellSandboxInfo,
   CollectedOutput,
-  DshEnvironment,
-  DshEnvironmentKey,
+  QilinEnvironment,
+  QilinEnvironmentKey,
 } from './types.ts'
 export { parseExitStatus } from './render.ts'
 export type { ParsedExitStatus } from './render.ts'

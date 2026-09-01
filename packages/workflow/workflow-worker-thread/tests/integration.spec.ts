@@ -7,6 +7,7 @@ import InvariantRegistry from '@qilin/invariants'
 import * as SessionInvariant from '@qilin/session/invariant'
 import * as AgentInvariant from '@qilin/agent/invariant'
 import * as AgentLoopInvariant from '@qilin/agent-loop/invariant'
+import SessionProjectionRegistry from '@qilin/session-projection'
 import SubagentRuntime from '@qilin/subagent'
 import * as spawn from '@qilin/subagent-spawn-in-process'
 import { STRUCTURED_OUTPUT_TOOL } from '@qilin/subagent-in-process-driver'
@@ -35,6 +36,7 @@ async function setup(script: Script) {
   const adapter = new MockAdapter(script)
   await mountAgentLoopTestDependencies(ctx)
   await mountInvariants(ctx)
+  await ctx.plugin(SessionProjectionRegistry)
   await ctx.plugin(AgentLoop, { agents: [] })
   await ctx.plugin(SubagentRuntime)
   await ctx.plugin(spawn, { providerName: 'spawn' })
@@ -44,7 +46,7 @@ async function setup(script: Script) {
   return { ctx, parent, adapter }
 }
 
-describe('dsh-workflow-worker-thread over the real in-process stack', () => {
+describe('qilin-workflow-worker-thread over the real in-process stack', () => {
   it('runs a two-stage workflow: a plain child, then a schema child through the structured runtime', async () => {
     const { ctx, parent } = await setup([
       textResponse('the file list is a.ts'),

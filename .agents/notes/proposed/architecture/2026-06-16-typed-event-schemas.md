@@ -10,14 +10,14 @@ The harness models its core vocabulary — content blocks, message sources, fini
 
 The pattern is **compile-time only**. The types vanish at runtime: there is no schema object to validate an incoming value against, parse untrusted input with, or enumerate at runtime. The [session-persistence contract](../../implemented/architecture/2026-06-14-session-persistence.md) exposes two consequences:
 
-1. **Persistence treats `event.data` as opaque JSON.** The JSONL/SQLite backends `JSON.stringify`/`JSON.parse` each event verbatim; the only runtime guard is `isJsonValue` (round-trip serializability — rejects BigInt, functions, cycles, non-finite numbers, …), NOT structural validation. A corrupted-but-still-JSON event datum (wrong field types, missing fields) round-trips silently and is only caught later, if at all, by a consumer's `switch`.
+1. **Persistence treats `event.data` as opaque JSON.** The JSONL provider `JSON.stringify`s and `JSON.parse`s each event verbatim; the only runtime guard is `isJsonValue` (round-trip serializability — rejects BigInt, functions, cycles, non-finite numbers, …), not structural validation. A corrupted-but-still-JSON event datum (wrong field types, missing fields) round-trips silently and is only caught later, if at all, by a consumer's `switch`.
 2. **No runtime contract for plugin-added variants.** A plugin that declaration-merges a new `SessionEventMap` key gets compile-time typing for its own code, but nothing validates that the values it produces match the shape it declared — at the producer, at the persistence boundary, or on reload.
 
 This raises whether the event vocabulary should move to **Zod** or another runtime-schema library so durable and plugin boundaries have runtime schemas rather than erased types.
 
 ## Why this is not a persistence change
 
-It is tempting to read "use Zod for serialization" as a local change to `dsh-session-persistence-jsonl/src/format.ts`. It is not, for one structural reason: **a plugin cannot declaration-merge a Zod schema.** Declaration merging is a TypeScript compile-time mechanism; a Zod schema is a runtime value. To validate events with Zod you need a **runtime registry** that every event-producing package contributes its schema to (e.g. `ctx.sessionEvents.register('compaction/marker', z.object({…}))`), and every consumer reads from. That registry — not the persistence backend — becomes the source of truth for the vocabulary, replacing the merge-extensible interface.
+It is tempting to read "use Zod for serialization" as a local change to `qilin-session-persistence-jsonl/src/format.ts`. It is not, for one structural reason: **a plugin cannot declaration-merge a Zod schema.** Declaration merging is a TypeScript compile-time mechanism; a Zod schema is a runtime value. To validate events with Zod you need a **runtime registry** that every event-producing package contributes its schema to (e.g. `ctx.sessionEvents.register('compaction/marker', z.object({…}))`), and every consumer reads from. That registry — not the persistence backend — becomes the source of truth for the vocabulary, replacing the merge-extensible interface.
 
 So the real proposal is: **replace the compile-time merge-extensible-map pattern with a runtime schema registry, repo-wide.** That is a core-vocabulary redesign.
 
@@ -25,11 +25,11 @@ So the real proposal is: **replace the compile-time merge-extensible-map pattern
 
 A migration of the event/vocabulary API to runtime schemas touches, at minimum:
 
-- **Six merge-extensible maps** (~370 LOC of core types): `ContentBlockMap`, `MessageSourceMap`, `FinishReasonMap` (in `dsh-llm`); `TurnTriggerMap`, `TurnEndReasonMap`, `SessionEventMap` (in `dsh-session`).
-- **~10 `declare module` augmentation sites** across `dsh-agent`, `dsh-agent-loop`, `dsh-shell`, `dsh-llm`, `dsh-session`, `dsh-session-persistence`, `dsh-system-prompt`, `dsh-tools` — each would move from declaration merging to a runtime `register()` call.
+- **Six merge-extensible maps** (~370 LOC of core types): `ContentBlockMap`, `MessageSourceMap`, `FinishReasonMap` (in `qilin-llm`); `TurnTriggerMap`, `TurnEndReasonMap`, `SessionEventMap` (in `qilin-session`).
+- **~10 `declare module` augmentation sites** across `qilin-agent`, `qilin-agent-loop`, `qilin-shell`, `qilin-llm`, `qilin-session`, `qilin-session-persistence`, `qilin-system-prompt`, `qilin-tools` — each would move from declaration merging to a runtime `register()` call.
 - **The event producers** — 16 `session.append(...)` call sites in the loop — unchanged in shape but now validated at the boundary.
-- **~7 switch-consumers** that branch on these unions: `deriveMessages` and the package-owned invariant companion (`dsh-session`), `BlockAssembler` (`dsh-llm`), both LLM adapters (`dsh-llm-deepseek`, `dsh-llm-pi-ai`), and the tool schema layer (`dsh-tools`). The `assertNever`-on-closed-unions vs fall-through-on-extensible-unions convention (a documented lint rule) would need rethinking — runtime variants are not statically exhaustive.
-- **The `defineTool` `InferArgs` DSL** (`dsh-tools`), which derives zero-cast `execute` arg types from a compile-time schema spec — the showcase of the current approach.
+- **~7 switch-consumers** that branch on these unions: `deriveMessages` and the package-owned invariant companion (`qilin-session`), `BlockAssembler` (`qilin-llm`), both LLM adapters (`qilin-llm-deepseek`, `qilin-llm-pi-ai`), and the tool schema layer (`qilin-tools`). The `assertNever`-on-closed-unions vs fall-through-on-extensible-unions convention (a documented lint rule) would need rethinking — runtime variants are not statically exhaustive.
+- **The `defineTool` `InferArgs` DSL** (`qilin-tools`), which derives zero-cast `execute` arg types from a compile-time schema spec — the showcase of the current approach.
 - **Docs**: architecture.md (the pattern is described as foundational), [dev-mode invariants](../../implemented/architecture/2026-06-11-dev-invariants-over-deep-readonly.md), and any Agent Note that references the pattern.
 
 This is a repository-wide vocabulary redesign, not a persistence implementation detail.

@@ -11,6 +11,7 @@ import * as SessionInvariant from '@qilin/session/invariant'
 import * as AgentInvariant from '@qilin/agent/invariant'
 import * as AgentLoopInvariant from '@qilin/agent-loop/invariant'
 import SubagentRuntime, { type SubagentStartRequest } from '@qilin/subagent'
+import SessionProjectionRegistry from '@qilin/session-projection'
 import { MockAdapter, textResponse, toolCallResponse } from '../../../core/agent-loop/tests/mock-adapter.ts'
 import type { StreamChunk } from '@qilin/llm'
 import * as fork from '../src/index.ts'
@@ -44,6 +45,7 @@ async function setup(script: Script) {
   await mountAgentLoopTestDependencies(ctx)
   await mountInvariants(ctx)
   await ctx.plugin(AgentLoop, { agents: [] })
+  await ctx.plugin(SessionProjectionRegistry)
   await ctx.plugin(SubagentRuntime)
   await ctx.plugin(fork, { providerName: 'fork' })
   ctx.llm.registerAdapter(['mock'], new MockAdapter(script))
@@ -55,7 +57,7 @@ function text(blocks: { type: string; text?: string }[]): string {
   return blocks.filter(b => b.type === 'text').map(b => b.text).join('')
 }
 
-describe('dsh-subagent-fork-in-process', () => {
+describe('qilin-subagent-fork-in-process', () => {
   it('emits subagent/start only after the seeded child is published', async () => {
     const { ctx, parent } = await setup([textResponse('child answer')])
     let childAtStart: ReturnType<typeof ctx.agents.get>
@@ -173,7 +175,6 @@ describe('dsh-subagent-fork-in-process', () => {
     const result = await run.result
     expect(result.stopReason).toBe('completed')
     expect(result.structured).toEqual({ answer: 9 })
-    // Run-scoped runtime: nothing stays registered after the settle.
     expect(ctx.tools.get(STRUCTURED_OUTPUT_TOOL)).toBeUndefined()
     await run.dispose()
   })
@@ -194,13 +195,20 @@ describe('dsh-subagent-fork-in-process', () => {
     await run.dispose()
   })
 
-  it('advertises every start-time capability (depthLimit, outputSchema, toolFilter, persona)', async () => {
+  it('advertises every start-time capability', async () => {
     const { ctx } = await setup([])
-    expect(ctx.subagents.getProvider('fork')!.capabilities).toEqual({ outputSchema: true, depthLimit: true, toolFilter: true, persona: true })
+    expect(ctx.subagents.getProvider('fork')!.capabilities).toEqual({
+      agentOptions: true,
+      outputSchema: true,
+      depthLimit: true,
+      toolFilter: true,
+      persona: true,
+    })
   })
 
   it('unregisters the provider when its fiber is disposed (HMR safety)', async () => {
     const ctx = new Context()
+    await ctx.plugin(SessionProjectionRegistry)
     await ctx.plugin(SubagentRuntime)
     await ctx.plugin(AgentRegistry)
     const fiber = await ctx.plugin(fork, { providerName: 'fork' })

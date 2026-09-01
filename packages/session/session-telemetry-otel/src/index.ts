@@ -37,7 +37,7 @@ import { SeverityNumber, type AnyValue, type Logger } from '@opentelemetry/api-l
 import { resourceFromAttributes } from '@opentelemetry/resources'
 
 // The package's own manifest is the single source of the instrumentation-scope
-// version (same pattern as dsh-llm's attribution identity).
+// version (same pattern as qilin-llm's attribution identity).
 const { version } = createRequire(import.meta.url)('../package.json') as { version: string }
 
 /** Session-sharing policy selected by {@link Config.mode}. */

@@ -20,7 +20,7 @@
  */
 
 import { existsSync } from 'node:fs'
-import { isAbsolute, relative, sep } from 'node:path'
+import { isAbsolute, join, parse, relative, sep } from 'node:path'
 import type { Context } from '@deepseek-ai/cordis'
 import { HarnessError } from '@qilin/llm'
 import { ItemRetainer, TextRetainer } from '@qilin/output-retention'
@@ -58,7 +58,7 @@ export const SEARCH_GRACE_MS = 3_000
  * COUNT, but retained matches of a broad search (many long lines) can still
  * serialize to hundreds of kilobytes, and `meta` is persisted with the session
  * log and re-sent on every request. A deployment's final output budget
- * (`dsh-spill-policy`) only shrinks a result's `content`, never its `meta`, so the
+ * (`qilin-spill-policy`) only shrinks a result's `content`, never its `meta`, so the
  * projection owns this cap. 64 KiB holds the full default-capped result of a
  * typical search while bounding the pathological one.
  */
@@ -170,7 +170,10 @@ let rgPathPromise: Promise<string> | undefined
  */
 export function resolveRgPath(): Promise<string> {
   rgPathPromise ??= Promise.resolve().then(async () => {
-    const executableSidecar = `${process.execPath}-rg`
+    const executable = parse(process.execPath)
+    const executableSidecar = process.platform === 'win32'
+      ? join(executable.dir, `${executable.name}-rg.exe`)
+      : `${process.execPath}-rg`
     if ('pkg' in process && existsSync(executableSidecar)) return executableSidecar
     return (await import('@vscode/ripgrep')).rgPath
   })

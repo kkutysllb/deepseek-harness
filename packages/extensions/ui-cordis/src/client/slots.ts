@@ -1,6 +1,6 @@
 /** Injected faces and the Package-owned `tool.view.cordis` slot declaration. */
 
-import type { SessionId } from '@qilin/client-connection/client'
+import type { SessionId } from '@qilin/api-remotes/client'
 import type { HostObservable } from '@qilin/client-ui-slots'
 import type {
   CordisRunActivity, CordisRunFailure, CordisUserRunRequest, DynamicCordisLivePackage,

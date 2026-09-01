@@ -10,7 +10,7 @@ An unconditional SPA fallback makes every unmatched GET or HEAD request look suc
 
 ## Decision
 
-`dsh-host-frontend-static` renders `index.html` only when the normalized target is the dist root or the configured index path. The current Web client has no History API pathname routes; query strings do not change pathname matching, and URL fragments never reach the server. Existing files are served normally, while `ENOENT`, `EISDIR`, and `ENOTDIR` reads produce an empty 404 response with no content type. Other filesystem failures are rethrown to the webserver's request-failure handling instead of being mislabeled as absence.
+`qilin-host-frontend-static` renders `index.html` only when the normalized target is the dist root or the configured index path. The current Web client has no History API pathname routes; query strings do not change pathname matching, and URL fragments never reach the server. Existing files are served normally, while `ENOENT`, `EISDIR`, and `ENOTDIR` reads produce an empty 404 response with no content type. Other filesystem failures are rethrown to the webserver's request-failure handling instead of being mislabeled as absence.
 
 GET and HEAD use the same status and content type for index entries, files, and misses. Named routes still match before the fallback, traversal outside the dist root remains 403, and non-GET/HEAD requests reaching the fallback remain 405.
 
@@ -20,7 +20,7 @@ GET and HEAD use the same status and content type for index entries, files, and 
 
 **Use an `Accept: text/html` request header as the fallback rule.** The header expresses representation preference, not whether the pathname is a declared client route. Browser fetches, bots, and monitors may request HTML for an invalid path, so the same false-success behavior remains.
 
-**Add a configurable pathname allowlist now.** No current client route consumes such configuration. A future History API router can add an explicit server rule or configuration field together with the route that requires it, without preserving a speculative public option today.
+**Add a configurable pathname allowlist.** No current client route consumes such configuration. A future History API router can add an explicit server rule or configuration field together with the route that requires it, without preserving a speculative public option.
 
 ## Consequences
 

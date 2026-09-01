@@ -15,7 +15,7 @@
 
 import { Context } from '@deepseek-ai/cordis'
 import type { DynamicCordisPackage } from '@qilin/api-remotes/client'
-import type { SlotRegistry } from '@qilin/client-runtime/client'
+import type { SlotRegistry } from '@qilin/client-ui-renderer/client'
 import type { ThemeRuntime } from '@qilin/client-ui-theme/client'
 
 /** Facade verbs beyond declared services (host CTX_VERBS twin). */

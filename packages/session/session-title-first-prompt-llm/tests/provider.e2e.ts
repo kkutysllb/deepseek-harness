@@ -5,6 +5,7 @@ import LlmRuntime from '@qilin/llm'
 import * as LlmDeepSeek from '@qilin/llm-deepseek'
 import SessionStore, { SessionId } from '@qilin/session'
 import SessionTitleService from '@qilin/session-title'
+import SessionProjectionRegistry from '@qilin/session-projection'
 import * as FirstMessageTitleProvider from '@qilin/session-title-first-prompt-llm'
 
 const contexts: Context[] = []
@@ -20,6 +21,7 @@ describe.skipIf(!process.env.DEEPSEEK_API_KEY)('first-prompt title provider with
     await ctx.plugin(LlmRuntime)
     await ctx.plugin(LlmDeepSeek, { thinking: 'disabled' })
     await ctx.plugin(SessionStore)
+    await ctx.plugin(SessionProjectionRegistry)
     await ctx.plugin(SessionTitleService, {
       fallbackMaxWords: 5,
       fallbackMaxBytes: 40,

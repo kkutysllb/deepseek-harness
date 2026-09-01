@@ -6,10 +6,12 @@ import { Context } from '@deepseek-ai/cordis'
 import type { Agent } from '@qilin/agent'
 import AgentLoop from '@qilin/agent-loop'
 import { mountAgentLoopTestDependencies } from '@qilin/agent-loop-testkit'
-import { CallId } from '@qilin/llm'
+import { ToolCallId } from '@qilin/llm'
 import { scopeOf } from '@qilin/scope'
 import { SessionId } from '@qilin/session'
+import SessionProjectionRegistry from '@qilin/session-projection'
 import JsonlSessionPersistence from '@qilin/session-persistence-jsonl'
+import SessionQueryEngine from '@qilin/session-query'
 import SubagentService from '@qilin/subagent'
 import * as SubagentFork from '@qilin/subagent-fork-in-process'
 import * as SubagentSpawn from '@qilin/subagent-spawn-in-process'
@@ -37,6 +39,17 @@ const TOOL_NAMES = [
 const roots: string[] = []
 let callNumber = 0
 
+/** Session query implementation whose search faces are outside these tests. */
+class TestSessionQuery extends SessionQueryEngine {
+  override searchSessions(): Promise<never> {
+    return Promise.reject(new Error('session search is not configured in this test'))
+  }
+
+  override searchEvents(): Promise<never> {
+    return Promise.reject(new Error('event search is not configured in this test'))
+  }
+}
+
 afterEach(() => {
   for (const root of roots.splice(0)) rmSync(root, { recursive: true, force: true })
 })
@@ -44,9 +57,11 @@ afterEach(() => {
 async function setup(script: ConstructorParameters<typeof MockAdapter>[0], legacyControl = false) {
   const ctx = new Context()
   await mountAgentLoopTestDependencies(ctx)
-  const storageRoot = mkdtempSync(join(tmpdir(), 'dsh-tool-team-'))
+  await ctx.plugin(SessionProjectionRegistry)
+  const storageRoot = mkdtempSync(join(tmpdir(), 'qilin-tool-team-'))
   roots.push(storageRoot)
   await ctx.plugin(JsonlSessionPersistence, { root: storageRoot })
+  await ctx.plugin(TestSessionQuery)
   await ctx.plugin(AgentLoop, { agents: [] })
   await ctx.plugin(SubagentService)
   if (legacyControl) await ctx.plugin(ToolSubagentControl)
@@ -68,7 +83,7 @@ function execute(
   signal: AbortSignal = SIGNAL,
 ) {
   return ctx.tools.execute({
-    callId: CallId(`team-call-${++callNumber}`),
+    callId: ToolCallId(`team-call-${++callNumber}`),
     name,
     arguments: args,
     signal,
@@ -110,7 +125,7 @@ async function waitNoAgent(ctx: Context, id: SessionId): Promise<void> {
   await vi.waitFor(() => { expect(ctx.agents.get(id)).toBeUndefined() }, { timeout: 5_000 })
 }
 
-describe('dsh-tool-team', () => {
+describe('qilin-tool-team', () => {
   it('installs the complete scoped schema and shared-checkout policy for roots and teammates', async () => {
     const { ctx, lead } = await setup(['hang'])
     const leadAssembly = await assembly(ctx, lead)

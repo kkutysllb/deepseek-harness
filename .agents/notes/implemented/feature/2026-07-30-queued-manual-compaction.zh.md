@@ -34,7 +34,7 @@ Status: implemented
 
 ### 一个参数化事务拥有每一对标记
 
-`dsh-compaction-basic` 只有一个区域事务，由标记归属值（`number | null`）、稳定性规则（整个会话表层或所选区段）与可选 flush 参数化。它按同一顺序执行：
+`qilin-compaction-basic` 只有一个区域事务，由标记归属值（`number | null`）、稳定性规则（整个会话表层或所选区段）与可选 flush 参数化。它按同一顺序执行：
 
 1. 验证所选位置范围，并检查持久日志尾部；
 2. 拒绝活动的未匹配压缩标记；

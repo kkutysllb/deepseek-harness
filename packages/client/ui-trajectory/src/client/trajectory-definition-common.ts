@@ -1,4 +1,4 @@
-import type { ConversationNodeContext } from '@qilin/client-runtime/client'
+import type { ConversationNodeContext } from '@qilin/client-ui-conversation/client'
 import type {
   TrajectoryContribution, TrajectoryConversationViewNode,
 } from './trajectory-contract.ts'

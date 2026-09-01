@@ -2,13 +2,16 @@
 import { act, cleanup, fireEvent, render, screen, waitFor } from '@testing-library/react'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import { AuthError, UnauthorizedSignal, type AccountView, type IAuthClient } from '@qilin/client-connection/client'
+import { en as commonEn } from '@qilin/client-locale/src/locales/en.ts'
+import { makeTranslate } from '@qilin/client-test-runtime'
 import { AccountOverlay } from '../src/client/AccountOverlay.tsx'
 import { AccountsSettingsSection } from '../src/client/AccountsSettingsSection.tsx'
-import { en, type AccountsLocaleKey } from '../src/client/locales.ts'
+import { en } from '../src/client/locales.ts'
 
 afterEach(cleanup)
 
-const t = (key: AccountsLocaleKey): string => en[key]
+const t: Parameters<typeof AccountOverlay>[0]['t'] = makeTranslate(en, commonEn)
+const sectionT: Parameters<typeof AccountsSettingsSection>[0]['t'] = makeTranslate(en, commonEn)
 
 function user(id: string, email: string, systemRole: 'admin' | 'user', disabledAt: number | null = null): AccountView {
   return {
@@ -181,7 +184,7 @@ describe('AccountsSettingsSection', () => {
   it('renders the users table and applies a role toggle through updateUser', async () => {
     const users = [user('a1', 'admin@qilin.dev', 'admin'), user('u1', 'user@qilin.dev', 'user')]
     const auth = fakeAuth({ listUsers: vi.fn(async () => users), updateUser: vi.fn(async () => user('u1', 'user@qilin.dev', 'admin')) })
-    render(<AccountsSettingsSection auth={auth} t={t} />)
+    render(<AccountsSettingsSection auth={auth} t={sectionT} />)
     await screen.findByText('user@qilin.dev')
     const promote = screen.getAllByRole('button', { name: en.promote })[0]!
     fireEvent.click(promote)
@@ -194,7 +197,7 @@ describe('AccountsSettingsSection', () => {
       listUsers: vi.fn(async () => users),
       updateUser: vi.fn(async () => { throw new AuthError(409, 'last_admin_protected', 'no') }),
     })
-    render(<AccountsSettingsSection auth={auth} t={t} />)
+    render(<AccountsSettingsSection auth={auth} t={sectionT} />)
     await screen.findByText('admin@qilin.dev')
     fireEvent.click(screen.getByRole('button', { name: en.disable }))
     await screen.findByText(en.errorLastAdmin)
@@ -203,7 +206,7 @@ describe('AccountsSettingsSection', () => {
   it('resets a password through the inline confirm row', async () => {
     const users = [user('u1', 'user@qilin.dev', 'user')]
     const auth = fakeAuth({ listUsers: vi.fn(async () => users), resetPassword: vi.fn(async () => users[0]!) })
-    render(<AccountsSettingsSection auth={auth} t={t} />)
+    render(<AccountsSettingsSection auth={auth} t={sectionT} />)
     await screen.findByText('user@qilin.dev')
     fireEvent.click(screen.getByRole('button', { name: en.resetPassword }))
     fireEvent.input(screen.getByPlaceholderText(en.newPassword), { target: { value: 'fresh-pass-99' } })
@@ -213,7 +216,7 @@ describe('AccountsSettingsSection', () => {
 
   it('shows the administrator-required state on 403', async () => {
     const auth = fakeAuth({ listUsers: vi.fn(async () => { throw new AuthError(403, 'forbidden', 'no') }) })
-    render(<AccountsSettingsSection auth={auth} t={t} />)
+    render(<AccountsSettingsSection auth={auth} t={sectionT} />)
     expect(await screen.findByText(en.adminRequired)).toBeTruthy()
   })
 
@@ -223,12 +226,12 @@ describe('AccountsSettingsSection', () => {
       listUsers: vi.fn(async () => [disabled]),
       updateUser: vi.fn(async () => user('u2', 'off@qilin.dev', 'user', null)),
     })
-    render(<AccountsSettingsSection auth={auth} t={t} />)
+    render(<AccountsSettingsSection auth={auth} t={sectionT} />)
     await screen.findByText('off@qilin.dev')
     fireEvent.click(screen.getByRole('button', { name: en.enable }))
     await waitFor(() => { expect(auth.updateUser).toHaveBeenCalledWith('u2', { disabled: false }) })
     const empty = fakeAuth({ listUsers: vi.fn(async () => []) })
-    render(<AccountsSettingsSection auth={empty} t={t} />)
+    render(<AccountsSettingsSection auth={empty} t={sectionT} />)
     expect(await screen.findByText(en.empty)).toBeTruthy()
   })
 
@@ -241,7 +244,7 @@ describe('AccountsSettingsSection', () => {
       listUsers,
       updateUser: vi.fn(async () => { throw new AuthError(500, 'internal_error', 'boom') }),
     })
-    render(<AccountsSettingsSection auth={auth} t={t} />)
+    render(<AccountsSettingsSection auth={auth} t={sectionT} />)
     expect(await screen.findByText(en.errorGeneric)).toBeTruthy()
     fireEvent.click(screen.getByRole('button', { name: en.retry }))
     await screen.findByText('user@qilin.dev')
@@ -255,7 +258,7 @@ describe('AccountsSettingsSection', () => {
       listUsers: vi.fn(async () => users),
       resetPassword: vi.fn(async () => { throw new AuthError(400, 'weak_password', 'short') }),
     })
-    render(<AccountsSettingsSection auth={auth} t={t} />)
+    render(<AccountsSettingsSection auth={auth} t={sectionT} />)
     await screen.findByText('user@qilin.dev')
     fireEvent.click(screen.getByRole('button', { name: en.resetPassword }))
     fireEvent.input(screen.getByPlaceholderText(en.newPassword), { target: { value: 'short' } })
@@ -268,7 +271,7 @@ describe('AccountsSettingsSection', () => {
   it('lands on the generic error state for non-auth failures and stays quiet after unmount', async () => {
     const deferred = Promise.withResolvers<AccountView[]>()
     const auth = fakeAuth({ listUsers: () => deferred.promise })
-    const view = render(<AccountsSettingsSection auth={auth} t={t} />)
+    const view = render(<AccountsSettingsSection auth={auth} t={sectionT} />)
     view.unmount()
     await act(async () => { deferred.reject(new Error('transport down')) })
     expect(view.container.querySelector('table')).toBeNull()
@@ -281,7 +284,7 @@ describe('AccountsSettingsSection', () => {
       ? Promise.reject(new AuthError(400, 'weak_password', 'short'))
       : deferred.promise)
     const auth = fakeAuth({ listUsers: vi.fn(async () => users), resetPassword })
-    render(<AccountsSettingsSection auth={auth} t={t} />)
+    render(<AccountsSettingsSection auth={auth} t={sectionT} />)
     await screen.findByText('user@qilin.dev')
     fireEvent.click(screen.getByRole('button', { name: en.resetPassword }))
     fireEvent.click(screen.getByRole('button', { name: en.confirmReset }))

@@ -13,7 +13,7 @@ const dirs: string[] = []
 
 /** A context whose credential records live in a throwaway `$QILIN_HOME`. */
 async function stored(): Promise<Context> {
-  const dir = await mkdtemp(join(tmpdir(), 'dsh-pi-auth-'))
+  const dir = await mkdtemp(join(tmpdir(), 'qilin-pi-auth-'))
   dirs.push(dir)
   const ctx = new Context()
   await ctx.plugin(LocalCredentialProvider, { path: join(dir, '.credentials.yaml'), watch: false })
@@ -62,6 +62,47 @@ describe('pi-ai credential store over harness records', () => {
 
     await expect(store.read('openai-codex')).resolves.toEqual(granted)
     await expect(ctx.credentials.readRecord(CODEX)).resolves.toEqual({ kind: 'grant', payload: granted })
+  })
+
+  it('stores the JSON image of a grant, dropping explicitly-undefined members', async () => {
+    const ctx = await stored()
+    const store = credentialStoreFrom(ctx)
+    // The github.com Copilot shape: pi-ai sets optional members to explicit
+    // undefined, which the strict record validator refuses verbatim.
+    const granted = {
+      type: 'oauth' as const,
+      access: 'at',
+      refresh: 'rt',
+      expires: 42,
+      enterpriseUrl: undefined,
+      nested: { keep: 'x', drop: undefined },
+      list: ['a', undefined, 'b'],
+    }
+
+    await store.modify('github-copilot', () => Promise.resolve(granted))
+
+    await expect(ctx.credentials.readRecord(recordKeyFor('github-copilot'))).resolves.toEqual({
+      kind: 'grant',
+      payload: {
+        type: 'oauth',
+        access: 'at',
+        refresh: 'rt',
+        expires: 42,
+        nested: { keep: 'x' },
+        list: ['a', null, 'b'],
+      },
+    })
+  })
+
+  it('passes a genuinely unstorable grant value through to the store\'s loud refusal', async () => {
+    const ctx = await stored()
+    const store = credentialStoreFrom(ctx)
+    // A foreign-prototype member is not the undefined idiom: the image leaves
+    // it untouched and the record validator still refuses the write.
+    const granted = { type: 'oauth' as const, access: 'at', refresh: 'rt', expires: 42, issued: new Date(0) }
+
+    await expect(store.modify('github-copilot', () => Promise.resolve(granted)))
+      .rejects.toThrow(/JSON cannot represent/)
   })
 
   it('shows the mutation the current credential and leaves it alone when declined', async () => {
@@ -155,7 +196,7 @@ describe('pi-ai ambient auth context', () => {
   })
 
   it('answers about the host filesystem, expanding a leading ~', async () => {
-    const dir = await mkdtemp(join(tmpdir(), 'dsh-pi-home-'))
+    const dir = await mkdtemp(join(tmpdir(), 'qilin-pi-home-'))
     dirs.push(dir)
     await writeFile(join(dir, 'creds'), 'x')
     // Both spellings of "home": os.homedir() reads HOME on POSIX and

@@ -48,8 +48,8 @@ function runBuiltWeb(cwd: string): Promise<{ stdout: string; stderr: string; cod
   return new Promise((resolveRun, rejectRun) => {
     const env: NodeJS.ProcessEnv = {
       ...process.env,
-      DEEPSEEK_API_KEY: 'dsh-cli-smoke-dummy-key',
-      QILIN_HOME: join(cwd, '.dsh'),
+      DEEPSEEK_API_KEY: 'qilin-cli-smoke-dummy-key',
+      QILIN_HOME: join(cwd, '.qilin'),
     }
     delete env.DEEPSEEK_BASE_URL
     delete env.NODE_OPTIONS
@@ -115,7 +115,7 @@ describe.skipIf(!requireBuiltArtifacts)('built CLI lazy-search startup', () => {
     expect(webRow?.config?.openAt).toBe('never')
     expect(webRow?.disabled).toBeUndefined()
 
-    const cwd = await mkdtemp(join(tmpdir(), 'dsh-cli-lazy-search-'))
+    const cwd = await mkdtemp(join(tmpdir(), 'qilin-cli-lazy-search-'))
     try {
       const result = await runBuiltWeb(cwd)
       expect(result.stdout).toMatch(/dsh web: http:\/\/127\.0\.0\.1:\d+/u)

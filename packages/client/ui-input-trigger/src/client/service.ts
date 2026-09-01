@@ -7,7 +7,9 @@
  */
 import { Service } from '@deepseek-ai/cordis'
 import type { Context } from '@deepseek-ai/cordis'
-import type { ClientContext, ISessions, SessionId } from '@qilin/client-runtime/client'
+import type { Context as ClientContext } from '@deepseek-ai/cordis'
+import type { ISessions } from '@qilin/api-session-controller/client'
+import type { SessionId } from '@qilin/session/types'
 import type { InputTriggerSource } from '../types.ts'
 import { InputTriggerController } from './controller.ts'
 import type { InputTriggerServiceContract } from './contract.ts'

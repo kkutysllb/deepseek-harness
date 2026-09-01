@@ -44,11 +44,11 @@ interface OtlpLogsRequest {
 const servers: Server[] = []
 
 // The backend resolves the harness home's anonymous user id at construction;
-// pin QILIN_HOME to a temp dir so the suite never touches the ambient ~/.dsh.
+// pin QILIN_HOME to a temp dir so the suite never touches the ambient ~/.qilin.
 let tempHome: string
 let previousDshHome: string | undefined
 beforeAll(() => {
-  tempHome = mkdtempSync(join(tmpdir(), 'dsh-otel-home-'))
+  tempHome = mkdtempSync(join(tmpdir(), 'qilin-otel-home-'))
   previousDshHome = process.env.QILIN_HOME
   process.env.QILIN_HOME = tempHome
 })
@@ -490,7 +490,7 @@ describe('OpenTelemetrySessionBackend config fails loud', () => {
   })
 })
 
-describe('dsh-session-telemetry-otel real-load-path guard', () => {
+describe('qilin-session-telemetry-otel real-load-path guard', () => {
   it('keeps the Service class with inject/Config through unwrapExports', async () => {
     const module = await import('../src/index.ts')
     const loader = Object.create(Loader.prototype) as Loader

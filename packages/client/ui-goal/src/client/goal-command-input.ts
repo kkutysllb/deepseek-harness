@@ -3,7 +3,7 @@ import type { CommandId } from '@qilin/commands/brand'
 import type {} from '@qilin/commands/types'
 import type {
   ConversationNodeDefinition,
-} from '@qilin/client-runtime/client'
+} from '@qilin/client-ui-conversation/client'
 
 /** Goal-owned human command input projected independently of model messages. */
 export interface GoalCommandInputData {
@@ -12,7 +12,7 @@ export interface GoalCommandInputData {
   readonly time: number
 }
 
-declare module '@qilin/client-ui-conversation/client' {
+declare module '@qilin/client-ui-chat/client' {
   interface ChatNodeDataMap {
     /** Human-entered `/goal` command input. */
     'command-input': GoalCommandInputData

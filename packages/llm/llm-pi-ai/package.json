@@ -1,7 +1,7 @@
 {
   "name": "@qilin/llm-pi-ai",
-  "description": "pi-ai-backed DeepSeek adapter for the DeepSeek Harness LLM seam (design-verification twin of dsh-llm-deepseek)",
-  "version": "0.1.1-rc.2",
+  "description": "pi-ai-backed DeepSeek adapter for the DeepSeek Harness LLM seam (design-verification twin of qilin-llm-deepseek)",
+  "version": "0.1.2-alpha.3",
   "publishConfig": {
     "access": "public"
   },
@@ -32,30 +32,34 @@
   ],
   "license": "MIT",
   "peerDependencies": {
+    "@deepseek-ai/cordis": "workspace:^",
     "@qilin/attachment": "workspace:^",
     "@qilin/authorization": "workspace:^",
     "@qilin/credentials": "workspace:^",
-    "@qilin/launch-environment": "workspace:^",
+    "@qilin/fs": "workspace:^",
     "@qilin/invariants": "workspace:^",
+    "@qilin/launch-environment": "workspace:^",
     "@qilin/llm": "workspace:^",
     "@qilin/settings": "workspace:^",
-    "@qilin/timeout": "workspace:^",
-    "@deepseek-ai/cordis": "workspace:^"
+    "@qilin/timeout": "workspace:^"
   },
   "dependencies": {
-    "@earendil-works/pi-ai": "^0.82.1",
-    "@deepseek-ai/schemastery": "workspace:^"
+    "@qilin/brand": "workspace:^",
+    "@qilin/util-values": "workspace:^",
+    "@deepseek-ai/schemastery": "workspace:^",
+    "@earendil-works/pi-ai": "0.84.2"
   },
   "devDependencies": {
+    "@deepseek-ai/cordis": "workspace:^",
     "@qilin/attachment": "workspace:^",
     "@qilin/authorization": "workspace:^",
     "@qilin/credentials": "workspace:^",
-    "@qilin/launch-environment": "workspace:^",
+    "@qilin/fs": "workspace:^",
     "@qilin/invariants": "workspace:^",
+    "@qilin/launch-environment": "workspace:^",
     "@qilin/llm": "workspace:^",
     "@qilin/llm-deepseek": "workspace:^",
     "@qilin/settings": "workspace:^",
-    "@qilin/timeout": "workspace:^",
-    "@deepseek-ai/cordis": "workspace:^"
+    "@qilin/timeout": "workspace:^"
   }
 }

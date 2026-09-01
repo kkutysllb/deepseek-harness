@@ -1,7 +1,7 @@
 {
   "name": "@qilin/client-ui-workflow-run",
-  "description": "Durable workflow-run Conversation Node and nested member disclosure for dsh web",
-  "version": "0.1.1-rc.2",
+  "description": "Durable workflow-run Conversation Node and nested member disclosure for qilin web",
+  "version": "0.1.2-alpha.3",
   "publishConfig": {
     "access": "public"
   },
@@ -32,9 +32,12 @@
   "qilin": {
     "client": {
       "inject": [
+        "@qilin/api-session-controller",
         "@qilin/client-locale",
-        "@qilin/client-runtime",
-        "@qilin/client-ui-conversation"
+        "@qilin/client-ui-chat",
+        "@qilin/client-ui-conversation",
+        "@qilin/client-ui-renderer",
+        "@qilin/client-ui-session"
       ],
       "platform": "web"
     }
@@ -51,22 +54,19 @@
   ],
   "license": "MIT",
   "peerDependencies": {
-    "@qilin/client-locale": "workspace:^",
-    "@qilin/client-runtime": "workspace:^",
-    "@qilin/client-ui-conversation": "workspace:^",
-    "@qilin/invariants": "workspace:^",
-    "@qilin/session": "workspace:^",
-    "@qilin/tool-workflow": "workspace:^",
-    "@qilin/workflow": "workspace:^",
     "@deepseek-ai/cordis": "workspace:^"
   },
   "devDependencies": {
+    "@qilin/api-session-controller": "workspace:^",
     "@qilin/client-locale": "workspace:^",
-    "@qilin/client-runtime": "workspace:^",
+    "@qilin/client-store": "workspace:^",
     "@qilin/client-test-runtime": "workspace:^",
+    "@qilin/client-ui-chat": "workspace:^",
     "@qilin/client-ui-conversation": "workspace:^",
     "@qilin/client-ui-primitives": "workspace:^",
     "@qilin/client-ui-slots": "workspace:^",
+    "@qilin/client-ui-renderer": "workspace:^",
+    "@qilin/client-ui-session": "workspace:^",
     "@qilin/invariants": "workspace:^",
     "@qilin/session": "workspace:^",
     "@qilin/tool-workflow": "workspace:^",

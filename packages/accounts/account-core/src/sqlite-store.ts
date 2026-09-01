@@ -90,7 +90,7 @@ export interface SqliteAccountStoreOptions {
 
 /**
  * Resolve the default database location: `qilin-accounts/accounts.db` inside
- * the harness home (`QILIN_HOME`, falling back to `~/.dsh`).
+ * the harness home (`QILIN_HOME`, falling back to `~/.qilin`).
  * @param env - environment consulted for `QILIN_HOME`; defaults to `process.env`.
  * @returns the default database file path.
  */

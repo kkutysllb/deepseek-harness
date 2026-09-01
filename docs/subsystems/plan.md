@@ -2,13 +2,13 @@
 
 English | [中文](plan.zh.md)
 
-Plan mode is logged per-agent collaboration state owned by [dsh-plan-mode](../../packages/plan/plan-mode) (`ctx.planMode`, `PlanModeController`): while active, a deployment-owned guidance section is included in each model request. Plan mode is **soft guidance**. [Sandbox mode](sandbox.md) and [approval policy](approval.md) enforce restrictions independently; neither reads or writes plan state, so deployments configure them separately. The package is optional, and the agent loop does not depend on it. It contributes the `plan:policy` prompt section and registers the `exit_plan_mode` tool and `/plan` command. The [design note](../../.agents/notes/implemented/simplification/2026-07-22-plan-specific-collaboration-state.md) owns the rationale; the [package README](../../packages/plan/plan-mode/README.md) owns the model-experience and limitation detail.
+Plan mode is logged per-agent collaboration state owned by [qilin-plan-mode](../../packages/plan/plan-mode) (`ctx.planMode`, `PlanModeController`): while active, a deployment-owned guidance section is included in each model request. Plan mode is **soft guidance**. [Sandbox mode](sandbox.md) and [approval policy](approval.md) enforce restrictions independently; neither reads or writes plan state, so deployments configure them separately. The package is optional, and the agent loop does not depend on it. It contributes the `plan:policy` prompt section and registers the `exit_plan_mode` tool and `/plan` command. The [design note](../../.agents/notes/implemented/simplification/2026-07-22-plan-specific-collaboration-state.md) owns the rationale; the [package README](../../packages/plan/plan-mode/README.md) owns the model-experience and limitation detail.
 
 Source: [`packages/plan/plan-mode/src/index.ts`](../../packages/plan/plan-mode/src/index.ts)
 
 ## Logged state and recovery
 
-`plan/mode` (`{ active: boolean }`) is a log-only, whole-value-replace [session event](session.md): durable and replayable, never in the model transcript. `foldPlanMode(events, end?)` returns the last logged value in the prefix, or `false` when there is none — the state in force is always a pure fold of the session log, so resume, fork, and compaction recover it with no live mirror, and UIs observe committed flips through `session/event`. The complete event declaration is in the [persistence log event catalog](../persistence-catalog.md).
+`plan/mode` (`{ active: boolean }`) is a log-only, whole-value-replace [session event](session.md): durable and replayable, never in the model transcript. The optionally registered `plan` unit folds committed mode, command settlement, and the mode recorded at the latest request header. `ctx.planMode` reads that state through `stateOf()`; the first dependent access fails if the registry, `plan` key, or `turnBoundary` key is absent. Clients receive only `{ active, pending }`; resume, fork, and compaction recover both from the log. The complete event declaration is in the [persistence log event catalog](../persistence-catalog.md).
 
 ## Pending selections and the pre-step append
 
@@ -50,7 +50,7 @@ Generated from source by `scripts/gen-cordis-catalog.ts` (verified fresh by `pnp
 
 ### `ctx.planMode` — `PlanModeController`
 
-`ctx.planMode`: owns logged plan state, applies and narrates selected state at step start, the `plan:policy` section, the `/plan` command, and the stable exit tool. UIs observe committed flips through `session/event`; there is no live mirror.
+`ctx.planMode`: owns logged plan state, applies and narrates selected state at step start, the `plan:policy` section, the `/plan` command, and the stable exit tool. Client carriers expose the projection's cropped `{ active, pending }` view.
 
 ```ts cordis-catalog
 /**
