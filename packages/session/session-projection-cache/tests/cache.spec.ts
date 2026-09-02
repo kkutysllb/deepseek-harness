@@ -272,7 +272,7 @@ describe('SessionProjectionCache write policy', () => {
     })
     const warn = vi.spyOn(ctx.logger, 'warn')
     await ctx.sessionProjectionCache.write(session)
-    const snap = ctx.sessionProjectionCache.cachedSnapshot(headerOf(session.id, session.header.createdAt, '/work'))
+    const snap = ctx.sessionProjectionCache.cachedSnapshot(headerOf(session.id, session.header.createdAt, '/work'), SessionLogOffset(0))
     expect(snap?.values['cache-test/marks']).toEqual({ marks: ['kept'] })
     expect('cache-test/bad-only' in (snap?.values ?? {})).toBe(false)
     expect(warn).toHaveBeenCalledWith(
