@@ -2,5 +2,5 @@
 # side as of the last confirmed-consistent state. Both languages carry equal authority;
 # after editing either side, bring the other along and re-record with:
 #   pnpm run verify-translation-pairing --write packages/test-support/loader-smoke/README.md
-README.md: 869488be8b683adc493da9b7e3d344a6ba53e4f1
-README.zh.md: a7a60342840b48fc05067c0b54f61e40e6593d96
+README.md: 624b45eab22c0c0a0d670115b537ff9cc874d532
+README.zh.md: 8d62bf77f0e67efeeea7adb247acac5830fb6712

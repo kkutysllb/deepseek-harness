@@ -2,5 +2,5 @@
 # side as of the last confirmed-consistent state. Both languages carry equal authority;
 # after editing either side, bring the other along and re-record with:
 #   pnpm run verify-translation-pairing --write .agents/notes/implemented/architecture/2026-08-28-account-auth-session-csrf-services.md
-2026-08-28-account-auth-session-csrf-services.md: 3fd74cf167a3f79fae92ba0572ec479258e3e4bc
-2026-08-28-account-auth-session-csrf-services.zh.md: 59f8e8231ba584c68346b3c0fddc5090cabf2bc8
+2026-08-28-account-auth-session-csrf-services.md: 28c5f0f57fd2e45a6476340314786b650a2ba0b4
+2026-08-28-account-auth-session-csrf-services.zh.md: 2146dee23a4708c5f73456249ccc356ba58a8650

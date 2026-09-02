@@ -2,5 +2,5 @@
 # side as of the last confirmed-consistent state. Both languages carry equal authority;
 # after editing either side, bring the other along and re-record with:
 #   pnpm run verify-translation-pairing --write .agents/notes/implemented/architecture/2026-08-20-preview-cloudflare-pages-deploy.md
-2026-08-20-preview-cloudflare-pages-deploy.md: 314cb73d65181533b5694b0e34296610cb395a41
-2026-08-20-preview-cloudflare-pages-deploy.zh.md: 7aa0ffdabd88da6c98b95af8854fd12f9498d34f
+2026-08-20-preview-cloudflare-pages-deploy.md: 60ed4fd3a3c8052df41cd84fbf85eadbcebd7ec7
+2026-08-20-preview-cloudflare-pages-deploy.zh.md: 00990eca4cc15abf67d2d917c22d719c8229a371

@@ -2,5 +2,5 @@
 # side as of the last confirmed-consistent state. Both languages carry equal authority;
 # after editing either side, bring the other along and re-record with:
 #   pnpm run verify-translation-pairing --write .agents/notes/implemented/architecture/2026-07-22-slot-type-chain-implementation.md
-2026-07-22-slot-type-chain-implementation.md: f746c690ac15ca6f467e3b45606b6792c02df503
-2026-07-22-slot-type-chain-implementation.zh.md: 2dddfb5e17007fb70754eecc1476093577b704a7
+2026-07-22-slot-type-chain-implementation.md: ee93effe675a633e58e5f5909f0b52e810b30aa3
+2026-07-22-slot-type-chain-implementation.zh.md: e79161a1f71fe5026e12ea3b83b0d733afd62cf5

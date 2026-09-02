@@ -3298,6 +3298,7 @@ export interface Config {
 - `@qilin/authorization` — 需要 `credentials`（[`packages/credentials/authorization/src/index.ts`](../packages/credentials/authorization/src/index.ts)）
 - `@qilin/client-locale`（[`packages/client/locale/src/index.ts`](../packages/client/locale/src/index.ts)）
 - `@qilin/client-modules` — 需要 `webServer` · `loader`（[`packages/client/modules/src/index.ts`](../packages/client/modules/src/index.ts)）
+- `@qilin/client-ui-accounts`（[`packages/client/ui-accounts/src/index.ts`](../packages/client/ui-accounts/src/index.ts)）
 - `@qilin/client-ui-agent-preset`（[`packages/client/ui-agent-preset/src/index.ts`](../packages/client/ui-agent-preset/src/index.ts)）
 - `@qilin/client-ui-approval`（[`packages/client/ui-approval/src/index.ts`](../packages/client/ui-approval/src/index.ts)）
 - `@qilin/client-ui-attachment`（[`packages/client/ui-attachment/src/index.ts`](../packages/client/ui-attachment/src/index.ts)）
@@ -3393,6 +3394,10 @@ export interface Config {
 
 由其他包作为库导入；`cordis.yml` 无法加载它们。
 
+- `@qilin/account-auth`（[`packages/accounts/account-auth/src/index.ts`](../packages/accounts/account-auth/src/index.ts)）
+- `@qilin/account-core`（[`packages/accounts/account-core/src/index.ts`](../packages/accounts/account-core/src/index.ts)）
+- `@qilin/account-http`（[`packages/accounts/account-http/src/index.ts`](../packages/accounts/account-http/src/index.ts)）
+- `@qilin/account-rbac`（[`packages/accounts/account-rbac/src/index.ts`](../packages/accounts/account-rbac/src/index.ts)）
 - `@qilin/agent-loop-testkit`（[`packages/test-support/agent-loop-testkit/src/index.ts`](../packages/test-support/agent-loop-testkit/src/index.ts)）
 - `@qilin/anonymous-user-id`（[`packages/identity/anonymous-user-id/src/index.ts`](../packages/identity/anonymous-user-id/src/index.ts)）
 - `@qilin/app-boot`（[`packages/boot/app-boot/src/index.ts`](../packages/boot/app-boot/src/index.ts)）

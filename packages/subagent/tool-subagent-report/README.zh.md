@@ -45,7 +45,7 @@ kind: "package-reference"
 |---|---|---|
 | `reportDelivery` | `next-step` | 已接受报告的父级调度：`next-step` 在最近 step 边界唤醒父级；`quiet` 添加相同上下文但不唤醒 |
 
-生成的[配置目录](../../../docs/config-catalog.zh.md#deepseek-aidsh-tool-subagent-report)是每个受支持字段及其 JSDoc 的穷尽式真源。
+生成的[配置目录](../../../docs/config-catalog.zh.md#qilintool-subagent-report)是每个受支持字段及其 JSDoc 的穷尽式真源。
 
 ### 子级获得什么
 
@@ -100,8 +100,8 @@ kind: "package-reference"
 - [Subagent 子系统](../../../docs/subsystems/subagent.zh.md)——可继续子级、Activation 与 `reportFrom`/`reportDelivery` 约定。
 - [qilin-tool-subagent-control](../tool-subagent-control/README.zh.md)——父到子的控制工具。
 - [qilin-tool-subagent](../tool-subagent/README.zh.md)——启动可继续子级的委派工具。
-- [生成工具目录](../../../docs/tool-catalog.zh.md#deepseek-aidsh-tool-subagent-report)——`report` 的 schema。
-- [生成配置目录](../../../docs/config-catalog.zh.md#deepseek-aidsh-tool-subagent-report)——每个受支持配置字段。
+- [生成工具目录](../../../docs/tool-catalog.zh.md#qilintool-subagent-report)——`report` 的 schema。
+- [生成配置目录](../../../docs/config-catalog.zh.md#qilintool-subagent-report)——每个受支持配置字段。
 
 -----
 
@@ -112,7 +112,7 @@ kind: "package-reference"
 
 #### 模型看到什么
 
-已生成的 [`report` schema](../../../docs/tool-catalog.zh.md#deepseek-aidsh-tool-subagent-report)：一个必填 `output` 字符串。其描述说明子级必须在结束前上报一次，上报只会到达启动该子级的 Agent，并且不会结束轮次。它不包含接收方或投递模式参数。独立的 `tool:report` 提示词 section 在 schema 之外重申该义务。
+已生成的 [`report` schema](../../../docs/tool-catalog.zh.md#qilintool-subagent-report)：一个必填 `output` 字符串。其描述说明子级必须在结束前上报一次，上报只会到达启动该子级的 Agent，并且不会结束轮次。它不包含接收方或投递模式参数。独立的 `tool:report` 提示词 section 在 schema 之外重申该义务。
 
 #### Token 影响
 

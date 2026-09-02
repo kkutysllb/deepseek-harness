@@ -2,5 +2,5 @@
 # side as of the last confirmed-consistent state. Both languages carry equal authority;
 # after editing either side, bring the other along and re-record with:
 #   pnpm run verify-translation-pairing --write .agents/notes/implemented/architecture/2026-07-28-portable-execution-world-consumers.md
-2026-07-28-portable-execution-world-consumers.md: ef72dee8b900148811dc6734e82035b5bc3c1016
-2026-07-28-portable-execution-world-consumers.zh.md: 95652281efad4ac334a398c60b599d17bdfa5c79
+2026-07-28-portable-execution-world-consumers.md: 5713ff91d194f21a93251b60c12d68adfd2d3549
+2026-07-28-portable-execution-world-consumers.zh.md: fdbaeac37ab48b8d7f27ab84fcd8d4cd1be5c589

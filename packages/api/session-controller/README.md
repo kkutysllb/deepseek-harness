@@ -41,7 +41,7 @@ The Session object also carries local submission echoes: `session.beginSubmissio
 | `coldBlankProbeMaxBytes` | `1,024` | Maximum physical size of a cold Session artifact eligible for blankness verification; `0` disables probes |
 | `nativeOpen` | platform-detected | Whether Session workspace paths can be handed to a native desktop opener |
 
-The generated [configuration catalog](../../../docs/config-catalog.md#deepseek-aidsh-api-session-controller) is the exhaustive source for accepted fields and their JSDoc.
+The generated [configuration catalog](../../../docs/config-catalog.md#qilinapi-session-controller) is the exhaustive source for accepted fields and their JSDoc.
 
 -----
 

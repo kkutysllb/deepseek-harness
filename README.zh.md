@@ -1,8 +1,8 @@
-# DeepSeek Harness
+# OpenKylin
 
 [English](README.md) | 中文
 
-DeepSeek Harness（`openkylin`）是由 [DeepSeek AI](https://deepseek.com) 开发的开源 agent harness（智能体框架）。
+OpenKylin（`openkylin`）是一个开源 agent harness（智能体框架），fork 自 [DeepSeek Harness](https://github.com/kkutysllb/deepseek-harness)（由 DeepSeek AI 开发），上游基线为 `dsh-v0.1.2-alpha.3`，并已整体改名至 OpenKylin 产品线。
 
 它构建于**一切皆插件**的架构之上，由 [Cordis](https://github.com/cordiverse/cordis) 驱动，其设计参见论文 [_A Programming Paradigm for Spatiotemporal Composability_](https://arxiv.org/abs/2608.25512)。
 
@@ -10,7 +10,7 @@ DeepSeek Harness（`openkylin`）是由 [DeepSeek AI](https://deepseek.com) 开�
 
 ## 开发者预览
 
-DeepSeek Harness 处于 _开发者预览_ 阶段，正在快速迭代。**未来将出现破坏兼容性的变更。**
+OpenKylin 处于 _开发者预览_ 阶段，正在快速迭代。**未来将出现破坏兼容性的变更。**
 
 运行本项目前，请阅读[安全说明](SAFETY.zh.md)。
 
@@ -48,7 +48,9 @@ pnpm openkylin web
 
 - 通过 [GitHub Discussions](https://github.com/kkutysllb/OpenKylin/discussions) 提交反馈或 bug 报告。
 - 为你的插件仓库添加 [`qilin-plugin`](https://github.com/topics/dsh-plugin) 话题，便于被发现。
-- 欢迎加入 DeepSeek Harness 企微群：扫码添加企微小助手并填写入群问卷，完成后小助手会邀请你入群。
+- 上游项目与社区：[DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harness)。
+
+欢迎加入 DeepSeek Harness 企微群：扫码添加企微小助手并填写入群问卷，完成后小助手会邀请你入群。
 
 <table>
   <thead>

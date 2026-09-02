@@ -2,5 +2,5 @@
 # side as of the last confirmed-consistent state. Both languages carry equal authority;
 # after editing either side, bring the other along and re-record with:
 #   pnpm run verify-translation-pairing --write .agents/notes/implemented/architecture/2026-06-30-bash-stdin-env-trusted-plugin-api.md
-2026-06-30-bash-stdin-env-trusted-plugin-api.md: 4dd056cfe55495e201b8767a61ef90a6467c8cfd
-2026-06-30-bash-stdin-env-trusted-plugin-api.zh.md: 5db31912ccb07ebc82975c70906ee4d4700fb966
+2026-06-30-bash-stdin-env-trusted-plugin-api.md: d759b39c7fa5091bc739d41a714af2d58ca2c8db
+2026-06-30-bash-stdin-env-trusted-plugin-api.zh.md: 8ed9b226a4e1c258082daa7fa2c473433baf83b3

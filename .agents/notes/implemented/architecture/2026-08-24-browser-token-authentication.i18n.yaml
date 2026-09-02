@@ -2,5 +2,5 @@
 # side as of the last confirmed-consistent state. Both languages carry equal authority;
 # after editing either side, bring the other along and re-record with:
 #   pnpm run verify-translation-pairing --write .agents/notes/implemented/architecture/2026-08-24-browser-token-authentication.md
-2026-08-24-browser-token-authentication.md: e147273d89f7b1650f5ea2b748995f83c846e0b3
-2026-08-24-browser-token-authentication.zh.md: 147520f8ef49f0e8ff43a2491a099f7ab174a407
+2026-08-24-browser-token-authentication.md: e980a37ede52a6ca825e54d20ceff75b63956e0b
+2026-08-24-browser-token-authentication.zh.md: 085ecef75342ad9c52d8da408704fe07a84830dd

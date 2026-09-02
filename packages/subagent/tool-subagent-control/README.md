@@ -98,7 +98,7 @@ Read these pages when the package-level contract is not enough; they move from t
 - [Subagent subsystem](../../../docs/subsystems/subagent.md) — continuable children, activations, inbox, interrupt, and follow-up authority.
 - [qilin-tool-subagent](../tool-subagent/README.md) — the delegation tool that starts continuable children.
 - [qilin-tool-subagent-report](../tool-subagent-report/README.md) — the child-to-parent report channel.
-- [Generated tool catalog](../../../docs/tool-catalog.md#deepseek-aidsh-tool-subagent-control) — the three tool schemas.
+- [Generated tool catalog](../../../docs/tool-catalog.md#qilintool-subagent-control) — the three tool schemas.
 
 -----
 
@@ -109,7 +109,7 @@ Read these pages when the package-level contract is not enough; they move from t
 
 #### What the model sees
 
-The generated [schemas](../../../docs/tool-catalog.md#deepseek-aidsh-tool-subagent-control): `send_message` takes `subagent_id` and `message`; `interrupt_agent` takes `agent_id`; `list_agents` takes the optional `scope` enum.
+The generated [schemas](../../../docs/tool-catalog.md#qilintool-subagent-control): `send_message` takes `subagent_id` and `message`; `interrupt_agent` takes `agent_id`; `list_agents` takes the optional `scope` enum.
 
 #### Token effect
 

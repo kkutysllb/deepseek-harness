@@ -6,7 +6,7 @@
 
 mypy 存量清理从 **525 errors / 76 files** 起步，分两阶段推进：
 
-- **4b（已完成，241 errors 清零）**：除 `agents` / `community` / `runtime` 三大模块外的全部模块达到 0 error，并在 CI 中建立 **clean-module gate**（见 [.github/workflows/ci.yml](../.github/workflows/ci.yml)）锁定结果——门禁用 `mypy --follow-imports=silent` + 白名单目录，排除了三大模块的错误泄漏，白名单内模块任何新错误都会使 CI 失败。
+- **4b（已完成，241 errors 清零）**：除 `agents` / `community` / `runtime` 三大模块外的全部模块达到 0 error，并在 CI 中建立 **clean-module gate**（见 `.github/workflows/ci.yml`（历史引用，已移除））锁定结果——门禁用 `mypy --follow-imports=silent` + 白名单目录，排除了三大模块的错误泄漏，白名单内模块任何新错误都会使 CI 失败。
 - **4c（本文档）**：三大模块剩余 **284 errors / 49 files** 的 backlog 整理与清理路线图。
 
 ## 当前分布（284 errors / 49 files）

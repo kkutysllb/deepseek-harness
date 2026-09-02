@@ -47,7 +47,7 @@ The config owns the fixed opener, runtime context, deployment persona, and tool 
 | `persona` | `''` | The global deployment-persona prompt fragment, rendered at order `0` |
 | `toolOrder` | — | Explicit model-facing tool order with one `'<unlisted-tools>'` rest entry |
 
-The generated [configuration catalog](../../../docs/config-catalog.md#deepseek-aidsh-system-prompt) is the exhaustive source for every accepted field. A `toolOrder` list without exactly one rest entry or with duplicates fails at load; a listed name with no registered tool rejects every `assemble()`.
+The generated [configuration catalog](../../../docs/config-catalog.md#qilinsystem-prompt) is the exhaustive source for every accepted field. A `toolOrder` list without exactly one rest entry or with duplicates fails at load; a listed name with no registered tool rejects every `assemble()`.
 
 ### Contribute a prompt section
 
@@ -151,7 +151,7 @@ Prefix-stable while identity, persona, variables, section text, and order render
 
 #### What the model sees
 
-For shipped tools, the model receives the per-agent-visible subset of the [generated tool schemas](../../../docs/tool-catalog.md#deepseek-aidsh-tools), ordered by configuration or lexicographically after restrictions and assembly interception. Extensions can contribute additional definitions through the same registry. Sections and schema providers are separate assembly inputs, so a tool restriction does not remove independently registered guidance.
+For shipped tools, the model receives the per-agent-visible subset of the [generated tool schemas](../../../docs/tool-catalog.md#qilintools), ordered by configuration or lexicographically after restrictions and assembly interception. Extensions can contribute additional definitions through the same registry. Sections and schema providers are separate assembly inputs, so a tool restriction does not remove independently registered guidance.
 
 #### Token effect
 

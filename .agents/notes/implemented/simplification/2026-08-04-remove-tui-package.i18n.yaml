@@ -2,5 +2,5 @@
 # side as of the last confirmed-consistent state. Both languages carry equal authority;
 # after editing either side, bring the other along and re-record with:
 #   pnpm run verify-translation-pairing --write .agents/notes/implemented/simplification/2026-08-04-remove-tui-package.md
-2026-08-04-remove-tui-package.md: 19d8205e8adcbca59135b8bbe30341f3926905b4
-2026-08-04-remove-tui-package.zh.md: 08406c5c1fe045d7662e9197b07a00d578fa1dc1
+2026-08-04-remove-tui-package.md: 3cc0aff57e66c36b227dd75a9e464d870336b00f
+2026-08-04-remove-tui-package.zh.md: 6ee4ec6536722478a59a49da3fecd9369ed1d2dc

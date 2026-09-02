@@ -2,5 +2,5 @@
 # side as of the last confirmed-consistent state. Both languages carry equal authority;
 # after editing either side, bring the other along and re-record with:
 #   pnpm run verify-translation-pairing --write docs/api-gateway.md
-api-gateway.md: 680de1ed2ac702a6decddbfedb03fd90f168b2d6
-api-gateway.zh.md: 19d2b6c13b9509b3abcd9ce417cfa4141398e6c1
+api-gateway.md: 4bacf0badddf7a43874488a7f3ce9675cb6e64fd
+api-gateway.zh.md: aa3bac7dbb4ba81e843a9d305ca7a2a302d335ca

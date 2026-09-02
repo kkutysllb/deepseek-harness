@@ -45,7 +45,7 @@ Load the subagent service, a backend, the delegation tool in `continuable` mode,
 |---|---|---|
 | `reportDelivery` | `next-step` | Parent scheduling for accepted reports: `next-step` wakes the parent at its nearest step boundary; `quiet` adds the same context without waking it |
 
-The generated [configuration catalog](../../../docs/config-catalog.md#deepseek-aidsh-tool-subagent-report) is the exhaustive source for every accepted field and its JSDoc.
+The generated [configuration catalog](../../../docs/config-catalog.md#qilintool-subagent-report) is the exhaustive source for every accepted field and its JSDoc.
 
 ### What the child gets
 
@@ -100,8 +100,8 @@ Read these pages when the package-level contract is not enough; they move from t
 - [Subagent subsystem](../../../docs/subsystems/subagent.md) — continuable children, activations, and the `reportFrom`/`reportDelivery` contract.
 - [qilin-tool-subagent-control](../tool-subagent-control/README.md) — the parent-to-child control tools.
 - [qilin-tool-subagent](../tool-subagent/README.md) — the delegation tool that starts continuable children.
-- [Generated tool catalog](../../../docs/tool-catalog.md#deepseek-aidsh-tool-subagent-report) — the `report` schema.
-- [Generated configuration catalog](../../../docs/config-catalog.md#deepseek-aidsh-tool-subagent-report) — every accepted config field.
+- [Generated tool catalog](../../../docs/tool-catalog.md#qilintool-subagent-report) — the `report` schema.
+- [Generated configuration catalog](../../../docs/config-catalog.md#qilintool-subagent-report) — every accepted config field.
 
 -----
 
@@ -112,7 +112,7 @@ Read these pages when the package-level contract is not enough; they move from t
 
 #### What the model sees
 
-The generated [`report` schema](../../../docs/tool-catalog.md#deepseek-aidsh-tool-subagent-report): one required `output` string. Its description states that the child must report once before finishing, that reporting reaches only the Agent that started the child, and that it does not end the turn. It carries no recipient or delivery-mode parameter. The separate `tool:report` prompt section repeats the obligation outside the schema.
+The generated [`report` schema](../../../docs/tool-catalog.md#qilintool-subagent-report): one required `output` string. Its description states that the child must report once before finishing, that reporting reaches only the Agent that started the child, and that it does not end the turn. It carries no recipient or delivery-mode parameter. The separate `tool:report` prompt section repeats the obligation outside the schema.
 
 #### Token effect
 

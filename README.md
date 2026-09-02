@@ -1,8 +1,8 @@
-# DeepSeek Harness
+# OpenKylin
 
 English | [中文](README.zh.md)
 
-DeepSeek Harness (`openkylin`) is an open-source agent harness developed by [DeepSeek AI](https://deepseek.com).
+OpenKylin (`openkylin`) is an open-source agent harness. It is a fork of [DeepSeek Harness](https://github.com/kkutysllb/deepseek-harness), originally developed by DeepSeek AI, aligned upstream at `dsh-v0.1.2-alpha.3` and rebranded for the OpenKylin product line.
 
 It is built on an **everything-is-a-plugin** architecture and powered by [Cordis](https://github.com/cordiverse/cordis), whose design is described in [_A Programming Paradigm for Spatiotemporal Composability_](https://arxiv.org/abs/2608.25512).
 
@@ -10,7 +10,7 @@ Documentation: [https://deepseek-harness.github.io/deepseek-harness/](https://de
 
 ## Developer preview
 
-DeepSeek Harness is in _developer preview_ and iterating rapidly. **THERE WILL BE COMPATIBILITY-BREAKING CHANGES.**
+OpenKylin is in _developer preview_ and iterating rapidly. **THERE WILL BE COMPATIBILITY-BREAKING CHANGES.**
 
 Review the [safety notice](SAFETY.md) before running the project.
 
@@ -44,7 +44,7 @@ pnpm openkylin web
 
 - Submit feedback or bug reports through [GitHub Discussions](https://github.com/kkutysllb/OpenKylin/discussions).
 - Add the [`qilin-plugin`](https://github.com/topics/dsh-plugin) topic to your plugin repository for discoverability.
-- Join <a href="https://discord.gg/Ycq5dCaS4">DeepSeek Harness Discord community</a>.
+- Upstream project and community: [DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harness).
 
 ## Contributing
 
