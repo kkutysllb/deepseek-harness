@@ -49,7 +49,7 @@ declare module '@deepseek-ai/cordis' {
 }
 
 /** package.json `openkylin.client` declaration fields, validated one by one after reading the file. */
-interface QilinClientDeclaration {
+interface OpenKylinClientDeclaration {
   inject?: string[]
   platform: string
   /** Boot phase-one registration barrier; absent rows still ride the shared application batch. */
@@ -198,7 +198,7 @@ function exactPackageSpecifier(specifier: string): string | undefined {
 }
 
 /** Narrow an unknown parsed JSON value to the `openkylin.client` declaration, throwing on malformed fields. */
-function parseDshClient(pkgName: string, value: unknown): QilinClientDeclaration | undefined {
+function parseDshClient(pkgName: string, value: unknown): OpenKylinClientDeclaration | undefined {
   if (value === undefined) return undefined
   if (typeof value !== 'object' || value === null) {
     throw new Error(`client-modules: ${pkgName} has a non-object openkylin.client declaration`)

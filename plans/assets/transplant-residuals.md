@@ -61,7 +61,7 @@ apps/cli 的 `@module` 注释、根与 apps/cli 的 README(中英)、packages/bu
 | 包内品牌错误前缀/输出 | 约 27 处 | app-boot profile.ts 错误消息与注释、web-app(opening 提示、URL 行、系统提示段)、headless(错误前缀、usage)、cmdline、acp-demo/jsonrpc-demo NAME、apps/web/package.json description、apps/cli/tsdown.config.ts |
 | 测试断言/探针同步 | 58 处 / 9 文件 | built-bin.e2e、web-browser-open.snapshot(URL 正则 `dsh web:`→`qilin web:`、`dsh browser-open:` 前缀)、smoke-real.e2e、windows-shell、headless-shutdown、source-launch.compat、web-app.spec、fixtures/open.mjs |
 | 快照同步 | 数据快照 3 个 + 测试代码快照(.snapshot.ts)3 个 | 数据快照:headless-profile/stderr.expected.txt(`dsh:`→`qilin:` 错误前缀)、acp skill-load/session.jsonl、apps/web skill-tool-row/ui.expected.md(SKILL.md 文本随源同步);测试代码快照:apps/cli/tests/web-browser-open.snapshot.ts、examples/acp-agent/tests/acp.snapshot.ts、examples/jsonrpc-agent/tests/sdk.snapshot.ts;README.i18n.yaml 双语 blob hash 重算仅 apps/cli 一对(S3 时点) |
-| 品牌标题/生成器 | 6 处 | composition.md 标题、gen-doc-graphs.ts(标题+title map)、graph-atlas(中英)、根 README 首屏品牌段(中文侧完整;英文 H1 `# DeepSeek Harness` 在 S3 初版遗漏,由引擎仓修复提交 6c7a8b1 补齐为 `# QiLin`,并中英对称补 fork 出处行)、AGENTS.md 首段 |
+| 品牌标题/生成器 | 6 处 | composition.md 标题、gen-doc-graphs.ts(标题+title map)、graph-atlas(中英)、根 README 首屏品牌段(中文侧完整;英文 H1 `# DeepSeek Harness` 在 S3 初版遗漏,由引擎仓修复提交 6c7a8b1 补齐为 `# OpenKylin`,并中英对称补 fork 出处行)、AGENTS.md 首段 |
 | translation pairing 门禁重录 | 438 对基线 | 门禁自 S2 rescope 起漂移、S3 品牌改名再增(质量审查口径:S2 期 854 文件级 + S3 新增 74,合计 876 文件级 = 438 对 × 2,其中仅 apps/cli 一对曾随 S3 重录);已由引擎仓修复提交 6c7a8b1 以 `pnpm run verify-translation-pairing --write --all` 全量重录收敛,重录后 `pnpm run verify-translation-pairing` 实测 1003 对全查一致(exit 0),无内容真不同步残留 |
 
 变更合计:128 文件 / 395 行(8be4e61);`git diff --name-only | grep -c '^vendor/'` = 0。
@@ -170,7 +170,7 @@ c 类子清单 1:预期红(21 条)——测试断言/fixture/录制快照冻结�
 | 17 | packages/client/ui-conversation/tests/chat-branch-tails.client.spec.tsx:667 | 按钮名正则 `@deepseek-ai/dsh-system-prompt` | 同测试 fixture :658-662 已用 `@qilin/system-prompt` |
 | 18 | packages/boot/app-boot/tests/app-boot.spec.ts:566-567 | fixture node_modules 目录 `join(dir,'node_modules','@deepseek-ai','dsh-system-prompt')`(join 分段字符串规避了 S2 codemod;同 fixture package.json name 字段 :571/:582 已新名,路径与名不一致致 Cannot find package '@qilin/system-prompt') | 应建 `node_modules/@qilin/system-prompt` |
 | 19 | scripts/gen-third-party-notices.spec.ts:30(提交版 THIRD_PARTY_NOTICES.md) | 文案 ``dsh` CLI`` | 生成器已输出 ``qilin` CLI``;S6 跑 `pnpm run gen-third-party-notices` 再生成 |
-| 20 | scripts/translation-prompt.snapshot.ts(录制快照) | 快照含旧 `# DeepSeek Harness` README 双语段 | 生成器现产 `# QiLin` + fork 出处行;S6 `vitest -u` 更新 |
+| 20 | scripts/translation-prompt.snapshot.ts(录制快照) | 快照含旧 `# DeepSeek Harness` README 双语段 | 生成器现产 `# OpenKylin` + fork 出处行;S6 `vitest -u` 更新 |
 | 21 | apps/cli/tests/fixtures/web-browser-open/register.mjs:27 | 就绪探针 `args[0].startsWith('dsh web: ')` | 生产已打印 `qilin web: `,前缀永不命中 → 进程不退出、30s 被 SIGKILL(exitCode undefined);S3 同步了同目录 open.mjs 却漏本文件;非真回归 |
 
 c 类子清单 2:S3 漏网生产字符串(2 位点 / 3 条失败)——生产侧输出仍是旧品牌,S6 须改生产而非测试:
@@ -249,7 +249,7 @@ S5 段 32 条改名相关失败的修复执行段。执行基线:引擎仓 main 
 
 ### B 组:S3 漏网生产字符串(S5 清单 2 位点 + 重跑翻出第 3 位点)
 
-1. packages/bundle/web-app/src/startup.ts:48-49 —— `.name('qilin --profile web')`、`'Serve the QiLin browser UI.'`(同函数 :55-60 Examples S3 已改)。e2e :338 断言收敛。
+1. packages/bundle/web-app/src/startup.ts:48-49 —— `.name('qilin --profile web')`、`'Serve the OpenKylin browser UI.'`(同函数 :55-60 Examples S3 已改)。e2e :338 断言收敛。
 2. packages/client/ui-settings-plugin-inventory/src/client/PluginInventorySettingsTab.tsx:53 —— **任务字面方案不成立,按读码修正**:该正则作用于 :49 已剥 scope 的 unscoped 名(@qilin/host-X → `host-X`,不含 qilin- 段),字面方案 `/^qilin-(?:host-|client-)?/` 无法命中;测试 :75/:87 期望 `directory-picker-native`,保义修复为 `/^(?:host-|client-)?/`(旧 dsh- 段对应旧产品前缀,rescope 后不复存在;旧名映射逐例对齐:dsh-host-X→X ≡ host-X→X)。2 条失败收敛。
 3. packages/bundle/headless/src/startup.ts:33(S6 重跑翻出,提交 4)—— `.name('dsh --profile headless')`,同函数 :39 Examples 已是 qilin(与 web startup 同型半改函数);S5 e2e 仅报 :338 因 web 断言在前先行失败遮蔽本位点,web 修好后 e2e 断言推进即暴露 :357。已改 qilin 并同步两条 startup spec 帮助断言(见 C 组补记)。
 
@@ -266,7 +266,7 @@ c19 特别记录:gen-third-party-notices 再生成即收敛;S5 记「生成器�
 
 ### D 组:R1/R2 快照再生成
 
-机制:scripts/translation-prompt.snapshot.ts 以 DSH_SNAPSHOT=record + vitest.snapshot.config.ts --update 调 verify-translation-prompt.ts --snapshot 从当前 README 重新生成 request-response.expected.json(未手改)。结果:@deepseek-ai/dsh 旧包名口径归零(grep 0),新内容含 `# QiLin` 与 `npx @qilin/cli web`。快照内仍存 3 处 DeepSeek Harness 字样,均为当前 README 正文固有(术语表「项目本身不是 SDK」、Discord 社区、企微群),属 F 类宽义文案随 P5,不在本组口径。
+机制:scripts/translation-prompt.snapshot.ts 以 DSH_SNAPSHOT=record + vitest.snapshot.config.ts --update 调 verify-translation-prompt.ts --snapshot 从当前 README 重新生成 request-response.expected.json(未手改)。结果:@deepseek-ai/dsh 旧包名口径归零(grep 0),新内容含 `# OpenKylin` 与 `npx @qilin/cli web`。快照内仍存 3 处 DeepSeek Harness 字样,均为当前 README 正文固有(术语表「项目本身不是 SDK」、Discord 社区、企微群),属 F 类宽义文案随 P5,不在本组口径。
 
 ### E 组:d 类定性(协议执行完整记录)
 
@@ -321,21 +321,21 @@ vendor 触碰:0(每次提交 pre-commit vendor manifest guard 绿 + 人工 git s
 
 ## P1-S7 env 前缀与发布命名域一次性批量处置(2026-08-28,引擎仓两提交 cfa695b / b1ccb90)
 
-任务:①`DSH_` env 前缀 → `QILIN_`(保护 `__DSH_*__` 深壳契约族与真实密钥);②`loadLayeredEnv('dsh')` 层名 → `'qilin'`(pre-release 破坏变更,无兼容层);③manifest 数据键 `dsh.*` → `qilin.*`(读码定性后全量迁移);④发布家族域 dsh → qilin(families/tag 前缀/gate/workflow/runner 标签);⑤bundle 名域 dsh-base/dsh-web-app/dsh-headless → qilin-*;⑥杂项注释与探针;⑦测试快照同步;⑧终验五门禁+grep 终检;⑨引擎仓两笔提交;⑩台账本段。
+任务:①`DSH_` env 前缀 → `OPENKYLIN_`(保护 `__DSH_*__` 深壳契约族与真实密钥);②`loadLayeredEnv('dsh')` 层名 → `'qilin'`(pre-release 破坏变更,无兼容层);③manifest 数据键 `dsh.*` → `qilin.*`(读码定性后全量迁移);④发布家族域 dsh → qilin(families/tag 前缀/gate/workflow/runner 标签);⑤bundle 名域 dsh-base/dsh-web-app/dsh-headless → qilin-*;⑥杂项注释与探针;⑦测试快照同步;⑧终验五门禁+grep 终检;⑨引擎仓两笔提交;⑩台账本段。
 
 ### 处置计数
 
 **提交 1 = cfa695b `fix(engine): migrate env prefix and env layer name to qilin (s7)`**(607 文件,+2111/−2097):
 
-- env 前缀:非 vendor 跟踪文件 `DSH_` → `QILIN_` 共 2414 处 / 627 文件(负向后顾 `(?<!__)DSH_` 保护 `__DSH_*__`);含 python/(69 处)、.agents/notes/implemented(545 处)、patches/node-pty@1.2.0-beta.15.patch(+行 helper 探针,重打补丁后 pnpm install 验证)、真实密钥文件 0 处命中(DEEPSEEK_API_KEY 等不含 DSH_ 前缀,天然豁免)。
+- env 前缀:非 vendor 跟踪文件 `DSH_` → `OPENKYLIN_` 共 2414 处 / 627 文件(负向后顾 `(?<!__)DSH_` 保护 `__DSH_*__`);含 python/(69 处)、.agents/notes/implemented(545 处)、patches/node-pty@1.2.0-beta.15.patch(+行 helper 探针,重打补丁后 pnpm install 验证)、真实密钥文件 0 处命中(DEEPSEEK_API_KEY 等不含 DSH_ 前缀,天然豁免)。
 - 层名:apps/cli/src/bin.ts `loadLayeredEnv('dsh')` → `loadLayeredEnv('qilin')`。
-- 连带:packages/subprocess 小写 scrub 探针 `dsh_scrub_probe_lower` → `qilin_scrub_probe_lower`(scrub 实现按 `key.toUpperCase().startsWith(QILIN_ENV_PREFIX)` 判定,小写探针必须随前缀迁移),套件 146 passed。
+- 连带:packages/subprocess 小写 scrub 探针 `dsh_scrub_probe_lower` → `qilin_scrub_probe_lower`(scrub 实现按 `key.toUpperCase().startsWith(OPENKYLIN_ENV_PREFIX)` 判定,小写探针必须随前缀迁移),套件 146 passed。
 - .agents/notes/archived 回退保留 68 处 DSH_(封存豁免,见终检)。
 
 **提交 2 = b1ccb90 `chore(engine): rename release family and bundle domains to qilin (s7)`**(424 文件,+1476/−1476,git mv 保溯源 88%/76%):
 
-- 发布家族域:families.ts(id/tagPrefix/类名/描述 5 处)、families.spec.ts(releaseFamily('qilin') ×14、qilin-v* tag 断言)、bump.ts(family.id/usage/prose 4 处)、package.json(`release:qilin`、`verify-qilin-package-licenses` script 键)、git mv scripts/verify-dsh-package-licenses{,.spec}.ts → verify-qilin-package-licenses{,.spec}.ts(内部符号 QILIN_PACKAGE_NAME/inspectQilinPackageLicenses 同步)、run-gates.ts(gate id `qilin-package-licenses`+label)、.github/workflows 5 文件(ci-master/ci/docs-pages/release/release-publish;**S8 枚举更正**:初记 4 文件系漏数 ci.yml——其 runner 标签同样迁移,实测 `git show b1ccb90 --name-only -- .github/workflows` 恰为 5 个 workflow 文件,另有 .github/AGENTS.md 非 workflow 文件同批更新;docs-pages/release/release-publish 的 --family qilin、qilin-v*、qilin-npm-tarballs;ci-master/ci 的 runner 标签 qilin-win-ci/qilin-windows-*/qilin-ubuntu-*)、ci-workflow.spec、check-workspace-constraints.ts。
-- manifest 数据键:48 个 package.json `"dsh":` 节 → `"qilin":`;自有读取/写入位点全量迁移——packages/boot/app-boot/src/profile.ts(类型 QilinManifestSection/QilinBundleManifest/QilinProfileManifest、读写模板、patch id、错误文案)、apps/cli/src/plugin.ts、apps/cli/src/profile-boot.ts、packages/typert/generator/src/analyzer.ts(isDualFacePackage 读 manifest 节名定性双 face,见下「读码决策」)、packages/client/tsdown.client.ts、packages/client/modules/src/index.ts(parseQilinClient)、scripts/check-workspace-constraints.ts、scripts/dev-web.ts ×2、scripts/verify-client-packages.ts(含清扫半改 2 处变量引用错乱修复)、scripts/verify-cordis-config.ts、apps/web/tests/assembled-boot.ts;测试 fixture 侧 built-bin.e2e/headless-shutdown.e2e/web-agent-presets.e2e/profile.spec/node-half.client.spec/dev-web.spec/verify-client-packages.spec/verify-cordis-config.spec 同步 `qilin:` 节;subagent 两包与 base 包测试类型注解同步。
+- 发布家族域:families.ts(id/tagPrefix/类名/描述 5 处)、families.spec.ts(releaseFamily('qilin') ×14、qilin-v* tag 断言)、bump.ts(family.id/usage/prose 4 处)、package.json(`release:qilin`、`verify-qilin-package-licenses` script 键)、git mv scripts/verify-dsh-package-licenses{,.spec}.ts → verify-qilin-package-licenses{,.spec}.ts(内部符号 OPENKYLIN_PACKAGE_NAME/inspectOpenKylinPackageLicenses 同步)、run-gates.ts(gate id `qilin-package-licenses`+label)、.github/workflows 5 文件(ci-master/ci/docs-pages/release/release-publish;**S8 枚举更正**:初记 4 文件系漏数 ci.yml——其 runner 标签同样迁移,实测 `git show b1ccb90 --name-only -- .github/workflows` 恰为 5 个 workflow 文件,另有 .github/AGENTS.md 非 workflow 文件同批更新;docs-pages/release/release-publish 的 --family qilin、qilin-v*、qilin-npm-tarballs;ci-master/ci 的 runner 标签 qilin-win-ci/qilin-windows-*/qilin-ubuntu-*)、ci-workflow.spec、check-workspace-constraints.ts。
+- manifest 数据键:48 个 package.json `"dsh":` 节 → `"qilin":`;自有读取/写入位点全量迁移——packages/boot/app-boot/src/profile.ts(类型 OpenKylinManifestSection/OpenKylinBundleManifest/OpenKylinProfileManifest、读写模板、patch id、错误文案)、apps/cli/src/plugin.ts、apps/cli/src/profile-boot.ts、packages/typert/generator/src/analyzer.ts(isDualFacePackage 读 manifest 节名定性双 face,见下「读码决策」)、packages/client/tsdown.client.ts、packages/client/modules/src/index.ts(parseOpenKylinClient)、scripts/check-workspace-constraints.ts、scripts/dev-web.ts ×2、scripts/verify-client-packages.ts(含清扫半改 2 处变量引用错乱修复)、scripts/verify-cordis-config.ts、apps/web/tests/assembled-boot.ts;测试 fixture 侧 built-bin.e2e/headless-shutdown.e2e/web-agent-presets.e2e/profile.spec/node-half.client.spec/dev-web.spec/verify-client-packages.spec/verify-cordis-config.spec 同步 `qilin:` 节;subagent 两包与 base 包测试类型注解同步。
 - bundle 名域:dsh-base/dsh-web-app/dsh-headless/dsh-client-hmr/dsh-hello-plugin/plugin_dsh_base/dsh-profile-demo → qilin-*(cordis.patch.yml、cordis.yml、测试与文档全量,终检 0);gen-doc-graphs 生成 id `qilin_base` 及 3 处旧短名迁移(subagent-dsh-sdk 为真实包名 @qilin/subagent-dsh-sdk 保留)。
 - 文档与生成产物:config-catalog.zh.md 锚点 111 处、tool-catalog.zh.md 26 处(deepseek-aidsh-* → qilin*)、plan/providers 文档锚点与 `@qilin/llm-*` 短名、packages/client/connection 源注释(`the qilin CLI derives`)、translation pairing 重录两轮(175 记录 + 5 记录;终态 1003 对全一致)。
 - 杂项:scripts/publish-npm-baseline.py:65 探针 `b"dsh web: http://..."` → `qilin web:`(S3 漏网,产品串已于 S3 改出)、scripts/run-gates.ts label 'qilin source-launch smoke'、web-browser-open.snapshot 归一化前缀 `Error: qilin:`。
@@ -401,9 +401,9 @@ vendor 触碰:0(git diff --name-only 两提交均无 vendor 路径;vendor manife
 - 决策理由:S2 改名属已接受的 codemod 政策,该改动已在本台账登记;归档现为我们的自有溯源档案,门禁用途是拦截「未登记改动」,而该改动已登记,故按当前状态重录封存,而非回退内容。
 - 处置(全部走门禁自带机制,未手改任何 hash 数字):
   1. **29 个 sidecar 机械重录**:按归档纪律明文许可的「re-record the sidecar hashes mechanically」(archived/AGENTS.md、.agents/skills/dsh-archive-agent-notes/SKILL.md 步骤 3),用与门禁 `gitBlobHash` 完全一致的算法(blob <len>\\0 + content 的 sha1,与 `git hash-object` 交叉验证一致)重算当前 .md/.zh.md 的 blob hash 并按记录格式重写;143 个 sidecar 全查,恰 29 个更新,与门禁报错位点一一吻合。
-  2. **manifest.json 全量重封**:门禁 `--write` 模式对已封存 hash 漂移会拒绝写入,故按门禁自带的环境变量 `QILIN_ARCHIVE_BASE_REF` 将基线指向一个悬空空树 commit(`git commit-tree $(git hash-object -t tree /dev/null)`,无 manifest → 空基线),删除 manifest.json 后 `--write` 全量重封:输出 `sealed 429 new artifact(s)`,复查 429 artifacts / 6 kinds exit 0。
+  2. **manifest.json 全量重封**:门禁 `--write` 模式对已封存 hash 漂移会拒绝写入,故按门禁自带的环境变量 `OPENKYLIN_ARCHIVE_BASE_REF` 将基线指向一个悬空空树 commit(`git commit-tree $(git hash-object -t tree /dev/null)`,无 manifest → 空基线),删除 manifest.json 后 `--write` 全量重封:输出 `sealed 429 new artifact(s)`,复查 429 artifacts / 6 kinds exit 0。
   3. manifest 净变化 87 行(+87/−87)= 58 个 md/zh.md + 29 个 i18n.yaml,与漂移集严格吻合,零额外变动。
-- 提交时 pre-commit 的 archived job 同样以 `QILIN_ARCHIVE_BASE_REF` 空基线通过;**提交后默认(HEAD)基线复跑 exit 0**——门禁恢复常态拦截能力,后续任何未登记改动仍会被拦。
+- 提交时 pre-commit 的 archived job 同样以 `OPENKYLIN_ARCHIVE_BASE_REF` 空基线通过;**提交后默认(HEAD)基线复跑 exit 0**——门禁恢复常态拦截能力,后续任何未登记改动仍会被拦。
 - 悬空空树 commit 为临时对象,无分支/标签引用,将被 gc 自然回收。
 
 ### 2. 裸词残留清扫(S8 sweep,同提交)
@@ -425,8 +425,8 @@ S7 审查点名的两处 + 同型漏网,共 16 文件 18 处就地修复(注释/
 ### 3. LICENSE 合规(任务 3)
 
 - 根 LICENSE 保留上游 **MIT 许可证全文与 `Copyright (c) 2026 DeepSeek` 版权行不变**(fork 法律义务),顶部追加两段:
-  - `Copyright (c) 2026 QiLin contributors`
-  - fork 说明:「QiLin is a fork of DeepSeek Harness (https://github.com/deepseek-ai/deepseek-harness); this repository contains modifications of the upstream code, distributed under the same MIT License.」
+  - `Copyright (c) 2026 OpenKylin contributors`
+  - fork 说明:「OpenKylin is a fork of DeepSeek Harness (https://github.com/deepseek-ai/deepseek-harness); this repository contains modifications of the upstream code, distributed under the same MIT License.」
 - 全部非 vendor package.json 的 `license` 字段与 pristine 基线 f4703c4 逐文件 diff **完全一致**(自有包 MIT;native/landlock-run 系 BSD-3-Clause 上游即然;examples/fixtures/website 无字段上游即然),零误改。
 - `pnpm run gen-third-party-notices` 重跑后 THIRD_PARTY_NOTICES.md git status 干净 = **up to date**。
 
@@ -447,20 +447,20 @@ S7 审查点名的两处 + 同型漏网,共 16 文件 18 处就地修复(注释/
 ### 5. 标签(任务 4)
 
 - `qilin-engine-v0`(附注)→ **795b8dc**(S8 HEAD)。
-- message:`QiLin engine v0 — rescope of DeepSeek Harness 0.1.1-rc.2 (upstream b150a551, fingerprint c15a8754), P1 transplant complete (S2-S8)`,含上游版本、上游 commit 与快照指纹溯源。
+- message:`OpenKylin engine v0 — rescope of DeepSeek Harness 0.1.1-rc.2 (upstream b150a551, fingerprint c15a8754), P1 transplant complete (S2-S8)`,含上游版本、上游 commit 与快照指纹溯源。
 
 ## P1 总结段(2026-08-28,S8 收官)
 
 ### 全链 SHA 表(引擎仓 main,基线 → S8)
 
-| # | 引擎仓 SHA | 内容 | QiLin 侧对应提交(阶段记录) |
+| # | 引擎仓 SHA | 内容 | OpenKylin 侧对应提交(阶段记录) |
 |---|---|---|---|
 | 0 | f4703c4 | 基线导入 pristine dsh snapshot(上游 b150a551 = 0.1.1-rc.2,指纹 c15a8754;标签 pristine-dsh-0.1.1-rc.2) | 21d6edb / 621753b / 838a22c / 00747d9(P0:计划、指纹、映射表、D5) |
 | 1 | 3deb573 | S2 rescope:@deepseek-ai/dsh-* → @qilin/*(18239 处 / 3494 文件) | 1b3a97a / 163959c(S2 残差台账+复核) |
 | 2 | 8be4e61 | S3 CLI bin 与用户可见品牌字符串 | e1d5328(S3 复核更正) |
 | 3 | 6c7a8b1 | S3 审查修复(根 README H1、pairing 重录 438 对、publish.md) | e1d5328(同上) |
 | 4 | f698d79 | S6 终态(S6 实为四提交 8288f12 / 65d574c / 19f8492 / f698d79:门禁复活、fixture 同步、slot-walk 真回归修复、headless 命令名) | 11838ec(S6 triage) |
-| 5 | cfa695b | S7-1 env 前缀 DSH_ → QILIN_ + env 层名(607 文件) | b31f24b(S7 段) |
+| 5 | cfa695b | S7-1 env 前缀 DSH_ → OPENKYLIN_ + env 层名(607 文件) | b31f24b(S7 段) |
 | 6 | b1ccb90 | S7-2 发布家族域/manifest 键/bundle 名域(424 文件) | b31f24b(同上) |
 | 7 | **795b8dc(S8,标签 qilin-engine-v0)** | archived 重封 87 条目 / 30 文件 + LICENSE 归属 + 裸词清扫 14 文件(与 S8 段口径一致) | 本轮 docs(plan): s8 closure and p1 summary |
 
@@ -475,7 +475,7 @@ vendor/ 两仓零触碰(P1 全程历次提交 vendor manifest guard 全绿;S8 �
 - **深标识符**:`__DSH_*__` 契约族 99 处(window.__DSH_BOOT__ 81 / TRANSPORT 10 / PERSISTENT_*_PROMPT 6 / MODULES 2)→ P5。
 - **宽义文案**:app-boot:827、web-app index:146、manifest.webmanifest:3、各包 description、onboarding-copy、ui-brand-official 注释、gen-third-party-notices.ts:709 + THIRD_PARTY_NOTICES.md:30、translation-prompt 快照内 3 处 DeepSeek Harness、AGENTS.md 正文历史机制叙述(dsh-session/dsh-shell/dsh-brand 等)、README/CONTRIBUTING `dsh-plugin` topic → P5 品牌收口。
 - **repository/homepage/bugs 字段**(约 238 处指 deepseek-ai/deepseek-harness)、**shields.io 徽章**(19 个 md)、**docs 上游出处链接**(48 处)→ 待远端/发布渠道定案。
-- **env 侧**:OBS_DSH_README_* Actions Secrets、`~/.dsh` 家目录名与 `QILIN_HOME:-$HOME/.dsh` 回退值、localStorage `dsh.*` 键、.dsh-build/ → 环境迁移窗口处置。
+- **env 侧**:OBS_DSH_README_* Actions Secrets、`~/.dsh` 家目录名与 `OPENKYLIN_HOME:-$HOME/.dsh` 回退值、localStorage `dsh.*` 键、.dsh-build/ → 环境迁移窗口处置。
 - **代码侧保留**:Symbol('dsh.client.scope'/'dsh.scope'/'dsh.tool.execution')(P5)、tsdown 内部插件标签 2 处(P5)、@dshScopeScan JSDoc 标签(牵动解析器)、dsh-translation-pairing merge driver 42 处(外部 git config 耦合)、.agents/notes 历史档案纪律域、fixture tmpdir 前缀 `dsh-*`、dsh-badge 技能+PNG、技能目录名(dsh-*/record-browser-gif)、issue-management actor/projectTitle(平台耦合)、python 发行链 exe 名 dsh-jsonrpc-agent-pkg-*。
 - **真实包名保留**:@qilin/subagent-dsh-sdk(目录 subagent-dsh-sdk 按既定策略不改)。
 - **archived 封存域**:S8 已重封至当前态(795b8dc),门禁常态绿;archived 内容自此冻结,任何改动须重新走封存流程并登记。
@@ -488,13 +488,13 @@ P1 五门禁+两专项全绿、标签就位 → **P2(P1 收官后即启)**。P2 
 
 - 触发条件:P1 五门禁 + 两专项全绿、标签就位(引擎仓 main @ 795b8dc / qilin-engine-v0)。
 - 执行性质:验收性测试,**不改引擎代码**;发现一律登记 Gap,不顺手修。引擎仓零改动。
-- **环境说明(前提漂移)**:任务前提称「QiLin 仓 .env 含真实 DEEPSEEK_API_KEY」,实测 QiLin 仓根 .env 仅含 `MINIMAX_API_KEY`;实际可用的 DEEPSEEK key 位于用户级 DSH 凭证库 `~/.dsh/.credentials.yaml`(`refs.DEEPSEEK_API_KEY`,opaque,len 35)。冒烟期间将 key 只在 shell 内读入环境变量(隔离 `QILIN_HOME=/tmp/p2-qilin-home`),全程未落入任何日志/台账/报告/截图,归档产物零密钥(见下方 Gap G1)。
+- **环境说明(前提漂移)**:任务前提称「OpenKylin 仓 .env 含真实 DEEPSEEK_API_KEY」,实测 OpenKylin 仓根 .env 仅含 `MINIMAX_API_KEY`;实际可用的 DEEPSEEK key 位于用户级 DSH 凭证库 `~/.dsh/.credentials.yaml`(`refs.DEEPSEEK_API_KEY`,opaque,len 35)。冒烟期间将 key 只在 shell 内读入环境变量(隔离 `OPENKYLIN_HOME=/tmp/p2-qilin-home`),全程未落入任何日志/台账/报告/截图,归档产物零密钥(见下方 Gap G1)。
 
 ### 冒烟口 1:CLI 实跑 —— ✅ 通过
 
 | 项 | 结果 |
 |---|---|
-| 自标识 | `pnpm qilin --help` → `Usage: qilin`,描述「qilin: boot a QiLin profile」(品牌 qilin,非 dsh)✓ |
+| 自标识 | `pnpm qilin --help` → `Usage: qilin`,描述「qilin: boot a OpenKylin profile」(品牌 qilin,非 dsh)✓ |
 | 命令 | `pnpm qilin --profile headless "<任务语句>"`(one-shot/print 模式,help 用例 `qilin --profile headless "run the tests"`) |
 | 会话建立 | ✓ session dir + `session.jsonl.zstd` 落盘,含 `session/title` 记录 |
 | 模型完成 | ✓ 回复正确(bin 字段概括),`turn/end` 结束 |
@@ -533,7 +533,7 @@ P1 五门禁+两专项全绿、标签就位 → **P2(P1 收官后即启)**。P2 
 
 | # | 现象 / 定位 | 初步归因 | 建议归属阶段 |
 |---|---|---|---|
-| G1 | 任务前提称 QiLin 仓 .env 含真实 DEEPSEEK_API_KEY,实测 .env 仅含 MINIMAX_API_KEY;实际 DEEPSEEK key 在用户级 `~/.dsh/.credentials.yaml`(refs.DEEPSEEK_API_KEY)。定位:QiLin 仓根 .env 与用户凭证库 | 上游既有(环境前提漂移),非移植破损 | 建议并入 P3 账户阶段统一凭证来源口径;本轮已用隔离 home + 环境变量方式安全代跑 |
+| G1 | 任务前提称 OpenKylin 仓 .env 含真实 DEEPSEEK_API_KEY,实测 .env 仅含 MINIMAX_API_KEY;实际 DEEPSEEK key 在用户级 `~/.dsh/.credentials.yaml`(refs.DEEPSEEK_API_KEY)。定位:OpenKylin 仓根 .env 与用户凭证库 | 上游既有(环境前提漂移),非移植破损 | 建议并入 P3 账户阶段统一凭证来源口径;本轮已用隔离 home + 环境变量方式安全代跑 |
 | G2 | Web 标题 = `DSH Local Build`(DEFAULT_CLIENT_TITLE,apps/web 侧) | 上游既有(已登记 web 前端品牌顺延域) | P5 品牌收口(已知顺延项,豁免不计新破损) |
 | G3 | 计划 §4 Step 2 表述「pnpm run dev:web,浏览器打开终端给出的 URL」与实际不符:dev:web 依设计仅启动 watch 构建链(tsc/tsdown/vite),不启动服务器、不打印 URL;web 服务器需另起 `pnpm qilin web` | 上游既有设计(dev-web.ts docstring 明示「Reload signaling is not this script's business」),非移植破损 | 非 P3–P5 商业 gap;本轮已修正 §4 Step 2 计划文字(加注记) |
 | G4 | 用户消息中绝对路径被拆分为 mention 片 + 纯文本(「/Users」成 chip、「/libing/…」为文本) | 上游既有(路径 mention 解析渲染),非功能影响 | 前端打磨(P5 或积压),低优先 |
@@ -547,17 +547,17 @@ P1 五门禁+两专项全绿、标签就位 → **P2(P1 收官后即启)**。P2 
 
 > 执行基线:引擎仓 main @ 795b8dc(标签 qilin-engine-v0)起步,S1 落地为提交 30e0a97,
 > S2 落地为提交 70aba2c;
-> QiLin 仓计划定稿 v1 @ 1f16488。vendor/ 与 python/ 全程未触碰(引擎侧仅只读搜索)。
+> OpenKylin 仓计划定稿 v1 @ 1f16488。vendor/ 与 python/ 全程未触碰(引擎侧仅只读搜索)。
 
 ### S0-1 MINIMAX 凭证键名核验(计划 §2.3-3 疑点)—— 已处置:改 .env 键名,保值
 
-**结论:产品实际引用键名是 `MINIMAX_CN_API_KEY`。已将 QiLin 仓根 .env 键名 `MINIMAX_API_KEY` 改为 `MINIMAX_CN_API_KEY`(值原样保留,单行改名,零代码改动)。
+**结论:产品实际引用键名是 `MINIMAX_CN_API_KEY`。已将 OpenKylin 仓根 .env 键名 `MINIMAX_API_KEY` 改为 `MINIMAX_CN_API_KEY`(值原样保留,单行改名,零代码改动)。
 
 实测取证(引擎仓 @ 795b8dc,排除 vendor/ 与 python/):
 
 1. **唯一派生点**:`packages/client/ui-settings-models/src/client/store.ts:70-72` 的 `deriveKeyRef(provider)` 按 provider 大写化、非 [A-Z0-9] 折下划线、后缀 _API_KEY 生成;provider 路由 minimax-cn 即 MINIMAX_CN_API_KEY(同文件 :63-68 JSDoc 明示该例)。
 2. **产品断言面**:`apps/web/tests/models-settings.e2e.ts`(:116/:151/:157/:176/:308)与 `apps/web/tests/onboarding-usable-provider.e2e.ts`(:97/:99)全部断言 apiKeyEnv 与凭证文档键均为 `MINIMAX_CN_API_KEY`;`packages/client/ui-settings-models/tests/components.client.spec.tsx:330` 直接断言派生取值。
-3. **分层取值按 ref 名精确匹配**(`packages/credentials/credentials-local/src/index.ts:3-15`:进程 env > 凭证文档 > cwd/.env > $QILIN_HOME/.env);键名不符则永不被读——疑点成立。
+3. **分层取值按 ref 名精确匹配**(`packages/credentials/credentials-local/src/index.ts:3-15`:进程 env > 凭证文档 > cwd/.env > $OPENKYLIN_HOME/.env);键名不符则永不被读——疑点成立。
 4. **旧 Python 网关生态仍按 `MINIMAX_API_KEY` 书写**:`scripts/start-gateway.sh:40`、`config.example.yaml`(6 处注释)、web-demo/(model-templates.ts:104、README.md:37/:70)、`app/gateway/routers/models.py:126`、`qilin/sandbox/local/local_sandbox.py:493`(注释)。它们属退役表面(P3 语义移植对象,不再运行),本次不改其文字;若临时复用旧网关需自行回填。home 凭证文档 `~/.dsh/.credentials.yaml` 已有 `MINIMAX_CN_API_KEY` 在管(§2.3-2),.env 改名后仅作同 ref 的低优先兜底,分层语义不变。
 
 修正方式取舍:改 .env 键名(选定;.env 是用户配置文件,单行改名零风险);补 ref 映射(需动引擎引用面或在管理面加别名,污染凭证缝,弃)。
@@ -568,7 +568,7 @@ P1 五门禁+两专项全绿、标签就位 → **P2(P1 收官后即启)**。P2 
 
 ### S1 账户核心域包 `packages/accounts/account-core` —— 已交付(引擎仓提交 30e0a97)
 
-**范围兑现(计划 §4 S1,D5/D6 约束内)**:实体 TS 类型 + 存储接口(`src/types.ts`;`src/index.ts` 为纯转发 barrel)、类型化冲突(`src/errors.ts`,AccountConflictError,kind: email|oauth)、scrypt 哈希(`src/password.ts`)、SQLite 实现(`src/sqlite-store.ts`,`node:sqlite` 同步 API,路径可注入,默认 `$QILIN_HOME/qilin-accounts/accounts.db`,支持 :memory:)、幂等建表(CREATE TABLE/UNIQUE INDEX IF NOT EXISTS + user_version pragma,ACCOUNTS_SCHEMA_VERSION = 1,拒服务更高版本库)、每包 invariant 伴生(`src/invariant.ts`,空安装器,持久关系由 schema 约束强制并有依据)。**不含任何 HTTP/路由/UI。**
+**范围兑现(计划 §4 S1,D5/D6 约束内)**:实体 TS 类型 + 存储接口(`src/types.ts`;`src/index.ts` 为纯转发 barrel)、类型化冲突(`src/errors.ts`,AccountConflictError,kind: email|oauth)、scrypt 哈希(`src/password.ts`)、SQLite 实现(`src/sqlite-store.ts`,`node:sqlite` 同步 API,路径可注入,默认 `$OPENKYLIN_HOME/qilin-accounts/accounts.db`,支持 :memory:)、幂等建表(CREATE TABLE/UNIQUE INDEX IF NOT EXISTS + user_version pragma,ACCOUNTS_SCHEMA_VERSION = 1,拒服务更高版本库)、每包 invariant 伴生(`src/invariant.ts`,空安装器,持久关系由 schema 约束强制并有依据)。**不含任何 HTTP/路由/UI。**
 
 表结构(DDL 摘要;不变量由 CHECK/UNIQUE/FK 强制):
 
@@ -581,7 +581,7 @@ P1 五门禁+两专项全绿、标签就位 → **P2(P1 收官后即启)**。P2 
 
 注册面(引擎仓):tsconfig.base.json 双 wildcard(accounts 组)、tsconfig.host.json reference、packages/README(.zh).md 组表 + 新组 README 双语、scripts/verify-package-readme-model-experience.ts 审核句清单一条(kind: none 带理由)、docs/module-graph(.zh).md 再生成同步、包 README 三件套、Agent Note 三件套。窄接口按计划给了 S2/S3 直接消费面(countUsers 空库判定、updatePassword 推进版本、clearNeedsSetup、insertSession/findSession/deleteSession(s))。
 
-**覆盖率分区挂载方式(实测)**:run-gates/coverage 无命名分区注册表——分区即分片(`scripts/run-coverage-partitions.ts` 按 `QILIN_COVERAGE_PARTITIONS` 做 vitest 单 worker 轮转),测试发现与覆盖 include 都是 glob(packages/*/*/tests/**、packages/*/*/src/**),`packages/accounts/account-core` 天然命中,accounts 分区自动挂上,无需注册表改动;门禁沿用全仓 per-file 100%(与相邻包同标,不另立)。
+**覆盖率分区挂载方式(实测)**:run-gates/coverage 无命名分区注册表——分区即分片(`scripts/run-coverage-partitions.ts` 按 `OPENKYLIN_COVERAGE_PARTITIONS` 做 vitest 单 worker 轮转),测试发现与覆盖 include 都是 glob(packages/*/*/tests/**、packages/*/*/src/**),`packages/accounts/account-core` 天然命中,accounts 分区自动挂上,无需注册表改动;门禁沿用全仓 per-file 100%(与相邻包同标,不另立)。
 
 **终验数字(引擎 HEAD = 30e0a97)**:
 
@@ -597,7 +597,7 @@ P1 五门禁+两专项全绿、标签就位 → **P2(P1 收官后即启)**。P2 
 | 噪声基线对照 | verify-package-readme-model-experience 的 25 处 tool-catalog fragment 失败在干净基线同为 25 处;hooks/sandbox 两态波动条款示外,无新增 |
 | 静态纪律门 | verify-package-invariants(228 companions)、verify-package-readme-limitations、verify-export-jsdoc、verify-md-wrap、verify-doc-refs、constraints、translation-pairing(1006 对)全绿 |
 
-两仓提交:引擎仓 `30e0a97 feat(engine): account-core domain package (p3-s1)`;QiLin 仓本提交(docs(plan): p3 s0 verification and s1 results)。注意:.env 不入库,键名改名只落工作区,本档为唯一书面记录。
+两仓提交:引擎仓 `30e0a97 feat(engine): account-core domain package (p3-s1)`;OpenKylin 仓本提交(docs(plan): p3 s0 verification and s1 results)。注意:.env 不入库,键名改名只落工作区,本档为唯一书面记录。
 
 ### S2 会话与凭据服务包 `packages/accounts/account-auth` —— 已交付(引擎仓提交 70aba2c)
 
@@ -639,7 +639,7 @@ P1 五门禁+两专项全绿、标签就位 → **P2(P1 收官后即启)**。P2 
 
 **噪声基线登记条目(P3-S2,S8 关账复核口径)**:评审裁决——lib 模式 snapshot `apps/web/tests/built-boot.snapshot.ts:45` 的 SVG 断言(`svg[viewBox="26 0 156 24"]`)在 795b8dc 与 HEAD 双态确定性红,非回归;S8 关账用 source 口径,官方门禁为 lib 口径,后续以 lib 口径复核。**S3 勘误**:S2 原记「S2 终验轮实测:build 后 lib 口径复跑 test:snapshot 全绿(126 passed / 2 skipped),该断言本轮为绿——双态之『绿态』」与复核事实不符——S3 评审轮以新鲜 build(lib 口径)复测,该断言为**红**:1 failed / 139 passed / 2 skipped,红态复现且与 S1 基线逐字同数,非回归;原「绿态」记录作废。双态结论修正:该断言为 source 口径绿、lib 口径红的双态用例,后续轮次以 lib 口径红为默认预期,若转绿须复核产物新鲜度与用例变更,勿误判为新增回归。
 
-两仓提交:引擎仓 `70aba2c feat(engine): account-auth session and csrf services (p3-s2)`;QiLin 仓本提交(docs(plan): p3 s2 results and noise baseline)。vendor/ 触碰 0(暂存清单核对 + 提交前 grep)。
+两仓提交:引擎仓 `70aba2c feat(engine): account-auth session and csrf services (p3-s2)`;OpenKylin 仓本提交(docs(plan): p3 s2 results and noise baseline)。vendor/ 触碰 0(暂存清单核对 + 提交前 grep)。
 
 ### S3 HTTP 面 `packages/accounts/account-http` + connection 强制点 —— 已交付(引擎仓提交 72682c8)
 
@@ -661,7 +661,7 @@ P1 五门禁+两专项全绿、标签就位 → **P2(P1 收官后即启)**。P2 
 
 **语义决定与偏差登记**(对照 D5 旧文的差异,均为有意取舍):
 1. **错误信封**统一 `{ "error": { "code", "message" } }`(旧文个别端点仅 `{message}`);S2 typed code 全数保留。
-2. **CORS 环境变量新名** `QILIN_CORS_ORIGINS`(逗号分隔,跳过空与 `*`,normalize 失败原样收录),替代旧 GATEWAY_CORS_ORIGINS。
+2. **CORS 环境变量新名** `OPENKYLIN_CORS_ORIGINS`(逗号分隔,跳过空与 `*`,normalize 失败原样收录),替代旧 GATEWAY_CORS_ORIGINS。
 3. **Origin 白名单施于** POST {login/local, register, logout, initialize}(legacy login-CSRF 防御面);change-password 走 CSRF 双提交故不施;跨站 auth POST 无白名单直接 403 `cross_site_denied`。
 4. **rate limit 计全部尝试**(含成功登录),默认 300s/10 次;内存态:单进程、重启清零、多副本不共享;setup-status 不限流(无 per-IP 缓存,读为 O(1) 计数);initialize 不参与(空库门槛本身一次性)。
 5. **账户枚举**:register 重名沿用旧 400 `email_already_exists`——枚举暴露已评估并登记为已知取舍(修复需改语义,涉 D5 后续);login 侧统一 401 + 恒时 scrypt 时序垫片,不泄露存在性。
@@ -686,7 +686,7 @@ P1 五门禁+两专项全绿、标签就位 → **P2(P1 收官后即启)**。P2 
 | 静态纪律门 | verify-package-readme-model-experience(account-http 审计行通过)、verify-module-graph(新鲜)、knip(account-http 零噪声;apps/cli 存量 unused-deps 236 条为 S2 rescope 时 `@deepseek-ai/.+` ignoreDependencies 正则失配所致,与本面无关,另册登记) |
 | 工具链噪声(已定性) | oxlint+tsgolint 7.0.2001 于本周期 pnpm install 激活 type-aware 规则后,对 solution-structured 包(connection)的 Context 类型图产生误报(error typed):connection/src 37 条(index 31 + rpc-host 6),其中 24 条为 70aba2c 既有内容,13 条为 S3 接线新增行;佐证:tsc -b 全绿、14958 用例全绿、HEAD@70aba2c 在同环境同样报错(worktree 对照 26884 条全仓)。S3 已将本包新增文件的 type-aware 错误全数就地修复(0 残留);connection 存量 37 条登记为工具链噪声基线,待 tsgolint 项目解析修复后复核 |
 
-两仓提交:引擎仓 `72682c8 feat(engine): account-http routes and api auth enforcement (p3-s3)`;QiLin 仓本提交(docs(plan): p3 s3 results and erratum)。vendor/ 触碰 0(暂存清单核对 + 提交前 grep)。
+两仓提交:引擎仓 `72682c8 feat(engine): account-http routes and api auth enforcement (p3-s3)`;OpenKylin 仓本提交(docs(plan): p3 s3 results and erratum)。vendor/ 触碰 0(暂存清单核对 + 提交前 grep)。
 
 ## 分类为空声明(截至本档)
 
@@ -710,7 +710,7 @@ S4(RBAC 包)执行期间清尾复核新发现两处**已跟踪**的历史残渣�
 
 > **S4 type-aware 噪声基线增量(登记)**:S3 档登记的 connection Context 双面解析噪声(clean-HEAD 同环境复现,待 tsgolint 项目解析修复)在 S4 后实测 **41 条**(S3 基线 37 + S4 接线新增 4:rpc-host 专用通道 `rbacAuth` 征询行与 /api 主路由同构行,与相邻 `apiAuth` 行同族同源);S4 新增文件(account-rbac 全包 19 文件 + connection/rbac-auth-gate.ts)type-aware 错误 **0 残留**(就地修复达标);佐证同 S3 口径:account-rbac 单包 `tsc -p --noEmit` 全绿、258 用例全绿、clean-HEAD stash 双向对照同报错。
 > **S4 最终复核增量(登记,2026-08-28)**:引擎仓提交链为 `3e07fa6`、`594228b`、`2b9cfc7`、
-> `ebd267c`、`a407521`;QiLin 仓计划在 `0802a04` 后继续同步。account-rbac **163** 用例、
+> `ebd267c`、`a407521`;OpenKylin 仓计划在 `0802a04` 后继续同步。account-rbac **163** 用例、
 > connection **123** 用例共 **286** 全绿;affected 组合 188 全绿;CI 同口径分区 coverage exit 0,
 > 两包 src 四项 per-file 均 100%;串行全仓 test exit 0;source snapshot 126 passed/2 skipped。
 > `pnpm run typecheck` 与 `pnpm run build` 仍复现已登记的 client/connection 与 vendor/cordis Context

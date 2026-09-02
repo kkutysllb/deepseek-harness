@@ -1,16 +1,16 @@
 # DSH 对齐重构 · 工作区注册表 + 引擎自主循环 + 侧边栏分组
 
-> 状态：草案（QiLin 现状小节待两份子代理分析报告回填）
+> 状态：草案（OpenKylin 现状小节待两份子代理分析报告回填）
 > 参考源码：本仓库 `deepseek-harness/`（完整 DSH 源码，非安装产物反推）
 > 约束：`.qilin/users/<uid>/threads` 既有数据零破坏；旧线程迁移后必须可见且可用。
 
-## 0. 移植范围判定（哪些 DSH 机制进 QiLin）
+## 0. 移植范围判定（哪些 DSH 机制进 OpenKylin）
 
 | DSH 机制 | 移植 | 理由 / 裁剪 |
 |---|---|---|
 | Workspace 实体注册表 | ✅ 全量 | 侧边栏分组的地基；uuid id、canonical path、持久顺序、header 归组 |
 | 线程 header cwd 不可变 | ✅ 全量 | 创建时定死；无任何迁移 API |
-| sandbox/mode 会话事件折叠 | ✅ 裁剪版 | QiLin 沙箱现为单机全放行 → 先实现「事件记录+折叠解析」，执行端分档后接 |
+| sandbox/mode 会话事件折叠 | ✅ 裁剪版 | OpenKylin 沙箱现为单机全放行 → 先实现「事件记录+折叠解析」，执行端分档后接 |
 | Ungrouped / archiveSession | ✅ 全量 | UI 分组完备性所需 |
 | 手动排序 insertBefore / Last-updated 双模式 | ✅ 全量 | DSH sidebar 核心交互 |
 | goal 领域(active/paused/blocked/complete + CAS) | ✅ 全量 | 引擎自主循环的状态地基 |
@@ -63,9 +63,9 @@
 - 变更事件为**整快照**（post-change 全量 GoalSnapshot + roundsStarted + 时间戳）；clear 是带 `cleared: GoalRef` 的版本化 tombstone；fold=last-wins。
 - 轮次归因 `GoalMessageSource { kind:'goal', goalId, revision, round }` —— 计数递增的唯一凭据。
 - 九个稳定错误码（移植为 API 错误响应 code）：`GOAL_AGENT_NOT_LIVE / GOAL_NOT_FOUND / GOAL_ALREADY_EXISTS / GOAL_STALE_REVISION / GOAL_INVALID_OBJECTIVE / GOAL_INVALID_MAX_ROUNDS / GOAL_INVALID_BLOCK_REASON / GOAL_INVALID_EDIT / GOAL_INVALID_TRANSITION`。
-- `GoalChanged { operation, ref, goal? }` 为变更后广播形态（QiLin 对应为 SSE 推送载荷）。
+- `GoalChanged { operation, ref, goal? }` 为变更后广播形态（OpenKylin 对应为 SSE 推送载荷）。
 
-## 2. QiLin 现状（待子代理报告回填）
+## 2. OpenKylin 现状（待子代理报告回填）
 
 ### 2.1 后端（qilin/ + app/）—— 已取证（子代理 08caf106 + 主线复核）
 
@@ -119,7 +119,7 @@
 - ✅ 存储侧 `admit_round`（sql.py）：active+同 id/revision+round==rounds_started+1+≤cap 全部 fail-closed；引入 `_context` 读法（最近非 round 行=goal 头/全任意行最新计数），所有七动词 guard/CAS/projection 均改为上下文语义，并发 admit 不再可被 mutation 用旧计数回滚（事务内实读 rounds_now）。
 - ✅ `app/gateway/goal_round_driver.py`：prompt 渲染逐字移植 prompt.ts（测试锁死段落快照）；`drive()` 静默闸门：无目标/clear/paused/disarmed→drop，预算耗尽→自动 block(round-limit, DSH 同文案)，注入成功后才 admit 记账，投递失败不污染计数。
 - ✅ tests/test_goal_round_driver.py 七用例（prompt 快照 parity/三 drop 分支/预算耗尽 block 文案/成功注入两连轮记账/失败不记账）。后端全量 726 passed，ruff clean。
-- ✅ P6b（第 11 轮）：idle 终态边接线完成——复用 worker 现有 `ctx.on_run_completed` 单槽钩子，`compose_run_completed` 链式组合 scheduled_task 观察器与 goal driver 观察器（逐环异常隔离）；注入通道走 `launch_scheduled_thread_run`（internal caller），metadata["goal_round"] 携带 {kind, round, id, revision} 归因；轮次成功后经 goal_broker 广播 `operation='round'` SSE；feature flag `QILIN_GOAL_ROUND_DRIVER`（默认关，观察器无条件装配、flag 运行期可翻）。tests/test_goal_round_wiring.py 6 用例。后端全量 732 passed，ruff clean。
+- ✅ P6b（第 11 轮）：idle 终态边接线完成——复用 worker 现有 `ctx.on_run_completed` 单槽钩子，`compose_run_completed` 链式组合 scheduled_task 观察器与 goal driver 观察器（逐环异常隔离）；注入通道走 `launch_scheduled_thread_run`（internal caller），metadata["goal_round"] 携带 {kind, round, id, revision} 归因；轮次成功后经 goal_broker 广播 `operation='round'` SSE；feature flag `OPENKYLIN_GOAL_ROUND_DRIVER`（默认关，观察器无条件装配、flag 运行期可翻）。tests/test_goal_round_wiring.py 6 用例。后端全量 732 passed，ruff clean。
 
 **P6c 终态语义完善 + P6 验收 e2e（第 12 轮）**：
 - ✅ 状态闸门（§1.4「取消不留活口」）：仅 success 触发 drive；interrupted 且 armed→自动 pause 并广播，杜绝人离开后被后续 idle 边复活；error/timeout 不驱动不改相位（防错误循环自旋轮次）。
@@ -142,7 +142,7 @@
 - `threads_meta`：`thread_id PK / assistant_id / user_id(idx) / display_name / status(idle|interrupted|…) / metadata_json(JSON，title 在其中) / created_at / updated_at`。当前 5 行演示数据。
 - `runs` 表：run_id/thread_id/operation_kind/model_name/status/stop_reason/message_count/first_human_message…——goal 轮次的天然记账邻居（round 归因可挂 runs.metadata_json）。
 
-## 3. 目标架构（QiLin 语境落地）
+## 3. 目标架构（OpenKylin 语境落地）
 
 ### 3.1 后端新增表（SQLite，qilin.db）
 ```sql
@@ -171,7 +171,7 @@ CREATE TABLE workspace_meta (    -- initialized 标记 + archive 全局集合
 ALTER TABLE threads ADD COLUMN cwd TEXT;          -- NULL=旧数据未分组
 ALTER TABLE threads ADD COLUMN archived INTEGER NOT NULL DEFAULT 0;
 
--- 自主循环（goal/change 事件的持久形态；QiLin 用表而非事件日志裁剪见 §5.3）
+-- 自主循环（goal/change 事件的持久形态；OpenKylin 用表而非事件日志裁剪见 §5.3）
 CREATE TABLE goals (
   id TEXT PRIMARY KEY,
   thread_id TEXT NOT NULL REFERENCES threads(thread_id),
@@ -214,10 +214,10 @@ GET    /api/workspaces/tree                # 侧栏投影: workspaces(Ungrouped)
 - 排序双模：Manual（拖拽持久，Host 写 workspace_sessions.position）/ Last updated（完全重排+即时晋升一次）。
 - 展开记忆每 workspace 收合态；默认显示 5 条 + Show more。
 - Delete workspace 确认框明示保留边界；Archive 无确认（非破坏）+ 可从 Ungrouped 过滤器恢复。
-- 会话行 Fork/重命名不在本轮（QiLin 无 fork 语义），仅排序+archive。
+- 会话行 Fork/重命名不在本轮（OpenKylin 无 fork 语义），仅排序+archive。
 - 新建会话入口收敛：工作区行 hover 出「+」（替代已删除的输入框 selector）；全局新建按钮走默认(Ungrouped)。
 
-### 3.6 引擎自主循环（Round Driver@QiLin）
+### 3.6 引擎自主循环（Round Driver@OpenKylin）
 - 触发边界：SSE 流结束 + 无排队用户输入 = idle 点；gateway 内 GoalRoundDriver 订阅该边界。
 - 续跑投递：复用现有 chat 补全通道，以 `<goal_round>` 系统包裹消息注入（模板逐字对齐 DSH prompt.ts）。
 - 轮次记账：只有 driver 注入的消息递增 rounds_started；人在循环中的发言零消耗。

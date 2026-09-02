@@ -1,8 +1,8 @@
-# QiLin 引擎移植(qilin 化 DSH 基座)Implementation Plan
+# OpenKylin 引擎移植(qilin 化 DSH 基座)Implementation Plan
 
-**Goal:** 把 deepseek-harness/ 快照整体移植为 @qilin/* 自有引擎代码库,上游快照转为只读跟踪参照;QiLin 品牌壳与账号体系架于其上;Python 引擎(qilin/ + app/ + web-demo 非品牌部分)退役删除。
+**Goal:** 把 deepseek-harness/ 快照整体移植为 @qilin/* 自有引擎代码库,上游快照转为只读跟踪参照;OpenKylin 品牌壳与账号体系架于其上;Python 引擎(qilin/ + app/ + web-demo 非品牌部分)退役删除。
 
-**Architecture:** 四层结构——① QiLin 商业壳(landing/登录注册/玄金麒麟 VI + 账号 BFF);② @qilin/* 引擎包树(DSH 快照移植产物,一切皆插件);③ vendored Cordis 内核(保留原名,见 D6);④ 只读上游参照 reference/dsh-upstream/(gitignore,永不提交修改),更新走「diff → 移植清单 → 手工移植」。
+**Architecture:** 四层结构——① OpenKylin 商业壳(landing/登录注册/玄金麒麟 VI + 账号 BFF);② @qilin/* 引擎包树(DSH 快照移植产物,一切皆插件);③ vendored Cordis 内核(保留原名,见 D6);④ 只读上游参照 reference/dsh-upstream/(gitignore,永不提交修改),更新走「diff → 移植清单 → 手工移植」。
 
 **Tech Stack:** TypeScript(ESM, strict)/ pnpm workspaces / Node ^22.19||>=24 / vitest / vendored Cordis 插件内核 / Next.js(仅品牌壳来源,不进入引擎)
 
@@ -15,11 +15,11 @@
 | # | 决策 | 内容 |
 |---|------|------|
 | D1 | 上游策略 | 方案1(fork + rescope);上游 clone 只读,不做任何提交修改;更新 = diff 上游 → 移植清单 → 手工移植 |
-| D2 | 所有权口径 | 不做商业套壳——引擎代码 100% 归 QiLin。执行方式 = 整体移植改造(§0),不是从零重打 |
+| D2 | 所有权口径 | 不做商业套壳——引擎代码 100% 归 OpenKylin。执行方式 = 整体移植改造(§0),不是从零重打 |
 | D3 | 旧数据 | 不迁移。Python 侧 .qilin 线程/账号/检查点随退役一并废弃 |
 | D4 | V1 能力 | 多 Provider 模型 + 多用户 RBAC(含登录/JWT/CSRF);IM 渠道进 backlog;TUI 放弃(DSH 有 CLI) |
-| D5 | 仓库形态 | 已定案(2026-08-27):双仓。新建 /Users/libing/kk_Projects/qilin-engine 承载 @qilin/* 引擎树,自原貌基线提交起独立 git 历史;QiLin 仓保留品牌壳/文档/plans;上游 diff 移植在引擎仓内进行 |
-| D6 | cordis 内核 | 不改名。vendored pinned 上游 + rescope 映射 + verify-cordis-* 门禁全系依赖原名;产品品牌在 QiLin 层完成(类比 Edge 不改名 Chromium)。所有者可推翻,代价是断开 vendor 同步机制 |
+| D5 | 仓库形态 | 已定案(2026-08-27):双仓。新建 /Users/libing/kk_Projects/qilin-engine 承载 @qilin/* 引擎树,自原貌基线提交起独立 git 历史;OpenKylin 仓保留品牌壳/文档/plans;上游 diff 移植在引擎仓内进行 |
+| D6 | cordis 内核 | 不改名。vendored pinned 上游 + rescope 映射 + verify-cordis-* 门禁全系依赖原名;产品品牌在 OpenKylin 层完成(类比 Edge 不改名 Chromium)。所有者可推翻,代价是断开 vendor 同步机制 |
 
 ---
 
@@ -36,16 +36,16 @@
 
 ## §1 命名与结构映射表
 
-| 原(DSH) | 新(QiLin) | 说明 |
+| 原(DSH) | 新(OpenKylin) | 说明 |
 |---|---|---|
 | @deepseek-ai/dsh-<pkg> | @qilin/<pkg> | npm scope 全量;1,710 文件内的 import/package.json/tsconfig paths |
 | @deepseek-ai/dsh-root | @qilin/engine-root | 根包名 |
 | dsh CLI bin | qilin | apps/cli bin 名与命令自标识字符串 |
 | @deepseek-ai/cordis、cordis-plugin-*、cosmokit | 保留原名 | D6:vendor 同步映射依赖 |
-| DSH_ 环境变量前缀 | QILIN_ | DSH_SNAPSHOT / DSH_BUILD_FACE 等;P1 第二批 codemod |
+| DSH_ 环境变量前缀 | OPENKYLIN_ | DSH_SNAPSHOT / DSH_BUILD_FACE 等;P1 第二批 codemod |
 | window.__DSH_BOOT__ | 暂保留 | web 壳引导契约,深标识符;P1 不动,列残差观察项 |
 | MIT LICENSE / third-party notices | 保留 | 版权与许可文本必须留存;移植后跑 gen-third-party-notices 重生成 |
-| 用户可见文案中的 "DeepSeek Harness / DSH" | "QiLin" | README/UI 字符串;内部代号性注释不强求 |
+| 用户可见文案中的 "DeepSeek Harness / DSH" | "OpenKylin" | README/UI 字符串;内部代号性注释不强求 |
 
 ---
 
@@ -139,7 +139,7 @@ pnpm run test
 - [x] **Step 7: 第二批 codemod——环境变量前缀**
 
 ```bash
-rg -l 'DSH_' --glob '!vendor/**' --glob '!*.env*' | xargs sed -i '' 's/DSH_/QILIN_/g'
+rg -l 'DSH_' --glob '!vendor/**' --glob '!*.env*' | xargs sed -i '' 's/DSH_/OPENKYLIN_/g'
 ```
 
 同步更新 README 环境变量表;重跑 pnpm run test。

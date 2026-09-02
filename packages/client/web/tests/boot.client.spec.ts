@@ -2,7 +2,7 @@
 import type { Context } from '@deepseek-ai/cordis'
 import * as modulesClient from '@qilin/client-modules/client'
 import type {
-  ClientBundleRegistration, ClientModuleCreateOptions, ClientModuleLoaderTarget, QilinWindow,
+  ClientBundleRegistration, ClientModuleCreateOptions, ClientModuleLoaderTarget, OpenKylinWindow,
   WebBootEntry,
 } from '@qilin/client-modules/client'
 import { afterEach, describe, expect, it, vi } from 'vitest'
@@ -11,7 +11,7 @@ import { AppWebEntry } from '../src/boot.ts'
 const MODULES_ID = '@qilin/client-modules'
 const PROVIDER_CLIENT_ID = 'provider/client'
 const RUNTIME_CLIENT_ID = 'runtime/client'
-const win = globalThis as QilinWindow
+const win = globalThis as OpenKylinWindow
 const transportGlobal = globalThis as {
   __OPENKYLIN_TRANSPORT__?: { loadBundle(url: string): Promise<void> }
 }

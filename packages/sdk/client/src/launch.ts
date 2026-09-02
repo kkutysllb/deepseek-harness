@@ -27,7 +27,7 @@ export interface RuntimeProcessOptions {
 }
 
 /** Node argv plus internal profile patches required by one resolved openkylin entry. */
-export interface QilinNodeLaunch {
+export interface OpenKylinNodeLaunch {
   /** Arguments before the profile selector. */
   nodeArgs: string[]
   /** Internal patches applied below caller-supplied patches. */
@@ -87,7 +87,7 @@ export function resolveDshNodeLaunchFromManifests(
   dshManifestUrl: string,
   clientManifestUrl: string,
   sourceLoaderUrl?: string,
-): QilinNodeLaunch {
+): OpenKylinNodeLaunch {
   const bin = resolveDshBinFromManifests(dshManifestUrl, clientManifestUrl)
   if (existsSync(bin)) return { nodeArgs: [bin], patches: [], environment: {} }
 
@@ -112,7 +112,7 @@ export function resolveDshNodeLaunchFromManifests(
  * Resolve the installed openkylin package to a built or source Node launch.
  * @returns the launch descriptor for the current checkout or installed package.
  */
-function installedDshNodeLaunch(): QilinNodeLaunch {
+function installedDshNodeLaunch(): OpenKylinNodeLaunch {
   return resolveDshNodeLaunchFromManifests(
     import.meta.resolve('@qilin/cli/package.json'),
     new URL('../package.json', import.meta.url).href,

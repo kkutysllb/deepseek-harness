@@ -16,12 +16,12 @@
 
 ```ts type-equiv
 /** One environment key inside the managed {@link OPENKYLIN_ENV_PREFIX} namespace. */
-type QilinEnvironmentKey = `${typeof OPENKYLIN_ENV_PREFIX}${string}`
+type OpenKylinEnvironmentKey = `${typeof OPENKYLIN_ENV_PREFIX}${string}`
 ```
 
 ```ts type-equiv
 /** Trusted DeepSeek Harness variables for one child-process execution. */
-type QilinEnvironment = Readonly<Record<QilinEnvironmentKey, string>>
+type OpenKylinEnvironment = Readonly<Record<OpenKylinEnvironmentKey, string>>
 ```
 
 ```ts type-equiv

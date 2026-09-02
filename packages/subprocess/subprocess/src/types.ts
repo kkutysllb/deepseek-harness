@@ -13,10 +13,10 @@ import type { Readable, Writable } from 'node:stream'
 export const OPENKYLIN_ENV_PREFIX = 'OPENKYLIN_' as const
 
 /** One environment key inside the managed {@link OPENKYLIN_ENV_PREFIX} namespace. */
-export type QilinEnvironmentKey = `${typeof OPENKYLIN_ENV_PREFIX}${string}`
+export type OpenKylinEnvironmentKey = `${typeof OPENKYLIN_ENV_PREFIX}${string}`
 
 /** Trusted DeepSeek Harness variables for one child-process execution. */
-export type QilinEnvironment = Readonly<Record<QilinEnvironmentKey, string>>
+export type OpenKylinEnvironment = Readonly<Record<OpenKylinEnvironmentKey, string>>
 
 /** One captured stream: the (possibly truncated) text plus recovery info. */
 export interface CollectedOutput {

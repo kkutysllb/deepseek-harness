@@ -48,7 +48,7 @@ Tailwind 映射方式（定死）：`qilin-brand.css` 内先在 `:root` 定义�
 
 新建 `src/components/brand/qilin-mark.tsx`（含配套样式），提供三个小组件，纯静态 SVG/CSS，零 JS 动效、零依赖：
 
-1. `QilinSeal` —— 篆书风格的方印「麟」（SVG，朱砂红底白字或描边版两种 variant），用于 header logo 上标、auth 卡片顶部、footer 收尾。
+1. `OpenKylinSeal` —— 篆书风格的方印「麟」（SVG，朱砂红底白字或描边版两种 variant），用于 header logo 上标、auth 卡片顶部、footer 收尾。
 2. `ScalePattern` —— 半圆叠瓦鳞纹 SVG pattern，透明度 ~4%，仅作背景角落点缀（landing 右下角），不做大面积铺陈。
 3. `GoldDivider` —— 「◆──」中点菱形金色分隔细线，用于 footer、区块之间。
 
@@ -67,7 +67,7 @@ Tailwind 映射方式（定死）：`qilin-brand.css` 内先在 `:root` 定义�
 ### Header
 
 - 保留 `kworks-landing-header` class 与桌面拖拽区约束（`[-webkit-app-region:drag]`、macOS `pl-[80px]`、Windows 无红灯的 `.kworks-win-titlebar` 兼容逻辑全部原样）。
-- 左侧：「OpenKylin」衬线字（暖白色）+ 右上标小号 `QilinSeal`。
+- 左侧：「OpenKylin」衬线字（暖白色）+ 右上标小号 `OpenKylinSeal`。
 - 新增右侧 mono 小字链「进入控制台 →」（`text-[var(--ql-ink-mid)]`，hover 转 gold-300）。
   实现备注：为避免链接贴视口右缘，头部追加水平内边距 `px-6 md:px-10`（macOS 段
   `pl-[calc(80px+1rem)]`，Windows/浏览器随平台 class 收窄）——属计划外的最小 UX 补全，经评审确认保留。
@@ -85,7 +85,7 @@ Tailwind 映射方式（定死）：`qilin-brand.css` 内先在 `:root` 定义�
 ### Footer
 
 - 分隔线改 `GoldDivider` 菱形结金线；衬线口号与 MIT 版权行文案不变；
-  行末加一枚小号 `QilinSeal` 收尾。
+  行末加一枚小号 `OpenKylinSeal` 收尾。
 
 ## 5. 登录/注册页 + 初始化页改动清单
 
@@ -101,7 +101,7 @@ login (`src/app/(auth)/login/page.tsx`) 与 setup (`src/app/(auth)/setup/page.ts
   顶部一条 2px 鎏金渐变饰条（替代 ShineBorder 流光）点睛。
 - **表单控件规范**：label 小号 mono 宽字距；
   input 透明底 hairline 边框、focus 金色 ring；主按钮金色实底黑字；错误文案用亮朱砂红变体。
-- **login 页结构差异保留**：logo 区改为 QilinSeal + "OpenKylin" 衬线字组合，
+- **login 页结构差异保留**：logo 区改为 OpenKylinSeal + "OpenKylin" 衬线字组合，
   标题按 isLogin 切换「登录控制台 / 创建账户」，底部「返回首页」链接保留。
 - **setup 页三模式（loading / init_admin / change_password）状态机与其余 300 行业务逻辑完全不动**，仅替换 JSX 视觉壳与控件 className。
 

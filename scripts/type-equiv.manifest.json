@@ -1588,12 +1588,12 @@
     },
     {
       "doc": "docs/subsystems/subprocess.md",
-      "symbol": "QilinEnvironmentKey",
+      "symbol": "OpenKylinEnvironmentKey",
       "source": "packages/subprocess/subprocess/src/types.ts"
     },
     {
       "doc": "docs/subsystems/subprocess.md",
-      "symbol": "QilinEnvironment",
+      "symbol": "OpenKylinEnvironment",
       "source": "packages/subprocess/subprocess/src/types.ts"
     },
     {

@@ -8,7 +8,7 @@ Source: [`packages/shell/shell/src/types.ts`](../../packages/shell/shell/src/typ
 
 ## Managed shell environment namespace
 
-`OPENKYLIN_*` variables are Harness-owned child-process facts. The model-facing bash tool collects them through `ctx.shellEnv` and passes them through `ShellExecRequest.dshEnv`; the subprocess service removes inherited `OPENKYLIN_*` names before merging the current snapshot. The `QilinEnvironmentKey`/`QilinEnvironment` vocabulary is owned by the [subprocess seam](subprocess.md) and re-exported by `qilin-shell`.
+`OPENKYLIN_*` variables are Harness-owned child-process facts. The model-facing bash tool collects them through `ctx.shellEnv` and passes them through `ShellExecRequest.dshEnv`; the subprocess service removes inherited `OPENKYLIN_*` names before merging the current snapshot. The `OpenKylinEnvironmentKey`/`OpenKylinEnvironment` vocabulary is owned by the [subprocess seam](subprocess.md) and re-exported by `qilin-shell`.
 
 ## Request vs. spec: the `resolve()` split
 
@@ -59,7 +59,7 @@ interface ShellExecRequest {
    * value from the harness process and a caller {@link env} entry cannot
    * displace a managed one.
    */
-  dshEnv?: QilinEnvironment | undefined
+  dshEnv?: OpenKylinEnvironment | undefined
   /** Fully resolved per-call sandbox policy; sandboxing executors default it. */
   sandboxPolicy?: SandboxExecutionPolicy | undefined
 }
@@ -92,7 +92,7 @@ interface ShellExecSpec {
    */
   env?: Record<string, string> | undefined
   /** Managed `OPENKYLIN_*` snapshot (typed to managed keys); merges after {@link env}. */
-  dshEnv?: QilinEnvironment | undefined
+  dshEnv?: OpenKylinEnvironment | undefined
   /** Resolved sandbox policy; ignored by executors that do not confine. */
   sandboxPolicy: SandboxExecutionPolicy | undefined
 }
@@ -288,7 +288,7 @@ register(contributor: BashEnvContributor): () => void
  * @param execution - the current tool execution.
  * @returns an immutable environment overlay containing built-ins and current contributions.
  */
-collect(execution: ToolExecution): QilinEnvironment
+collect(execution: ToolExecution): OpenKylinEnvironment
 
 /**
  * Enumerate plugin-contributed variables without executing their resolvers.
@@ -297,7 +297,7 @@ collect(execution: ToolExecution): QilinEnvironment
 list(): BashEnvVariableInfo[]
 ```
 
-Types: [QilinEnvironment](subprocess.md) · [ToolExecution](tools.md)
+Types: [OpenKylinEnvironment](subprocess.md) · [ToolExecution](tools.md)
 
 Source: [`packages/shell/shell-env/src/index.ts`](../../packages/shell/shell-env/src/index.ts)
 <!-- END GENERATED cordis-surface -->

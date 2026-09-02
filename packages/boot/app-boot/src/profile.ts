@@ -47,13 +47,13 @@ export const PROFILE_PATCH_FILENAME = 'cordis.patch.yml'
 const PROFILE_MODULE_FALLBACK_DIR = '.openkylin-module-fallback'
 
 /** The bundle half of the `openkylin` manifest section: what a bundle package exports. */
-export interface QilinBundleManifest {
+export interface OpenKylinBundleManifest {
   /** The patch layer this bundle exports, relative to its package root. */
   patch: string
 }
 
 /** The profile half of the `openkylin` manifest section: what a profile directory composes. */
-export interface QilinProfileManifest {
+export interface OpenKylinProfileManifest {
   /** Ordered bundle layer list (package names). */
   bundles?: string[]
   /** Whether user patch files reload while this profile remains active. */
@@ -75,11 +75,11 @@ export interface ProfileTemplate {
  * The profile-launcher slice of the `openkylin`-owned package.json section. A
  * manifest may declare both roles; other consumers own additional keys.
  */
-export interface QilinManifestSection {
+export interface OpenKylinManifestSection {
   /** Bundle metadata consumed by the profile launcher. */
-  bundle?: QilinBundleManifest
+  bundle?: OpenKylinBundleManifest
   /** Profile metadata consumed by the profile launcher. */
-  profile?: QilinProfileManifest
+  profile?: OpenKylinProfileManifest
 }
 
 /** The slice of package.json both profiles and bundles use. */
@@ -87,7 +87,7 @@ export interface ProfileManifest {
   name?: string
   dependencies?: Record<string, string>
   peerDependencies?: Record<string, string>
-  openkylin?: QilinManifestSection
+  openkylin?: OpenKylinManifestSection
 }
 
 /** One resolved bundle layer of a profile. */

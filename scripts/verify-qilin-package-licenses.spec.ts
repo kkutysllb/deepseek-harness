@@ -2,7 +2,7 @@ import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { dirname, join } from 'node:path'
 import { afterEach, describe, expect, it } from 'vitest'
-import { inspectQilinPackageLicenses } from './verify-qilin-package-licenses.ts'
+import { inspectOpenKylinPackageLicenses } from './verify-qilin-package-licenses.ts'
 
 const roots: string[] = []
 
@@ -40,7 +40,7 @@ describe('OpenKylin package license gate', () => {
       license: 'BSD-3-Clause',
     })
 
-    expect(inspectQilinPackageLicenses(root)).toEqual({
+    expect(inspectOpenKylinPackageLicenses(root)).toEqual({
       packageCount: 3,
       failures: [
         'packages/core/agent/package.json: @qilin/agent must declare "license": "MIT"; found "BSD-3-Clause".',
@@ -52,7 +52,7 @@ describe('OpenKylin package license gate', () => {
     const root = createWorkspace()
     writeManifest(root, 'packages/core/agent/package.json', { name: '@qilin/agent' })
 
-    expect(inspectQilinPackageLicenses(root).failures).toEqual([
+    expect(inspectOpenKylinPackageLicenses(root).failures).toEqual([
       'packages/core/agent/package.json: @qilin/agent must declare "license": "MIT"; found undefined.',
     ])
   })

@@ -1,6 +1,6 @@
-# Better Sidebar Web (QiLin) Implementation Plan
+# Better Sidebar Web (OpenKylin) Implementation Plan
 
-**Goal:** 在 QiLin web-demo 内构建右侧多 tab 工作台，对齐 DSH-better-sidebar 的 UI 行为模式与扩展协议（`SidebarPanelRegistry` + `FileViewerRegistry`），含 5 个内置 viewer + 可写文件浏览树（限 thread workspace），7 个阶段每步独立可验证。
+**Goal:** 在 OpenKylin web-demo 内构建右侧多 tab 工作台，对齐 DSH-better-sidebar 的 UI 行为模式与扩展协议（`SidebarPanelRegistry` + `FileViewerRegistry`），含 5 个内置 viewer + 可写文件浏览树（限 thread workspace），7 个阶段每步独立可验证。
 
 **Architecture:** 后端新增 `app/gateway/routers/files.py`（6 个 FS 端点，realpath 三道防线）+ `app/gateway/routers/sidebar_tabs.py`（tab 状态复用 `threads_meta.metadata_json.sidebar_tabs`）；前端新增 `web-demo/src/core/sidebar/`（协议层 6 文件）+ `web-demo/src/components/better-sidebar/`（UI 层 11 文件）+ `web-demo/src/core/files/`（FS 客户端 2 文件）；通过 `rightPanelMode` 与既有 rightPanel 共存/切换。
 
@@ -51,7 +51,7 @@ import qilin.persistence.models  # noqa: F401
 import app.gateway.routers.files as files_module
 from app.gateway.authz import AuthContext
 from app.gateway.deps import get_current_user
-from qilin.config.paths import QiLinPaths
+from qilin.config.paths import OpenKylinPaths
 from qilin.persistence.base import Base
 
 
@@ -61,12 +61,12 @@ THREAD = "thr-001"
 
 @pytest_asyncio.fixture
 async def client(tmp_path, monkeypatch):
-    # Redirect QILIN_HOME so per-thread workspace path is inside tmp_path.
+    # Redirect OPENKYLIN_HOME so per-thread workspace path is inside tmp_path.
     home = tmp_path / ".qilin"
     home.mkdir()
-    monkeypatch.setattr("qilin.config.paths.QiLinPaths", lambda: QiLinPaths(home))
+    monkeypatch.setattr("qilin.config.paths.OpenKylinPaths", lambda: OpenKylinPaths(home))
     # Pre-create thread workspace dir with a sample tree.
-    ws = QiLinPaths(home).user_workspace_dir(THREAD)
+    ws = OpenKylinPaths(home).user_workspace_dir(THREAD)
     ws.mkdir(parents=True)
     (ws / "README.md").write_text("# hello", encoding="utf-8")
     (ws / "src").mkdir()
@@ -150,7 +150,7 @@ from pydantic import BaseModel, Field
 
 from app.gateway.authz import AuthContext, require_permission
 from app.gateway.deps import get_current_user
-from qilin.config.paths import QiLinPaths
+from qilin.config.paths import OpenKylinPaths
 
 router = APIRouter(prefix="/api/files", tags=["files"])
 
@@ -168,7 +168,7 @@ def _thread_workspace_root(thread_id: str) -> FsPath:
         raise WorkspacePathError("thread_id_invalid", "thread_id has invalid characters", 404)
     if len(thread_id) > 128:
         raise WorkspacePathError("thread_id_invalid", "thread_id too long", 404)
-    paths = QiLinPaths()
+    paths = OpenKylinPaths()
     root = paths.user_workspace_dir(thread_id).resolve()
     return root
 

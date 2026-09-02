@@ -1,4 +1,4 @@
-# QiLin 侧边栏与 DSH-better-sidebar 对齐 — 调研与方案甄别
+# OpenKylin 侧边栏与 DSH-better-sidebar 对齐 — 调研与方案甄别
 
 > 状态：**等待用户澄清「替换范围」**。
 > 本计划只整理事实、设计冲突、可能方案；不动任何源码。
@@ -18,7 +18,7 @@
 - README 描述的产品形态：**右侧栏 + 底部面板双工作台**，内置 7 个 tab（文件/编辑器/浏览器/终端/Git/任务/侧边对话）+ 6 个 viewer，向生态开放 `ctx.betterSidebar.registerTab / registerFileViewer`。
 - 既有生态：README 列了 28+ 第三方 tab 插件（如 `dsh-file-review-tab / dsh-git-remotes / dh-excel-panel / dsh-sidechat / dsh-ssh-tunnel`）。
 
-### 1.2 QiLin 当前侧边栏（web-demo）
+### 1.2 OpenKylin 当前侧边栏（web-demo）
 - 技术栈：Next.js 16 + React 19 + Tailwind v4 + Radix+shadcn + LangGraph SDK；`pnpm@10.26.2`。
 - 入口组件：`web-demo/src/components/workspace/workspace-sidebar.tsx`（44 行）。
 - 子件：
@@ -36,22 +36,22 @@
 
 ## 2. 关键冲突（用户原话与现实落差）
 
-| 维度 | DSH-better-sidebar | QiLin web-demo | 冲突结论 |
+| 维度 | DSH-better-sidebar | OpenKylin web-demo | 冲突结论 |
 |---|---|---|---|
 | 平台 | DSH 桌面客户端插件（注入 `ctx.betterSidebar`） | Next.js 16 Web App（直连本地 gateway） | **不能**直接 `npm install dsh-better-sidebar` 复用——没有 `cordis`/`dsh-runtime` 宿主 |
-| 形态 | 右侧多 tab 工作台（文件/编辑器/终端/Git/浏览器/任务/侧边对话） | 左侧会话/线程列表面板 | 两者功能目的不同——better-sidebar 不能直接替代 QiLin 的左侧栏 |
-| 终端 | `node-pty` 真实 shell，需宿主二进制 + 构建脚本 | 无对应能力（QiLin 后端在 `app/` Python gateway 里做沙箱 shell） | 即便做右侧 tab，终端要单独写一个 web-pty 适配 |
-| 文件树/Git | 直读宿主机文件系统 + 本地 git CLI | QiLin 走 server-side sandbox 文件 API（`qilin/sandbox/tools.py`）；git 在后端非核心能力 | 走 web 直读需新增 Tauri/Electron 通道，纯浏览器内做不到等价 FS 视图 |
+| 形态 | 右侧多 tab 工作台（文件/编辑器/终端/Git/浏览器/任务/侧边对话） | 左侧会话/线程列表面板 | 两者功能目的不同——better-sidebar 不能直接替代 OpenKylin 的左侧栏 |
+| 终端 | `node-pty` 真实 shell，需宿主二进制 + 构建脚本 | 无对应能力（OpenKylin 后端在 `app/` Python gateway 里做沙箱 shell） | 即便做右侧 tab，终端要单独写一个 web-pty 适配 |
+| 文件树/Git | 直读宿主机文件系统 + 本地 git CLI | OpenKylin 走 server-side sandbox 文件 API（`qilin/sandbox/tools.py`）；git 在后端非核心能力 | 走 web 直读需新增 Tauri/Electron 通道，纯浏览器内做不到等价 FS 视图 |
 | 状态 | 走 DSH session / workspace 实体 | 走 LangGraph threads + 后端 threads_meta | 数据层契约不同 |
-| 生态 | 28+ tab 插件 | QiLin 暂无对应扩展机制 | 引入会同时引入新加载机制与运行期 |
+| 生态 | 28+ tab 插件 | OpenKylin 暂无对应扩展机制 | 引入会同时引入新加载机制与运行期 |
 
 ## 3. 「全面替换」的三种合理诠释（待用户选）
 
 | 方案 | 描述 | 工作量 | 与既有计划的关系 | 风险 |
 |---|---|---|---|---|
 | A. **整体对齐** | 在 web-demo 内完整复刻 better-sidebar 的右侧双工作台（文件/编辑器/终端/Git/浏览器/侧边对话 7 tab + viewer 协议 + 插件注册 API），作为新右侧栏组件，独立于现有左侧栏 | 大（4–6 周起步） | 与 dsh-alignment-refactor 并行而非冲突，但要新增大量 web-only 适配（web-pty、WebContainer 风格的浏览器内 FS） | 文件系统层在纯 web 下根本走不通（沙箱外 FS）；终端要在浏览器内集成 pty 替代品；范围远超 UI |
-| B. **选择性借鉴** | 只提取 better-sidebar 的「会话级 tab 隔离 / tab 拖拽分栏 / 固定到全局 tab」等 UI 行为模式，应用到 QiLin web-demo 的左侧会话栏，让 `RecentChatList` 与「会话右侧面板」具备这些能力 | 中（1–2 周） | 替换 `2026-08-27-dsh-alignment-refactor.md` P3 阶段的部分目标（归档/拖拽），其它分组与 cwd 注册表保持 | 视觉/交互质量提升明显，范围可控 |
-| C. **新增侧栏 tab 协议** | 在 QiLin web-demo 内部定义一个轻量的 `ctx.toolsSidebar`（自命名）服务：暴露 `registerPanel({ id, title, render, scope })`，先用 QiLin 自有逻辑内置「文件 / 任务 / 子代理 / 变更 / Todo」5 个面板，右侧栏按会话级隔离 | 中-大（2–3 周） | 与 dsh-alignment-refactor P3「侧栏分组」互补而非替代；可作为后续扩展点 | 需要设计新 API、保持向后兼容 |
+| B. **选择性借鉴** | 只提取 better-sidebar 的「会话级 tab 隔离 / tab 拖拽分栏 / 固定到全局 tab」等 UI 行为模式，应用到 OpenKylin web-demo 的左侧会话栏，让 `RecentChatList` 与「会话右侧面板」具备这些能力 | 中（1–2 周） | 替换 `2026-08-27-dsh-alignment-refactor.md` P3 阶段的部分目标（归档/拖拽），其它分组与 cwd 注册表保持 | 视觉/交互质量提升明显，范围可控 |
+| C. **新增侧栏 tab 协议** | 在 OpenKylin web-demo 内部定义一个轻量的 `ctx.toolsSidebar`（自命名）服务：暴露 `registerPanel({ id, title, render, scope })`，先用 OpenKylin 自有逻辑内置「文件 / 任务 / 子代理 / 变更 / Todo」5 个面板，右侧栏按会话级隔离 | 中-大（2–3 周） | 与 dsh-alignment-refactor P3「侧栏分组」互补而非替代；可作为后续扩展点 | 需要设计新 API、保持向后兼容 |
 
 ## 5. 验证基线
 - 现有服务 `http://localhost:28080`（`web-demo/server.js`，dev=true）可热更新 → UI 改动刷新即可见。

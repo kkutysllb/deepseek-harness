@@ -102,7 +102,7 @@
 | # | 项目 | 结果 | 证据 |
 |---|------|------|------|
 | 8.1 | 品牌 token 层生效 | ✅ | `@theme inline` 段落在 globals.css 尾部后语义类正常生成；landing 背景 computed=`rgb(13,11,9)`=#0d0b09 |
-| 8.2 | QilinMark 组件单测 | ✅ | vitest 7/7（aria 边界/outline/pattern id 唯一性/GoldDivider 结构） |
+| 8.2 | OpenKylinMark 组件单测 | ✅ | vitest 7/7（aria 边界/outline/pattern id 唯一性/GoldDivider 结构） |
 | 8.3 | landing 双档布局 | ✅ | 1440 与 390 下无横向滚动；小屏 eyebrow 与固定 header 重叠已修（main pt-16，实测 eyebrowTop 104 > headerBottom 64） |
 | 8.4 | CTA 与旧视觉清除 | ✅ | CTA computed=`rgb(201,162,74)` 金色实底；视觉复查确认彩虹渐变/星空/流光零残留 |
 | 8.5 | login 卡片与登录链路 | ✅ | 窄卡 352px + rounded-xl + hairline + 顶部 2px 金渐变饰条；admin 真实登录直达 /workspace |

@@ -7,7 +7,7 @@
 import { Context } from '@deepseek-ai/cordis'
 import Loader from '@deepseek-ai/cordis-plugin-loader'
 import type {
-  BootManifest, ClientModuleCreateOptions, ClientModuleSystem, QilinWindow,
+  BootManifest, ClientModuleCreateOptions, ClientModuleSystem, OpenKylinWindow,
 } from '@qilin/client-modules/client'
 import type {} from '@qilin/client-ui-renderer/client'
 import { BootPage } from './boot-page.ts'
@@ -52,7 +52,7 @@ export class AppWebEntry {
       // row, or rejects it into the failure rendering below. An absent global
       // means no bootstrap owns the document and there is nothing to wait for.
       await (globalThis as { __OPENKYLIN_BOOT_READY__?: { promise: Promise<void> } }).__OPENKYLIN_BOOT_READY__?.promise
-      const win = globalThis as QilinWindow
+      const win = globalThis as OpenKylinWindow
       const moduleLoader = win.__ModuleLoader__
       if (moduleLoader === undefined) {
         throw new Error('web boot: window.__ModuleLoader__ bootstrap facade is missing')

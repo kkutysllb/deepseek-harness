@@ -16,8 +16,8 @@ import type { SubprocessTerminalHandle, SubprocessTerminalSpawnSpec } from './ty
 export { OPENKYLIN_ENV_PREFIX } from './types.ts'
 export type {
   CollectedOutput,
-  QilinEnvironment,
-  QilinEnvironmentKey,
+  OpenKylinEnvironment,
+  OpenKylinEnvironmentKey,
   SubprocessCollect,
   SubprocessCollectedOutputs,
   SubprocessHandle,

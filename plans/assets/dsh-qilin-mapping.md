@@ -1,4 +1,4 @@
-# DSH → QiLin 包级映射表
+# DSH → OpenKylin 包级映射表
 
 - 生成日期:2026-08-27
 - 用途:P1 rescope codemod 与《plans/2026-08-27-qilin-engine-transplant.md》§7 上游移植的对照依据;「原 npm 名」一律逐包实测自各包 package.json 的实际 name 字段(非目录名推断);「新 npm 名」按 D1 rescope 规则生成:@qilin/<去掉 @deepseek-ai/dsh- 前缀后的名字>;vendor 按 D6 保留原名。例外:根包→@qilin/engine-root(总计划 §1 定案);apps/cli→@qilin/cli(P1-S2 定案);取值列含括注者均非机械改名,codemod 须跳过。

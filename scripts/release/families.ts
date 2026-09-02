@@ -318,7 +318,7 @@ export abstract class ReleaseFamily {
 }
 
 /** Release packages and apps: one shared version across the whole family. */
-class QilinFamily extends ReleaseFamily {
+class OpenKylinFamily extends ReleaseFamily {
   readonly id = 'openkylin'
   readonly patterns = ['packages/!(experimental)/*/package.json', 'apps/*/package.json'] as const
   readonly tagPrefix = 'openkylin-v'
@@ -417,7 +417,7 @@ class VendorFamily extends ReleaseFamily {
 
 /** Every release family this module owns, in workflow order. */
 function releaseFamilies(): readonly ReleaseFamily[] {
-  return [new QilinFamily(), new VendorFamily()]
+  return [new OpenKylinFamily(), new VendorFamily()]
 }
 
 /**

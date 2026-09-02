@@ -3,7 +3,7 @@
 > **已定稿(2026-08-28)**:D1–D6 经结构化决策面板由用户逐项拍板(D1/D2/D3/D4/D6 采纳推荐;D5 用户否决推荐、拍板开放注册,附安全适配条款见 §3.D5)。
 > 本计划自此可执行;S 系列按序推进。
 
-**目标(一句话):** 为 QiLin 引擎(qilin-engine)补齐多用户账户体系(注册/登录/会话)
+**目标(一句话):** 为 OpenKylin 引擎(qilin-engine)补齐多用户账户体系(注册/登录/会话)
 与服务端 RBAC 强制点,使 Web 表面从「单用户 loopback 信任」演进为「多用户、可鉴权、
 可授权」,并为 P4 多服务商模型与 P5 品牌壳提供账户地基。
 
@@ -36,7 +36,7 @@ vitest(测试与覆盖率门禁)/ scrypt 或 bcrypt(密码哈希,S1 定)。
 - **不实现** P5 商业品牌壳(P3 前端登录页使用现有 ui-primitives 中性皮肤)。
 - **不迁移/不退役** P6 的 8 个 IM 渠道(`app/channels/`:dingtalk、discord、feishu、
   github、slack、telegram、wechat、wecom);其语义仅作借鉴。
-- **不触碰** 两仓的 `vendor/` 与 QiLin 仓 `python/` 目录。
+- **不触碰** 两仓的 `vendor/` 与 OpenKylin 仓 `python/` 目录。
 - **不做** 计费/配额/租户隔离(组织级多租户),仅做单实例多用户。
 - **不修改** 引擎既有会话(session)持久化格式;用户↔会话的归属关系为 P3 新增映射,
   不改写历史会话数据。
@@ -97,7 +97,7 @@ vitest(测试与覆盖率门禁)/ scrypt 或 bcrypt(密码哈希,S1 定)。
    - **测试基建**:vitest 全仓统一,含 e2e 配置与分区覆盖率
      (`vitest.e2e.config.ts`、`scripts/run-coverage-partitions.ts`)。
 
-### 2.2 旧 Python 网关语义盘点(QiLin 仓 qilin/ 与 app/,只读)
+### 2.2 旧 Python 网关语义盘点(OpenKylin 仓 qilin/ 与 app/,只读)
 
 **结论:旧网关有一套完整、自洽的账户行为契约,值得整体沿用其语义。**
 
@@ -111,7 +111,7 @@ vitest(测试与覆盖率门禁)/ scrypt 或 bcrypt(密码哈希,S1 定)。
 | D | **HttpOnly cookie 优先 + Bearer 兜底**:桌面跨端口 dev 模式从响应体取 token 走 Bearer;仅会话创建端点(login/register/initialize)回传 access_token | `auth_middleware.py:119-139`、`auth/models.py:52-61` | 双轨鉴权(D2) |
 | E | **cookie 安全策略**:HttpOnly access_token + qilin_session_persistent(记住我);secure 按 https 判定、loopback 豁免 + 显式环境开关逃生 | `session_cookie.py:18-53`(:20 为逃生开关) | 本地 dev 与部署两态 |
 | F | **CSRF 双提交**:state-changing 方法(POST/PUT/DELETE/PATCH)校验 csrf_token cookie + X-CSRF-Token 头;豁免 /auth/me 与 webhook(供应商签名自证);RFC-001 契约 | `csrf_middleware.py:1-5`、`:26-28`、`:41-60` | 引擎 /api 写路径 |
-| G | **auth-disabled 逃生阀**:QILIN_AUTH_DISABLED,显式生产环境禁止禁用 | `auth_disabled.py:8-20` | 本地/E2E 模式 |
+| G | **auth-disabled 逃生阀**:OPENKYLIN_AUTH_DISABLED,显式生产环境禁止禁用 | `auth_disabled.py:8-20` | 本地/E2E 模式 |
 | H | **垃圾 cookie 防绕过**:拒绝把任意 cookie 形状字符串当会话 | `auth_middleware.py:137-139` | 安全面细节 |
 | I | **用户模型**:UUID、唯一 email、bcrypt 哈希(OAuth 用户可空)、`system_role: admin|user`、oauth_provider/oauth_id 联结、needs_setup(重置账户补全流程) | `app/gateway/auth/models.py:15-38` | 账户实体(D6 存储) |
 | J | **注册开关**:POST /auth/register 是否开放由配置即时读取决定(改配置即生效);首用户 initialize 流 + setup-status 探测 | `routers/auth.py:355-408`、`:540`、`:614` | D5 注册策略 |
@@ -133,7 +133,7 @@ vitest(测试与覆盖率门禁)/ scrypt 或 bcrypt(密码哈希,S1 定)。
 
 **事实(实测):**
 
-1. QiLin 仓 `.env` 仅一枚键:`MINIMAX_API_KEY`(值脱敏)。
+1. OpenKylin 仓 `.env` 仅一枚键:`MINIMAX_API_KEY`(值脱敏)。
 2. 引擎实际凭证文档 `~/.dsh/.credentials.yaml` 的 refs(仅列键名):
    `DEEPSEEK_API_KEY`、`MINIMAX_CN_API_KEY`、`ZAI_CODING_CN_API_KEY`、
    `QWEN_TOKEN_PLAN_CN_API_KEY`、`OPENAI_CODEX_API_KEY`。
@@ -149,10 +149,10 @@ vitest(测试与覆盖率门禁)/ scrypt 或 bcrypt(密码哈希,S1 定)。
    已按机械风险最小落地:改仓根 `.env` 键名为 `MINIMAX_CN_API_KEY`(值原样保留,
    零代码改动)。详见台账 P3 段 S0-1。
 4. **引擎全部凭证读取位点清单**(统一凭证源 D4 的事实基础):
-   - 唯一管理面:`LocalCredentialProvider`,默认 `$QILIN_HOME/.credentials.yaml`
+   - 唯一管理面:`LocalCredentialProvider`,默认 `$OPENKYLIN_HOME/.credentials.yaml`
      (即 `~/.dsh/.credentials.yaml`,watch 热发布,跨进程写锁,注释保留的叶子级补丁)
      (`packages/credentials/credentials-local/src/index.ts:43-78`);
-   - 信任分层:进程 env > 凭证文档 > `cwd/.env` > `$QILIN_HOME/.env`
+   - 信任分层:进程 env > 凭证文档 > `cwd/.env` > `$OPENKYLIN_HOME/.env`
      (同文件 :3-15 文档注释);
    - 消费方:LLM 适配族按 **scope 化 record** 读写(credentialKey(llm-pi-ai, providerId),
      `packages/llm/llm-pi-ai/src/auth.ts:27-44`);OAuth grant 以不透明 JSON 原样入库
@@ -258,7 +258,7 @@ provider,届时只需按会话归属解析,无需改动账户模型。多服务�
 | 选项 | 说明 | 代价/风险 |
 |---|---|---|
 | A. 复用引擎文件存储(storages JSON / settings.yaml / 自定义 yaml) | 零新依赖 | users 需要唯一性约束、原子并发写、部分索引(oauth 联结唯一),JSON 文档全部要手搓且易漂移 |
-| B. **SQLite(node:sqlite,推荐)** | 单文件(如 `$QILIN_HOME/qilin-accounts/accounts.db`);users/sessions 两表起步;唯一索引原生支持 | node:sqlite 在 Node 22 需关注版本行为(引擎已有 session-persistence-sqlite 先例,风险已被踩平) |
+| B. **SQLite(node:sqlite,推荐)** | 单文件(如 `$OPENKYLIN_HOME/qilin-accounts/accounts.db`);users/sessions 两表起步;唯一索引原生支持 | node:sqlite 在 Node 22 需关注版本行为(引擎已有 session-persistence-sqlite 先例,风险已被踩平) |
 | C. 完整 DB 服务(postgres 等) | 旧实现(sqlalchemy+alembic)延续 | 引入外部服务依赖,与引擎「单进程、home 自包含」哲学冲突 |
 
 **推荐:B。** 理由:账户数据的形状(唯一 email、唯一 oauth 联结、并发登录写)
@@ -331,7 +331,7 @@ provider,届时只需按会话归属解析,无需改动账户模型。多服务�
   两态、initialize 幂等与 409、ws 拒升与 Origin 分层、429 + Retry-After;契约
   D/E/F/G/H/J/K 逐条映射(映射表见台账 P3 段 S3 小节)。src 全文件 per-file 100%。
 - **审**:spec 审(路由表与状态码契约)✅(路由表与偏差登记见台账:错误信封、
-  QILIN_CORS_ORIGINS 新名、Origin 白名单端点集、rate limit 全尝试计数、login/register 共享每 IP 预算与内存态局限);
+  OPENKYLIN_CORS_ORIGINS 新名、Origin 白名单端点集、rate limit 全尝试计数、login/register 共享每 IP 预算与内存态局限);
   质量审(安全专项:cookie 属性、错误信息不泄露账户存在性——注册重名响应沿用旧语义
   但评估枚举风险)✅(枚举暴露已评估并登记为已知取舍,login 侧统一 401 + 时序垫片)。
 
@@ -383,7 +383,7 @@ provider,届时只需按会话归属解析,无需改动账户模型。多服务�
   account-http 同 `dbPath`(双 SQLite 连接为受支持形态);专用通道无点端点归 `route:` 域须写全前缀;
   ws 升级仅 authN(事件流无可授权方法面);授权决策无逐请求审计(顺延)。
 - **清尾**:a. 引擎仓 `packages/typert/generator/tests/.generated-model-Go0yu7/` 已删(未跟踪,直接清除);
-  b. QiLin 仓 `qilin-engine/` 纯拷贝已删(rsync 校验仅 knip.json/tsbuildinfo 两生成物差异,真仓更新后删);
+  b. OpenKylin 仓 `qilin-engine/` 纯拷贝已删(rsync 校验仅 knip.json/tsbuildinfo 两生成物差异,真仓更新后删);
   c. 本档 S3 段 rate limit 描述补「共享」二字(与引擎包注释逐字对齐,见下);新发现已跟踪历史残渣
   `.generated-model-O7FJNT/`、`.generated-model-qwn8sk/` 仅登记未处置(残差档 R3/R4)。
 
@@ -453,7 +453,7 @@ provider,届时只需按会话归属解析,无需改动账户模型。多服务�
 - **生命周期与目录接缝回归延续**:与上一增量合并后,真实 Context/SystemPrompt/ToolRuntime/assemble、
   late-load、scope disposer generation 隔离均保持通过。
 - **新鲜门禁证据**:affected account-rbac + connection 测试 **188 全绿**;完整两包测试 **286 全绿**;
-  CI 同口径 `QILIN_COVERAGE_EXEMPT_HEAVY=1 QILIN_COVERAGE_PARTITIONS=4 pnpm run
+  CI 同口径 `OPENKYLIN_COVERAGE_EXEMPT_HEAVY=1 OPENKYLIN_COVERAGE_PARTITIONS=4 pnpm run
   test:coverage:partitioned` **exit 0**, account-rbac/src 与 client/connection/src per-file
   statement/branch/function/line 均 100%;串行全仓 `pnpm test -- --fileParallelism=false --maxWorkers=1`
   **exit 0**;source snapshot **126 passed/2 skipped**。
@@ -573,7 +573,7 @@ provider,届时只需按会话归属解析,无需改动账户模型。多服务�
 
 - 引擎仓:`/Users/libing/kk_Projects/qilin-engine` @ main `795b8dc`(tag
   `qilin-engine-v0`,工作区干净)。
-- QiLin 仓:`/Users/libing/kk_Projects/QiLin`;旧 Python 代码仅只读盘点
+- OpenKylin 仓:`/Users/libing/kk_Projects/OpenKylin`;旧 Python 代码仅只读盘点
   (`qilin/`、`app/`),`vendor/`、`python/` 未触碰。
 - 本文件引用的全部 文件:行 号以两仓上述提交为快照基准;后续提交若移动行号,
   以语义描述为准。
@@ -648,8 +648,8 @@ provider,届时只需按会话归属解析,无需改动账户模型。多服务�
   AccountOverlay.tsx(余 61/63 卸载竞态两臂、156:58 busy-true 标签臂、158 notice 臂);
   AccountsSettingsSection.tsx(余 29:58 非 AuthError 臂、30/33 卸载竞态臂、56 apply busy 臂、
   69/85 confirm 空值臂、76 map FALSE 臂、132/143 busy 禁用臂)。
-- 复跑指令:\`QILIN_COVERAGE_EXEMPT_HEAVY=1 QILIN_COVERAGE_PARTITIONS=4 pnpm run test:coverage:partitioned\`
+- 复跑指令:\`OPENKYLIN_COVERAGE_EXEMPT_HEAVY=1 OPENKYLIN_COVERAGE_PARTITIONS=4 pnpm run test:coverage:partitioned\`
   (务必独占运行,与串行全量并行会因 CPU 争用污染分区报告,见 21:06 一轮的假阳性 hooks-codex)。
 - 断言注意:jsdom 下 fireEvent.click 会穿透 disabled 按钮,勿依赖 disabled 阻止第二次提交;
   弱口令/缺参用例的桩需在 fake 内复现服务端语义;plugin.warn 接缝一次故障记两条 warn 属正常。
-- 引擎 HEAD @ main 34cd398(工作区干净);本文件 QiLin 侧同步。
+- 引擎 HEAD @ main 34cd398(工作区干净);本文件 OpenKylin 侧同步。

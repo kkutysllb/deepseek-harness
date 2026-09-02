@@ -913,7 +913,7 @@ Error: inject boom
 stdout | scripts/run-gates.spec.ts > gate graph validation > constructs and executes preflight for a valid non-empty ci-primary graph
 run-gates: start runtime closure
 run-gates: start constraints
-run-gates: start QiLin package licenses
+run-gates: start OpenKylin package licenses
 run-gates: start package invariants
 run-gates: start Cordis config
 run-gates: start optional dependency imports
@@ -975,7 +975,7 @@ run-gates: start built-bin smoke
 stdout | scripts/run-gates.spec.ts > gate graph validation > constructs and executes preflight for a valid non-empty ci-linux-primary graph
 run-gates: start runtime closure
 run-gates: start constraints
-run-gates: start QiLin package licenses
+run-gates: start OpenKylin package licenses
 run-gates: start package invariants
 run-gates: start Cordis config
 run-gates: start optional dependency imports
@@ -1040,7 +1040,7 @@ run-gates: start web browser snapshot
 stdout | scripts/run-gates.spec.ts > gate graph validation > constructs and executes preflight for a valid non-empty ci-static graph
 run-gates: start runtime closure
 run-gates: start constraints
-run-gates: start QiLin package licenses
+run-gates: start OpenKylin package licenses
 run-gates: start package invariants
 run-gates: start Cordis config
 run-gates: start optional dependency imports
@@ -1130,7 +1130,7 @@ run-gates: start test:coverage-exempt-heavy
 stdout | scripts/run-gates.spec.ts > gate graph validation > constructs and executes preflight for a valid non-empty ci-windows-complete graph
 run-gates: start runtime closure
 run-gates: start constraints
-run-gates: start QiLin package licenses
+run-gates: start OpenKylin package licenses
 run-gates: start package invariants
 run-gates: start Cordis config
 run-gates: start optional dependency imports
@@ -1174,7 +1174,7 @@ run-gates: start built-bin smoke
 stdout | scripts/run-gates.spec.ts > gate graph validation > constructs and executes preflight for a valid non-empty ci-windows-observational graph
 run-gates: start runtime closure
 run-gates: start constraints
-run-gates: start QiLin package licenses
+run-gates: start OpenKylin package licenses
 run-gates: start package invariants
 run-gates: start Cordis config
 run-gates: start optional dependency imports
@@ -1238,7 +1238,7 @@ run-gates: start build:web
 run-gates: start vendor rescope
 run-gates: start knip
 run-gates: start constraints
-run-gates: start QiLin package licenses
+run-gates: start OpenKylin package licenses
 run-gates: start package invariants
 run-gates: start optional dependency imports
 run-gates: start client packages
@@ -1283,7 +1283,7 @@ run-gates: start vendor rescope
 run-gates: start knip
 run-gates: start publint
 run-gates: start constraints
-run-gates: start QiLin package licenses
+run-gates: start OpenKylin package licenses
 run-gates: start package invariants
 run-gates: start built package invariants
 run-gates: start node-next types
@@ -3095,7 +3095,7 @@ chain selector crashed in 'k.chain' (unknown registrant), treating as declined: 
 stdout | scripts/run-gates.spec.ts > gate graph validation > constructs and executes preflight for a valid non-empty ci-primary graph
 run-gates: start runtime closure
 run-gates: start constraints
-run-gates: start QiLin package licenses
+run-gates: start OpenKylin package licenses
 run-gates: start package invariants
 run-gates: start Cordis config
 run-gates: start optional dependency imports
@@ -3157,7 +3157,7 @@ run-gates: start built-bin smoke
 stdout | scripts/run-gates.spec.ts > gate graph validation > constructs and executes preflight for a valid non-empty ci-linux-primary graph
 run-gates: start runtime closure
 run-gates: start constraints
-run-gates: start QiLin package licenses
+run-gates: start OpenKylin package licenses
 run-gates: start package invariants
 run-gates: start Cordis config
 run-gates: start optional dependency imports
@@ -3222,7 +3222,7 @@ run-gates: start web browser snapshot
 stdout | scripts/run-gates.spec.ts > gate graph validation > constructs and executes preflight for a valid non-empty ci-static graph
 run-gates: start runtime closure
 run-gates: start constraints
-run-gates: start QiLin package licenses
+run-gates: start OpenKylin package licenses
 run-gates: start package invariants
 run-gates: start Cordis config
 run-gates: start optional dependency imports
@@ -3312,7 +3312,7 @@ run-gates: start test:coverage-exempt-heavy
 stdout | scripts/run-gates.spec.ts > gate graph validation > constructs and executes preflight for a valid non-empty ci-windows-complete graph
 run-gates: start runtime closure
 run-gates: start constraints
-run-gates: start QiLin package licenses
+run-gates: start OpenKylin package licenses
 run-gates: start package invariants
 run-gates: start Cordis config
 run-gates: start optional dependency imports
@@ -3356,7 +3356,7 @@ run-gates: start built-bin smoke
 stdout | scripts/run-gates.spec.ts > gate graph validation > constructs and executes preflight for a valid non-empty ci-windows-observational graph
 run-gates: start runtime closure
 run-gates: start constraints
-run-gates: start QiLin package licenses
+run-gates: start OpenKylin package licenses
 run-gates: start package invariants
 run-gates: start Cordis config
 run-gates: start optional dependency imports
@@ -3420,7 +3420,7 @@ run-gates: start build:web
 run-gates: start vendor rescope
 run-gates: start knip
 run-gates: start constraints
-run-gates: start QiLin package licenses
+run-gates: start OpenKylin package licenses
 run-gates: start package invariants
 run-gates: start optional dependency imports
 run-gates: start client packages
@@ -3465,7 +3465,7 @@ run-gates: start vendor rescope
 run-gates: start knip
 run-gates: start publint
 run-gates: start constraints
-run-gates: start QiLin package licenses
+run-gates: start OpenKylin package licenses
 run-gates: start package invariants
 run-gates: start built package invariants
 run-gates: start node-next types

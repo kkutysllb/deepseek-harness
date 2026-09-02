@@ -8,10 +8,10 @@
  */
 
 import type { SandboxEnforcement, SandboxExecutionPolicy, SandboxMode } from '@qilin/sandbox'
-import type { CollectedOutput, QilinEnvironment } from '@qilin/subprocess'
+import type { CollectedOutput, OpenKylinEnvironment } from '@qilin/subprocess'
 
 export { OPENKYLIN_ENV_PREFIX } from '@qilin/subprocess'
-export type { CollectedOutput, QilinEnvironment, QilinEnvironmentKey } from '@qilin/subprocess'
+export type { CollectedOutput, OpenKylinEnvironment, OpenKylinEnvironmentKey } from '@qilin/subprocess'
 
 /**
  * Sandbox facts for one run, present iff a sandboxing executor handled it.
@@ -73,7 +73,7 @@ export interface ShellExecRequest {
    * value from the harness process and a caller {@link env} entry cannot
    * displace a managed one.
    */
-  dshEnv?: QilinEnvironment | undefined
+  dshEnv?: OpenKylinEnvironment | undefined
   /** Fully resolved per-call sandbox policy; sandboxing executors default it. */
   sandboxPolicy?: SandboxExecutionPolicy | undefined
 }
@@ -104,7 +104,7 @@ export interface ShellExecSpec {
    */
   env?: Record<string, string> | undefined
   /** Managed `OPENKYLIN_*` snapshot (typed to managed keys); merges after {@link env}. */
-  dshEnv?: QilinEnvironment | undefined
+  dshEnv?: OpenKylinEnvironment | undefined
   /** Resolved sandbox policy; ignored by executors that do not confine. */
   sandboxPolicy: SandboxExecutionPolicy | undefined
 }

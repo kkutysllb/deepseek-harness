@@ -8,7 +8,7 @@ bash 执行 seam 分为 Service Definition（[qilin-shell](../../packages/shell/
 
 ## 受管 shell 环境命名空间
 
-`OPENKYLIN_*` 变量是归 Harness 所有的子进程事实。面向模型的 bash 工具通过 `ctx.shellEnv` 收集它们，再经由 `ShellExecRequest.dshEnv` 传递；子进程服务在合并当前快照之前会移除继承而来的 `OPENKYLIN_*` 名称。`QilinEnvironmentKey`／`QilinEnvironment` 词汇归[子进程 seam](subprocess.zh.md)所有，由 `qilin-shell` 重导出。
+`OPENKYLIN_*` 变量是归 Harness 所有的子进程事实。面向模型的 bash 工具通过 `ctx.shellEnv` 收集它们，再经由 `ShellExecRequest.dshEnv` 传递；子进程服务在合并当前快照之前会移除继承而来的 `OPENKYLIN_*` 名称。`OpenKylinEnvironmentKey`／`OpenKylinEnvironment` 词汇归[子进程 seam](subprocess.zh.md)所有，由 `qilin-shell` 重导出。
 
 ## 请求与规格：`resolve()` 拆分
 
@@ -59,7 +59,7 @@ interface ShellExecRequest {
    * value from the harness process and a caller {@link env} entry cannot
    * displace a managed one.
    */
-  dshEnv?: QilinEnvironment | undefined
+  dshEnv?: OpenKylinEnvironment | undefined
   /** Fully resolved per-call sandbox policy; sandboxing executors default it. */
   sandboxPolicy?: SandboxExecutionPolicy | undefined
 }
@@ -92,7 +92,7 @@ interface ShellExecSpec {
    */
   env?: Record<string, string> | undefined
   /** Managed `OPENKYLIN_*` snapshot (typed to managed keys); merges after {@link env}. */
-  dshEnv?: QilinEnvironment | undefined
+  dshEnv?: OpenKylinEnvironment | undefined
   /** Resolved sandbox policy; ignored by executors that do not confine. */
   sandboxPolicy: SandboxExecutionPolicy | undefined
 }
@@ -288,7 +288,7 @@ register(contributor: BashEnvContributor): () => void
  * @param execution - the current tool execution.
  * @returns an immutable environment overlay containing built-ins and current contributions.
  */
-collect(execution: ToolExecution): QilinEnvironment
+collect(execution: ToolExecution): OpenKylinEnvironment
 
 /**
  * Enumerate plugin-contributed variables without executing their resolvers.
@@ -297,7 +297,7 @@ collect(execution: ToolExecution): QilinEnvironment
 list(): BashEnvVariableInfo[]
 ```
 
-Types: [QilinEnvironment](subprocess.zh.md) · [ToolExecution](tools.zh.md)
+Types: [OpenKylinEnvironment](subprocess.zh.md) · [ToolExecution](tools.zh.md)
 
 Source: [`packages/shell/shell-env/src/index.ts`](../../packages/shell/shell-env/src/index.ts)
 <!-- END GENERATED cordis-surface -->

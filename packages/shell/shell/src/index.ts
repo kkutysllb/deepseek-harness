@@ -30,8 +30,8 @@ export type {
   ShellRunResult,
   ShellSandboxInfo,
   CollectedOutput,
-  QilinEnvironment,
-  QilinEnvironmentKey,
+  OpenKylinEnvironment,
+  OpenKylinEnvironmentKey,
 } from './types.ts'
 export { parseExitStatus } from './render.ts'
 export type { ParsedExitStatus } from './render.ts'

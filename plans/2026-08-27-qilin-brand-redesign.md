@@ -1,4 +1,4 @@
-# QiLin 玄金麒麟 VI 改版（landing + auth）Implementation Plan
+# OpenKylin 玄金麒麟 VI 改版（landing + auth）Implementation Plan
 
 **Goal:** 按 `docs/superpowers/specs/2026-08-27-qilin-brand-redesign-design.md`，把 web-demo 的 landing 页与登录/注册/初始化页从 KWorks 视觉遗产（Galaxy 星空、彩虹渐变、ShineBorder）改为「玄金麒麟」自主品牌视觉，业务逻辑零改动。
 
@@ -6,7 +6,7 @@
 
 **Tech Stack:** Next.js App Router（部分 RSC 部分客户端）、Tailwind CSS v4、lucide-react、vitest+testing-library（happy-dom）、Playwright MCP（截图验证）。
 
-**验证环境:** 服务已在 http://localhost:28080 运行且 dev=true（Next 热更新），改代码后浏览器刷新即可见。仓库根：`/Users/libing/kk_Projects/QiLin`。
+**验证环境:** 服务已在 http://localhost:28080 运行且 dev=true（Next 热更新），改代码后浏览器刷新即可见。仓库根：`/Users/libing/kk_Projects/OpenKylin`。
 
 **安全边界（每个任务都适用）:** 不改 workspace 目录任何文件；不改 `globals.css` 既有规则（只允许新增文件与 root layout 的 import 行）；保留所有 `kworks*` 标识符；不引入新 npm 依赖。
 
@@ -21,7 +21,7 @@
 - [ ] **Step 1: 写入 token 文件**
 
 ```css
-/* qilin-brand.css — QiLin 品牌 VI「玄金麒麟」token 层。
+/* qilin-brand.css — OpenKylin 品牌 VI「玄金麒麟」token 层。
    仅供 landing 与 auth 页面使用；不得在此改动全局 --background 等 shadcn 变量。 */
 :root {
   /* 基底 */
@@ -80,7 +80,7 @@ git commit -m "feat(web-demo): 新增玄金麒麟 VI token 层(qilin-brand.css)"
 
 ---
 
-### Task 2: 品牌组件 QilinMark（TDD）
+### Task 2: 品牌组件 OpenKylinMark（TDD）
 
 **Files:**
 - Test: `web-demo/tests/unit/components/qilin-mark.test.tsx`（新建）
@@ -93,21 +93,21 @@ git commit -m "feat(web-demo): 新增玄金麒麟 VI token 层(qilin-brand.css)"
 import { render, screen } from "@testing-library/react";
 import { describe, expect, test } from "vitest";
 
-import { GoldDivider, QilinSeal, ScalePattern } from "@/components/brand/qilin-mark";
+import { GoldDivider, OpenKylinSeal, ScalePattern } from "@/components/brand/qilin-mark";
 
-describe("QilinMark 品牌组件", () => {
-  test("QilinSeal 默认为装饰元素(aria-hidden)，传 label 时暴露 role=img", () => {
-    const { container, rerender } = render(<QilinSeal />);
+describe("OpenKylinMark 品牌组件", () => {
+  test("OpenKylinSeal 默认为装饰元素(aria-hidden)，传 label 时暴露 role=img", () => {
+    const { container, rerender } = render(<OpenKylinSeal />);
     const decorative = container.querySelector("svg");
     expect(decorative?.getAttribute("aria-hidden")).toBe("true");
     expect(decorative?.getAttribute("role")).toBeNull();
 
-    rerender(<QilinSeal label="麒麟印记" />);
+    rerender(<OpenKylinSeal label="麒麟印记" />);
     expect(screen.getByRole("img", { name: "麒麟印记" })).toBeTruthy();
   });
 
-  test("QilinSeal outline variant 用描边而非实底填充", () => {
-    const { container } = render(<QilinSeal variant="outline" />);
+  test("OpenKylinSeal outline variant 用描边而非实底填充", () => {
+    const { container } = render(<OpenKylinSeal variant="outline" />);
     const rect = container.querySelector("rect");
     expect(rect?.getAttribute("fill")).toBe("none");
     expect(rect?.getAttribute("stroke")).toContain("var(--ql-cinnabar");
@@ -142,7 +142,7 @@ import { cn } from "@/lib/utils";
  * 「麟」字方印 — 玄金麒麟 VI 的品牌印章。
  * 默认纯装饰(aria-hidden)；作为 logo 语义使用时传入 label 以暴露给读屏。
  */
-export function QilinSeal({
+export function OpenKylinSeal({
   size = 24,
   variant = "solid",
   label,
@@ -239,7 +239,7 @@ Expected: `4 passed`。若 `to-ql-gold-700` 类名被 tailwind-merge 视为冲�
 
 ```bash
 git add web-demo/src/components/brand/qilin-mark.tsx web-demo/tests/unit/components/qilin-mark.test.tsx
-git commit -m "feat(web-demo): 品牌组件 QilinMark(麟印/鳞纹/金线)"
+git commit -m "feat(web-demo): 品牌组件 OpenKylinMark(麟印/鳞纹/金线)"
 ```
 
 ---
@@ -311,7 +311,7 @@ git commit -m "feat(web-demo): landing 背景切换为玄金静态层"
 ```tsx
 import Link from "next/link";
 
-import { QilinSeal } from "@/components/brand/qilin-mark";
+import { OpenKylinSeal } from "@/components/brand/qilin-mark";
 import { cn } from "@/lib/utils";
 
 export type HeaderProps = {
@@ -331,8 +331,8 @@ export async function Header({ className, homeURL }: HeaderProps) {
       )}
     >
       <a href={homeURL ?? "/"} className="flex items-center gap-2 [-webkit-app-region:no-drag]">
-        <span className="font-serif text-xl text-ql-ink-hi">QiLin</span>
-        <QilinSeal size={14} variant="outline" />
+        <span className="font-serif text-xl text-ql-ink-hi">OpenKylin</span>
+        <OpenKylinSeal size={14} variant="outline" />
       </a>
       <Link
         href="/workspace"
@@ -350,7 +350,7 @@ export async function Header({ className, homeURL }: HeaderProps) {
 
 - [ ] **Step 2: 验证**
 
-刷新首页：左上「QiLin」暖白衬线字 + 朱砂描边小印，右侧 mono 金调「进入控制台 →」，hover 变亮金。`[-webkit-app-region]` 属桌面壳专用属性，浏览器忽略不影响点击。
+刷新首页：左上「OpenKylin」暖白衬线字 + 朱砂描边小印，右侧 mono 金调「进入控制台 →」，hover 变亮金。`[-webkit-app-region]` 属桌面壳专用属性，浏览器忽略不影响点击。
 
 - [ ] **Step 3: Commit**
 
@@ -406,7 +406,7 @@ export function Hero({ className }: { className?: string }) {
       {/* 左：品牌文案 */}
       <div className="flex w-full flex-col items-center text-center lg:w-[45%] lg:items-start lg:text-left">
         <p className="font-mono text-xs tracking-[0.35em] text-ql-gold-500">
-          QILIN · AUTONOMOUS AGENT ENGINE
+          OPENKYLIN · AUTONOMOUS AGENT ENGINE
         </p>
         <h1 className="mt-4 flex flex-wrap items-center justify-center gap-2 text-3xl font-bold text-ql-ink-hi lg:justify-start lg:text-5xl">
           <WordRotate
@@ -427,7 +427,7 @@ export function Hero({ className }: { className?: string }) {
             ]}
           />{" "}
           <span className="bg-gradient-to-r from-ql-gold-300 to-ql-gold-500 bg-clip-text text-transparent">
-            就用 QiLin
+            就用 OpenKylin
           </span>
         </h1>
         <p className="mt-4 max-w-xl text-base leading-relaxed text-ql-ink-mid">
@@ -504,7 +504,7 @@ git commit -m "feat(web-demo): hero 换皮(鎏金 CTA+模块清单卡)"
 ```tsx
 import { useMemo } from "react";
 
-import { GoldDivider, QilinSeal } from "@/components/brand/qilin-mark";
+import { GoldDivider, OpenKylinSeal } from "@/components/brand/qilin-mark";
 import { cn } from "@/lib/utils";
 
 export type FooterProps = {
@@ -527,8 +527,8 @@ export function Footer({ className }: FooterProps) {
         </p>
       </div>
       <div className="container mb-4 flex items-center justify-center gap-2 text-xs text-ql-ink-low">
-        <p>基于 MIT 协议开源 · &copy; {year} QiLin</p>
-        <QilinSeal size={12} />
+        <p>基于 MIT 协议开源 · &copy; {year} OpenKylin</p>
+        <OpenKylinSeal size={12} />
       </div>
     </footer>
   );
@@ -558,7 +558,7 @@ git commit -m "feat(web-demo): footer 换皮(金线分隔+麟印收尾)"
 ```tsx
 import { type ReactNode } from "react";
 
-import { QilinSeal } from "@/components/brand/qilin-mark";
+import { OpenKylinSeal } from "@/components/brand/qilin-mark";
 import { cn } from "@/lib/utils";
 
 /** 认证页表单控件统一样式（Input 直接拼接到 className 使用）。 */
@@ -607,8 +607,8 @@ export function AuthShell({
           <div className="space-y-6 p-8">
             <div className="flex flex-col items-center gap-1.5 text-center">
               <div className="flex items-center gap-2">
-                <QilinSeal size={18} />
-                <span className="font-serif text-xl text-ql-ink-hi">QiLin</span>
+                <OpenKylinSeal size={18} />
+                <span className="font-serif text-xl text-ql-ink-hi">OpenKylin</span>
               </div>
               <h1 className="text-base font-semibold text-ql-ink-hi">{title}</h1>
               {subtitle && (
@@ -736,7 +736,7 @@ import { cn } from "@/lib/utils";
 - [ ] **Step 3: 运行时验证（真实登录链路）**
 
 访问 `http://localhost:28080/login`：
-Expected: 卡片顶部有鎏金饰条、微麟印+QiLin 衬线标识；无星空/网格/流光。填 admin@example.com / QiLin#Demo2026 登录成功跳 `/workspace`。再回到 `/login` 点「没有账户？立即注册」，标题切到「创建账户」（路由守卫可能因已登录弹回 workspace——该行为是既有逻辑，不是回归）。
+Expected: 卡片顶部有鎏金饰条、微麟印+OpenKylin 衬线标识；无星空/网格/流光。填 admin@example.com / OpenKylin#Demo2026 登录成功跳 `/workspace`。再回到 `/login` 点「没有账户？立即注册」，标题切到「创建账户」（路由守卫可能因已登录弹回 workspace——该行为是既有逻辑，不是回归）。
 
 - [ ] **Step 4: Commit**
 
@@ -858,7 +858,7 @@ Expected: 无输出。（有输出则停下修复引用，禁止带引用删除�
 - [ ] **Step 2: 删除文件**
 
 ```bash
-cd /Users/libing/kk_Projects/QiLin/web-demo
+cd /Users/libing/kk_Projects/OpenKylin/web-demo
 git rm src/components/ui/galaxy.tsx src/components/ui/galaxy.css \
        src/components/ui/flickering-grid.tsx src/components/ui/shine-border.tsx \
        src/components/ui/spotlight-card.tsx src/components/ui/spotlight-card.css \
@@ -906,7 +906,7 @@ git add -A && git commit -m "refactor(web-demo): 退役 KWorks 遗产炫彩组�
 - [ ] **Step 3: 生产构建回归（先停服避免 .next 冲突）**
 
 ```bash
-cd /Users/libing/kk_Projects/QiLin
+cd /Users/libing/kk_Projects/OpenKylin
 ./scripts/start-all.sh --stop
 (cd web-demo && pnpm build)
 nohup ./scripts/start-all.sh > /tmp/web-demo.log 2>&1 & disown
@@ -934,7 +934,7 @@ Expected: build 成功；health JSON 正常；首页 200。
 | # | 项目 | 结果 |
 |---|------|------|
 | 9.1 | token 层生效(bg-ql-* 语义类渲染正确) | |
-| 9.2 | QilinMark 单测 4 项通过 | |
+| 9.2 | OpenKylinMark 单测 4 项通过 | |
 | 9.3 | landing 三组件换皮后 1440/390 无布局破损 | |
 | 9.4 | CTA 金色实底(rgb≈201,162,74)、无彩虹渐变 | |
 | 9.5 | login 换壳后真实登录链路可用 | |
@@ -958,4 +958,4 @@ git push origin main
 
 1. **Spec 覆盖**：§2 token→Task 1；§3 母题组件→Task 2；§4 landing 三件套→Task 3–6；§5 auth 外壳/两页→Task 7–9；退役清理→Task 10；§7 验收→Task 11。无缺口。
 2. **占位符扫描**：所有代码步骤均给出完整实现；README 差异表的列结构以现有表头为准属自适应适配，非占位。
-3. **一致性**：`QilinSeal/ScalePattern/GoldDivider/AuthShell/authFieldClass/authLabelClass/authErrorClass/authSubmitClass` 在定义与消费处命名逐一比对一致；Token 名与规格 §2 表格一一对应。
+3. **一致性**：`OpenKylinSeal/ScalePattern/GoldDivider/AuthShell/authFieldClass/authLabelClass/authErrorClass/authSubmitClass` 在定义与消费处命名逐一比对一致；Token 名与规格 §2 表格一一对应。

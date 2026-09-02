@@ -1,7 +1,7 @@
 $ node --import tsx/esm apps/cli/src/bin.ts --help
 Usage: qilin [options] [command] [args...]
 
-qilin: boot a QiLin profile — an ordered stack of plugin-bundle patch layers
+qilin: boot a OpenKylin profile — an ordered stack of plugin-bundle patch layers
 under your own overrides.
 
 Arguments:
@@ -10,7 +10,7 @@ Arguments:
 
 Options:
   -V, --version               output the version number
-  --profile <name>            the profile under $QILIN_HOME/profiles to boot
+  --profile <name>            the profile under $OPENKYLIN_HOME/profiles to boot
   --patch <path>              extra patch-list overlay applied after the profile
                               layer (repeatable)
   --dump-config               print the composed profile tree and exit

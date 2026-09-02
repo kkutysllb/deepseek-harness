@@ -31,7 +31,7 @@ interface MutableRegistryManifest {
 }
 
 /** Summary of a verified two-release npm layout. */
-export interface QilinInstallLayoutSummary {
+export interface OpenKylinInstallLayoutSummary {
   readonly dshPackagesPerVersion: number
   readonly checkedDshEdges: number
 }
@@ -115,7 +115,7 @@ function setDifference(left: ReadonlySet<string>, right: ReadonlySet<string>): s
  * @param packageLock - Metadata-only package lock produced by npm.
  * @returns Counts for the verified openkylin packages and dependency edges.
  */
-export function assertDualDshInstallLayout(packageLock: NpmPackageLock): QilinInstallLayoutSummary {
+export function assertDualDshInstallLayout(packageLock: NpmPackageLock): OpenKylinInstallLayoutSummary {
   const [nestedVersion, rootVersion] = SYNTHETIC_OPENKYLIN_VERSIONS
   const errors: string[] = []
   const namesByVersion = new Map<string, Set<string>>([

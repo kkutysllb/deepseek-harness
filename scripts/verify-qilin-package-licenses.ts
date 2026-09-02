@@ -10,7 +10,7 @@ const ROOT = resolve(import.meta.dirname, '..')
 const OPENKYLIN_PACKAGE_NAME = /^@qilin\//
 
 /** Result of checking every OpenKylin package reachable through the root workspace list. */
-export interface QilinPackageLicenseReport {
+export interface OpenKylinPackageLicenseReport {
   /** Number of OpenKylin package manifests checked. */
   packageCount: number
   /** Repository-relative diagnostics for non-MIT declarations. */
@@ -54,7 +54,7 @@ function printable(value: unknown): string {
  * @param root - absolute repository root containing the workspace package.json.
  * @returns the checked package count and every non-MIT declaration.
  */
-export function inspectQilinPackageLicenses(root: string): QilinPackageLicenseReport {
+export function inspectOpenKylinPackageLicenses(root: string): OpenKylinPackageLicenseReport {
   let packageCount = 0
   const failures: string[] = []
 
@@ -76,7 +76,7 @@ export function inspectQilinPackageLicenses(root: string): QilinPackageLicenseRe
 }
 
 if (process.argv[1] && import.meta.filename === resolve(process.argv[1])) {
-  const report = inspectQilinPackageLicenses(ROOT)
+  const report = inspectOpenKylinPackageLicenses(ROOT)
   if (report.failures.length > 0) {
     process.stderr.write('verify-qilin-package-licenses: non-MIT OpenKylin package declarations found:\n')
     for (const failure of report.failures) process.stderr.write(`  ${failure}\n`)

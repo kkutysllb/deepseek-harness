@@ -1,6 +1,6 @@
-# QiLin Web Demo（KWorks 全面对齐）实施计划
+# OpenKylin Web Demo（KWorks 全面对齐）实施计划
 
-**Goal:** 将 KWorks `frontend/` 整体移植为 `QiLin/web-demo/`，纯 web 模式浏览器直连本地 QiLin gateway，全量页面 + QiLin 品牌，不影响本机已安装的 KWorks 应用。
+**Goal:** 将 KWorks `frontend/` 整体移植为 `OpenKylin/web-demo/`，纯 web 模式浏览器直连本地 OpenKylin gateway，全量页面 + OpenKylin 品牌，不影响本机已安装的 KWorks 应用。
 
 **Architecture:** 直接移植 + 同源自定义代理。`web-demo/server.js`（Next 自定义服务，端口 28080）把 `/api/*`、`/health` 无缓冲转发到 gateway（端口 28081），支持 SSE 逐字流式与 WebSocket 升级；前端走 KWorks 原生 web 分支（`isDesktop()` 为 false），API 层零改动。数据目录用仓库内 `.qilin/`，与 KWorks 的 `~/.kworks/` 隔离。
 
@@ -14,7 +14,7 @@
 - CSRF：双提交，cookie 名 `csrf_token`，请求头 `X-CSRF-Token`；login/initialize 豁免
 - 线程：`POST /api/threads`（JSON `{metadata:{...}}`）；流式：`POST /api/threads/{id}/runs/stream`（JSON `{input:{messages:[...]}}`，其余字段可省略，`extra="forbid"` 勿加未知字段）
 - 前端调用 langgraph SDK 路径为 `/api/langgraph/*`，需代理重写为 `/api/*`（KWorks next.config rewrites 同款映射）
-- KWorks 占用端口：19987（gateway）/ 18569（dev）；QiLin 旧脚本遗留端口：8081/3000 —— 全部避开
+- KWorks 占用端口：19987（gateway）/ 18569（dev）；OpenKylin 旧脚本遗留端口：8081/3000 —— 全部避开
 
 ---
 
@@ -46,7 +46,7 @@ test -f /Users/libing/kk_Projects/KWorks/frontend/package.json && echo OK
 - [ ] **Step 4: gateway 依赖可用性**
 
 ```bash
-cd /Users/libing/kk_Projects/QiLin && test -f config.yaml || cp config.example.yaml config.yaml; uv run python -c "import app.gateway.app" && echo "gateway importable"
+cd /Users/libing/kk_Projects/OpenKylin && test -f config.yaml || cp config.example.yaml config.yaml; uv run python -c "import app.gateway.app" && echo "gateway importable"
 ```
 期望：输出 `gateway importable`（若 uv 缺失，先 `brew install uv`）。
 
@@ -57,12 +57,12 @@ cd /Users/libing/kk_Projects/QiLin && test -f config.yaml || cp config.example.y
 **Files:**
 - Create: `web-demo/`（整个目录，来自 rsync）
 - Modify: `web-demo/package.json`（name）
-- Modify: `/Users/libing/kk_Projects/QiLin/.gitignore`（追加 web-demo 产物）
+- Modify: `/Users/libing/kk_Projects/OpenKylin/.gitignore`（追加 web-demo 产物）
 
 - [ ] **Step 1: rsync 拷贝（排除构建产物与本地环境）**
 
 ```bash
-cd /Users/libing/kk_Projects/QiLin
+cd /Users/libing/kk_Projects/OpenKylin
 rsync -a \
   --exclude='node_modules' --exclude='.next' --exclude='out' \
   --exclude='test-results' --exclude='playwright-report' \
@@ -82,7 +82,7 @@ ls web-demo/package.json web-demo/src web-demo/next.config.js
 
 - [ ] **Step 3: 主仓 .gitignore 追加**
 
-在 `/Users/libing/kk_Projects/QiLin/.gitignore` 末尾追加：
+在 `/Users/libing/kk_Projects/OpenKylin/.gitignore` 末尾追加：
 ```
 # web-demo (KWorks-aligned)
 web-demo/node_modules/
@@ -97,7 +97,7 @@ web-demo/tsconfig.tsbuildinfo
 - [ ] **Step 4: 验证 git 只看到源码**
 
 ```bash
-cd /Users/libing/kk_Projects/QiLin && git add .gitignore web-demo && git status --short | grep -c node_modules
+cd /Users/libing/kk_Projects/OpenKylin && git add .gitignore web-demo && git status --short | grep -c node_modules
 ```
 期望：输出 `0`（node_modules 尚未安装且已被忽略）。
 
@@ -117,28 +117,28 @@ git commit -m "chore(web-demo): port KWorks frontend sources (full alignment bas
 - [ ] **Step 1: 安装依赖**
 
 ```bash
-cd /Users/libing/kk_Projects/QiLin/web-demo && pnpm install 2>&1 | tail -15
+cd /Users/libing/kk_Projects/OpenKylin/web-demo && pnpm install 2>&1 | tail -15
 ```
 期望：无 ERR（依赖体积大，预计 3-8 分钟；three.js/pptx viewer 等按设计保留不裁剪）。
 
 - [ ] **Step 2: typecheck 基线**
 
 ```bash
-cd /Users/libing/kk_Projects/QiLin/web-demo && pnpm typecheck 2>&1 | tail -10
+cd /Users/libing/kk_Projects/OpenKylin/web-demo && pnpm typecheck 2>&1 | tail -10
 ```
 期望：0 error（KWorks 上游代码是干净的；若报错先排查是否 rsync 遗漏文件）。
 
 - [ ] **Step 3: vitest 基线**
 
 ```bash
-cd /Users/libing/kk_Projects/QiLin/web-demo && pnpm test 2>&1 | tail -20
+cd /Users/libing/kk_Projects/OpenKylin/web-demo && pnpm test 2>&1 | tail -20
 ```
 记录通过/失败数作为基线（与 KWorks frontend 当前结果一致即可；新增失败必须在后续任务修复）。
 
 - [ ] **Step 4: 提交**
 
 ```bash
-cd /Users/libing/kk_Projects/QiLin && git add web-demo/pnpm-lock.yaml && git commit -m "chore(web-demo): pnpm install + baseline typecheck/test"
+cd /Users/libing/kk_Projects/OpenKylin && git add web-demo/pnpm-lock.yaml && git commit -m "chore(web-demo): pnpm install + baseline typecheck/test"
 ```
 
 ---
@@ -152,7 +152,7 @@ cd /Users/libing/kk_Projects/QiLin && git add web-demo/pnpm-lock.yaml && git com
 - [ ] **Step 1: 安装 http-proxy-middleware**
 
 ```bash
-cd /Users/libing/kk_Projects/QiLin/web-demo && pnpm add http-proxy-middleware
+cd /Users/libing/kk_Projects/OpenKylin/web-demo && pnpm add http-proxy-middleware
 ```
 期望：安装成功（v3.x）。
 
@@ -160,9 +160,9 @@ cd /Users/libing/kk_Projects/QiLin/web-demo && pnpm add http-proxy-middleware
 
 ```javascript
 /**
- * QiLin Web Demo — same-origin custom server.
+ * OpenKylin Web Demo — same-origin custom server.
  *
- * Proxies /api/* and /health to the QiLin gateway with NO response
+ * Proxies /api/* and /health to the OpenKylin gateway with NO response
  * buffering (SSE streams token-by-token) and WebSocket upgrade support.
  * next.config.js rewrites remain as fallback for plain `next dev`, but
  * this server intercepts first when running via `pnpm dev`.
@@ -263,14 +263,14 @@ server.listen(port, hostname, () => {
 - [ ] **Step 4: 静态语法验证（不启动服务）**
 
 ```bash
-cd /Users/libing/kk_Projects/QiLin/web-demo && node --check server.js && echo "syntax OK"
+cd /Users/libing/kk_Projects/OpenKylin/web-demo && node --check server.js && echo "syntax OK"
 ```
 期望：`syntax OK`。
 
 - [ ] **Step 5: 提交**
 
 ```bash
-cd /Users/libing/kk_Projects/QiLin && git add web-demo/server.js web-demo/package.json web-demo/pnpm-lock.yaml && git commit -m "feat(web-demo): same-origin proxy server (SSE unbuffered + WS upgrade)"
+cd /Users/libing/kk_Projects/OpenKylin && git add web-demo/server.js web-demo/package.json web-demo/pnpm-lock.yaml && git commit -m "feat(web-demo): same-origin proxy server (SSE unbuffered + WS upgrade)"
 ```
 
 ---
@@ -297,7 +297,7 @@ cd /Users/libing/kk_Projects/QiLin && git add web-demo/server.js web-demo/packag
 编辑 `web-demo/next.config.js`：
 ```javascript
           const gatewayURL = getInternalServiceURL(
-            "QILIN_GATEWAY_URL",
+            "OPENKYLIN_GATEWAY_URL",
             "http://127.0.0.1:28081",
           );
 ```
@@ -306,9 +306,9 @@ cd /Users/libing/kk_Projects/QiLin && git add web-demo/server.js web-demo/packag
 - [ ] **Step 3: 创建 `web-demo/.env.example`**
 
 ```bash
-# QiLin gateway 地址（server.js 同源代理目标；也是 next.config rewrites 的 fallback）
+# OpenKylin gateway 地址（server.js 同源代理目标；也是 next.config rewrites 的 fallback）
 GATEWAY_TARGET_URL=http://127.0.0.1:28081
-QILIN_GATEWAY_URL=http://127.0.0.1:28081
+OPENKYLIN_GATEWAY_URL=http://127.0.0.1:28081
 # web-demo 服务端口 / 主机
 WEB_DEMO_PORT=28080
 WEB_DEMO_HOST=127.0.0.1
@@ -317,14 +317,14 @@ WEB_DEMO_HOST=127.0.0.1
 - [ ] **Step 4: typecheck 回归**
 
 ```bash
-cd /Users/libing/kk_Projects/QiLin/web-demo && pnpm typecheck 2>&1 | tail -5
+cd /Users/libing/kk_Projects/OpenKylin/web-demo && pnpm typecheck 2>&1 | tail -5
 ```
 期望：0 error。
 
 - [ ] **Step 5: 提交**
 
 ```bash
-cd /Users/libing/kk_Projects/QiLin && git add web-demo/next.config.js web-demo/.env.example && git commit -m "feat(web-demo): defaultLocale zh + QILIN_GATEWAY_URL env (default 28081)"
+cd /Users/libing/kk_Projects/OpenKylin && git add web-demo/next.config.js web-demo/.env.example && git commit -m "feat(web-demo): defaultLocale zh + OPENKYLIN_GATEWAY_URL env (default 28081)"
 ```
 
 ---
@@ -350,7 +350,7 @@ export GATEWAY_CORS_ORIGINS="${GATEWAY_CORS_ORIGINS:-http://localhost:28080,http
 
 ```bash
 #!/usr/bin/env bash
-# 一键启动: QiLin gateway (28081) + web-demo (28080)
+# 一键启动: OpenKylin gateway (28081) + web-demo (28080)
 # 硬约束: 不影响本机已安装的 KWorks 应用 (19987/18569/~/.kworks) —— 只检测、不杀进程
 set -euo pipefail
 
@@ -401,7 +401,7 @@ exec node server.js
 - [ ] **Step 3: 启动 gateway 并直连验证**
 
 ```bash
-cd /Users/libing/kk_Projects/QiLin && ./scripts/start-gateway.sh --daemon
+cd /Users/libing/kk_Projects/OpenKylin && ./scripts/start-gateway.sh --daemon
 sleep 3 && curl -s http://127.0.0.1:28081/health
 ```
 期望：`{"status":"healthy","service":"qilin-gateway"}`。失败则 `tail -30 /tmp/qilin-gateway.log` 排查。
@@ -411,7 +411,7 @@ sleep 3 && curl -s http://127.0.0.1:28081/health
 
 后台起前端（用本会话的 run_in_background 机制）：
 ```bash
-cd /Users/libing/kk_Projects/QiLin/web-demo && pnpm dev
+cd /Users/libing/kk_Projects/OpenKylin/web-demo && pnpm dev
 ```
 等待输出 `[web-demo] http://127.0.0.1:28080 -> gateway http://127.0.0.1:28081`，然后：
 ```bash
@@ -434,7 +434,7 @@ const withNextra = isDesktopBuild || disableDocs ? (config) => config : nextra({
 - [ ] **Step 6: 提交**
 
 ```bash
-cd /Users/libing/kk_Projects/QiLin && git add scripts/start-gateway.sh scripts/start-all.sh web-demo/next.config.js && git commit -m "feat(web-demo): M1 — gateway/web-demo scripts + same-origin proxy smoke pass"
+cd /Users/libing/kk_Projects/OpenKylin && git add scripts/start-gateway.sh scripts/start-all.sh web-demo/next.config.js && git commit -m "feat(web-demo): M1 — gateway/web-demo scripts + same-origin proxy smoke pass"
 ```
 
 ---
@@ -449,7 +449,7 @@ cd /Users/libing/kk_Projects/QiLin && git add scripts/start-gateway.sh scripts/s
 ```javascript
 #!/usr/bin/env node
 /**
- * QiLin Web Demo 代理冒烟测试
+ * OpenKylin Web Demo 代理冒烟测试
  * 验证: /health 同源可达、认证闭环、SSE 首字节 < 500ms
  * 用法: pnpm smoke   (等价于 BASE=http://127.0.0.1:28080 node scripts/smoke-proxy.mjs)
  * env:  SMOKE_EMAIL / SMOKE_PASSWORD 覆盖默认测试账号
@@ -458,7 +458,7 @@ import process from "node:process";
 
 const BASE = process.env.BASE || "http://127.0.0.1:28080";
 const EMAIL = process.env.SMOKE_EMAIL || "admin@qilin.local";
-const PASSWORD = process.env.SMOKE_PASSWORD || "QiLin#Demo2026";
+const PASSWORD = process.env.SMOKE_PASSWORD || "OpenKylin#Demo2026";
 
 function cookiesFrom(res) {
   const out = {};
@@ -563,7 +563,7 @@ main().catch((err) => {
 - [ ] **Step 2: 运行冒烟（前置：Task 5 的 gateway 与 web-demo 均在跑）**
 
 ```bash
-cd /Users/libing/kk_Projects/QiLin/web-demo && pnpm smoke
+cd /Users/libing/kk_Projects/OpenKylin/web-demo && pnpm smoke
 ```
 期望：末行 `✅ PASS`。常见失败：
 - `initialize` 400 密码不够强 → 换更复杂的 `SMOKE_PASSWORD`
@@ -573,10 +573,10 @@ cd /Users/libing/kk_Projects/QiLin/web-demo && pnpm smoke
 - [ ] **Step 3: 浏览器手工验证聊天闭环**
 
 用浏览器打开 `http://localhost:28080`：
-1. 首次进入应跳到初始化页 → 用 `admin@qilin.local / QiLin#Demo2026` 完成设置
+1. 首次进入应跳到初始化页 → 用 `admin@qilin.local / OpenKylin#Demo2026` 完成设置
 2. 新建会话发送消息 → 回复**逐字流式**出现（不是一次性整段）
 3. 思考/工具调用卡片按执行顺序交错展示
-发现的接口漂移问题：在 `web-demo` 内做适配（不改 QiLin 后端），每个修复单独说明。
+发现的接口漂移问题：在 `web-demo` 内做适配（不改 OpenKylin 后端），每个修复单独说明。
 
 - [ ] **Step 4: 交付物预览验证**
 
@@ -585,7 +585,7 @@ cd /Users/libing/kk_Projects/QiLin/web-demo && pnpm smoke
 - [ ] **Step 5: 提交**
 
 ```bash
-cd /Users/libing/kk_Projects/QiLin && git add web-demo/scripts/smoke-proxy.mjs web-demo && git commit -m "feat(web-demo): M2 — auth + SSE streaming closed loop (smoke PASS)"
+cd /Users/libing/kk_Projects/OpenKylin && git add web-demo/scripts/smoke-proxy.mjs web-demo && git commit -m "feat(web-demo): M2 — auth + SSE streaming closed loop (smoke PASS)"
 ```
 
 ---
@@ -618,19 +618,19 @@ cd /Users/libing/kk_Projects/QiLin && git add web-demo/scripts/smoke-proxy.mjs w
 - [ ] **Step 3: vitest 回归**
 
 ```bash
-cd /Users/libing/kk_Projects/QiLin/web-demo && pnpm test 2>&1 | tail -10 && pnpm typecheck 2>&1 | tail -5
+cd /Users/libing/kk_Projects/OpenKylin/web-demo && pnpm test 2>&1 | tail -10 && pnpm typecheck 2>&1 | tail -5
 ```
 期望：不劣于 Task 2 基线。
 
 - [ ] **Step 4: 提交**
 
 ```bash
-cd /Users/libing/kk_Projects/QiLin && git add web-demo && git commit -m "feat(web-demo): M3 — full page verification & fixes"
+cd /Users/libing/kk_Projects/OpenKylin && git add web-demo && git commit -m "feat(web-demo): M3 — full page verification & fixes"
 ```
 
 ---
 
-## Task 8: 品牌化 KWorks → QiLin（对应里程碑 M4 前半）
+## Task 8: 品牌化 KWorks → OpenKylin（对应里程碑 M4 前半）
 
 **Files:**
 - Modify: `web-demo/src/**`、`web-demo/content/**`（文案）
@@ -641,8 +641,8 @@ cd /Users/libing/kk_Projects/QiLin && git add web-demo && git commit -m "feat(we
 - [ ] **Step 1: 展示文案批量替换**
 
 ```bash
-cd /Users/libing/kk_Projects/QiLin/web-demo
-grep -rl "KWorks" src content --include="*.ts" --include="*.tsx" --include="*.mdx" --include="*.json" | xargs sed -i '' 's/KWorks/QiLin/g'
+cd /Users/libing/kk_Projects/OpenKylin/web-demo
+grep -rl "KWorks" src content --include="*.ts" --include="*.tsx" --include="*.mdx" --include="*.json" | xargs sed -i '' 's/KWorks/OpenKylin/g'
 grep -rn "KWorks" src content --include="*.ts" --include="*.tsx" --include="*.mdx" | wc -l
 ```
 期望：末行 `0`。注意：`kworksDesktop`（小写标识符）**不被匹配**，保持原样（web 模式下是死代码，保留以便上游同步）。
@@ -651,7 +651,7 @@ grep -rn "KWorks" src content --include="*.ts" --include="*.tsx" --include="*.md
 
 编辑 `web-demo/package.json` 的 `description`（若无则加在 name 下方）：
 ```json
-  "description": "QiLin Web Demo — KWorks-aligned web workspace for the QiLin agent engine",
+  "description": "OpenKylin Web Demo — KWorks-aligned web workspace for the OpenKylin agent engine",
 ```
 
 - [ ] **Step 3: 替换 favicon**
@@ -670,7 +670,7 @@ grep -rn "KWorks" src content --include="*.ts" --include="*.tsx" --include="*.md
 </svg>
 ```
 
-- [ ] **Step 4: 主题主色改 QiLin 绿**
+- [ ] **Step 4: 主题主色改 OpenKylin 绿**
 
 先定位：
 ```bash
@@ -683,7 +683,7 @@ grep -n -- "--primary:" web-demo/src/styles/globals.css
 - [ ] **Step 5: 落地页文案重写**
 
 逐文件编辑 `web-demo/src/components/landing/`：
-- `hero.tsx`：主标题 `麒麟 QiLin`，副标题 `生产级多智能体引擎 · 本地优先的 AI 工作台`，主 CTA `开始使用`，次 CTA `查看文档`
+- `hero.tsx`：主标题 `麒麟 OpenKylin`，副标题 `生产级多智能体引擎 · 本地优先的 AI 工作台`，主 CTA `开始使用`，次 CTA `查看文档`
 - `sections/sandbox-section.tsx`：主题改为 `多后端沙箱隔离`（Local / BoxLite / E2B / Tenki）
 - `sections/skills-section.tsx`：主题改为 `技能生态与市场`（静态+动态扫描、安全审查）
 - `sections/community-section.tsx`：主题改为 `8 大渠道接入`（飞书/钉钉/企微/微信/Slack/Discord/Telegram/GitHub）
@@ -693,7 +693,7 @@ grep -n -- "--primary:" web-demo/src/styles/globals.css
 - [ ] **Step 6: 回归验证**
 
 ```bash
-cd /Users/libing/kk_Projects/QiLin/web-demo && pnpm typecheck 2>&1 | tail -5
+cd /Users/libing/kk_Projects/OpenKylin/web-demo && pnpm typecheck 2>&1 | tail -5
 ```
 浏览器刷新落地页 + 工作台，截图确认品牌一致、无 "KWorks" 残留：
 ```bash
@@ -704,7 +704,7 @@ grep -rn "KWorks" web-demo/src web-demo/content web-demo/public | wc -l
 - [ ] **Step 7: 提交**
 
 ```bash
-cd /Users/libing/kk_Projects/QiLin && git add web-demo && git commit -m "feat(web-demo): M4 — rebrand KWorks -> QiLin (copy/logo/primary color)"
+cd /Users/libing/kk_Projects/OpenKylin && git add web-demo && git commit -m "feat(web-demo): M4 — rebrand KWorks -> OpenKylin (copy/logo/primary color)"
 ```
 
 ---
@@ -718,7 +718,7 @@ cd /Users/libing/kk_Projects/QiLin && git add web-demo && git commit -m "feat(we
 - [ ] **Step 1: 写 `web-demo/README.md`**
 
 ```markdown
-# QiLin Web Demo
+# OpenKylin Web Demo
 
 与 KWorks web 端全面对齐的麒麟引擎 Web 工作台（直接移植 + 纯 web 模式）。
 
@@ -739,14 +739,14 @@ cd .. && ./scripts/start-all.sh
 | 进程 | 默认端口 | env 覆盖 |
 |---|---|---|
 | web-demo | 28080 | WEB_DEMO_PORT |
-| QiLin gateway | 28081 | GATEWAY_PORT / GATEWAY_TARGET_URL |
+| OpenKylin gateway | 28081 | GATEWAY_PORT / GATEWAY_TARGET_URL |
 
-数据目录：仓库内 `.qilin/`（QILIN_HOME 默认），与 KWorks 应用 `~/.kworks/` 完全隔离。
+数据目录：仓库内 `.qilin/`（OPENKYLIN_HOME 默认），与 KWorks 应用 `~/.kworks/` 完全隔离。
 
 ## 架构
 
 浏览器 → `server.js`（Next 自定义服务，同源代理 /api/*、/health，SSE 不缓冲，
-支持 WebSocket）→ QiLin gateway。前端为 KWorks frontend 纯 web 模式
+支持 WebSocket）→ OpenKylin gateway。前端为 KWorks frontend 纯 web 模式
 （`isDesktop()` 为 false 时的原生分支），API 层零改动。
 
 ## 常用命令
@@ -783,7 +783,7 @@ cd .. && ./scripts/start-all.sh
 - [ ] **Step 4: 提交**
 
 ```bash
-cd /Users/libing/kk_Projects/QiLin && git add web-demo/README.md docs/web-demo-acceptance-checklist.md && git commit -m "docs(web-demo): M4 — README + acceptance checklist"
+cd /Users/libing/kk_Projects/OpenKylin && git add web-demo/README.md docs/web-demo-acceptance-checklist.md && git commit -m "docs(web-demo): M4 — README + acceptance checklist"
 ```
 
 ---

@@ -3,7 +3,7 @@ $ npm run build:lib:host && npm run build:lib:client
 npm warn Unknown env config "manage-package-manager-versions". This will stop working in the next major version of npm. See `npm help npmrc` for supported config options.
 
 > @qilin/engine-root@0.1.1-rc.2 build:lib:host
-> tsc -b tsconfig.host.json && tsdown --env.QILIN_BUILD_FACE host
+> tsc -b tsconfig.host.json && tsdown --env.OPENKYLIN_BUILD_FACE host
 
 ℹ tsdown v0.22.2 powered by rolldown v1.1.1
 ℹ config file: /Users/libing/kk_Projects/qilin-engine/tsdown.config.ts
@@ -2093,7 +2093,7 @@ See https://rolldown.rs/options/checks#plugintimings for more details.
 npm warn Unknown env config "manage-package-manager-versions". This will stop working in the next major version of npm. See `npm help npmrc` for supported config options.
 
 > @qilin/engine-root@0.1.1-rc.2 build:lib:client
-> tsc -b tsconfig.client.json && tsdown --env.QILIN_BUILD_FACE client
+> tsc -b tsconfig.client.json && tsdown --env.OPENKYLIN_BUILD_FACE client
 
 ℹ tsdown v0.22.2 powered by rolldown v1.1.1
 ℹ config file: /Users/libing/kk_Projects/qilin-engine/tsdown.config.ts

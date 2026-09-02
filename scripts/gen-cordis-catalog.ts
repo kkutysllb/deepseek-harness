@@ -360,7 +360,7 @@ export const LINK_MAP: Readonly<Record<string, string>> = {
   ShellExecSpec: 'shell.md',
   ShellProcess: 'shell.md',
   ShellRunResult: 'shell.md',
-  QilinEnvironment: 'subprocess.md',
+  OpenKylinEnvironment: 'subprocess.md',
   SubprocessHandle: 'subprocess.md',
   SubprocessOutcome: 'subprocess.md',
   SubprocessOutputRead: 'subprocess.md',
