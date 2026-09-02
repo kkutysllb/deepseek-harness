@@ -27,6 +27,7 @@
  */
 
 import { createModels, getSupportedThinkingLevels } from '@earendil-works/pi-ai'
+import { openAIResponsesApi } from '@earendil-works/pi-ai/api/openai-responses.lazy'
 import type {
   Api,
   AuthContext,
@@ -212,6 +213,56 @@ function requestHeaders(headers: Readonly<Record<string, string>> | undefined): 
 }
 
 /**
+ * Error-finish signatures of an endpoint that does not speak the Codex wire
+ * protocol. Gateways without a Codex channel (translation relays, new-api-style
+ * gateways) answer the codex path with their HTML front page — zero SSE events,
+ * so the shared Responses parser reports its terminal-event error or the raw
+ * HTML surfaces as the error text — or with a plain 404/405.
+ * @param failure - the error finish's failure detail.
+ * @returns whether the failure reads as "no Codex channel here".
+ */
+function isCodexProtocolMismatch(failure: { message: string; code: string }): boolean {
+  return /stream ended before a terminal response event/i.test(failure.message)
+    || /<!doctype html|<html[\s>]/i.test(failure.message)
+    || /\b404\b|\b405\b/.test(failure.message)
+}
+
+/**
+ * Whether one fallback attempt's error justifies the next candidate. Clear
+ * provider verdicts (auth, quota, rate limit, invalid request, server, timeout)
+ * would repeat on every path of the same host, so only mismatch signatures and
+ * unclassified or transport noise advance the chain.
+ * @param failure - the error finish's failure detail.
+ * @returns whether the next candidate should be tried.
+ */
+function fallbackAdvanceable(failure: { message: string; code: string }): boolean {
+  return isCodexProtocolMismatch(failure)
+    || failure.code === 'TRANSPORT'
+    || failure.code === 'PI_AI_ERROR'
+}
+
+/**
+ * The candidate models for one stream attempt, configured protocol first. A
+ * route speaking the Codex wire protocol may in practice point at a gateway
+ * that only serves the standard OpenAI Responses protocol; for those the
+ * follow-up attempts re-issue the request over `openai-responses`, first
+ * against the configured endpoint and then with the conventional `/v1` prefix
+ * the standard channel lives under. A route with no configured base URL is the
+ * official Codex endpoint, which speaks the native protocol, and non-Codex
+ * routes get their single attempt.
+ * @param model - the resolved model descriptor.
+ * @returns the attempt candidates.
+ */
+function codexProtocolFallbacks(model: Model<Api>): readonly Model<Api>[] {
+  if (model.api !== 'openai-codex-responses') return [model]
+  const base = model.baseUrl.trim().replace(/\/+$/, '')
+  if (base.length === 0) return [model]
+  const repointed: Model<Api> = { ...model, api: 'openai-responses' }
+  if (/\/v\d+$/.test(base)) return [model, repointed]
+  return [model, repointed, { ...repointed, baseUrl: `${base}/v1` }]
+}
+
+/**
  * pi-ai-backed multi-provider adapter. Each operation reads the current
  * profiles, so a configuration change reaches the next request without a
  * restart; model descriptors come from the collection those profiles built.
@@ -372,7 +423,7 @@ export class PiAiAdapter extends LlmAdapter {
             maxBytes: profile.requestImageMaxBytes,
           },
         }, onReplayDegrade)
-      const events = snapshot.models.streamSimple(model, context, {
+      const streamOptions = {
         ...profileOptions(profile, reasoning, apiKey),
         ...options.temperature === undefined ? {} : { temperature: options.temperature },
         ...options.maxTokens === undefined ? {} : { maxTokens: options.maxTokens },
@@ -381,27 +432,71 @@ export class PiAiAdapter extends LlmAdapter {
         // Profile headers are deployment-owned; attribution names are
         // Harness-owned and therefore win collisions.
         headers: requestHeaders(profile.headers),
-      })
-      const iterator = toStreamChunks(events, model.contextWindow, options.signal)[Symbol.asyncIterator]()
-      let exhausted = false
-      try {
-        while (true) {
-          const result = await watchdog.next(iterator)
-          const timeout = timeoutOf(watchdog.signal, 'LLM_STREAM_IDLE_TIMEOUT')
-          if (timeout !== undefined) throw timeout
-          if (result.done) {
-            exhausted = true
-            return
+      }
+      // One attempt per candidate model: the configured protocol first, then —
+      // for a Codex-protocol route whose endpoint betrays no Codex channel —
+      // the standard OpenAI Responses protocol (see codexProtocolFallbacks).
+      const attempts = codexProtocolFallbacks(model)
+      // The usage chunk is held back one step: a protocol-mismatch finish must
+      // be swallowable without the consumer having seen a zero usage for an
+      // attempt it will never know happened.
+      let pendingUsage: StreamChunk | undefined
+      let sawContent = false
+      for (let attemptIndex = 0; attemptIndex < attempts.length; attemptIndex++) {
+        const attemptModel = attempts[attemptIndex]
+        if (attemptModel === undefined) return
+        const lastAttempt = attemptIndex === attempts.length - 1
+        const events = attemptIndex === 0
+          ? snapshot.models.streamSimple(model, context, streamOptions)
+          : openAIResponsesApi().streamSimple(attemptModel, context, streamOptions)
+        const iterator = toStreamChunks(events, model.contextWindow, options.signal)[Symbol.asyncIterator]()
+        let settled = false
+        try {
+          while (true) {
+            const result = await watchdog.next(iterator)
+            const timeout = timeoutOf(watchdog.signal, 'LLM_STREAM_IDLE_TIMEOUT')
+            if (timeout !== undefined) throw timeout
+            if (result.done) {
+              settled = true
+              return
+            }
+            const chunk = result.value
+            if (chunk.type === 'usage') {
+              pendingUsage = chunk
+              continue
+            }
+            const mismatch = chunk.type === 'finish'
+              && chunk.reason.kind === 'error'
+              && !sawContent
+              && (attemptIndex === 0
+                ? isCodexProtocolMismatch(chunk.reason.failure)
+                : fallbackAdvanceable(chunk.reason.failure))
+            if (!lastAttempt && mismatch) {
+              // Discard the held usage and re-issue over the next candidate.
+              pendingUsage = undefined
+              sawContent = false
+              settled = true
+              break
+            }
+            if (pendingUsage !== undefined) {
+              yield pendingUsage
+              pendingUsage = undefined
+            }
+            if (chunk.type !== 'finish') sawContent = true
+            yield chunk
+            if (chunk.type === 'finish') {
+              settled = true
+              return
+            }
           }
-          yield result.value
-        }
-      } finally {
-        if (!exhausted) {
-          consumer.abort('pi-ai stream consumer stopped')
-          try {
-            await iterator.return(undefined)
-          } catch (_abortedSdkTeardown) {
-            // The stable signal already owns SDK termination; return-time abort cannot add an outcome.
+        } finally {
+          if (!settled) {
+            consumer.abort('pi-ai stream consumer stopped')
+            try {
+              await iterator.return(undefined)
+            } catch (_abortedSdkTeardown) {
+              // The stable signal already owns SDK termination; return-time abort cannot add an outcome.
+            }
           }
         }
       }
