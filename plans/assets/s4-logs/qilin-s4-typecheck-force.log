@@ -1,0 +1,10 @@
+
+real	0m18.049s
+user	0m27.266s
+sys	0m0.874s
+HOST_EXIT=0
+
+real	0m15.059s
+user	0m23.212s
+sys	0m0.599s
+CLIENT_EXIT=0

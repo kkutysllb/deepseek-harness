@@ -1,5 +1,5 @@
 {
-  "name": "@deepseek-ai/dsh-launch-environment",
+  "name": "@qilin/launch-environment",
   "description": "Immutable DeepSeek Harness launch environment that records which layer supplied each value",
   "version": "0.1.2-alpha.4",
   "publishConfig": {

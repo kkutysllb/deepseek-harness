@@ -10,7 +10,7 @@ import LocalAttachmentStore from '../src/index.ts'
 const homes: string[] = []
 
 async function store(): Promise<LocalAttachmentStore> {
-  const dshHome = await mkdtemp(join(tmpdir(), 'dsh-request-image-'))
+  const dshHome = await mkdtemp(join(tmpdir(), 'qilin-request-image-'))
   homes.push(dshHome)
   return new LocalAttachmentStore(new Context(), { dshHome })
 }

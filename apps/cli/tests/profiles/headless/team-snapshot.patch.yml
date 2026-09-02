@@ -24,11 +24,7 @@
 - id: tool-subagent-control
   disabled: true
 
-- id: tool-subagent-list-agents
-  disabled: true
 
-- id: tool-subagent-report
-  disabled: true
 
 - id: tool-subagent
   config:
@@ -47,7 +43,7 @@
 
 - insert:
     - id: agent-team
-      name: '@deepseek-ai/dsh-experimental-agent-team'
+      name: '@qilin/experimental-agent-team'
       config:
         maxMembers: 8
         maxTasks: 256
@@ -56,7 +52,7 @@
         disposalTimeoutMs: 5000
 
     - id: tool-agent-team
-      name: '@deepseek-ai/dsh-experimental-tool-agent-team'
+      name: '@qilin/experimental-tool-agent-team'
       config:
         freshProvider: spawn
         forkProvider: fork

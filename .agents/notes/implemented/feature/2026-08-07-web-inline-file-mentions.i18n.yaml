@@ -2,5 +2,5 @@
 # side as of the last confirmed-consistent state. Both languages carry equal authority;
 # after editing either side, bring the other along and re-record with:
 #   pnpm run verify-translation-pairing --write .agents/notes/implemented/feature/2026-08-07-web-inline-file-mentions.md
-2026-08-07-web-inline-file-mentions.md: 0c7341e9aec688a0661fedb18731a1c172215f45
-2026-08-07-web-inline-file-mentions.zh.md: 3483672b42ccfda819d4c42453fc6609910ca1d3
+2026-08-07-web-inline-file-mentions.md: 957919ff292f7780f09b603b517e0a43bfad35b3
+2026-08-07-web-inline-file-mentions.zh.md: 4b26794e18abbcc06dab76a168b6eae3f0d740a0

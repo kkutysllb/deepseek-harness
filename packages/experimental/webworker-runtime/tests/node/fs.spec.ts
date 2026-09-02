@@ -8,11 +8,11 @@
  * imports can create two slots, leaving the bridge with no mounted filesystem.
  */
 import { expect, test } from 'vitest'
-import { MemoryVfs } from '@deepseek-ai/dsh-experimental-webworker-runtime/src/storage/memory.ts'
-import { setActiveVfs } from '@deepseek-ai/dsh-experimental-webworker-runtime/src/storage/active.ts'
-import * as fs from '@deepseek-ai/dsh-experimental-webworker-runtime/src/node/builtin_modules/implemented/fs.ts'
-import * as fsp from '@deepseek-ai/dsh-experimental-webworker-runtime/src/node/builtin_modules/implemented/fs/promises.ts'
-import type { VfsBigIntStats, VfsMutationSink, VfsStats } from '@deepseek-ai/dsh-experimental-webworker-runtime/src/storage/types.ts'
+import { MemoryVfs } from '@qilin/experimental-webworker-runtime/src/storage/memory.ts'
+import { setActiveVfs } from '@qilin/experimental-webworker-runtime/src/storage/active.ts'
+import * as fs from '@qilin/experimental-webworker-runtime/src/node/builtin_modules/implemented/fs.ts'
+import * as fsp from '@qilin/experimental-webworker-runtime/src/node/builtin_modules/implemented/fs/promises.ts'
+import type { VfsBigIntStats, VfsMutationSink, VfsStats } from '@qilin/experimental-webworker-runtime/src/storage/types.ts'
 
 let flushes = 0
 const sink: VfsMutationSink = {
@@ -144,7 +144,7 @@ check('promises.rm recursive', fs.existsSync('/dsh/config-copy'), false)
 // ---------------------------------------------------------------------------
 // The `{ bigint: true }` stats the filesystem service reads.
 //
-// `dsh-fs-local` stats EVERY target this way before it lists or reads: it masks
+// `qilin-fs-local` stats EVERY target this way before it lists or reads: it masks
 // `mode` with a BigInt literal and builds its version token from
 // `dev:ino:size:mtimeNs:ctimeNs`. A number-valued `mode` here made that mask
 // throw `Cannot mix BigInt and other types`, which the service reported as
@@ -193,7 +193,7 @@ check('a directory reports the creation-default mode in the bigint shape', Numbe
 
 // ---------------------------------------------------------------------------
 // Permission bits round-trip: creation takes the caller's mode, chmod changes
-// it, stat reads back the stored value. dsh-credentials-local's owner-only
+// it, stat reads back the stored value. qilin-credentials-local's owner-only
 // check reads exactly this (writeFileAtomic writes `wx` + mode 600, renames
 // into place, then the provider stats the result).
 // ---------------------------------------------------------------------------

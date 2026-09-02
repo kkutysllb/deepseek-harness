@@ -1,18 +1,18 @@
 import { describe, expect, it, vi } from 'vitest'
 import { Context } from '@deepseek-ai/cordis'
-import { createUserMessage, ToolCallId } from '@deepseek-ai/dsh-llm'
-import SystemPrompt from '@deepseek-ai/dsh-system-prompt'
-import ToolRuntime, { RUN_CODE_NAME, defineContentToolFixture } from '@deepseek-ai/dsh-tools'
-import { Session, SessionId, type SessionEvent, type UserMessage } from '@deepseek-ai/dsh-session'
-import AgentRegistry, { agentEvents, type Agent } from '@deepseek-ai/dsh-agent'
-import { createScope } from '@deepseek-ai/dsh-scope'
+import { createUserMessage, ToolCallId } from '@qilin/llm'
+import SystemPrompt from '@qilin/system-prompt'
+import ToolRuntime, { RUN_CODE_NAME, defineContentToolFixture } from '@qilin/tools'
+import { Session, SessionId, type SessionEvent, type UserMessage } from '@qilin/session'
+import AgentRegistry, { agentEvents, type Agent } from '@qilin/agent'
+import { createScope } from '@qilin/scope'
 import UserQuestionService, {
   UserQuestionError, type AskUserQuestionAnswer, type AskUserQuestionRequest,
-} from '@deepseek-ai/dsh-user-questions'
-import CommandRuntime from '@deepseek-ai/dsh-commands'
-import { CodeRuntime, type CodeRunRequest, type CodeRunResult } from '@deepseek-ai/dsh-code-runtime'
-import SessionProjectionRegistry from '@deepseek-ai/dsh-session-projection'
-import { turnBoundaryProjectionDefinition } from '@deepseek-ai/dsh-agent-loop'
+} from '@qilin/user-questions'
+import CommandRuntime from '@qilin/commands'
+import { CodeRuntime, type CodeRunRequest, type CodeRunResult } from '@qilin/code-runtime'
+import SessionProjectionRegistry from '@qilin/session-projection'
+import { turnBoundaryProjectionDefinition } from '@qilin/agent-loop'
 import PlanModeController, { EXIT_PLAN_MODE, planProjectionDefinition, resolveConfig } from '../src/index.ts'
 import type { PlanModeConfig } from '../src/index.ts'
 import type { PlanUnitState } from '../src/types.ts'
@@ -29,7 +29,7 @@ function registerQuestionAnswerer(ctx: Context, answerer: QuestionAnswerer): () 
 }
 
 /**
- * Drives the REAL plugin: mounts `dsh-plan-mode` beside real `SystemPrompt` and
+ * Drives the REAL plugin: mounts `qilin-plan-mode` beside real `SystemPrompt` and
  * `ToolRuntime` services, with fake Agents carrying real `Session`s and a
  * real scoped `agent.ctx` minted through `createScope`.
  * Request boundaries are simulated by dispatching the real pre-step waterfall

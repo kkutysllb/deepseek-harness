@@ -2,20 +2,20 @@
  * JSON-RPC methods and notifications for out-of-process harness SDKs.
  * The surrounding context owns plugins, persistence, and configured adapters.
  *
- * @module @deepseek-ai/dsh-sdk-jsonrpc-server/server
+ * @module @qilin/sdk-jsonrpc-server/server
  */
 
 import type { Context } from '@deepseek-ai/cordis'
 import { resolve } from 'node:path'
-import { brandString } from '@deepseek-ai/dsh-brand'
-import type { Agent, AgentHandle } from '@deepseek-ai/dsh-agent'
-import { admitEncodedImages, type EncodedImageAttachment, type ImageAttachmentRef } from '@deepseek-ai/dsh-attachment'
-import { createUserMessage, ReasoningEffortId, type ContentBlock, type LlmRuntime } from '@deepseek-ai/dsh-llm'
-import { carrierKeyOf, type Scoped } from '@deepseek-ai/dsh-scope'
-import type { SessionId } from '@deepseek-ai/dsh-session'
-import type SubagentRuntime from '@deepseek-ai/dsh-subagent'
-import type { SubagentRunEndInfo } from '@deepseek-ai/dsh-subagent'
-import * as LlmDeepSeek from '@deepseek-ai/dsh-llm-deepseek'
+import { brandString } from '@qilin/brand'
+import type { Agent, AgentHandle } from '@qilin/agent'
+import { admitEncodedImages, type EncodedImageAttachment, type ImageAttachmentRef } from '@qilin/attachment'
+import { createUserMessage, ReasoningEffortId, type ContentBlock, type LlmRuntime } from '@qilin/llm'
+import { carrierKeyOf, type Scoped } from '@qilin/scope'
+import type { SessionId } from '@qilin/session'
+import type SubagentRuntime from '@qilin/subagent'
+import type { SubagentRunEndInfo } from '@qilin/subagent'
+import * as LlmDeepSeek from '@qilin/llm-deepseek'
 import type {
   InitializeParams,
   InitializeResult,
@@ -26,7 +26,7 @@ import type {
   SdkEncodedImageBlock,
   SubagentFinishedNotification,
   SubagentStartedNotification,
-} from '@deepseek-ai/dsh-sdk-protocol'
+} from '@qilin/sdk-protocol'
 
 interface SessionRecord {
   handle: AgentHandle
@@ -165,7 +165,7 @@ export class HarnessSdkJsonRpcServer {
     this.reasoningEffort = reasoningEffort
     this.maxTokens = params.maxTokens
     this.initialized = true
-    return { serverInfo: { name: 'deepseek-harness-sdk-runtime', version: '0.0.1' } }
+    return { serverInfo: { name: 'openkylin-sdk-runtime', version: '0.0.1' } }
   }
 
   /**
@@ -275,7 +275,7 @@ export class HarnessSdkJsonRpcServer {
     // No preset composition: this server's compositions keep the model-facing
     // rows in the host plane, so this agent reads them from the global layer. A
     // deployment that configures a roster has to join one here first
-    // (@deepseek-ai/dsh-agent-presets README, "Composing a child agent").
+    // (@qilin/agent-presets README, "Composing a child agent").
     const handle = await this.ctx.agents.create({
       sessionId: brandString<SessionId>(sessionId),
       meta: { cwd: this.cwd },

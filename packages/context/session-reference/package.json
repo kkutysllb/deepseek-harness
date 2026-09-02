@@ -1,5 +1,5 @@
 {
-  "name": "@deepseek-ai/dsh-session-reference",
+  "name": "@qilin/session-reference",
   "description": "Cross-session snapshot references and durable untrusted model context (ctx.sessionReferenceResolver)",
   "version": "0.1.2-alpha.4",
   "publishConfig": {
@@ -44,40 +44,40 @@
   ],
   "license": "MIT",
   "dependencies": {
-    "@deepseek-ai/dsh-brand": "workspace:^",
-    "@deepseek-ai/dsh-util-values": "workspace:^",
+    "@qilin/brand": "workspace:^",
+    "@qilin/util-values": "workspace:^",
     "@deepseek-ai/schemastery": "workspace:^",
     "zod": "^4.4.3"
   },
   "peerDependencies": {
     "@deepseek-ai/cordis": "workspace:^",
-    "@deepseek-ai/dsh-agent": "workspace:^",
-    "@deepseek-ai/dsh-compaction": "workspace:^",
-    "@deepseek-ai/dsh-llm": "workspace:^",
-    "@deepseek-ai/dsh-output-retention": "workspace:^",
-    "@deepseek-ai/dsh-session": "workspace:^",
-    "@deepseek-ai/dsh-session-projection": "workspace:^",
-    "@deepseek-ai/dsh-session-projection-cache": "workspace:^",
-    "@deepseek-ai/dsh-session-query": "workspace:^",
-    "@deepseek-ai/dsh-session-title": "workspace:^",
-    "@deepseek-ai/dsh-typert-protocol": "workspace:^"
+    "@qilin/agent": "workspace:^",
+    "@qilin/compaction": "workspace:^",
+    "@qilin/llm": "workspace:^",
+    "@qilin/output-retention": "workspace:^",
+    "@qilin/session": "workspace:^",
+    "@qilin/session-projection": "workspace:^",
+    "@qilin/session-projection-cache": "workspace:^",
+    "@qilin/session-query": "workspace:^",
+    "@qilin/session-title": "workspace:^",
+    "@qilin/typert-protocol": "workspace:^"
   },
   "peerDependenciesMeta": {
-    "@deepseek-ai/dsh-session-projection-cache": {
+    "@qilin/session-projection-cache": {
       "optional": true
     }
   },
   "devDependencies": {
     "@deepseek-ai/cordis": "workspace:^",
-    "@deepseek-ai/dsh-agent": "workspace:^",
-    "@deepseek-ai/dsh-compaction": "workspace:^",
-    "@deepseek-ai/dsh-llm": "workspace:^",
-    "@deepseek-ai/dsh-output-retention": "workspace:^",
-    "@deepseek-ai/dsh-session": "workspace:^",
-    "@deepseek-ai/dsh-session-projection": "workspace:^",
-    "@deepseek-ai/dsh-session-projection-cache": "workspace:^",
-    "@deepseek-ai/dsh-session-query": "workspace:^",
-    "@deepseek-ai/dsh-session-title": "workspace:^",
-    "@deepseek-ai/dsh-typert-protocol": "workspace:^"
+    "@qilin/agent": "workspace:^",
+    "@qilin/compaction": "workspace:^",
+    "@qilin/llm": "workspace:^",
+    "@qilin/output-retention": "workspace:^",
+    "@qilin/session": "workspace:^",
+    "@qilin/session-projection": "workspace:^",
+    "@qilin/session-projection-cache": "workspace:^",
+    "@qilin/session-query": "workspace:^",
+    "@qilin/session-title": "workspace:^",
+    "@qilin/typert-protocol": "workspace:^"
   }
 }

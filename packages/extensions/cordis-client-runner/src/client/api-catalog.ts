@@ -9,7 +9,7 @@
  * the same AST walk as docs/cordis-catalog, so this data and the rendered
  * docs cannot diverge.
  *
- * @module @deepseek-ai/dsh-cordis-client-runner/client/api-catalog
+ * @module @qilin/cordis-client-runner/client/api-catalog
  */
 
 /* jscpd:ignore-start */
@@ -426,12 +426,24 @@ export const EVENT_API: readonly EventApiEntry[] = [
 /** Shapes of every exported type the Service and Event signatures reference (transitively), sorted by name. */
 export const TYPE_API: readonly TypeApiEntry[] = [
   {
+    name: 'AccountUpdate',
+    declaration: 'export interface AccountUpdate {\n    readonly systemRole?: \'admin\' | \'user\';\n    readonly disabled?: boolean;\n}',
+  },
+  {
+    name: 'AccountView',
+    declaration: 'export interface AccountView {\n    readonly id: string;\n    readonly email: string;\n    readonly systemRole: \'admin\' | \'user\';\n    readonly needsSetup: boolean;\n    readonly oauthProvider: string | null;\n    readonly oauthId: string | null;\n    readonly sessionVersion: number;\n    readonly createdAt: number;\n    readonly updatedAt: number;\n    readonly disabledAt: number | null;\n}',
+  },
+  {
     name: 'ActionsDecl',
     declaration: 'export type ActionsDecl<T> = Record<string, (draft: T, ...params: any[]) => void>;',
   },
   {
     name: 'AgentContext',
     declaration: 'export type AgentContext = Omit<Context, \'remote\'> & {\n    readonly remote: ClientRemote & TypertRemoteScopeApi<\'agent\'>;\n};',
+  },
+  {
+    name: 'AuthError',
+    declaration: 'export class AuthError extends Error {\n    constructor(readonly status: number, readonly code: string, message: string);\n}',
   },
   {
     name: 'BakedActions',
@@ -499,7 +511,7 @@ export const TYPE_API: readonly TypeApiEntry[] = [
   },
   {
     name: 'ConnectionHandle',
-    declaration: 'export interface ConnectionHandle {\n    readonly isLoopback: boolean;\n    readonly generation: ConnectionGenerationState;\n    readonly state: ConnectionStateSource;\n    readonly rpc: ClientConnectionRpc;\n    reconnect(): void;\n    registerGenerationSource(source: ConnectionGenerationSource): () => void;\n    start(sinks: ConnectionSinks, config?: ConnectionConfig): ConnectionLoop;\n}',
+    declaration: 'export interface ConnectionHandle {\n    readonly isLoopback: boolean;\n    readonly generation: ConnectionGenerationState;\n    readonly state: ConnectionStateSource;\n    readonly rpc: ClientConnectionRpc;\n    readonly auth: IAuthClient;\n    onUnauthorized(listener: (error: AuthError) => void): () => void;\n    reconnect(): void;\n    registerGenerationSource(source: ConnectionGenerationSource): () => void;\n    start(sinks: ConnectionSinks, config?: ConnectionConfig): ConnectionLoop;\n}',
   },
   {
     name: 'ConnectionHostInfo',
@@ -550,6 +562,10 @@ export const TYPE_API: readonly TypeApiEntry[] = [
     declaration: 'export type HostObservable<T> = ObservableSnapshot<T>;',
   },
   {
+    name: 'IAuthClient',
+    declaration: 'export interface IAuthClient {\n    me(): Promise<AccountView>;\n    setupStatus(): Promise<SetupStatus>;\n    login(email: string, password: string, rememberMe?: boolean): Promise<IssuedLogin>;\n    initialize(email: string, password: string, rememberMe?: boolean): Promise<IssuedLogin>;\n    logout(): Promise<void>;\n    changePassword(currentPassword: string, newPassword: string): Promise<void>;\n    listUsers(): Promise<AccountView[]>;\n    updateUser(id: string, update: AccountUpdate): Promise<AccountView>;\n    resetPassword(id: string, newPassword: string): Promise<AccountView>;\n}',
+  },
+  {
     name: 'InjectFace',
     declaration: 'export type InjectFace<I extends object> = I extends {\n    hooks: infer HS extends HooksSources;\n} ? I extends {\n    keyedHooks: infer KS extends KeyedHooksSources;\n} ? Omit<I, \'hooks\' | \'keyedHooks\'> & PropsHooks<HS> & PropsKeyedHooks<KS> : Omit<I, \'hooks\'> & PropsHooks<HS> : I extends {\n    keyedHooks: infer KS extends KeyedHooksSources;\n} ? Omit<I, \'keyedHooks\'> & PropsKeyedHooks<KS> : I;',
   },
@@ -560,6 +576,10 @@ export const TYPE_API: readonly TypeApiEntry[] = [
   {
     name: 'ISession',
     declaration: 'export interface ISession {\n    readonly sessionId: SessionId;\n    readonly projections: ProjectionsFace;\n    beginSubmission(input: BeginSubmissionInput): SubmissionHandle;\n    prompt(content: PromptContentPart[], mode: \'queue\' | \'steer\', signal?: AbortSignal, requestId?: SessionRequestId): Promise<RemoteResult<{\n        accepted: true;\n    }>>;\n    readAttachment(attachmentId: AttachmentIdType): Promise<RemoteResult<{\n        attachment: ImageAttachmentRef;\n        data: Uint8Array;\n    }>>;\n    updateQueue(itemId: MessageId, action: QueueAction): Promise<RemoteResult<{\n        accepted: true;\n    }>>;\n    cancel(): Promise<RemoteResult<{\n        accepted: true;\n    }>>;\n    rename(title: string): Promise<RemoteResult<{\n        title: string;\n        seq: SessionSeq;\n    }>>;\n    loadOlder(): Promise<void>;\n    loadThrough(seq: SessionSeq): Promise<void>;\n    command(line: string): Promise<RemoteResult<{\n        matched: boolean;\n    }>>;\n}',
+  },
+  {
+    name: 'IssuedLogin',
+    declaration: 'export interface IssuedLogin {\n    readonly user: AccountView;\n    readonly accessToken: string;\n}',
   },
   {
     name: 'KeyedHooksSources',
@@ -764,6 +784,10 @@ export const TYPE_API: readonly TypeApiEntry[] = [
   {
     name: 'SessionStandardProps',
     declaration: 'export interface SessionStandardProps {\n}',
+  },
+  {
+    name: 'SetupStatus',
+    declaration: 'export interface SetupStatus {\n    readonly needsSetup: boolean;\n    readonly registrationEnabled: boolean;\n}',
   },
   {
     name: 'SlotComponent',

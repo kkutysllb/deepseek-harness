@@ -1,0 +1,1 @@
+{"version":3,"file":"rbac-auth-gate.js","sourceRoot":"","sources":["rbac-auth-gate.ts"],"names":[],"mappings":"AAAA;;;;;;;;GAQG;AA0BH;;;;;;GAMG;AACH,MAAM,CAAC,MAAM,wBAAwB,GAAG;IACtC,MAAM,EAAE,GAAG;IACX,IAAI,EAAE,IAAI,CAAC,SAAS,CAAC,EAAE,KAAK,EAAE,EAAE,IAAI,EAAE,gBAAgB,EAAE,OAAO,EAAE,gBAAgB,EAAE,EAAE,CAAC;CAC9E,CAAA"}

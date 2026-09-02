@@ -1,6 +1,6 @@
 {
-  "name": "@deepseek-ai/dsh-client-modules",
-  "description": "Client module system, dual-face: node half composes the __DSH_BOOT__ entry graph (incremental dsh.client scan, bundle route, index tap, webPlugins service); browser half is the lazy-CJS module table the vendored cordis Loader consumes as its internal seam",
+  "name": "@qilin/client-modules",
+  "description": "Client module system, dual-face: node half composes the __DSH_BOOT__ entry graph (incremental openkylin.client scan, bundle route, index tap, webPlugins service); browser half is the lazy-CJS module table the vendored cordis Loader consumes as its internal seam",
   "version": "0.1.2-alpha.4",
   "publishConfig": {
     "access": "public"
@@ -29,7 +29,7 @@
     "./src/*": "./src/*",
     "./package.json": "./package.json"
   },
-  "dsh": {
+  "openkylin": {
     "client": {
       "platform": "web",
       "inject": [],
@@ -43,8 +43,8 @@
   "license": "MIT",
   "devDependencies": {
     "@deepseek-ai/cordis-plugin-loader": "workspace:^",
-    "@deepseek-ai/dsh-host-webserver": "workspace:^",
-    "@deepseek-ai/dsh-invariants": "workspace:^",
+    "@qilin/host-webserver": "workspace:^",
+    "@qilin/invariants": "workspace:^",
     "@deepseek-ai/cordis": "workspace:^"
   },
   "files": [

@@ -2,8 +2,8 @@
 
 import { useEffect } from 'react'
 import clsx from 'clsx'
-import type { SessionListState, SessionSummary } from '@deepseek-ai/dsh-api-session-controller/client'
-import type { SessionId } from '@deepseek-ai/dsh-session/types'
+import type { SessionListState, SessionSummary } from '@qilin/api-session-controller/client'
+import type { SessionId } from '@qilin/session/types'
 import type {
   ConversationSessionHeaderSlotProps, ConversationSessionSlotProps,
 } from '../contract/slots.ts'

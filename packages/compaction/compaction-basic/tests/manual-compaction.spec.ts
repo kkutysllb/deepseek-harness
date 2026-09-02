@@ -1,37 +1,37 @@
 import { describe, expect, it, vi } from 'vitest'
 import { Context } from '@deepseek-ai/cordis'
-import AgentLoop from '@deepseek-ai/dsh-agent-loop'
-import { mountAgentLoopTestDependencies } from '@deepseek-ai/dsh-agent-loop-testkit'
-import InvariantRegistry from '@deepseek-ai/dsh-invariants'
-import { CommandId } from '@deepseek-ai/dsh-commands/brand'
-import * as SessionInvariant from '@deepseek-ai/dsh-session/invariant'
-import * as AgentInvariant from '@deepseek-ai/dsh-agent/invariant'
-import * as AgentLoopInvariant from '@deepseek-ai/dsh-agent-loop/invariant'
-import * as CompactionInvariant from '@deepseek-ai/dsh-compaction/invariant'
-import { BasicCompactionEngine } from '@deepseek-ai/dsh-compaction-basic'
-import { CompactionId, isCompactCheckpointSource, ManualCompactionError } from '@deepseek-ai/dsh-compaction'
-import type { CompactionResult } from '@deepseek-ai/dsh-compaction'
+import AgentLoop from '@qilin/agent-loop'
+import { mountAgentLoopTestDependencies } from '@qilin/agent-loop-testkit'
+import InvariantRegistry from '@qilin/invariants'
+import { CommandId } from '@qilin/commands/brand'
+import * as SessionInvariant from '@qilin/session/invariant'
+import * as AgentInvariant from '@qilin/agent/invariant'
+import * as AgentLoopInvariant from '@qilin/agent-loop/invariant'
+import * as CompactionInvariant from '@qilin/compaction/invariant'
+import { BasicCompactionEngine } from '@qilin/compaction-basic'
+import { CompactionId, isCompactCheckpointSource, ManualCompactionError } from '@qilin/compaction'
+import type { CompactionResult } from '@qilin/compaction'
 import {
   createAssistantMessage,
   createUserMessage,
   LlmAdapter,
-} from '@deepseek-ai/dsh-llm'
+} from '@qilin/llm'
 import type {
   ContentBlock,
   LlmResolvedModelInfo,
   Message,
   StreamChunk,
   TokenUsage,
-} from '@deepseek-ai/dsh-llm'
-import SessionStore, { Session, SessionId, type SessionEvent } from '@deepseek-ai/dsh-session'
-import SessionProjectionRegistry from '@deepseek-ai/dsh-session-projection'
-import LlmRuntime from '@deepseek-ai/dsh-llm'
-import TokenMeter from '@deepseek-ai/dsh-token-meter'
-import type { Agent } from '@deepseek-ai/dsh-agent'
+} from '@qilin/llm'
+import SessionStore, { Session, SessionId, type SessionEvent } from '@qilin/session'
+import SessionProjectionRegistry from '@qilin/session-projection'
+import LlmRuntime from '@qilin/llm'
+import TokenMeter from '@qilin/token-meter'
+import type { Agent } from '@qilin/agent'
 import type {
   SummarizationInput,
   SummaryResult,
-} from '@deepseek-ai/dsh-compaction-basic/src/summarizer.ts'
+} from '@qilin/compaction-basic/src/summarizer.ts'
 
 const MODEL = 'mock'
 const SIGNAL = new AbortController().signal

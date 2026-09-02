@@ -8,7 +8,7 @@
  * its bootstrap export, which constructs the system and retains the same
  * exports for this package's graph row. The plugin face only enrolls that
  * pre-existing instance by providing it as `ctx.modules`.
- * @module @deepseek-ai/dsh-client-modules/client
+ * @module @qilin/client-modules/client
  */
 import type { Context } from '@deepseek-ai/cordis'
 import { ClientModuleSystem } from './system.ts'
@@ -22,7 +22,7 @@ export { parseBootManifest, stripClientSuffix } from './manifest.ts'
 export type {
   BootManifest, BootModuleRow, BootPluginRow, ClientBootstrapModule, ClientBundleRegistration,
   ClientModuleCreateOptions, ClientModuleLoader, ClientModuleLoaderTarget, ClientModuleRecord,
-  ClientModuleSystemOptions, DshWindow,
+  ClientModuleSystemOptions, OpenKylinWindow,
   WebBootEntry, WebBootGraph,
 } from './manifest.ts'
 

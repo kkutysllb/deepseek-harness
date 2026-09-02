@@ -15,11 +15,11 @@ import { join } from 'node:path'
 import type { Browser, Page } from 'playwright'
 import { chromium } from 'playwright'
 import { afterAll, beforeAll, describe, expect, it, onTestFailed } from 'vitest'
-import { MessageId } from '@deepseek-ai/dsh-llm'
+import { MessageId } from '@qilin/llm'
 import {
   SESSION_FORMAT_VERSION, SessionId as sessionId, SessionSeq, type SessionHeader, type SessionId,
-} from '@deepseek-ai/dsh-session'
-import { snapshotSubagentDescriptor } from '@deepseek-ai/dsh-subagent'
+} from '@qilin/session'
+import { snapshotSubagentDescriptor } from '@qilin/subagent'
 import {
   captureStableAria, compareOrRefreshGolden, launchWebScaffold, seedSession, watchConsole,
   webSnapshotMode, type WebScaffold,
@@ -208,7 +208,7 @@ describe('web e2e: agent-preset selection', () => {
   beforeAll(async () => {
     // The shipped presets, plus one lane-owned preset that mounts and refuses:
     // the chip's own failure path needs a preset the roster offers.
-    presetRoot = await realpath(await mkdtemp(join(tmpdir(), 'dsh-web-e2e-refusing-')))
+    presetRoot = await realpath(await mkdtemp(join(tmpdir(), 'qilin-web-e2e-refusing-')))
     await seedRefusingPreset(presetRoot)
     scaffold = await launchWebScaffold({
       agentPresets: { roots: [{ path: presetRoot, trust: 'user' }], default: 'standard' },

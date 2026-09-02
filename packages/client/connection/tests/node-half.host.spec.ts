@@ -6,8 +6,8 @@ import { Context } from '@deepseek-ai/cordis'
 import { describe, expect, it } from 'vitest'
 import type { AddressInfo } from 'node:net'
 import type { IncomingMessage, ServerResponse } from 'node:http'
-import type { AttachmentStore } from '@deepseek-ai/dsh-attachment'
-import type { WebServer, WebRoute, WebUpgradeRoute } from '@deepseek-ai/dsh-host-webserver'
+import type { AttachmentStore } from '@qilin/attachment'
+import type { WebServer, WebRoute, WebUpgradeRoute } from '@qilin/host-webserver'
 import { API_PATH, RpcId, apply, inject, type ClientRequest, type HostConnectionHandle } from '../src/index.ts'
 import { DEFAULT_MAX_REQUEST_BODY_BYTES } from '../src/http-bridge.ts'
 import { provideBrowserCredentials } from './browser-credentials.ts'
@@ -81,7 +81,10 @@ function fakeResponse(): {
   return { response, state }
 }
 
-async function mounted(config?: { trustedHosts?: string[] }): Promise<{
+async function mounted(
+  config?: { trustedHosts?: string[] },
+  gate?: unknown,
+): Promise<{
   routes: WebRoute[]
   upgrades: WebUpgradeRoute[]
   connection: HostConnectionHandle
@@ -91,6 +94,7 @@ async function mounted(config?: { trustedHosts?: string[] }): Promise<{
   const routes: WebRoute[] = []
   const upgrades: WebUpgradeRoute[] = []
   provideBrowserCredentials(ctx)
+  if (gate !== undefined) ctx.provide('apiAuth', gate)
   ctx.provide('webServer', fakeHttpServer(routes, upgrades) as WebServer)
   const fiber = ctx.plugin({ inject: [...inject], apply }, config)
   await fiber.await()
@@ -163,6 +167,43 @@ describe('connection node half', () => {
     }), response)
     expect(state.status).toBe(403)
     expect(state.body).toBe('forbidden')
+    await dispose()
+  })
+
+  it('consults the optional apiAuth gate on /api routes after the fence', async () => {
+    const refusals: IncomingMessage[] = []
+    const gate = {
+      checkRequest: (request: IncomingMessage) => {
+        refusals.push(request)
+        return { allowed: false, status: 401, body: '{"error":{"code":"not_authenticated","message":"Authentication required"}}' }
+      },
+      checkUpgrade: () => true,
+    }
+    const { routes, connection, dispose } = await mounted({ trustedHosts: ['harness.example'] }, gate)
+    const { response, state } = fakeResponse()
+    await routes[0]!.handler(fakeRequest({
+      host: 'harness.example',
+      cookie: browserCookie(connection, 'harness.example'),
+    }), response)
+    expect(refusals).toHaveLength(1)
+    expect(state.status).toBe(401)
+    expect(state.body).toContain('not_authenticated')
+    await dispose()
+  })
+
+  it('lets gate-approved requests continue into the bridge', async () => {
+    const { routes, connection, dispose } = await mounted(undefined, {
+      checkRequest: () => ({ allowed: true, status: 401, body: '' }),
+      checkUpgrade: () => false,
+    })
+    const { response, state } = fakeResponse()
+    // The shared carrier claims no GET unary path: the verdict of interest is
+    // that the gate did not short-circuit — the bridge answered 404.
+    await routes[0]!.handler(fakeRequest({
+      host: '127.0.0.1:3080',
+      cookie: browserCookie(connection, '127.0.0.1:3080'),
+    }), response)
+    expect(state.status).toBe(404)
     await dispose()
   })
 
@@ -443,6 +484,208 @@ describe('connection node half', () => {
     expect(() => connection.rpc.handle('api3', async () => ({ ok: true, value: null })))
       .toThrow('invalid or reserved RPC channel')
     await remove()
+    await fiber.dispose()
+  })
+
+  it('consults the apiAuth gate on dedicated channel routes before the bridge', async () => {
+    const ctx = new Context()
+    const routes: WebRoute[] = []
+    provideBrowserCredentials(ctx)
+    ctx.provide('webServer', fakeHttpServer(routes, []) as WebServer)
+    ctx.provide('apiAuth', {
+      checkRequest: () => ({ allowed: false, status: 401, body: '{"error":{"code":"not_authenticated"}}' }),
+      checkUpgrade: () => false,
+    })
+    const fiber = ctx.plugin({ inject: [...inject], apply }, { trustedHosts: ['harness.example'] })
+    await fiber.await()
+    const connection = ctx.get('connection') as HostConnectionHandle
+    connection.rpc.handle('/rpc', async () => ({ ok: true, value: null }))
+    const route = routes.find(candidate => candidate.path === '/rpc')!
+    const refused = fakeResponse()
+    await route.handler(fakePost({
+      host: 'harness.example',
+      cookie: browserCookie(connection, 'harness.example'),
+    }, '/rpc/goals/create', {
+      type: 'client-request', rpcId: RpcId('rpc-gate'), method: 'goals/create', payload: {},
+    }), refused.response)
+    expect(refused.state).toMatchObject({ status: 401 })
+    expect(String(refused.state.body)).toContain('not_authenticated')
+    await fiber.dispose()
+  })
+
+  it('lets channel routes through when the apiAuth gate allows', async () => {
+    const ctx = new Context()
+    const routes: WebRoute[] = []
+    provideBrowserCredentials(ctx)
+    ctx.provide('webServer', fakeHttpServer(routes, []) as WebServer)
+    ctx.provide('apiAuth', {
+      checkRequest: () => ({ allowed: true, status: 200, body: '' }),
+      checkUpgrade: () => true,
+    })
+    const fiber = ctx.plugin({ inject: [...inject], apply }, { trustedHosts: ['harness.example'] })
+    await fiber.await()
+    const connection = ctx.get('connection') as HostConnectionHandle
+    connection.rpc.handle('/rpc', async () => ({ ok: true, value: { done: true } }))
+    const route = routes.find(candidate => candidate.path === '/rpc')!
+    const allowed = fakeResponse()
+    await route.handler(fakePost({
+      host: 'harness.example',
+      cookie: browserCookie(connection, 'harness.example'),
+    }, '/rpc/goals/create', {
+      type: 'client-request', rpcId: RpcId('rpc-open'), method: 'goals/create', payload: {},
+    }), allowed.response)
+    expect(JSON.parse(String(allowed.state.body))).toMatchObject({
+      rpcId: 'rpc-open',
+      result: { ok: true, value: { done: true } },
+    })
+    await fiber.dispose()
+  })
+
+  it('consults the rbacAuth gate with the endpoint after the auth fence on dedicated channel routes', async () => {
+    const ctx = new Context()
+    const routes: WebRoute[] = []
+    provideBrowserCredentials(ctx)
+    ctx.provide('webServer', fakeHttpServer(routes, []) as WebServer)
+    ctx.provide('apiAuth', { checkRequest: () => ({ allowed: true, status: 200, body: '' }), checkUpgrade: () => true })
+    const seenEndpoints: string[] = []
+    ctx.provide('rbacAuth', {
+      checkRequest: (_request: IncomingMessage, endpoint: string) => {
+        seenEndpoints.push(endpoint)
+        return { allowed: false, status: 403, body: '{"error":{"code":"permission_denied","message":"no"}}' }
+      },
+    })
+    const fiber = ctx.plugin({ inject: [...inject], apply }, { trustedHosts: ['harness.example'] })
+    await fiber.await()
+    const connection = ctx.get('connection') as HostConnectionHandle
+    connection.rpc.handle('/rpc', async () => ({ ok: true, value: null }))
+    const route = routes.find(candidate => candidate.path === '/rpc')!
+    const refused = fakeResponse()
+    await route.handler(fakePost({
+      host: 'harness.example',
+      cookie: browserCookie(connection, 'harness.example'),
+    }, '/rpc/goals/create', {
+      type: 'client-request', rpcId: RpcId('rbac-gate'), method: 'goals/create', payload: {},
+    }), refused.response)
+    expect(seenEndpoints).toEqual(['goals/create'])
+    expect(refused.state).toMatchObject({ status: 403 })
+    expect(String(refused.state.body)).toContain('permission_denied')
+    await fiber.dispose()
+  })
+
+  it('lets dedicated channel routes through when the rbacAuth gate allows', async () => {
+    const ctx = new Context()
+    const routes: WebRoute[] = []
+    provideBrowserCredentials(ctx)
+    ctx.provide('webServer', fakeHttpServer(routes, []) as WebServer)
+    ctx.provide('apiAuth', { checkRequest: () => ({ allowed: true, status: 200, body: '' }), checkUpgrade: () => true })
+    ctx.provide('rbacAuth', { checkRequest: () => ({ allowed: true, status: 200, body: '' }) })
+    const fiber = ctx.plugin({ inject: [...inject], apply }, { trustedHosts: ['harness.example'] })
+    await fiber.await()
+    const connection = ctx.get('connection') as HostConnectionHandle
+    connection.rpc.handle('/rpc', async () => ({ ok: true, value: { done: true } }))
+    const route = routes.find(candidate => candidate.path === '/rpc')!
+    const allowed = fakeResponse()
+    await route.handler(fakePost({
+      host: 'harness.example',
+      cookie: browserCookie(connection, 'harness.example'),
+    }, '/rpc/goals/create', {
+      type: 'client-request', rpcId: RpcId('rbac-open'), method: 'goals/create', payload: {},
+    }), allowed.response)
+    expect(JSON.parse(String(allowed.state.body))).toMatchObject({
+      rpcId: 'rbac-open',
+      result: { ok: true, value: { done: true } },
+    })
+    await fiber.dispose()
+  })
+
+  it('skips the rbacAuth gate for requests whose url is not a channel endpoint', async () => {
+    const ctx = new Context()
+    const routes: WebRoute[] = []
+    provideBrowserCredentials(ctx)
+    ctx.provide('webServer', fakeHttpServer(routes, []) as WebServer)
+    let rbacCalls = 0
+    ctx.provide('rbacAuth', { checkRequest: () => { rbacCalls += 1; return { allowed: true, status: 200, body: '' } } })
+    const fiber = ctx.plugin({ inject: [...inject], apply }, { trustedHosts: ['harness.example'] })
+    await fiber.await()
+    const connection = ctx.get('connection') as HostConnectionHandle
+    connection.rpc.handle('/rpc', async () => ({ ok: true, value: null }))
+    const route = routes.find(candidate => candidate.path === '/rpc')!
+    // A url outside the channel prefix parses to no endpoint; a missing url
+    // falls back to the site root the same way. Neither dispatches, and
+    // neither is an RBAC judgment.
+    for (const request of [
+      fakePost({
+        host: 'harness.example',
+        cookie: browserCookie(connection, 'harness.example'),
+      }, '/elsewhere/x', {
+        type: 'client-request', rpcId: RpcId('rbac-off-path'), method: 'goals/create', payload: {},
+      }),
+      Object.assign(Readable.from([Buffer.from('{}')]), {
+        url: undefined,
+        method: 'POST',
+        headers: {
+          host: 'harness.example',
+          cookie: browserCookie(connection, 'harness.example'),
+          'content-type': 'application/json',
+        },
+      }) as unknown as IncomingMessage,
+    ]) {
+      const response = fakeResponse()
+      await route.handler(request, response.response)
+      expect(response.state.status).toBe(404)
+    }
+    expect(rbacCalls).toBe(0)
+    await fiber.dispose()
+  })
+
+  it('never consults the rbacAuth gate once the apiAuth gate refused', async () => {
+    const ctx = new Context()
+    const routes: WebRoute[] = []
+    provideBrowserCredentials(ctx)
+    ctx.provide('webServer', fakeHttpServer(routes, []) as WebServer)
+    ctx.provide('apiAuth', { checkRequest: () => ({ allowed: false, status: 401, body: '{"error":{"code":"not_authenticated"}}' }), checkUpgrade: () => false })
+    let rbacCalls = 0
+    ctx.provide('rbacAuth', { checkRequest: () => { rbacCalls += 1; return { allowed: true, status: 200, body: '' } } })
+    const fiber = ctx.plugin({ inject: [...inject], apply }, { trustedHosts: ['harness.example'] })
+    await fiber.await()
+    const connection = ctx.get('connection') as HostConnectionHandle
+    connection.rpc.handle('/rpc', async () => ({ ok: true, value: null }))
+    const route = routes.find(candidate => candidate.path === '/rpc')!
+    const refused = fakeResponse()
+    await route.handler(fakePost({
+      host: 'harness.example',
+      cookie: browserCookie(connection, 'harness.example'),
+    }, '/rpc/goals/create', {
+      type: 'client-request', rpcId: RpcId('rbac-after-auth'), method: 'goals/create', payload: {},
+    }), refused.response)
+    expect(refused.state).toMatchObject({ status: 401 })
+    expect(rbacCalls).toBe(0)
+    await fiber.dispose()
+  })
+
+  it('maps a thrown rbacAuth gate fault to 500 internal_error instead of a verdict', async () => {
+    const ctx = new Context()
+    const routes: WebRoute[] = []
+    provideBrowserCredentials(ctx)
+    ctx.provide('webServer', fakeHttpServer(routes, []) as WebServer)
+    ctx.provide('apiAuth', { checkRequest: () => ({ allowed: true, status: 200, body: '' }), checkUpgrade: () => true })
+    ctx.provide('rbacAuth', { checkRequest: () => { throw new Error('store exploded') } })
+    const fiber = ctx.plugin({ inject: [...inject], apply }, { trustedHosts: ['harness.example'] })
+    await fiber.await()
+    const connection = ctx.get('connection') as HostConnectionHandle
+    connection.rpc.handle('/rpc', async () => ({ ok: true, value: null }))
+    const route = routes.find(candidate => candidate.path === '/rpc')!
+    const faulted = fakeResponse()
+    await route.handler(fakePost({
+      host: 'harness.example',
+      cookie: browserCookie(connection, 'harness.example'),
+    }, '/rpc/goals/create', {
+      type: 'client-request', rpcId: RpcId('rbac-fault'), method: 'goals/create', payload: {},
+    }), faulted.response)
+    // A store-level identity fault is an internal error, never a permission refusal.
+    expect(faulted.state.status).toBe(500)
+    expect(JSON.parse(String(faulted.state.body))).toMatchObject({ error: { code: 'internal_error' } })
+    expect(String(faulted.state.body)).not.toContain('permission_denied')
     await fiber.dispose()
   })
 })

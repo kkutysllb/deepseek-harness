@@ -1,5 +1,5 @@
 {
-  "name": "@deepseek-ai/dsh-client-ui-session",
+  "name": "@qilin/client-ui-session",
   "description": "Session Controller adapter for React and session-scoped slots",
   "version": "0.1.2-alpha.4",
   "publishConfig": {
@@ -25,11 +25,11 @@
     "./src/*": "./src/*",
     "./package.json": "./package.json"
   },
-  "dsh": {
+  "openkylin": {
     "client": {
       "inject": [
-        "@deepseek-ai/dsh-api-session-controller",
-        "@deepseek-ai/dsh-client-ui-renderer"
+        "@qilin/api-session-controller",
+        "@qilin/client-ui-renderer"
       ],
       "platform": "web"
     }
@@ -44,11 +44,11 @@
   },
   "devDependencies": {
     "@deepseek-ai/cordis": "workspace:^",
-    "@deepseek-ai/dsh-api-session-controller": "workspace:^",
-    "@deepseek-ai/dsh-client-store": "workspace:^",
-    "@deepseek-ai/dsh-client-ui-renderer": "workspace:^",
-    "@deepseek-ai/dsh-client-ui-slots": "workspace:^",
-    "@deepseek-ai/dsh-session": "workspace:^",
+    "@qilin/api-session-controller": "workspace:^",
+    "@qilin/client-store": "workspace:^",
+    "@qilin/client-ui-renderer": "workspace:^",
+    "@qilin/client-ui-slots": "workspace:^",
+    "@qilin/session": "workspace:^",
     "@types/react": "~18.3.1",
     "react": "^18.2.0"
   },

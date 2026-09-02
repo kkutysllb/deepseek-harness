@@ -9,8 +9,8 @@ import type { InputTriggerController, SubmitOutcome } from '../src/client/contra
 import { SessionInputShell } from '../src/client/input/facade.ts'
 import type { DraftAttachmentId } from '../src/client/contract/input.ts'
 
-const mention = '@[Research](dsh-session:InNvdXJjZSI)'
-const spacedMention = '@[Research notes](dsh-session:InNvdXJjZSI)'
+const mention = '@[Research](qilin-session:InNvdXJjZSI)'
+const spacedMention = '@[Research notes](qilin-session:InNvdXJjZSI)'
 const commandImages = {
   serialize: () => Promise.resolve([]),
   release: () => {},

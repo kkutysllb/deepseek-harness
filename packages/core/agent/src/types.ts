@@ -1,12 +1,12 @@
 /**
  * Durable agent session-event vocabulary shared with type-only consumers.
  *
- * @module @deepseek-ai/dsh-agent/types
+ * @module @qilin/agent/types
  */
 
-import type { UserMessage } from '@deepseek-ai/dsh-llm/types'
-import type { OptionalSessionSeq, SessionId, SessionSeq } from '@deepseek-ai/dsh-session/types'
-import type { TypertContext, TypertLookup } from '@deepseek-ai/dsh-typert-protocol'
+import type { UserMessage } from '@qilin/llm/types'
+import type { OptionalSessionSeq, SessionId, SessionSeq } from '@qilin/session/types'
+import type { TypertContext, TypertLookup } from '@qilin/typert-protocol'
 
 /** Public live-agent handle; the runtime face augments its live capabilities. */
 export interface Agent {
@@ -14,7 +14,7 @@ export interface Agent {
   readonly id: SessionId
 }
 
-declare module '@deepseek-ai/dsh-typert-protocol' {
+declare module '@qilin/typert-protocol' {
   interface TypertLookupMap {
     agent: TypertLookup<Agent, SessionId>
   }
@@ -31,7 +31,7 @@ export type InboxTarget = 'next-turn' | 'next-step'
 /**
  * Turn and step boundaries folded from one agent session log.
  *
- * Reader contract: the key is registered by `dsh-agent-loop` and absent
+ * Reader contract: the key is registered by `qilin-agent-loop` and absent
  * otherwise. Without agent-loop no turn events exist, so readers treat an
  * absent key as "no open turn / no boundaries" — capability absence, not a
  * corrupt state. A reader whose behavior has no safe fallback for that
@@ -48,7 +48,7 @@ export interface TurnBoundaryProjection {
   readonly lastTurn: number
 }
 
-declare module '@deepseek-ai/dsh-session/types' {
+declare module '@qilin/session/types' {
   interface SessionEventMap {
     /**
      * One normalized mutation of an agent's durable pending-message lists.

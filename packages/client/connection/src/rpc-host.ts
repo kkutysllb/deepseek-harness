@@ -1,7 +1,7 @@
 /** Host registry and HTTP adapter for generic Connection RPC channels. */
 
 import { Context, Service } from '@deepseek-ai/cordis'
-import type { WebRoute } from '@deepseek-ai/dsh-host-webserver'
+import type { WebRoute } from '@qilin/host-webserver'
 import {
   RpcId,
   type ClientRequest,
@@ -10,7 +10,9 @@ import {
 import { clientRequestSchema } from './rpc-schema.ts'
 import { bridge, type FetchHandler } from './http-bridge.ts'
 import { isTrustedApiRequest } from './api-request-trust.ts'
-import { API_PATH } from './api-path.ts'
+import type { ApiAuthGate } from './api-auth-gate.ts'
+import { RBAC_GATE_FAULT_RESPONSE, type RbacAuthGate, type RbacAuthVerdict } from './rbac-auth-gate.ts'
+import { API_PATH, endpointFromPath } from './api-path.ts'
 import type { BrowserAuth } from './browser-auth.ts'
 import type {
   ConnectionIndexRequest,
@@ -30,7 +32,6 @@ import type {
 
 const INVALID_REQUEST_RPC_ID = RpcId('invalid-request')
 const CHANNEL_PATTERN = /^\/[A-Za-z0-9._~-]+$/
-const ENDPOINT_SEGMENT_PATTERN = /^[A-Za-z0-9_$.-]+$/
 
 interface ConnectionRpcInterceptor {
   readonly matches: ConnectionRpcEndpointMatcher
@@ -52,6 +53,10 @@ declare module '@deepseek-ai/cordis' {
   interface Context {
     /** Host Connection transport and RPC registrations. */
     connection: HostConnectionHandle
+    /** Optional /api authentication gate; present only when the composition mounts the accounts HTTP plugin. */
+    apiAuth?: ApiAuthGate
+    /** Optional /api RBAC fence; present only when the composition mounts the account-rbac plugin. */
+    rbacAuth?: RbacAuthGate
   }
 }
 
@@ -166,6 +171,35 @@ export class HostConnectionService extends Service implements HostConnectionHand
           res.end(rejection === 401 ? 'unauthorized' : 'forbidden')
           return
         }
+        const gate: ApiAuthGate | undefined = owner.get('apiAuth')
+        if (gate !== undefined) {
+          const verdict = gate.checkRequest(req)
+          if (!verdict.allowed) {
+            res.writeHead(verdict.status, { 'content-type': 'application/json' })
+            res.end(verdict.body)
+            return
+          }
+        }
+        const rbac: RbacAuthGate | undefined = owner.get('rbacAuth')
+        if (rbac !== undefined) {
+          const endpoint = endpointFromPath(channel, new URL(req.url ?? '/', 'http://localhost').pathname)
+          if (endpoint !== undefined) {
+            let verdict: RbacAuthVerdict
+            try {
+              verdict = rbac.checkRequest(req, endpoint)
+            } catch {
+              // Same fence-fault mapping as the /api route: stable 500.
+              res.writeHead(RBAC_GATE_FAULT_RESPONSE.status, { 'content-type': 'application/json' })
+              res.end(RBAC_GATE_FAULT_RESPONSE.body)
+              return
+            }
+            if (!verdict.allowed) {
+              res.writeHead(verdict.status, { 'content-type': 'application/json' })
+              res.end(verdict.body)
+              return
+            }
+          }
+        }
         await bridge(req, res, fetchHandler)
       },
     }
@@ -254,17 +288,6 @@ function invalidEnvelopeResponse(body: unknown, issues: readonly object[]): Resp
     message: 'invalid client-request message',
     details: { issues },
   })
-}
-
-function endpointFromPath(channel: string, pathname: string): string | undefined {
-  if (!pathname.startsWith(`${channel}/`)) return undefined
-  const endpoint = pathname.slice(channel.length + 1)
-  const segments = endpoint.split('/')
-  if (segments.some(segment =>
-    segment === '' || segment === '.' || segment === '..' || !ENDPOINT_SEGMENT_PATTERN.test(segment))) {
-    return undefined
-  }
-  return endpoint
 }
 
 function errorResponse(rpcId: RpcIdType, error: ConnectionRpcFailure): Response {

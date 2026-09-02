@@ -7,24 +7,24 @@
  * `permissions` session projection; the write side ships as the
  * `/permission` command.
  *
- * @module dsh-permission-presets
+ * @module qilin-permission-presets
  */
 
 import { Context, Service } from '@deepseek-ai/cordis'
 import z from '@deepseek-ai/schemastery'
 import { z as zod } from 'zod'
-import type { Session, SessionEvent } from '@deepseek-ai/dsh-session'
-import type { SandboxMode } from '@deepseek-ai/dsh-sandbox'
-import { SANDBOX_MODES, setSandboxMode } from '@deepseek-ai/dsh-sandbox-policy'
+import type { Session, SessionEvent } from '@qilin/session'
+import type { SandboxMode } from '@qilin/sandbox'
+import { SANDBOX_MODES, setSandboxMode } from '@qilin/sandbox-policy'
 // Side-effect type import: declaration-merges `ctx.shell` (the capability fact
 // `sandboxMode` this service reads), without a value dependency on the seam.
-import type {} from '@deepseek-ai/dsh-shell'
-import type { ApprovalPolicy } from '@deepseek-ai/dsh-user-approval'
-import { APPROVAL_POLICIES, setApprovalPolicy } from '@deepseek-ai/dsh-user-approval'
-import type {} from '@deepseek-ai/dsh-settings'
+import type {} from '@qilin/shell'
+import type { ApprovalPolicy } from '@qilin/user-approval'
+import { APPROVAL_POLICIES, setApprovalPolicy } from '@qilin/user-approval'
+import type {} from '@qilin/settings'
 // Type-only: resolves the optional projection and command children.
-import type {} from '@deepseek-ai/dsh-session-projection'
-import type {} from '@deepseek-ai/dsh-commands'
+import type {} from '@qilin/session-projection'
+import type {} from '@qilin/commands'
 import type { PermissionSelect, PresetOption } from './types.ts'
 
 export type * from './types.ts'
@@ -35,14 +35,14 @@ declare module '@deepseek-ai/cordis' {
   }
 }
 
-declare module '@deepseek-ai/dsh-session-projection/types' {
+declare module '@qilin/session-projection/types' {
   interface SessionProjectionStateMap {
     /** Latest logged permission overrides and constructor-seed provenance. */
     permissions: PermissionProjectionState
   }
 }
 
-declare module '@deepseek-ai/dsh-session/types' {
+declare module '@qilin/session/types' {
   interface SessionEventMap {
     /**
      * Records the selected preset as durable, log-only user intent. The knob

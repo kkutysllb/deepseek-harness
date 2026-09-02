@@ -3,7 +3,7 @@
  * timestamps, goal lifecycle clocks, and hook duration while preserving semantic payload values.
  * Request-header scrubbers stay composable so one scenario per header class can pin prompt and
  * tool-schema sidecars.
- * @module @deepseek-ai/dsh-session-snapshot/normalize
+ * @module @qilin/session-snapshot/normalize
  */
 
 import {
@@ -13,7 +13,7 @@ import {
   SessionLogOffset,
   SessionSeq,
   type SessionEvent,
-} from '@deepseek-ai/dsh-session'
+} from '@qilin/session'
 import { redactSessionSnapshotIds } from './identity.ts'
 
 const SESSION_ID = '{{sessionId}}'
@@ -56,7 +56,9 @@ const LOCAL_SPILL_PATH_RE = new RegExp(
   'g',
 )
 const SNAPSHOT_SPILL_PATH_RE = new RegExp(
-  String.raw`(?:[A-Za-z]:)?[\\/](?:tmp|t)[\\/](?:dsh-acp-snap-[0-9a-f]{9}|dsh-acp-snapshot-spill)[\\/]session-[0-9a-f]{12}[\\/][0-9a-f]{12}-([A-Za-z0-9._~-]+?)`
+  // The spill roots the harness has issued under both name eras (harness.ts
+  // mints `openkylin-acp-snap-*`).
+  String.raw`(?:[A-Za-z]:)?[\\/](?:tmp|t)[\\/](?:openkylin-acp-snap-[0-9a-f]{9}|openkylin-acp-snapshot-spill)[\\/]session-[0-9a-f]{12}[\\/][0-9a-f]{12}-([A-Za-z0-9._~-]+?)`
   + String.raw`(?=\. Use read with offset/limit|[\s)]|$)`,
   'g',
 )

@@ -1,17 +1,17 @@
 /**
  * Fresh-process SDK subagent client. Drives one child DeepSeek Harness
- * runtime over stdio JSON-RPC through `@deepseek-ai/dsh-sdk-client` and owns
+ * runtime over stdio JSON-RPC through `@qilin/sdk-client` and owns
  * cancellation and quiescent disposal. It publishes after the child
  * handshake, maps child failures to stop reasons, and tears down to
  * quiescence. The SDK client spawns the child rather than using
  * `ctx.subprocess` — the subprocess seam's documented exception for
  * SDK-managed transports — so this driver applies the seam's shared env scrub.
  *
- * @module @deepseek-ai/dsh-subagent-dsh-sdk/run
+ * @module @qilin/subagent-dsh-sdk/run
  */
 
 import { randomUUID } from 'node:crypto'
-import { brandString } from '@deepseek-ai/dsh-brand'
+import { brandString } from '@qilin/brand'
 import {
   DeepSeekHarness,
   type DeepSeekHarnessOptions,
@@ -19,16 +19,16 @@ import {
   JsonRpcResponseError,
   SdkProtocolError,
   TransportClosedError,
-} from '@deepseek-ai/dsh-sdk-client'
-import type { ContentBlock, ReasoningEffortId } from '@deepseek-ai/dsh-llm'
-import type { SessionEvent, SessionId, TurnEndReason } from '@deepseek-ai/dsh-session'
-import type { SubagentResult, SubagentRun, SubagentStartRequest, SubagentStopReason } from '@deepseek-ai/dsh-subagent'
-import { AssistantOutputFold, settleRunResult, subprocessRunHandle } from '@deepseek-ai/dsh-subagent'
-import { scrubbedParentEnv } from '@deepseek-ai/dsh-subprocess'
+} from '@qilin/sdk-client'
+import type { ContentBlock, ReasoningEffortId } from '@qilin/llm'
+import type { SessionEvent, SessionId, TurnEndReason } from '@qilin/session'
+import type { SubagentResult, SubagentRun, SubagentStartRequest, SubagentStopReason } from '@qilin/subagent'
+import { AssistantOutputFold, settleRunResult, subprocessRunHandle } from '@qilin/subagent'
+import { scrubbedParentEnv } from '@qilin/subprocess'
 
 /** Resolved spawn spec for an SDK runtime child process (no defaults — see Config). */
 export interface SdkRunSpec {
-  /** Explicit dsh CLI module; omission resolves the SDK client's same-version dependency. */
+  /** Explicit openkylin CLI module; omission resolves the SDK client's same-version dependency. */
   dshBin?: string
   /** Named child profile. */
   profile: string
@@ -54,7 +54,7 @@ export interface SdkRunSpec {
    * Extra environment variables to ADD for the child (e.g. the child
    * runtime's own `DEEPSEEK_API_KEY`). Merged after
    * the seam's `scrubbedParentEnv()` base, so an explicit credential or
-   * current `DSH_*` fact survives while ambient namesakes never leak.
+   * current `OPENKYLIN_*` fact survives while ambient namesakes never leak.
    */
   env: Record<string, string>
   /** Bound (ms) on the protocol `shutdown` exchange during dispose. */

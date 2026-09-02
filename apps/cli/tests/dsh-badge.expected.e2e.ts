@@ -1,16 +1,16 @@
 import { fileURLToPath } from 'node:url'
 import { describe, expect, it } from 'vitest'
-import { LOADER_SMOKE_TEST_TIMEOUT_MS, runLoaderSmoke } from '@deepseek-ai/dsh-loader-smoke'
+import { LOADER_SMOKE_TEST_TIMEOUT_MS, runLoaderSmoke } from '@qilin/loader-smoke'
 const binScript = fileURLToPath(new URL('./fixtures/dsh-badge/snapshot.ts', import.meta.url))
 const configPath = fileURLToPath(new URL('./fixtures/dsh-badge/cordis.yml', import.meta.url))
 const defaultConfigPath = fileURLToPath(new URL('./fixtures/dsh-badge/default.cordis.yml', import.meta.url))
 const tsconfigPath = fileURLToPath(new URL('../../../tsconfig.json', import.meta.url))
 const badgeAssetsPath = fileURLToPath(new URL('../../../packages/skill/skill-badge/assets/', import.meta.url))
 
-describe('dsh badge assembled snapshot', () => {
+describe('openkylin badge assembled snapshot', () => {
   it('advertises and loads the opt-in bundled skill through the shipped app', async () => {
     const disabled = await runLoaderSmoke({
-      label: 'disabled dsh badge skill snapshot',
+      label: 'disabled openkylin badge skill snapshot',
       tempDirPrefix: 'headless-snapshot-dsh-badge-disabled-',
       binScript,
       libBinScript: binScript,
@@ -18,7 +18,7 @@ describe('dsh badge assembled snapshot', () => {
       tsconfigPath,
     })
     const enabled = await runLoaderSmoke({
-      label: 'dsh badge skill snapshot',
+      label: 'openkylin badge skill snapshot',
       tempDirPrefix: 'headless-snapshot-dsh-badge-',
       binScript,
       libBinScript: binScript,
@@ -38,12 +38,12 @@ describe('dsh badge assembled snapshot', () => {
         "result": {
           "content": [
             {
-              "text": "Error: skill "dsh-badge" is unknown or no longer available",
+              "text": "Error: skill "qilin-badge" is unknown or no longer available",
               "type": "text",
             },
           ],
           "error": {
-            "message": "skill "dsh-badge" is unknown or no longer available",
+            "message": "skill "qilin-badge" is unknown or no longer available",
           },
           "isError": true,
         },
@@ -58,7 +58,7 @@ describe('dsh badge assembled snapshot', () => {
       A skill is a reusable set of task-specific instructions. The following skills are available in this session:
 
       <available_skills>
-      - \`dsh-badge\`: Add the official “powered by dsh” badge to documents, pull requests, merge requests, and other content produced with DeepSeek Harness. Use whenever creating a pull request or merge request. Also use when the user asks for a dsh badge, powered-by-dsh attribution, or a reusable dsh badge asset or snippet.
+      - \`qilin-badge\`: Add the official “powered by openkylin” badge to documents, pull requests, merge requests, and other content produced with DeepSeek Harness. Use whenever creating a pull request or merge request. Also use when the user asks for a openkylin badge, powered-by-dsh attribution, or a reusable openkylin badge asset or snippet.
       </available_skills>
 
       If the user names a skill, or the task clearly matches a skill's description, call the \`skill\` tool with the exact skill name before taking task actions. Load all applicable skills, then follow their full instructions. This catalog contains summaries only; do not infer or follow a skill's instructions until it has been loaded.
@@ -70,20 +70,20 @@ describe('dsh badge assembled snapshot', () => {
         "result": {
           "content": [
             {
-              "text": "<skill_content name="dsh-badge">
+              "text": "<skill_content name="qilin-badge">
       <skill_resources>
       Base directory for this skill: {{badgeAssetsPath}}
       Resolve relative paths mentioned by this skill against the base directory before using them. Load referenced resources only as needed.
       </skill_resources>
 
       <skill_instructions>
-      # dsh Badge
+      # openkylin Badge
 
-      Add the official “powered by dsh” badge without recreating or restyling it.
+      Add the official “powered by openkylin” badge without recreating or restyling it.
 
       ## Assets
 
-      - Local PNG: [\`dsh-badge.png\`](dsh-badge.png), 726×120 source image; render at 121×20
+      - Local PNG: [\`qilin-badge.png\`](qilin-badge.png), 726×120 source image; render at 121×20
       - Shields.io image URL: \`https://img.shields.io/badge/powered_by-dsh-4D6BFE?style=flat-square&logo=deepseek&logoColor=white\`
       - Project URL: \`https://github.com/deepseek-ai/deepseek-harness\`
 
@@ -104,7 +104,7 @@ describe('dsh badge assembled snapshot', () => {
       ## Usage rules
 
       - For GitHub or GitLab Markdown, use the Shields.io URL and link it to the project URL unless the user asks for an unlinked image.
-      - For Feishu and other systems that import remote images unreliably, upload \`dsh-badge.png\` from this skill directory instead of generating another badge.
+      - For Feishu and other systems that import remote images unreliably, upload \`qilin-badge.png\` from this skill directory instead of generating another badge.
       - Preserve the badge's 121×20 dimensions and aspect ratio.
       - Place the badge at the end of the attributed document or section unless the user specifies another position.
       - Do not substitute another color, logo, label, or project URL.
@@ -116,13 +116,13 @@ describe('dsh badge assembled snapshot', () => {
           ],
           "isError": false,
           "value": {
-            "content": "# dsh Badge
+            "content": "# openkylin Badge
 
-      Add the official “powered by dsh” badge without recreating or restyling it.
+      Add the official “powered by openkylin” badge without recreating or restyling it.
 
       ## Assets
 
-      - Local PNG: [\`dsh-badge.png\`](dsh-badge.png), 726×120 source image; render at 121×20
+      - Local PNG: [\`qilin-badge.png\`](qilin-badge.png), 726×120 source image; render at 121×20
       - Shields.io image URL: \`https://img.shields.io/badge/powered_by-dsh-4D6BFE?style=flat-square&logo=deepseek&logoColor=white\`
       - Project URL: \`https://github.com/deepseek-ai/deepseek-harness\`
 
@@ -143,13 +143,13 @@ describe('dsh badge assembled snapshot', () => {
       ## Usage rules
 
       - For GitHub or GitLab Markdown, use the Shields.io URL and link it to the project URL unless the user asks for an unlinked image.
-      - For Feishu and other systems that import remote images unreliably, upload \`dsh-badge.png\` from this skill directory instead of generating another badge.
+      - For Feishu and other systems that import remote images unreliably, upload \`qilin-badge.png\` from this skill directory instead of generating another badge.
       - Preserve the badge's 121×20 dimensions and aspect ratio.
       - Place the badge at the end of the attributed document or section unless the user specifies another position.
       - Do not substitute another color, logo, label, or project URL.
       ",
-            "name": "dsh-badge",
-            "provider": "dsh-badge",
+            "name": "qilin-badge",
+            "provider": "qilin-badge",
             "resourceBase": {
               "kind": "directory",
               "path": "{{badgeAssetsPath}}",
@@ -157,13 +157,13 @@ describe('dsh badge assembled snapshot', () => {
           },
         },
         "summary": {
-          "description": "Add the official “powered by dsh” badge to documents, pull requests, merge requests, and other content produced with DeepSeek Harness. Use whenever creating a pull request or merge request. Also use when the user asks for a dsh badge, powered-by-dsh attribution, or a reusable dsh badge asset or snippet.",
+          "description": "Add the official “powered by openkylin” badge to documents, pull requests, merge requests, and other content produced with DeepSeek Harness. Use whenever creating a pull request or merge request. Also use when the user asks for a openkylin badge, powered-by-dsh attribution, or a reusable openkylin badge asset or snippet.",
           "invocation": {
             "modelInvocable": true,
             "userInvocable": true,
           },
-          "name": "dsh-badge",
-          "provider": "dsh-badge",
+          "name": "qilin-badge",
+          "provider": "qilin-badge",
           "resourceBase": {
             "kind": "directory",
             "path": "{{badgeAssetsPath}}",

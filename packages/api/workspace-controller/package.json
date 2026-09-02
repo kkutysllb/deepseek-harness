@@ -1,5 +1,5 @@
 {
-  "name": "@deepseek-ai/dsh-api-workspace-controller",
+  "name": "@qilin/api-workspace-controller",
   "description": "Workspace Remote commands and reconnect-safe state transport",
   "version": "0.1.2-alpha.4",
   "publishConfig": {
@@ -37,14 +37,14 @@
     "./src/*": "./src/*",
     "./package.json": "./package.json"
   },
-  "dsh": {
+  "openkylin": {
     "client": {
       "external": [
-        "@deepseek-ai/dsh-api-gateway/client"
+        "@qilin/api-gateway/client"
       ],
       "inject": [
-        "@deepseek-ai/dsh-api-gateway",
-        "@deepseek-ai/dsh-client-connection"
+        "@qilin/api-gateway",
+        "@qilin/client-connection"
       ],
       "platform": "web"
     }
@@ -65,28 +65,28 @@
   ],
   "license": "MIT",
   "dependencies": {
-    "@deepseek-ai/dsh-deque": "workspace:^",
+    "@qilin/deque": "workspace:^",
     "zod": "^4.4.3"
   },
   "peerDependencies": {
     "@deepseek-ai/cordis": "workspace:^",
-    "@deepseek-ai/dsh-api-gateway": "workspace:^",
-    "@deepseek-ai/dsh-client-connection": "workspace:^",
-    "@deepseek-ai/dsh-host-directory-picker": "workspace:^",
-    "@deepseek-ai/dsh-session": "workspace:^",
-    "@deepseek-ai/dsh-storage-domain": "workspace:^",
-    "@deepseek-ai/dsh-typert-protocol": "workspace:^",
-    "@deepseek-ai/dsh-workspace": "workspace:^"
+    "@qilin/api-gateway": "workspace:^",
+    "@qilin/client-connection": "workspace:^",
+    "@qilin/host-directory-picker": "workspace:^",
+    "@qilin/session": "workspace:^",
+    "@qilin/storage-domain": "workspace:^",
+    "@qilin/typert-protocol": "workspace:^",
+    "@qilin/workspace": "workspace:^"
   },
   "devDependencies": {
     "@deepseek-ai/cordis": "workspace:^",
-    "@deepseek-ai/dsh-api-gateway": "workspace:^",
-    "@deepseek-ai/dsh-client-connection": "workspace:^",
-    "@deepseek-ai/dsh-client-store": "workspace:^",
-    "@deepseek-ai/dsh-host-directory-picker": "workspace:^",
-    "@deepseek-ai/dsh-session": "workspace:^",
-    "@deepseek-ai/dsh-storage-domain": "workspace:^",
-    "@deepseek-ai/dsh-typert-protocol": "workspace:^",
-    "@deepseek-ai/dsh-workspace": "workspace:^"
+    "@qilin/api-gateway": "workspace:^",
+    "@qilin/client-connection": "workspace:^",
+    "@qilin/client-store": "workspace:^",
+    "@qilin/host-directory-picker": "workspace:^",
+    "@qilin/session": "workspace:^",
+    "@qilin/storage-domain": "workspace:^",
+    "@qilin/typert-protocol": "workspace:^",
+    "@qilin/workspace": "workspace:^"
   }
 }

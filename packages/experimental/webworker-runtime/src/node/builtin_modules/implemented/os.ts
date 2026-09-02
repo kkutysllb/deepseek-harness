@@ -4,7 +4,7 @@
  * real rather than throwing because several `[Service.init]` bodies read them
  * during construction.
  */
-import { DSH_HOME, DSH_TMP } from '../../../storage/paths.ts'
+import { OPENKYLIN_HOME, OPENKYLIN_TMP } from '../../../storage/paths.ts'
 import type { CpuInfo, NetworkInterfaceInfo } from 'node:os'
 
 /** Line ending of the virtual platform. */
@@ -15,15 +15,15 @@ export const EOL = '\n'
  * @returns the VFS temp path.
  */
 export function tmpdir(): string {
-  return DSH_TMP
+  return OPENKYLIN_TMP
 }
 
 /**
  * Home directory.
- * @returns `$DSH_HOME` inside the VFS.
+ * @returns `$OPENKYLIN_HOME` inside the VFS.
  */
 export function homedir(): string {
-  return DSH_HOME
+  return OPENKYLIN_HOME
 }
 
 /**
@@ -63,7 +63,7 @@ export function release(): string {
  * @returns a synthetic name.
  */
 export function hostname(): string {
-  return 'dsh-worker'
+  return 'qilin-worker'
 }
 
 /**

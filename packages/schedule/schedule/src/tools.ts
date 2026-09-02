@@ -1,13 +1,13 @@
 /**
  * Agent-scoped Schedule management tools over the durable session fold.
- * @module @deepseek-ai/dsh-schedule
+ * @module @qilin/schedule
  */
 
 import type { Context } from '@deepseek-ai/cordis'
-import type { Agent } from '@deepseek-ai/dsh-agent'
-import type { ContentBlock } from '@deepseek-ai/dsh-llm'
-import { defineTool } from '@deepseek-ai/dsh-tools'
-import type { GenericCallView } from '@deepseek-ai/dsh-tools'
+import type { Agent } from '@qilin/agent'
+import type { ContentBlock } from '@qilin/llm'
+import { defineTool } from '@qilin/tools'
+import type { GenericCallView } from '@qilin/tools'
 import {
   allocateScheduleId,
   createAfterScheduleRecord,

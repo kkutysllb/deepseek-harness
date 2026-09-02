@@ -2,14 +2,14 @@
 
 import { describe, expect, it, vi } from 'vitest'
 import { Context } from '@deepseek-ai/cordis'
-import AgentRegistry, { agentEvents } from '@deepseek-ai/dsh-agent'
-import type { Agent, AgentHandle, CreateAgentOptions } from '@deepseek-ai/dsh-agent'
-import { createUserMessage, ReasoningEffortId } from '@deepseek-ai/dsh-llm'
-import type { LlmCallConfig } from '@deepseek-ai/dsh-llm'
-import SessionStore, { SessionLogOffset, SessionSeq } from '@deepseek-ai/dsh-session'
-import type { Session, SessionEvent, SessionHeader, SessionId } from '@deepseek-ai/dsh-session'
-import SystemPrompt from '@deepseek-ai/dsh-system-prompt'
-import type { Workspace } from '@deepseek-ai/dsh-workspace'
+import AgentRegistry, { agentEvents } from '@qilin/agent'
+import type { Agent, AgentHandle, CreateAgentOptions } from '@qilin/agent'
+import { createUserMessage, ReasoningEffortId } from '@qilin/llm'
+import type { LlmCallConfig } from '@qilin/llm'
+import SessionStore, { SessionLogOffset, SessionSeq } from '@qilin/session'
+import type { Session, SessionEvent, SessionHeader, SessionId } from '@qilin/session'
+import SystemPrompt from '@qilin/system-prompt'
+import type { Workspace } from '@qilin/workspace'
 import {
   createSessionTestRemote, installSessionReadTestServices, testSessionPersistence,
 } from './test-remote.ts'

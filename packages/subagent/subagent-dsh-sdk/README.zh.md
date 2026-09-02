@@ -3,13 +3,13 @@ description: "面向用户与维护者的进程外 SDK subagent 后端，用于�
 kind: "package-reference"
 ---
 
-# @deepseek-ai/dsh-subagent-dsh-sdk
+# @qilin/subagent-dsh-sdk
 
 [English](README.md) | 中文
 
 ## 概述
 
-`dsh-subagent-dsh-sdk` 在全新的子进程中把每个被委派的子 agent（智能体）作为完整的 DeepSeek Harness 运行时运行，并经由 TypeScript SDK 客户端通过 stdio JSON-RPC 驱动。它是 ACP 提供方之外的第二个进程外后端，差异在协议格式（wire format）与子进程约定：子进程是完整的对等 harness，拥有由 `cordis.yml` 决定的组合、会话持久化、模型路由与工具。每次运行都会 spawn 子运行时（Node 下解析出的 `@deepseek-ai/dsh` CLI，或配置的 `dshBin`），以配置的提供方与模型路由完成 `initialize` 握手、提交任务，并从子进程的会话事件中读取答案。父级只收到子进程最终的 assistant 文本或安全错误——中间消息与工具流量不会跨越边界。当子进程应该是与父 harness 完全隔离的真实 Harness 运行时时，选择它。
+`qilin-subagent-dsh-sdk` 在全新的子进程中把每个被委派的子 agent（智能体）作为完整的 DeepSeek Harness 运行时运行，并经由 TypeScript SDK 客户端通过 stdio JSON-RPC 驱动。它是 ACP 提供方之外的第二个进程外后端，差异在协议格式（wire format）与子进程约定：子进程是完整的对等 harness，拥有由 `cordis.yml` 决定的组合、会话持久化、模型路由与工具。每次运行都会 spawn 子运行时（Node 下解析出的 `@qilin/cli` CLI，或配置的 `dshBin`），以配置的提供方与模型路由完成 `initialize` 握手、提交任务，并从子进程的会话事件中读取答案。父级只收到子进程最终的 assistant 文本或安全错误——中间消息与工具流量不会跨越边界。当子进程应该是与父 harness 完全隔离的真实 Harness 运行时时，选择它。
 
 ## 目录
 
@@ -31,14 +31,14 @@ kind: "package-reference"
 
 当子进程必须是完整的 harness 对等体——拥有自己的组合、会话持久化、模型路由与工具——而不是共享父进程的 agent 时，选择此后端。当子进程必须共享父级组合或遵守父级强制的非路由能力时，请选择进程内后端：本提供方接受 agent 路由选项，但会拒绝结构化输出、深度上限、工具过滤或 persona，而不是静默省略。
 
-提供方声明 `agentOptions: true`，同时保持 `outputSchema`/`depthLimit`/`toolFilter`/`persona` 为 false，并且 `inheritsParentContext: false`。不可变的 `agentRouteDefaults` 会在模型覆盖与确切路由预检前，把配置的 provider／model 基线公开给 `dsh-tool-subagent`；`start()` 则为直接调用方与 `maxTokens` 独立应用同一份配置默认值。Agent 路由值通过显式白名单跨越 SDK 协议；子进程仍是另一进程里的全新运行时，唯一从父 agent 本身派生的值是工作区 cwd。基于本提供方的 `dsh-tool-subagent` 部署应设置 `maxDepth: 'provider-managed'`——子 harness 拥有自己的递归预算。
+提供方声明 `agentOptions: true`，同时保持 `outputSchema`/`depthLimit`/`toolFilter`/`persona` 为 false，并且 `inheritsParentContext: false`。不可变的 `agentRouteDefaults` 会在模型覆盖与确切路由预检前，把配置的 provider／model 基线公开给 `qilin-tool-subagent`；`start()` 则为直接调用方与 `maxTokens` 独立应用同一份配置默认值。Agent 路由值通过显式白名单跨越 SDK 协议；子进程仍是另一进程里的全新运行时，唯一从父 agent 本身派生的值是工作区 cwd。基于本提供方的 `qilin-tool-subagent` 部署应设置 `maxDepth: 'provider-managed'`——子 harness 拥有自己的递归预算。
 
 ### 配置
 
 | 字段 | 默认值 | 含义 |
 |---|---|---|
-| `providerName` | `dsh-sdk` | `ctx.subagents` 上的注册表名称 |
-| `dshBin` | SDK 依赖 | 显式 dsh CLI 模块，在插件加载时解析并校验；省略则使用 SDK 依赖 |
+| `providerName` | `qilin-sdk` | `ctx.subagents` 上的注册表名称 |
+| `dshBin` | SDK 依赖 | 显式 openkylin CLI 模块，在插件加载时解析并校验；省略则使用 SDK 依赖 |
 | `profile` | `sdk` | 子进程命名的 profile |
 | `patches` | `[]` | 每次启动的有序 profile patch 文件，在插件加载时解析并校验 |
 | `dshHome` | 必填 | 每个嵌套子进程的绝对隔离 Harness home |
@@ -51,15 +51,15 @@ kind: "package-reference"
 | `disposeEofGraceMs` | `6000` | stdin EOF 之后、平台终止之前的宽限 |
 | `disposeGraceMs` | `3000` | 终止后的退出确认宽限 |
 
-生成的[配置目录](../../../docs/config-catalog.zh.md#deepseek-aidsh-subagent-dsh-sdk)是每个受支持字段及其 JSDoc 的穷尽式真源。
+生成的[配置目录](../../../docs/config-catalog.zh.md#qilinsubagent-dsh-sdk)是每个受支持字段及其 JSDoc 的穷尽式真源。
 
 请求 `agentOptions` 会分别覆盖 `provider`、`model` 与 `maxTokens`。`reasoningEffort` 没有提供方实例默认值：请求省略时保持缺省，由所选子模型解析自身默认值。面向模型的 subagent 工具可在每次调用时选择提供方／模型／推理强度；`maxTokens` 仍由工具配置或本提供方默认值在部署侧控制。
 
 ```yaml
 - id: subagent-dsh-sdk
-  name: '@deepseek-ai/dsh-subagent-dsh-sdk'
+  name: '@qilin/subagent-dsh-sdk'
   config:
-    providerName: dsh-sdk
+    providerName: qilin-sdk
     profile: sdk
     patches: ['./profiles/research-child.cordis.yml']
     dshHome: !!js dshHomePath('children')
@@ -67,8 +67,8 @@ kind: "package-reference"
     env:
       DEEPSEEK_API_KEY: !!js process.env.DEEPSEEK_API_KEY
 - id: tool-subagent
-  name: '@deepseek-ai/dsh-tool-subagent'
-  config: { provider: dsh-sdk, toolName: subagent, maxDepth: 'provider-managed' }
+  name: '@qilin/tool-subagent'
+  config: { provider: qilin-sdk, toolName: subagent, maxDepth: 'provider-managed' }
 ```
 
 ### 你会得到什么
@@ -124,10 +124,10 @@ kind: "package-reference"
 当包级约定不够用时阅读以下页面。它们从本后端逐步进入它接入的 seam 与它驱动的 SDK。
 
 - [Subagent 子系统](../../../docs/subsystems/subagent.zh.md)——服务约定、提供方约定与终态结果语义。
-- [dsh-subagent seam](../subagent/README.zh.md)——本提供方注册于其上的注册表与启动 API。
+- [qilin-subagent seam](../subagent/README.zh.md)——本提供方注册于其上的注册表与启动 API。
 - [ACP subagent 后端](../subagent-acp/README.zh.md)——经 Agent Client Protocol 的兄弟进程外提供方。
 - [TypeScript SDK 客户端](../../sdk/client/README.zh.md)——本后端用以驱动子进程的 stdio JSON-RPC 客户端。
-- [生成配置目录](../../../docs/config-catalog.zh.md#deepseek-aidsh-subagent-dsh-sdk)——每个受支持配置字段及其源声明。
+- [生成配置目录](../../../docs/config-catalog.zh.md#qilinsubagent-dsh-sdk)——每个受支持配置字段及其源声明。
 
 -----
 
@@ -152,7 +152,7 @@ kind: "package-reference"
 
 #### 模型看到什么
 
-经由 `dsh-tool-subagent`，父级只会收到子运行时最终的 assistant 文本（或累积的部分文本），或该消费方给出的精确停止原因错误；不会收到中间消息或工具流量。带诊断的非完成结果会先呈现安全诊断，再单独呈现保留的部分 assistant 输出；启动与 shutdown 错误使用同一固定事实，不公开原始 SDK 文本。
+经由 `qilin-tool-subagent`，父级只会收到子运行时最终的 assistant 文本（或累积的部分文本），或该消费方给出的精确停止原因错误；不会收到中间消息或工具流量。带诊断的非完成结果会先呈现安全诊断，再单独呈现保留的部分 assistant 输出；启动与 shutdown 错误使用同一固定事实，不公开原始 SDK 文本。
 
 #### Token 影响
 

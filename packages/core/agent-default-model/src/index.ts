@@ -1,14 +1,14 @@
 /**
  * Default model selection for an Agent without a session-specific selection.
  *
- * @module @deepseek-ai/dsh-agent-default-model
+ * @module @qilin/agent-default-model
  */
 
 import { Context, Service } from '@deepseek-ai/cordis'
 import z from '@deepseek-ai/schemastery'
-import type { ModelSelection } from '@deepseek-ai/dsh-agent'
-import { ReasoningEffortId } from '@deepseek-ai/dsh-llm'
-import type {} from '@deepseek-ai/dsh-settings'
+import type { ModelSelection } from '@qilin/agent'
+import { ReasoningEffortId } from '@qilin/llm'
+import type {} from '@qilin/settings'
 
 declare module '@deepseek-ai/cordis' {
   interface Context {

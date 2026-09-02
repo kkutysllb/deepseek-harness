@@ -9,22 +9,22 @@ import { mkdtempSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { Context } from '@deepseek-ai/cordis'
-import SessionStore, { SessionLogOffset, SessionSeq } from '@deepseek-ai/dsh-session'
-import AgentRegistry from '@deepseek-ai/dsh-agent'
-import { SessionHistoryController } from '@deepseek-ai/dsh-api-session-controller/src/history.ts'
-import { subagentIdentityProjectionDefinition } from '@deepseek-ai/dsh-subagent/src/projection.ts'
-import TypertRegistry from '@deepseek-ai/dsh-typert-registry'
-import { createUserMessage, MessageId } from '@deepseek-ai/dsh-llm'
-import { snapshotSubagentDescriptor } from '@deepseek-ai/dsh-subagent'
-import type { Agent } from '@deepseek-ai/dsh-agent'
-import type { Session, SessionEvent, SessionHeader, SessionId } from '@deepseek-ai/dsh-session'
+import SessionStore, { SessionLogOffset, SessionSeq } from '@qilin/session'
+import AgentRegistry from '@qilin/agent'
+import { SessionHistoryController } from '@qilin/api-session-controller/src/history.ts'
+import { subagentIdentityProjectionDefinition } from '@qilin/subagent/src/projection.ts'
+import TypertRegistry from '@qilin/typert-registry'
+import { createUserMessage, MessageId } from '@qilin/llm'
+import { snapshotSubagentDescriptor } from '@qilin/subagent'
+import type { Agent } from '@qilin/agent'
+import type { Session, SessionEvent, SessionHeader, SessionId } from '@qilin/session'
 import type { SessionPromptRequest, SessionRequestId } from '../src/types.ts'
 import {
   PersistenceCoordinator,
   SessionPersistenceRevision,
   type PersistenceBackend,
   type StoredPrefix,
-} from '@deepseek-ai/dsh-session-persistence'
+} from '@qilin/session-persistence'
 import { ApiSessionList } from '../src/list.ts'
 import {
   createSessionTestRemote,
@@ -60,7 +60,7 @@ describe('sessions.list cold merge', () => {
   it('fully observes only small possibly-blank artifacts and treats unavailable probes as visible', async () => {
     const ctx = new Context()
     await ctx.plugin(SessionStore)
-    const root = mkdtempSync(join(tmpdir(), 'dsh-cold-'))
+    const root = mkdtempSync(join(tmpdir(), 'qilin-cold-'))
     const smallPath = join(root, 'small.log')
     const largePath = join(root, 'large.log')
     writeFileSync(smallPath, 'x'.repeat(1024))
@@ -231,7 +231,7 @@ describe('sessions.list cold merge', () => {
     const ctx = new Context()
     await ctx.plugin(SessionStore)
     await ctx.plugin(AgentRegistry)
-    const root = mkdtempSync(join(tmpdir(), 'dsh-cold-race-'))
+    const root = mkdtempSync(join(tmpdir(), 'qilin-cold-race-'))
     const path = join(root, 'small.log')
     writeFileSync(path, 'small')
     const meta = header('attached-during-probe', 100)
@@ -287,7 +287,7 @@ describe('sessions.list cold merge', () => {
     await ctx.plugin(SessionStore)
     await ctx.plugin(AgentRegistry)
     installSessionReadTestServices(ctx)
-    const root = mkdtempSync(join(tmpdir(), 'dsh-cold-unprojected-'))
+    const root = mkdtempSync(join(tmpdir(), 'qilin-cold-unprojected-'))
     const path = join(root, 'small.log')
     writeFileSync(path, 'small')
     const meta = header('unprojected-small', 100)
@@ -449,7 +449,7 @@ describe('Remote Agent and Session lookup policy', () => {
       inspect,
       locate: () => undefined,
     })
-    const resumedSession = { id: sessionId, header: meta, events: [] } as unknown as import('@deepseek-ai/dsh-session').Session
+    const resumedSession = { id: sessionId, header: meta, events: [] } as unknown as import('@qilin/session').Session
     const resumedAgent = { id: sessionId, session: resumedSession, status: 'idle', ctx } as Agent
     const release = Promise.withResolvers<undefined>()
     const resume = vi.spyOn(ctx.agents, 'resume').mockImplementation(async () => {

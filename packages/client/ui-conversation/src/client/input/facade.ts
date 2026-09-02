@@ -11,7 +11,7 @@
 import type { Context } from '@deepseek-ai/cordis'
 import {
   createSnapshotStore, type ObservableSnapshot, type SnapshotStore,
-} from '@deepseek-ai/dsh-client-store'
+} from '@qilin/client-store'
 import type { LexicalEditor, NodeKey } from 'lexical'
 import {
   $addUpdateTag, $createParagraphNode, $createTextNode, $getRoot, $getSelection, $isRangeSelection,
@@ -172,7 +172,7 @@ export class SessionInputShell implements SessionInput {
 
   constructor(private readonly deps: SessionInputDeps) {
     this.editor = createEditor({
-      namespace: 'dsh-composer',
+      namespace: 'qilin-composer',
       nodes: [ReferenceChipNode, TextRefNode],
       onError: (error) => { throw error },
     })

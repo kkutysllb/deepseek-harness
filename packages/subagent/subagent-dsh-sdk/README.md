@@ -3,13 +3,13 @@ description: "The out-of-process SDK subagent backend for users and maintainers 
 kind: "package-reference"
 ---
 
-# @deepseek-ai/dsh-subagent-dsh-sdk
+# @qilin/subagent-dsh-sdk
 
 English | [中文](README.zh.md)
 
 ## Summary
 
-`dsh-subagent-dsh-sdk` runs each delegated child as a complete DeepSeek Harness runtime in a fresh subprocess, driven over stdio JSON-RPC through the TypeScript SDK client. It is the second out-of-process backend beside the ACP provider, differing in the wire and the child contract: the child is a full peer harness with its own `cordis.yml`-decided composition, session persistence, model route, and tools. Each run spawns the child runtime (the resolved `@deepseek-ai/dsh` CLI under Node, or the configured `dshBin`), completes an `initialize` handshake with the configured provider and model route, submits the task, and reads the answer from the child's session events. The parent receives only the child's final assistant text or a safe error — no intermediate messages or tool traffic crosses the boundary. Choose it when the child should be a genuine Harness runtime, fully isolated from the parent harness.
+`qilin-subagent-dsh-sdk` runs each delegated child as a complete DeepSeek Harness runtime in a fresh subprocess, driven over stdio JSON-RPC through the TypeScript SDK client. It is the second out-of-process backend beside the ACP provider, differing in the wire and the child contract: the child is a full peer harness with its own `cordis.yml`-decided composition, session persistence, model route, and tools. Each run spawns the child runtime (the resolved `@qilin/cli` CLI under Node, or the configured `dshBin`), completes an `initialize` handshake with the configured provider and model route, submits the task, and reads the answer from the child's session events. The parent receives only the child's final assistant text or a safe error — no intermediate messages or tool traffic crosses the boundary. Choose it when the child should be a genuine Harness runtime, fully isolated from the parent harness.
 
 ## Table of Contents
 
@@ -31,14 +31,14 @@ Mount this provider when a delegation should run as a complete Harness runtime i
 
 Choose this backend when the child must be a full harness peer — its own composition, session persistence, model route, and tools — rather than an agent that shares the parent's process. Choose an in-process backend when the child must share the parent's composition or honor parent-enforced non-route capabilities: this provider accepts agent route options but rejects structured output, depth caps, tool filters, and personas rather than silently omitting them.
 
-The provider advertises `agentOptions: true`, with `outputSchema`/`depthLimit`/`toolFilter`/`persona` false, and `inheritsParentContext: false`. Its immutable `agentRouteDefaults` publish the configured provider/model baseline to `dsh-tool-subagent` before model overrides and exact-route preflight; `start()` independently applies the same configuration defaults for direct callers and `maxTokens`. Agent route values cross the SDK wire as an explicit whitelist; the child remains a fresh runtime in another process, and the only value derived from the parent agent itself is the workspace cwd. `dsh-tool-subagent` deployments over this provider set `maxDepth: 'provider-managed'` — the child harness owns its own recursion budget.
+The provider advertises `agentOptions: true`, with `outputSchema`/`depthLimit`/`toolFilter`/`persona` false, and `inheritsParentContext: false`. Its immutable `agentRouteDefaults` publish the configured provider/model baseline to `qilin-tool-subagent` before model overrides and exact-route preflight; `start()` independently applies the same configuration defaults for direct callers and `maxTokens`. Agent route values cross the SDK wire as an explicit whitelist; the child remains a fresh runtime in another process, and the only value derived from the parent agent itself is the workspace cwd. `qilin-tool-subagent` deployments over this provider set `maxDepth: 'provider-managed'` — the child harness owns its own recursion budget.
 
 ### Configuration
 
 | Field | Default | Meaning |
 |---|---|---|
-| `providerName` | `dsh-sdk` | Registry name on `ctx.subagents` |
-| `dshBin` | SDK dependency | Explicit dsh CLI module, resolved and checked at plugin load; omission uses the SDK dependency |
+| `providerName` | `qilin-sdk` | Registry name on `ctx.subagents` |
+| `dshBin` | SDK dependency | Explicit openkylin CLI module, resolved and checked at plugin load; omission uses the SDK dependency |
 | `profile` | `sdk` | Named child profile |
 | `patches` | `[]` | Ordered per-launch profile patch files, resolved and checked at plugin load |
 | `dshHome` | required | Absolute isolated Harness home for every nested child process |
@@ -51,15 +51,15 @@ The provider advertises `agentOptions: true`, with `outputSchema`/`depthLimit`/`
 | `disposeEofGraceMs` | `6000` | Grace after stdin EOF before platform termination |
 | `disposeGraceMs` | `3000` | Exit-confirmation grace after termination |
 
-The generated [configuration catalog](../../../docs/config-catalog.md#deepseek-aidsh-subagent-dsh-sdk) is the exhaustive source for every accepted field and its JSDoc.
+The generated [configuration catalog](../../../docs/config-catalog.md#qilinsubagent-dsh-sdk) is the exhaustive source for every accepted field and its JSDoc.
 
 Request `agentOptions` override `provider`, `model`, and `maxTokens` independently. `reasoningEffort` has no provider-instance default: an omitted request leaves it absent so the selected child model resolves its own default. The model-facing subagent tool can select provider/model/reasoning per call; `maxTokens` remains deployment-controlled through tool config or this provider's default.
 
 ```yaml
 - id: subagent-dsh-sdk
-  name: '@deepseek-ai/dsh-subagent-dsh-sdk'
+  name: '@qilin/subagent-dsh-sdk'
   config:
-    providerName: dsh-sdk
+    providerName: qilin-sdk
     profile: sdk
     patches: ['./profiles/research-child.cordis.yml']
     dshHome: !!js dshHomePath('children')
@@ -67,8 +67,8 @@ Request `agentOptions` override `provider`, `model`, and `maxTokens` independent
     env:
       DEEPSEEK_API_KEY: !!js process.env.DEEPSEEK_API_KEY
 - id: tool-subagent
-  name: '@deepseek-ai/dsh-tool-subagent'
-  config: { provider: dsh-sdk, toolName: subagent, maxDepth: 'provider-managed' }
+  name: '@qilin/tool-subagent'
+  config: { provider: qilin-sdk, toolName: subagent, maxDepth: 'provider-managed' }
 ```
 
 ### What you get
@@ -124,10 +124,10 @@ The child environment is the subprocess seam's credential-scrubbed parent enviro
 Read these pages when the package-level contract is not enough. They move from this backend to the seam it plugs into and the SDK it drives.
 
 - [Subagent subsystem](../../../docs/subsystems/subagent.md) — the service contract, provider contract, and terminal result semantics.
-- [dsh-subagent seam](../subagent/README.md) — the registry and start API this provider registers on.
+- [qilin-subagent seam](../subagent/README.md) — the registry and start API this provider registers on.
 - [ACP subagent backend](../subagent-acp/README.md) — the sibling out-of-process provider over the Agent Client Protocol.
 - [TypeScript SDK client](../../sdk/client/README.md) — the stdio JSON-RPC client this backend drives the child through.
-- [Generated configuration catalog](../../../docs/config-catalog.md#deepseek-aidsh-subagent-dsh-sdk) — every accepted config field and its source declaration.
+- [Generated configuration catalog](../../../docs/config-catalog.md#qilinsubagent-dsh-sdk) — every accepted config field and its source declaration.
 
 -----
 
@@ -152,7 +152,7 @@ Independent of the parent request cache. Each SDK child can reuse only prefixes 
 
 #### What the model sees
 
-Through `dsh-tool-subagent`, the parent receives only the child's final assistant text (or accumulated partial text) or that consumer's exact stop-reason error, not intermediate messages or tool traffic. A diagnostic-bearing non-completed result presents the safe diagnostic before separately preserved partial assistant output; startup and shutdown errors expose the same fixed facts without raw SDK text.
+Through `qilin-tool-subagent`, the parent receives only the child's final assistant text (or accumulated partial text) or that consumer's exact stop-reason error, not intermediate messages or tool traffic. A diagnostic-bearing non-completed result presents the safe diagnostic before separately preserved partial assistant output; startup and shutdown errors expose the same fixed facts without raw SDK text.
 
 #### Token effect
 

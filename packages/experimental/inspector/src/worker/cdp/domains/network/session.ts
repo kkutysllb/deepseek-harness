@@ -141,8 +141,8 @@ export class NetworkDomain {
         this.sendRequestStart(session, event.requestKey, resourceType)
         session.sendEvent('Network.responseReceived', {
           requestId: event.requestId,
-          loaderId: 'dsh-inspector-loader',
-          frameId: 'dsh-inspector-host-frame',
+          loaderId: 'qilin-inspector-loader',
+          frameId: 'qilin-inspector-host-frame',
           timestamp,
           type: resourceType,
           response: {
@@ -213,8 +213,8 @@ export class NetworkDomain {
     this.requestTypes.get(session)?.set(requestKey, resourceType)
     session.sendEvent('Network.requestWillBeSent', {
       requestId: event.requestId,
-      loaderId: 'dsh-inspector-loader',
-      documentURL: 'dsh://host',
+      loaderId: 'qilin-inspector-loader',
+      documentURL: 'openkylin://host',
       request: {
         url: event.url,
         method: event.method,

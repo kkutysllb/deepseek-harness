@@ -2,7 +2,7 @@
  * In-memory filesystem behind the worker's `node:fs` proxy. Contents come from
  * the build-time image (see {@link loadVfsImage}); this remains the synchronous
  * authority when an asynchronous durable sink mirrors selected subtrees.
- * @module @deepseek-ai/dsh-experimental-webworker-runtime/src/storage/memory
+ * @module @qilin/experimental-webworker-runtime/src/storage/memory
  */
 import { dirname, join, normalize, resolve, SEP } from '../module-system/posix-path.ts'
 import { IMAGE_OVERLAY_DIRECTORIES } from '../image-layout.ts'
@@ -48,7 +48,7 @@ function encodingOf(options: VfsReadOptions): VfsEncoding | undefined {
 
 // Permission bits are entry state: creation takes the caller's mode (or the
 // umask-free default), `chmod` changes it, and both stat shapes report the
-// stored value — the round-trip consumers like dsh-credentials-local's
+// stored value — the round-trip consumers like qilin-credentials-local's
 // owner-only check rely on. The bits are never enforced: a single-owner
 // filesystem reads and writes as its owner regardless, like root.
 function statsOf(size: number, mtimeMs: number, directory: boolean, ino: bigint, mode: number): VfsStats {

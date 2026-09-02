@@ -15,12 +15,12 @@
  */
 import { Context } from '@deepseek-ai/cordis'
 import { describe, expect, it, vi } from 'vitest'
-import type { SessionId } from '@deepseek-ai/dsh-session/types'
-import { SlotRegistry } from '@deepseek-ai/dsh-client-ui-renderer/client'
-import { InputTriggerService } from '@deepseek-ai/dsh-client-ui-input-trigger/client'
-import { RemoteError, TestRemote } from '@deepseek-ai/dsh-client-test-runtime'
-import type { RemoteFailure } from '@deepseek-ai/dsh-api-remotes/client'
-import type { ClientSessionContext, InputTriggerSource } from '@deepseek-ai/dsh-client-ui-input-trigger/client'
+import type { SessionId } from '@qilin/session/types'
+import { SlotRegistry } from '@qilin/client-ui-renderer/client'
+import { InputTriggerService } from '@qilin/client-ui-input-trigger/client'
+import { RemoteError, TestRemote } from '@qilin/client-test-runtime'
+import type { RemoteFailure } from '@qilin/api-remotes/client'
+import type { ClientSessionContext, InputTriggerSource } from '@qilin/client-ui-input-trigger/client'
 import { apply, inject } from '../src/client/index.ts'
 import { SkillRow as SkillToolRow } from '../src/client/SkillRow.tsx'
 

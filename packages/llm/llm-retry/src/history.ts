@@ -1,6 +1,6 @@
-/** Durable request-route lookup for one open model step. @module @deepseek-ai/dsh-llm-retry/history */
+/** Durable request-route lookup for one open model step. @module @qilin/llm-retry/history */
 
-import type { SessionEvent } from '@deepseek-ai/dsh-session'
+import type { SessionEvent } from '@qilin/session'
 
 /**
  * Find the provider in force for one currently open step.

@@ -1,16 +1,19 @@
 /** Host HTTP bridge for browser-client RPC. */
 import type { Context } from '@deepseek-ai/cordis'
 import z from '@deepseek-ai/schemastery'
-import type {} from '@deepseek-ai/dsh-attachment'
-import type {} from '@deepseek-ai/dsh-credentials'
+import type {} from '@qilin/attachment'
+import type {} from '@qilin/credentials'
 // Activates the webServer Context merge used below.
-import type { WebRoute } from '@deepseek-ai/dsh-host-webserver'
-import { API_PATH } from './api-path.ts'
+import type { WebRoute } from '@qilin/host-webserver'
+import { API_PATH, endpointFromPath } from './api-path.ts'
+import type { ApiAuthGate } from './api-auth-gate.ts'
+import { RBAC_GATE_FAULT_RESPONSE, type RbacAuthGate, type RbacAuthVerdict } from './rbac-auth-gate.ts'
 import { bridge, DEFAULT_MAX_REQUEST_BODY_BYTES } from './http-bridge.ts'
 import { assertTrustedAuthority } from './api-request-trust.ts'
 import { BrowserAuth } from './browser-auth.ts'
 import { HostConnectionService } from './rpc-host.ts'
 
+export type { RbacAuthGate, RbacAuthVerdict } from './rbac-auth-gate.ts'
 export type {
   ConnectionFetchMethod,
   ConnectionFetchHandler,
@@ -120,6 +123,39 @@ export async function apply(ctx: Context, config?: ConnectionConfig): Promise<vo
         res.writeHead(rejection)
         res.end(rejection === 401 ? 'unauthorized' : 'forbidden')
         return
+      }
+      // Optional accounts composition: authentication, then the RBAC fence on
+      // cookie-authenticated writes. Absent when no accounts plugin is mounted.
+      const gate: ApiAuthGate | undefined = ctx.get('apiAuth')
+      if (gate !== undefined) {
+        const verdict = gate.checkRequest(req)
+        if (!verdict.allowed) {
+          res.writeHead(verdict.status, { 'content-type': 'application/json' })
+          res.end(verdict.body)
+          return
+        }
+        const rbac: RbacAuthGate | undefined = ctx.get('rbacAuth')
+        if (rbac !== undefined) {
+          // The gate judges the transport-parsed endpoint ('session.list'),
+          // the same normalization the channel routes and the policy grammar
+          // use; a path that parses to no endpoint falls to the dispatch.
+          const endpoint = endpointFromPath(API_PATH, new URL(req.url ?? '/', 'http://localhost').pathname)
+          if (endpoint !== undefined) {
+            let rbacVerdict: RbacAuthVerdict
+            try {
+              rbacVerdict = rbac.checkRequest(req, endpoint)
+            } catch {
+              res.writeHead(RBAC_GATE_FAULT_RESPONSE.status, { 'content-type': 'application/json' })
+              res.end(RBAC_GATE_FAULT_RESPONSE.body)
+              return
+            }
+            if (!rbacVerdict.allowed) {
+              res.writeHead(rbacVerdict.status, { 'content-type': 'application/json' })
+              res.end(rbacVerdict.body)
+              return
+            }
+          }
+        }
       }
       await bridge(req, res, fetchHandler, maxRequestBodyBytes)
     },

@@ -11,19 +11,19 @@ import { mkdir, mkdtemp, rm, writeFile } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { Context } from '@deepseek-ai/cordis'
-import { CodeRuntime } from '@deepseek-ai/dsh-code-runtime'
-import type { CodeRunRequest, CodeRunResult } from '@deepseek-ai/dsh-code-runtime'
-import { ToolCallId, LlmAdapter, LlmRuntime } from '@deepseek-ai/dsh-llm'
-import type { GenerateOptions, LlmModelInfo, LlmResolvedModelInfo, Message, StreamChunk } from '@deepseek-ai/dsh-llm'
-import SystemPrompt from '@deepseek-ai/dsh-system-prompt'
-import ToolRuntime, { RUN_CODE_NAME } from '@deepseek-ai/dsh-tools'
-import type { Config as ToolConfig } from '@deepseek-ai/dsh-tools'
-import LocalFileSystem from '@deepseek-ai/dsh-fs-local'
-import * as FsPolicy from '@deepseek-ai/dsh-fs-observation-policy'
-import LocalAttachmentStore from '@deepseek-ai/dsh-attachment-local'
-import { AttachmentError, AttachmentId, AttachmentStore } from '@deepseek-ai/dsh-attachment'
-import type { ImageAttachmentLimits, ImageAttachmentRef, SaveImageAttachment, StoredImageAttachment } from '@deepseek-ai/dsh-attachment'
-import * as ToolFs from '@deepseek-ai/dsh-tool-fs'
+import { CodeRuntime } from '@qilin/code-runtime'
+import type { CodeRunRequest, CodeRunResult } from '@qilin/code-runtime'
+import { ToolCallId, LlmAdapter, LlmRuntime } from '@qilin/llm'
+import type { GenerateOptions, LlmModelInfo, LlmResolvedModelInfo, Message, StreamChunk } from '@qilin/llm'
+import SystemPrompt from '@qilin/system-prompt'
+import ToolRuntime, { RUN_CODE_NAME } from '@qilin/tools'
+import type { Config as ToolConfig } from '@qilin/tools'
+import LocalFileSystem from '@qilin/fs-local'
+import * as FsPolicy from '@qilin/fs-observation-policy'
+import LocalAttachmentStore from '@qilin/attachment-local'
+import { AttachmentError, AttachmentId, AttachmentStore } from '@qilin/attachment'
+import type { ImageAttachmentLimits, ImageAttachmentRef, SaveImageAttachment, StoredImageAttachment } from '@qilin/attachment'
+import * as ToolFs from '@qilin/tool-fs'
 import {
   applyReadImageTool,
   formatImageReadOutput,
@@ -82,8 +82,8 @@ let dir: string
 let home: string
 
 beforeEach(async () => {
-  dir = await mkdtemp(join(tmpdir(), 'dsh-read-image-'))
-  home = await mkdtemp(join(tmpdir(), 'dsh-read-image-home-'))
+  dir = await mkdtemp(join(tmpdir(), 'qilin-read-image-'))
+  home = await mkdtemp(join(tmpdir(), 'qilin-read-image-home-'))
 })
 afterEach(async () => {
   await rm(dir, { recursive: true, force: true })

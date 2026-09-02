@@ -25,14 +25,14 @@ env:
   # Cloudflare Pages project receiving the upload. Its preview deployments are
   # the surface the Access application protects; the project's production branch
   # is deliberately a name no deployment uses, so no unprotected URL exists.
-  CF_PROJECT: dsh-build-preview
+  CF_PROJECT: qilin-build-preview
   # CI runs must never report to the production telemetry endpoint baked into
   # apps/cli/cordis.yml (AppCLIEntry disables the row when set).
-  DSH_TELEMETRY_DISABLED: '1'
+  OPENKYLIN_TELEMETRY_DISABLED: '1'
 
 jobs:
   preview:
-    runs-on: dsh-ubuntu-24-04-16core
+    runs-on: qilin-ubuntu-24-04-16core
     name: cloudflare pages preview
     steps:
       - uses: actions/checkout@v6
@@ -75,8 +75,8 @@ jobs:
 
       - name: Build the preview page and pack the VFS image
         env:
-          DSH_CLIENT_TITLE: DSH preview pr-${{ github.event.pull_request.number }}
-        run: pnpm --filter @deepseek-ai/dsh-web-frontend run build:preview
+          OPENKYLIN_CLIENT_TITLE: DSH preview pr-${{ github.event.pull_request.number }}
+        run: pnpm --filter @qilin/web-frontend run build:preview
 
       # Sourcemaps carry complete sources and stay off the deployment platform.
       # index.html is the served page, which cannot boot without a host
@@ -155,7 +155,7 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           PR: ${{ github.event.pull_request.number }}
         run: |
-          marker='<!-- dsh-preview-url -->'
+          marker='<!-- qilin-preview-url -->'
           existing=$(gh pr view "$PR" --json comments \
             --jq "[.comments[] | select(.body | contains(\"$marker\")) | .url] | first // empty")
           if [ -n "$existing" ]; then

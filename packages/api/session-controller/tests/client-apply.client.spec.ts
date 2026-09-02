@@ -3,14 +3,14 @@ import type { Fiber } from '@deepseek-ai/cordis'
 import type {
   ConnectionGeneration,
   ConnectionHandle,
-} from '@deepseek-ai/dsh-client-connection/client'
+} from '@qilin/client-connection/client'
 import {
   RemoteStreamCarrierError,
   RemoteStream,
   type RemoteStreamOptions,
-} from '@deepseek-ai/dsh-api-gateway/client'
-import type { SessionId } from '@deepseek-ai/dsh-session/types'
-import TypertRegistry from '@deepseek-ai/dsh-typert-registry'
+} from '@qilin/api-gateway/client'
+import type { SessionId } from '@qilin/session/types'
+import TypertRegistry from '@qilin/typert-registry'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import * as SessionClient from '../src/client/index.ts'
 import { ClientSessions } from '../src/client/sessions/service.ts'
@@ -50,6 +50,8 @@ async function mount(initialGeneration?: ConnectionGeneration): Promise<Bench> {
   let generation = initialGeneration
   const connection: ConnectionHandle = {
     isLoopback: true,
+    auth: {} as never,
+    onUnauthorized: () => () => {},
     generation: {
       getSnapshot: () => generation,
       subscribe: (listener) => {

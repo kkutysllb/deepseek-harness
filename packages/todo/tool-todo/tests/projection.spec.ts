@@ -9,17 +9,17 @@
 
 import { describe, expect, it } from 'vitest'
 import { Context } from '@deepseek-ai/cordis'
-import AgentRegistry from '@deepseek-ai/dsh-agent'
-import type { Agent } from '@deepseek-ai/dsh-agent'
-import { createUserMessage } from '@deepseek-ai/dsh-llm'
-import SessionStore from '@deepseek-ai/dsh-session'
-import type { Session } from '@deepseek-ai/dsh-session'
-import type { TodoItem } from '@deepseek-ai/dsh-tool-todo'
-import SystemPrompt from '@deepseek-ai/dsh-system-prompt'
-import ToolRuntime from '@deepseek-ai/dsh-tools'
-import SessionProjectionRegistry from '@deepseek-ai/dsh-session-projection'
-import UserQuestionService from '@deepseek-ai/dsh-user-questions'
-import * as ToolTodo from '@deepseek-ai/dsh-tool-todo'
+import AgentRegistry from '@qilin/agent'
+import type { Agent } from '@qilin/agent'
+import { createUserMessage } from '@qilin/llm'
+import SessionStore from '@qilin/session'
+import type { Session } from '@qilin/session'
+import type { TodoItem } from '@qilin/tool-todo'
+import SystemPrompt from '@qilin/system-prompt'
+import ToolRuntime from '@qilin/tools'
+import SessionProjectionRegistry from '@qilin/session-projection'
+import UserQuestionService from '@qilin/user-questions'
+import * as ToolTodo from '@qilin/tool-todo'
 
 interface Bench {
   ctx: Context

@@ -10,8 +10,8 @@ The owner is a Host-side Cordis service: extend `TypertRemoteService` so the ser
 
 ```ts
 import type { Context } from '@deepseek-ai/cordis'
-import type { Agent } from '@deepseek-ai/dsh-agent'
-import { Remote, TypertRemoteService } from '@deepseek-ai/dsh-typert-protocol'
+import type { Agent } from '@qilin/agent'
+import { Remote, TypertRemoteService } from '@qilin/typert-protocol'
 
 /** One stored note as a Client reads it. */
 export interface NoteRow {
@@ -55,14 +55,14 @@ A Remote failure is one class, `RemoteError`: merge the domain codes into `Remot
 A code reads `<domain>/<reason>`, and its declaration has four placement rules:
 
 - One producer only: declare it in the producing package, next to the throw.
-- Several packages produce it: declare it in the lowest domain package both depend on (`session/not-found` in `core/session`, `workspace/not-found` in `dsh-workspace`).
+- Several packages produce it: declare it in the lowest domain package both depend on (`session/not-found` in `core/session`, `workspace/not-found` in `qilin-workspace`).
 - The carrier codes `gateway/bad-request`, `gateway/cancelled`, and `gateway/internal` are declared in protocol, and the Gateway infrastructure codes in gateway — use them, never copy them.
 - A local failure that never crosses the wire stays out of the code table; express it with the caller's own type.
 
 ```ts
-import { RemoteError } from '@deepseek-ai/dsh-typert-protocol'
+import { RemoteError } from '@qilin/typert-protocol'
 
-declare module '@deepseek-ai/dsh-typert-protocol' {
+declare module '@qilin/typert-protocol' {
   interface RemoteErrorDetailsMap {
     /** No stored note carries that id. */
     'note/not-found': { readonly noteId: string }
@@ -89,7 +89,7 @@ export async function rename(noteId: string, title: string): Promise<void> {
 
 ## 3. Register it on the package
 
-`@Remote` must live in a Loader entry plugin package; when the owner is an abstract seam, the controller goes in the matching package under `packages/api/`. The manifest gains the two generated entries and the protocol peer dependency, while on the Client side the `@deepseek-ai/dsh-api-remotes` assembly mounts the contribution and re-exports the type vocabulary that consumers need. Which generated artifact each entry points at, and how the generation pipeline is ordered, are in the [API Gateway reference](../api-gateway.md).
+`@Remote` must live in a Loader entry plugin package; when the owner is an abstract seam, the controller goes in the matching package under `packages/api/`. The manifest gains the two generated entries and the protocol peer dependency, while on the Client side the `@qilin/api-remotes` assembly mounts the contribution and re-exports the type vocabulary that consumers need. Which generated artifact each entry points at, and how the generation pipeline is ordered, are in the [API Gateway reference](../api-gateway.md).
 
 ```json
 {
@@ -97,8 +97,8 @@ export async function rename(noteId: string, title: string): Promise<void> {
     "./typert": { "types": "./lib/typert.host.d.ts", "default": "./lib/typert.host.js" },
     "./remote": { "types": "./lib/typert.remote-client.d.ts", "default": "./lib/typert.remote-client.js" }
   },
-  "peerDependencies": { "@deepseek-ai/dsh-typert-protocol": "workspace:^" },
-  "devDependencies": { "@deepseek-ai/dsh-typert-protocol": "workspace:^" }
+  "peerDependencies": { "@qilin/typert-protocol": "workspace:^" },
+  "devDependencies": { "@qilin/typert-protocol": "workspace:^" }
 }
 ```
 
@@ -112,8 +112,8 @@ Fixed Host facts come from `ctx.remote.$host`: `home` and `isLoopback` are plain
 
 ```ts ignore-check
 import type { Context } from '@deepseek-ai/cordis'
-import { isRemoteFailure } from '@deepseek-ai/dsh-api-gateway/client'
-import type {} from '@deepseek-ai/dsh-api-remotes/client'
+import { isRemoteFailure } from '@qilin/api-gateway/client'
+import type {} from '@qilin/api-remotes/client'
 
 export const inject = ['remote', 'remote.notes']
 
@@ -151,7 +151,7 @@ export function hostLabel(): string {
 On the owner side, assert the code that was thrown: recover the failure with `remoteErrorOf` after catching, then compare `code` and the details fields you care about with `toMatchObject` — never deep-compare the error object with `toEqual`, and never assert `instanceof`.
 
 ```ts
-import { remoteErrorOf } from '@deepseek-ai/dsh-typert-protocol'
+import { remoteErrorOf } from '@qilin/typert-protocol'
 import { expect, it } from 'vitest'
 
 declare function rename(noteId: string, title: string): Promise<void>
@@ -166,11 +166,11 @@ it('refuses an unknown note before writing', async () => {
 })
 ```
 
-A Client-side double returns real instances: take the `RemoteError` and `TestRemote` value imports from `@deepseek-ai/dsh-client-test-runtime`, because a value import from the `api-remotes` facade would load the unbuilt assembly chain. `TestRemote.$host` is a plain field a spec assigns directly.
+A Client-side double returns real instances: take the `RemoteError` and `TestRemote` value imports from `@qilin/client-test-runtime`, because a value import from the `api-remotes` facade would load the unbuilt assembly chain. `TestRemote.$host` is a plain field a spec assigns directly.
 
 ```ts ignore-check
 import { Context } from '@deepseek-ai/cordis'
-import { RemoteError, TestRemote } from '@deepseek-ai/dsh-client-test-runtime'
+import { RemoteError, TestRemote } from '@qilin/client-test-runtime'
 import { expect, it } from 'vitest'
 
 it('renders the failure code the Host reported', async () => {

@@ -3,13 +3,13 @@ description: "Whole-log conversation counts and wall times for clients and maint
 kind: "package-reference"
 ---
 
-# @deepseek-ai/dsh-session-stats
+# @qilin/session-stats
 
 English | [中文](README.zh.md)
 
 ## Summary
 
-`dsh-session-stats` serves whole-log conversation figures — turn and step counts plus LLM, tool, first-token, and decode wall times — as the `sessionStats` projection unit. Clients read the figures from the registry's snapshot and change feed, and paging or compaction cannot change them because they fold from the complete durable log. Choose it in compositions that already mount the projection registry, such as the web chat bundle whose stats strip is the reference consumer; assemblies without the registry are unaffected and their consumers fall back to window-scoped counting. Setup and field semantics come first; the fold internals live in a collapsible developer section below.
+`qilin-session-stats` serves whole-log conversation figures — turn and step counts plus LLM, tool, first-token, and decode wall times — as the `sessionStats` projection unit. Clients read the figures from the registry's snapshot and change feed, and paging or compaction cannot change them because they fold from the complete durable log. Choose it in compositions that already mount the projection registry, such as the web chat bundle whose stats strip is the reference consumer; assemblies without the registry are unaffected and their consumers fall back to window-scoped counting. Setup and field semantics come first; the fold internals live in a collapsible developer section below.
 
 ## Table of Contents
 
@@ -30,9 +30,9 @@ Mount the plugin beside the session store and the projection registry when clien
 ### Composition
 
 ```yaml
-- name: '@deepseek-ai/dsh-session'
-- name: '@deepseek-ai/dsh-session-projection'
-- name: '@deepseek-ai/dsh-session-stats'
+- name: '@qilin/session'
+- name: '@qilin/session-projection'
+- name: '@qilin/session-stats'
 ```
 
 ### What the figures mean

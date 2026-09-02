@@ -21,22 +21,22 @@ import SessionStore, {
   SessionId,
   SessionLogOffset,
   SessionSeq,
-} from '@deepseek-ai/dsh-session'
-import type { SessionEvent } from '@deepseek-ai/dsh-session'
-import SessionProjectionRegistry from '@deepseek-ai/dsh-session-projection'
-import type { ProjectionDefinition } from '@deepseek-ai/dsh-session-projection'
-import Storage from '@deepseek-ai/dsh-storage'
+} from '@qilin/session'
+import type { SessionEvent } from '@qilin/session'
+import SessionProjectionRegistry from '@qilin/session-projection'
+import type { ProjectionDefinition } from '@qilin/session-projection'
+import Storage from '@qilin/storage'
 import {
   apply as storageJsonApply, Config as storageJsonConfig, inject as storageJsonInject, name as storageJsonName,
-} from '@deepseek-ai/dsh-storage-json'
+} from '@qilin/storage-json'
 import {
   apply as storageDomainApply, Config as storageDomainConfig, inject as storageDomainInject, name as storageDomainName,
-} from '@deepseek-ai/dsh-storage-domain'
+} from '@qilin/storage-domain'
 import SessionProjectionCache from '../src/index.ts'
 import { checkpointRecord, projectionCacheDomainSpec } from '../src/spec.ts'
 import type { CheckpointRecord } from '../src/spec.ts'
 
-declare module '@deepseek-ai/dsh-session-projection/types' {
+declare module '@qilin/session-projection/types' {
   interface SessionProjectionStateMap {
     'cache-test/marks': MarksState
     'cache-test/marks2': Map<string, string>
@@ -48,7 +48,7 @@ declare module '@deepseek-ai/dsh-session-projection/types' {
   }
 }
 
-declare module '@deepseek-ai/dsh-session/types' {
+declare module '@qilin/session/types' {
   interface SessionEventMap {
     'cache-test/mark': { marks: string[] }
   }
@@ -97,7 +97,7 @@ const contexts: Context[] = []
 const roots: string[] = []
 
 async function harness(options: HarnessOptions = {}) {
-  const root = options.root ?? await mkdtemp(join(tmpdir(), 'dsh-projcache-'))
+  const root = options.root ?? await mkdtemp(join(tmpdir(), 'qilin-projcache-'))
   roots.push(root)
   const ctx = new Context()
   contexts.push(ctx)
@@ -264,7 +264,7 @@ describe('SessionProjectionCache write policy', () => {
   })
 
   it('contains a durable write failure: logs a warning, event path unharmed, next write self-heals', async () => {
-    const root = await mkdtemp(join(tmpdir(), 'dsh-projcache-'))
+    const root = await mkdtemp(join(tmpdir(), 'qilin-projcache-'))
     roots.push(root)
     const ctx = new Context()
     contexts.push(ctx)
@@ -304,7 +304,7 @@ describe('SessionProjectionCache write policy', () => {
 
 describe('SessionProjectionCache listing read', () => {
   it('refuses a checkpoint created for a different inherited cut', async () => {
-    const root = await mkdtemp(join(tmpdir(), 'dsh-projcache-'))
+    const root = await mkdtemp(join(tmpdir(), 'qilin-projcache-'))
     roots.push(root)
     const id = SessionId('cut-identity')
     await seedRecord(
@@ -328,7 +328,7 @@ describe('SessionProjectionCache listing read', () => {
   })
 
   it('serves a creation-time checkpoint at the before-first-event cursor', async () => {
-    const root = await mkdtemp(join(tmpdir(), 'dsh-projcache-'))
+    const root = await mkdtemp(join(tmpdir(), 'qilin-projcache-'))
     roots.push(root)
     await seedRecord(root, 'before-first-event', {
       'cache-test/marks': { ver: 1, seq: -1, val: null },
@@ -340,7 +340,7 @@ describe('SessionProjectionCache listing read', () => {
   })
 
   it('keeps host-only checkpoint state out of cached wire snapshots', async () => {
-    const root = await mkdtemp(join(tmpdir(), 'dsh-projcache-'))
+    const root = await mkdtemp(join(tmpdir(), 'qilin-projcache-'))
     roots.push(root)
     await seedRecord(root, 'host-state', {
       'cache-test/marks': { ver: 1, seq: SessionSeq(4), val: { marks: ['wire'] } },
@@ -359,7 +359,7 @@ describe('SessionProjectionCache listing read', () => {
   })
 
   it('serves identity-matching rows with the cut watermark and refuses unrelated ones', async () => {
-    const root = await mkdtemp(join(tmpdir(), 'dsh-projcache-'))
+    const root = await mkdtemp(join(tmpdir(), 'qilin-projcache-'))
     roots.push(root)
     await seedRecord(root, 'listed', {
       'cache-test/marks': { ver: 1, seq: SessionSeq(4), val: { marks: ['t'] } },
@@ -377,7 +377,7 @@ describe('SessionProjectionCache listing read', () => {
   })
 
   it('returns undefined when the stored record is version-mismatched', async () => {
-    const root = await mkdtemp(join(tmpdir(), 'dsh-projcache-'))
+    const root = await mkdtemp(join(tmpdir(), 'qilin-projcache-'))
     roots.push(root)
     // A stale version-stamped document is discarded at open: absent record.
     const path = recordPath(root, SessionId('all-stale'))
@@ -395,7 +395,7 @@ describe('SessionProjectionCache listing read', () => {
   })
 
   it('returns undefined when every stored row is version-mismatched', async () => {
-    const root = await mkdtemp(join(tmpdir(), 'dsh-projcache-'))
+    const root = await mkdtemp(join(tmpdir(), 'qilin-projcache-'))
     roots.push(root)
     // A current document whose rows all fail the live unit's stateVersion:
     // the listing view is empty, so no block is served.
@@ -408,7 +408,7 @@ describe('SessionProjectionCache listing read', () => {
   })
 
   it('binds identity on cwd too: a matching cwd serves, a moved session does not', async () => {
-    const root = await mkdtemp(join(tmpdir(), 'dsh-projcache-'))
+    const root = await mkdtemp(join(tmpdir(), 'qilin-projcache-'))
     roots.push(root)
     await seedRecord(root, 'homed', {
       'cache-test/marks': { ver: 1, seq: SessionSeq(2), val: { marks: ['w'] } },
@@ -427,7 +427,7 @@ describe('SessionProjectionCache listing read', () => {
   })
 
   it('returns undefined for a malformed record document (refold from the log on the caller side)', async () => {
-    const root = await mkdtemp(join(tmpdir(), 'dsh-projcache-'))
+    const root = await mkdtemp(join(tmpdir(), 'qilin-projcache-'))
     roots.push(root)
     const path = recordPath(root, SessionId('malformed'))
     await mkdir(dirname(path), { recursive: true })
@@ -462,7 +462,7 @@ describe('SessionProjectionCache cold-read seeding', () => {
   }
 
   it('hydratePrepared seeds from a matching row and retries from the exact log on a malformed one', async () => {
-    const root = await mkdtemp(join(tmpdir(), 'dsh-projcache-'))
+    const root = await mkdtemp(join(tmpdir(), 'qilin-projcache-'))
     roots.push(root)
     // Records land on disk before the domain opens, so the in-memory table
     // picks them up at init.
@@ -502,7 +502,7 @@ describe('SessionProjectionCache cold-read seeding', () => {
   })
 
   it('coldSnapshot traverses the full log but applies only the events after each cached watermark', async () => {
-    const root = await mkdtemp(join(tmpdir(), 'dsh-projcache-'))
+    const root = await mkdtemp(join(tmpdir(), 'qilin-projcache-'))
     roots.push(root)
     // A cached row covering the prefix through seq 2 (three applies folded).
     await seedRecord(root, 'cold-snap', {
@@ -547,7 +547,7 @@ describe('SessionProjectionCache cold-read seeding', () => {
   })
 
   it('coldSnapshot write-back is fail-soft: a failed durable write logs and never throws', async () => {
-    const root = await mkdtemp(join(tmpdir(), 'dsh-projcache-'))
+    const root = await mkdtemp(join(tmpdir(), 'qilin-projcache-'))
     roots.push(root)
     const ctx = new Context()
     contexts.push(ctx)

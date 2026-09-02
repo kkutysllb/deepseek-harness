@@ -14,7 +14,7 @@ The stable ACP v1 protocol already defines the required control vocabulary. Addi
 
 ## Decision
 
-`@deepseek-ai/dsh-acp` implements the complete standard ACP v1 automation subset needed by a generic controller: `session/new`, `session/list`, `session/resume`, `session/close`, `session/prompt`, `session/cancel`, `session/set_config_option`, JSON-RPC `$/cancel_request`, `session/update`, and `session/request_permission`. It uses `@agentclientprotocol/sdk` 1.4's app/context interface on both sides of every in-repository connection.
+`@qilin/acp` implements the complete standard ACP v1 automation subset needed by a generic controller: `session/new`, `session/list`, `session/resume`, `session/close`, `session/prompt`, `session/cancel`, `session/set_config_option`, JSON-RPC `$/cancel_request`, `session/update`, and `session/request_permission`. It uses `@agentclientprotocol/sdk` 1.4's app/context interface on both sides of every in-repository connection.
 
 Capabilities omit unsupported methods and features. DSH adds no custom method, capability flag, or `_meta`, and assigns no private meaning to client metadata. `session/load`, `session/delete`, `session/fork`, additional directories, SSE and ACP-transport MCP, modes, commands, plans, terminals, client filesystem operations, and elicitation remain unsupported. Session controls and semantic updates are protocol data for automation; they do not make ACP a human UI.
 
@@ -40,7 +40,7 @@ The advisory LLM catalog now serves another automation consumer without becoming
 
 ## Standard MCP mapping
 
-`session/new` and `session/resume` accept standard stdio and Streamable HTTP MCP declarations. Stdio uses the session `cwd`; HTTP uses the declared URL and headers; both retain `dsh-mcp-client` timeout and reconnect defaults. Names, commands, URLs, environment entries, headers, and duplicate normalized namespaces are validated before Agent publication. Initial connection or discovery failure rolls the unpublished Agent back.
+`session/new` and `session/resume` accept standard stdio and Streamable HTTP MCP declarations. Stdio uses the session `cwd`; HTTP uses the declared URL and headers; both retain `qilin-mcp-client` timeout and reconnect defaults. Names, commands, URLs, environment entries, headers, and duplicate normalized namespaces are validated before Agent publication. Initial connection or discovery failure rolls the unpublished Agent back.
 
 MCP namespace reservations follow the nearest DSH registration scope rather than the process root. Independent Agent scopes may use the same server name, while duplicate names inside one Agent still fail. Scoped disposal releases tools, transports, and reservations.
 

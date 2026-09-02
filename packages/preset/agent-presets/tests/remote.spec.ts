@@ -11,18 +11,18 @@ import { fileURLToPath, pathToFileURL } from 'node:url'
 import { Context } from '@deepseek-ai/cordis'
 import Loader from '@deepseek-ai/cordis-plugin-loader'
 import Include from '@deepseek-ai/cordis-plugin-include'
-import LlmRuntime from '@deepseek-ai/dsh-llm'
-import SessionStore, { SessionId } from '@deepseek-ai/dsh-session'
-import SessionProjectionRegistry from '@deepseek-ai/dsh-session-projection'
-import SystemPrompt from '@deepseek-ai/dsh-system-prompt'
-import ToolRuntime from '@deepseek-ai/dsh-tools'
-import AgentRegistry, { type Agent } from '@deepseek-ai/dsh-agent'
-import AgentLoop from '@deepseek-ai/dsh-agent-loop'
-import { remoteErrorOf, type RemoteFailure } from '@deepseek-ai/dsh-typert-protocol'
+import LlmRuntime from '@qilin/llm'
+import SessionStore, { SessionId } from '@qilin/session'
+import SessionProjectionRegistry from '@qilin/session-projection'
+import SystemPrompt from '@qilin/system-prompt'
+import ToolRuntime from '@qilin/tools'
+import AgentRegistry, { type Agent } from '@qilin/agent'
+import AgentLoop from '@qilin/agent-loop'
+import { remoteErrorOf, type RemoteFailure } from '@qilin/typert-protocol'
 import { afterEach, describe, expect, it, vi } from 'vitest'
-import AgentPresets, { COMPOSITION_FILE, METADATA_FILE } from '@deepseek-ai/dsh-agent-presets'
-import type { Config } from '@deepseek-ai/dsh-agent-presets'
-import type {} from '@deepseek-ai/dsh-agent-presets/types'
+import AgentPresets, { COMPOSITION_FILE, METADATA_FILE } from '@qilin/agent-presets'
+import type { Config } from '@qilin/agent-presets'
+import type {} from '@qilin/agent-presets/types'
 
 const FIXTURES = join(dirname(fileURLToPath(import.meta.url)), 'fixtures')
 const ROOTS = [
@@ -32,7 +32,7 @@ const ROOTS = [
 // A row naming a package, the way an authored preset's rows do. Health
 // resolves every row it can prove will start, so a path reaching outside the
 // temp preset directory these tests seed would report the composition broken.
-const VALID = '- id: prompt\n  name: \'@deepseek-ai/dsh-system-prompt\'\n'
+const VALID = '- id: prompt\n  name: \'@qilin/system-prompt\'\n'
 
 afterEach(() => vi.restoreAllMocks())
 
@@ -96,7 +96,7 @@ const recordedPreset = (agent: Agent): unknown =>
 
 describe('the roster a client reads', () => {
   it('projects path-free rows, marking the default and carrying published metadata', async () => {
-    const userRoot = await mkdtemp(join(tmpdir(), 'dsh-preset-remote-'))
+    const userRoot = await mkdtemp(join(tmpdir(), 'qilin-preset-remote-'))
     await mkdir(join(userRoot, 'documented'), { recursive: true })
     await writeFile(join(userRoot, 'documented', COMPOSITION_FILE), VALID)
     await writeFile(join(userRoot, 'documented', METADATA_FILE), 'name: 我的模式\ndescription: 只做检索。\n')
@@ -121,7 +121,7 @@ describe('the roster a client reads', () => {
   })
 
   it('keeps a broken preset on the roster with its reason', async () => {
-    const userRoot = await mkdtemp(join(tmpdir(), 'dsh-preset-remote-'))
+    const userRoot = await mkdtemp(join(tmpdir(), 'qilin-preset-remote-'))
     await mkdir(join(userRoot, 'damaged'), { recursive: true })
     const ctx = await harness({
       default: 'standard',
@@ -173,7 +173,7 @@ describe('reading one composition', () => {
   })
 
   it('carries the display metadata a preset published', async () => {
-    const userRoot = await mkdtemp(join(tmpdir(), 'dsh-preset-remote-'))
+    const userRoot = await mkdtemp(join(tmpdir(), 'qilin-preset-remote-'))
     await mkdir(join(userRoot, 'documented'), { recursive: true })
     await writeFile(join(userRoot, 'documented', COMPOSITION_FILE), VALID)
     await writeFile(join(userRoot, 'documented', METADATA_FILE), 'name: 我的模式\ndescription: 只做检索。\n')
@@ -240,7 +240,7 @@ describe('authoring over Remote', () => {
   })
 
   it('copies and deletes through the Remote adapters', async () => {
-    const userRoot = await mkdtemp(join(tmpdir(), 'dsh-preset-remote-'))
+    const userRoot = await mkdtemp(join(tmpdir(), 'qilin-preset-remote-'))
     const ctx = await harness({
       default: 'standard',
       roots: [{ path: join(FIXTURES, 'system'), trust: 'system' }, { path: userRoot, trust: 'user' }],
@@ -431,7 +431,7 @@ describe('switching one session\'s composition', () => {
   })
 
   it('reports an unusable composition with its discovery reason', async () => {
-    const userRoot = await mkdtemp(join(tmpdir(), 'dsh-preset-remote-'))
+    const userRoot = await mkdtemp(join(tmpdir(), 'qilin-preset-remote-'))
     await mkdir(join(userRoot, 'damaged'), { recursive: true })
     const ctx = await harness({
       default: 'standard',

@@ -6,8 +6,8 @@
  * richer previews for the turns it holds.
  */
 
-import type {} from '@deepseek-ai/dsh-session-turn-outline/client'
-import { SessionSeq } from '@deepseek-ai/dsh-session/types'
+import type {} from '@qilin/session-turn-outline/client'
+import { SessionSeq } from '@qilin/session/types'
 import type { TurnNavigationItem } from '../contract/snapshot.ts'
 
 /** One rail mark: a loaded Turn scrolls to its row; an unloaded one pages history through its seq first. */

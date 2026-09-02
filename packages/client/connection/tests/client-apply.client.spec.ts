@@ -14,12 +14,12 @@ import {
 
 type Win = {
   location?: { hostname: string; search: string; origin?: string }
-  __DSH_TRANSPORT__?: ClientTransportHooks
+  __OPENKYLIN_TRANSPORT__?: ClientTransportHooks
 }
 
 afterEach(() => {
   delete (globalThis as Win).location
-  delete (globalThis as Win).__DSH_TRANSPORT__
+  delete (globalThis as Win).__OPENKYLIN_TRANSPORT__
   vi.unstubAllGlobals()
   vi.useRealTimers()
 })
@@ -92,6 +92,24 @@ describe('connection client apply', () => {
   it('reports non-loopback page authority through the connection handle', async () => {
     ;(globalThis as Win).location = { hostname: '192.0.2.20', search: '' }
     expect((await mount()).isLoopback).toBe(false)
+  })
+
+  it('emits the shared 401 signal when the auth carrier answers 401', async () => {
+    ;(globalThis as Win).location = { hostname: 'localhost', search: '' }
+    const original = globalThis.fetch
+    // AuthClient binds globalThis.fetch at construction, so stub before mount.
+    globalThis.fetch = () => Promise.resolve(new Response('{}', { status: 401 }))
+    const handle = await mount()
+    const unauthorized = vi.fn()
+    const off = handle.onUnauthorized(unauthorized)
+    try {
+      // Rejection is fine — the tap, not the call, is the assertion.
+      await handle.auth.me().catch(() => undefined)
+    } finally {
+      globalThis.fetch = original
+    }
+    expect(unauthorized).toHaveBeenCalledTimes(1)
+    off()
   })
 
   it('requires one generation source and ignores a stale source disposer', async () => {
@@ -447,7 +465,7 @@ describe('connection client apply', () => {
         yield { endpoint, payload }
       })(),
     )
-    ;(globalThis as Win).__DSH_TRANSPORT__ = {
+    ;(globalThis as Win).__OPENKYLIN_TRANSPORT__ = {
       fetch: vi.fn<ClientTransportHooks['fetch']>(),
       openStream,
       ownsHost: true,

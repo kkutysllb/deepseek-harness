@@ -3,7 +3,7 @@
   "repository": "deepseek-harness",
   "projectNumber": 1,
   "projectTitle": "DSH Issue Management",
-  "lifecycleActor": "dsh-issue-management",
+  "lifecycleActor": "qilin-issue-management",
   "priorityField": "Priority",
   "startDateField": "Start date",
   "projectTimeZone": "Asia/Shanghai",

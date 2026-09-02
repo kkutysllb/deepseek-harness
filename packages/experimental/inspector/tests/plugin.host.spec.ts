@@ -1,7 +1,7 @@
 import { createServer } from 'node:http'
 import type { AddressInfo } from 'node:net'
 import { Context } from '@deepseek-ai/cordis'
-import type { IndexInjection, WebServer } from '@deepseek-ai/dsh-host-webserver'
+import type { IndexInjection, WebServer } from '@qilin/host-webserver'
 import WebSocket, { type RawData } from 'ws'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import { apply, Config, inject, name, startInspector } from '../src/index.ts'
@@ -33,9 +33,9 @@ describe('experimental Inspector Host plugin', () => {
 
     const rows: IndexInjection[] = []
     context.emit('webserver/index-inject', rows)
-    const bootstrap = rows.find(row => row.kind === 'global' && row.name === '__DSH_INSPECTOR__')
-    expect(bootstrap).toMatchObject({ kind: 'global', name: '__DSH_INSPECTOR__' })
-    expect(log).toHaveBeenCalledWith(expect.stringMatching(/^dsh inspector: devtools:\/\//u))
+    const bootstrap = rows.find(row => row.kind === 'global' && row.name === '__OPENKYLIN_INSPECTOR__')
+    expect(bootstrap).toMatchObject({ kind: 'global', name: '__OPENKYLIN_INSPECTOR__' })
+    expect(log).toHaveBeenCalledWith(expect.stringMatching(/^openkylin inspector: devtools:\/\//u))
     expect(context.inspector).toBeDefined()
     await vi.waitFor(async () => {
       const tree = await context!.inspector.cordis.getTree()

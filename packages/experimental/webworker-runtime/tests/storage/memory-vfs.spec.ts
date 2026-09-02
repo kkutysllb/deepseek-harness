@@ -3,7 +3,7 @@
  * MemoryVfs owes its consumers, asserted directly rather than through the
  * `node:fs` bridge.
  *
- * `dsh-fs-local` builds a version token from `dev:ino:size:mtimeNs:ctimeNs` and
+ * `qilin-fs-local` builds a version token from `dev:ino:size:mtimeNs:ctimeNs` and
  * refuses a write whose token moved since it read. Two properties carry that:
  * `ino` identifies the entry at a path, and `mtimeMs` moves on every write. The
  * timestamp cases freeze the clock, because these writes are in memory and two

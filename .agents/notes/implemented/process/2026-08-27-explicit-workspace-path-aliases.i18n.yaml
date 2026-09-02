@@ -2,5 +2,5 @@
 # side as of the last confirmed-consistent state. Both languages carry equal authority;
 # after editing either side, bring the other along and re-record with:
 #   pnpm run verify-translation-pairing --write .agents/notes/implemented/process/2026-08-27-explicit-workspace-path-aliases.md
-2026-08-27-explicit-workspace-path-aliases.md: 51d2dee7911d323637121f509e160ef92c352568
-2026-08-27-explicit-workspace-path-aliases.zh.md: 702d3d7a8cf91c8c307b1708fc30faad6cab009a
+2026-08-27-explicit-workspace-path-aliases.md: d861eec7285ec9c495d48ddc67032b1bad3f8af4
+2026-08-27-explicit-workspace-path-aliases.zh.md: 65fd99c8b2b1d9819bc6aed5df3561c10d61db20

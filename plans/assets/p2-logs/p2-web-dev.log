@@ -1,0 +1,955 @@
+$ tsx scripts/dev-web.ts --poll
+
+7:34:57 AM - Starting compilation in watch mode...
+
+ℹ config file: /Users/libing/kk_Projects/qilin-engine/tsdown.config.ts
+ℹ config file: /Users/libing/kk_Projects/qilin-engine/packages/api/gateway/tsdown.config.ts
+ℹ config file: /Users/libing/kk_Projects/qilin-engine/packages/client/connection/tsdown.config.ts
+ℹ config file: /Users/libing/kk_Projects/qilin-engine/packages/api/remotes/tsdown.config.ts
+ℹ config file: /Users/libing/kk_Projects/qilin-engine/packages/client/hmr/tsdown.config.ts
+ℹ config file: /Users/libing/kk_Projects/qilin-engine/packages/client/locale/tsdown.config.ts
+ℹ config file: /Users/libing/kk_Projects/qilin-engine/packages/client/modules/tsdown.config.ts
+ℹ config file: /Users/libing/kk_Projects/qilin-engine/packages/client/runtime/tsdown.config.ts
+
+7:34:57 AM - Found 0 errors. Watching for file changes.
+ℹ config file: /Users/libing/kk_Projects/qilin-engine/packages/client/ui-agent-preset/tsdown.config.ts
+ℹ config file: /Users/libing/kk_Projects/qilin-engine/packages/client/ui-attachment/tsdown.config.ts
+ℹ config file: /Users/libing/kk_Projects/qilin-engine/packages/client/ui-brand-official/tsdown.config.ts
+ℹ config file: /Users/libing/kk_Projects/qilin-engine/packages/client/ui-conversation/tsdown.config.ts
+ℹ config file: /Users/libing/kk_Projects/qilin-engine/packages/client/ui-commands/tsdown.config.ts
+ℹ config file: /Users/libing/kk_Projects/qilin-engine/packages/client/ui-directory-picker-browse/tsdown.config.ts
+ℹ config file: /Users/libing/kk_Projects/qilin-engine/packages/client/ui-deliverables/tsdown.config.ts
+ℹ config file: /Users/libing/kk_Projects/qilin-engine/packages/client/ui-goal/tsdown.config.ts
+ℹ config file: /Users/libing/kk_Projects/qilin-engine/packages/client/ui-input-trigger/tsdown.config.ts
+ℹ config file: /Users/libing/kk_Projects/qilin-engine/packages/client/ui-jobs/tsdown.config.ts
+ℹ config file: /Users/libing/kk_Projects/qilin-engine/packages/client/ui-layout/tsdown.config.ts
+ℹ config file: /Users/libing/kk_Projects/qilin-engine/packages/client/ui-message-feedback/tsdown.config.ts
+ℹ config file: /Users/libing/kk_Projects/qilin-engine/packages/client/ui-model-selection/tsdown.config.ts
+ℹ config file: /Users/libing/kk_Projects/qilin-engine/packages/client/ui-permission-presets/tsdown.config.ts
+ℹ config file: /Users/libing/kk_Projects/qilin-engine/packages/client/ui-primitives/tsdown.config.ts
+ℹ config file: /Users/libing/kk_Projects/qilin-engine/packages/client/ui-plan/tsdown.config.ts
+ℹ config file: /Users/libing/kk_Projects/qilin-engine/packages/client/ui-reference/tsdown.config.ts
+ℹ config file: /Users/libing/kk_Projects/qilin-engine/packages/client/ui-renderer/tsdown.config.ts
+ℹ config file: /Users/libing/kk_Projects/qilin-engine/packages/client/ui-settings/tsdown.config.ts
+ℹ config file: /Users/libing/kk_Projects/qilin-engine/packages/client/ui-settings-general/tsdown.config.ts
+ℹ config file: /Users/libing/kk_Projects/qilin-engine/packages/client/ui-settings-models/tsdown.config.ts
+ℹ config file: /Users/libing/kk_Projects/qilin-engine/packages/client/ui-settings-plugin-inventory/tsdown.config.ts
+ℹ config file: /Users/libing/kk_Projects/qilin-engine/packages/client/ui-settings-plugins/tsdown.config.ts
+ℹ config file: /Users/libing/kk_Projects/qilin-engine/packages/client/ui-sidebar/tsdown.config.ts
+ℹ config file: /Users/libing/kk_Projects/qilin-engine/packages/client/ui-directory-picker-native/tsdown.config.ts
+ℹ config file: /Users/libing/kk_Projects/qilin-engine/packages/client/ui-slots/tsdown.config.ts
+ℹ config file: /Users/libing/kk_Projects/qilin-engine/packages/client/ui-skill/tsdown.config.ts
+ℹ config file: /Users/libing/kk_Projects/qilin-engine/packages/client/ui-subagent/tsdown.config.ts
+ℹ config file: /Users/libing/kk_Projects/qilin-engine/packages/client/ui-theme/tsdown.config.ts
+ℹ config file: /Users/libing/kk_Projects/qilin-engine/packages/client/ui-tool/tsdown.config.ts
+ℹ config file: /Users/libing/kk_Projects/qilin-engine/packages/client/ui-trajectory/tsdown.config.ts
+ℹ config file: /Users/libing/kk_Projects/qilin-engine/packages/client/ui-user-questions/tsdown.config.ts
+ℹ config file: /Users/libing/kk_Projects/qilin-engine/packages/client/ui-workflow-run/tsdown.config.ts
+ℹ config file: /Users/libing/kk_Projects/qilin-engine/packages/client/web/tsdown.config.ts
+ℹ config file: /Users/libing/kk_Projects/qilin-engine/packages/client/ui-workspace/tsdown.config.ts
+ℹ config file: /Users/libing/kk_Projects/qilin-engine/packages/extensions/cordis-client-runner/tsdown.config.ts
+ℹ config file: /Users/libing/kk_Projects/qilin-engine/packages/extensions/ui-cordis/tsdown.config.ts
+ℹ config file: /Users/libing/kk_Projects/qilin-engine/packages/typert/registry/tsdown.config.ts
+ℹ config file: /Users/libing/kk_Projects/qilin-engine/packages/session-query/session-log-export/tsdown.config.ts
+ℹ [@qilin/api-remotes] entry: lib/types/index.js, lib/types/invariant.js
+ℹ [@qilin/api-remotes] target: es2024
+ℹ [@qilin/api-remotes] tsconfig: tsconfig.json
+ℹ [@qilin/client-connection] entry: lib/types/index.js, lib/types/invariant.js
+ℹ [@qilin/client-connection] target: es2024
+ℹ [@qilin/client-connection] tsconfig: tsconfig.json
+ℹ [@qilin/api-gateway] entry: lib/types/index.js, lib/types/invariant.js
+ℹ [@qilin/api-gateway] target: es2024
+ℹ [@qilin/api-gateway] tsconfig: tsconfig.json
+ℹ [@qilin/client-hmr] entry: lib/types/index.js, lib/types/invariant.js
+ℹ [@qilin/client-hmr] target: es2024
+ℹ [@qilin/client-hmr] tsconfig: tsconfig.json
+ℹ [@qilin/client-locale] entry: lib/types/index.js, lib/types/invariant.js
+ℹ [@qilin/client-locale] target: es2024
+ℹ [@qilin/client-locale] tsconfig: tsconfig.json
+ℹ [@qilin/client-modules] entry: lib/types/index.js, lib/types/invariant.js
+ℹ [@qilin/client-modules] target: es2024
+ℹ [@qilin/client-modules] tsconfig: tsconfig.json
+ℹ [@qilin/client-runtime] entry: lib/types/index.js, lib/types/invariant.js
+ℹ [@qilin/client-runtime] target: es2024
+ℹ [@qilin/client-runtime] tsconfig: tsconfig.json
+ℹ [@qilin/client-ui-attachment] entry: lib/types/index.js, lib/types/invariant.js
+ℹ [@qilin/client-ui-attachment] target: es2024
+ℹ [@qilin/client-ui-attachment] tsconfig: tsconfig.json
+ℹ [@qilin/client-ui-agent-preset] entry: lib/types/index.js, lib/types/invariant.js
+ℹ [@qilin/client-ui-agent-preset] target: es2024
+ℹ [@qilin/client-ui-agent-preset] tsconfig: tsconfig.json
+ℹ [@qilin/client-ui-brand-official] entry: lib/types/index.js, lib/types/invariant.js
+ℹ [@qilin/client-ui-brand-official] target: es2024
+ℹ [@qilin/client-ui-brand-official] tsconfig: tsconfig.json
+ℹ [@qilin/client-ui-conversation] entry: lib/types/index.js, lib/types/invariant.js
+ℹ [@qilin/client-ui-conversation] target: es2024
+ℹ [@qilin/client-ui-conversation] tsconfig: tsconfig.json
+ℹ [@qilin/client-ui-commands] entry: lib/types/index.js, lib/types/invariant.js
+ℹ [@qilin/client-ui-commands] target: es2024
+ℹ [@qilin/client-ui-commands] tsconfig: tsconfig.json
+ℹ [@qilin/client-ui-deliverables] entry: lib/types/index.js, lib/types/invariant.js
+ℹ [@qilin/client-ui-deliverables] target: es2024
+ℹ [@qilin/client-ui-deliverables] tsconfig: tsconfig.json
+ℹ [@qilin/client-ui-directory-picker-browse] entry: lib/types/index.js, lib/types/invariant.js
+ℹ [@qilin/client-ui-directory-picker-browse] target: es2024
+ℹ [@qilin/client-ui-directory-picker-browse] tsconfig: tsconfig.json
+ℹ [@qilin/client-ui-directory-picker-native] entry: lib/types/index.js, lib/types/invariant.js
+ℹ [@qilin/client-ui-directory-picker-native] target: es2024
+ℹ [@qilin/client-ui-directory-picker-native] tsconfig: tsconfig.json
+ℹ [@qilin/client-ui-goal] entry: lib/types/index.js, lib/types/invariant.js
+ℹ [@qilin/client-ui-goal] target: es2024
+ℹ [@qilin/client-ui-goal] tsconfig: tsconfig.json
+ℹ [@qilin/client-ui-input-trigger] entry: lib/types/index.js, lib/types/invariant.js
+ℹ [@qilin/client-ui-input-trigger] target: es2024
+ℹ [@qilin/client-ui-input-trigger] tsconfig: tsconfig.json
+ℹ [@qilin/client-ui-jobs] entry: lib/types/index.js, lib/types/invariant.js
+ℹ [@qilin/client-ui-jobs] target: es2024
+ℹ [@qilin/client-ui-jobs] tsconfig: tsconfig.json
+ℹ [@qilin/client-ui-layout] entry: lib/types/index.js, lib/types/invariant.js
+ℹ [@qilin/client-ui-layout] target: es2024
+ℹ [@qilin/client-ui-layout] tsconfig: tsconfig.json
+ℹ [@qilin/client-ui-message-feedback] entry: lib/types/index.js, lib/types/invariant.js
+ℹ [@qilin/client-ui-message-feedback] target: es2024
+ℹ [@qilin/client-ui-message-feedback] tsconfig: tsconfig.json
+ℹ [@qilin/client-ui-model-selection] entry: lib/types/index.js, lib/types/invariant.js
+ℹ [@qilin/client-ui-model-selection] target: es2024
+ℹ [@qilin/client-ui-model-selection] tsconfig: tsconfig.json
+ℹ [@qilin/client-ui-reference] entry: lib/types/index.js, lib/types/invariant.js
+ℹ [@qilin/client-ui-reference] target: es2024
+ℹ [@qilin/client-ui-reference] tsconfig: tsconfig.json
+ℹ [@qilin/client-ui-permission-presets] entry: lib/types/index.js, lib/types/invariant.js
+ℹ [@qilin/client-ui-permission-presets] target: es2024
+ℹ [@qilin/client-ui-permission-presets] tsconfig: tsconfig.json
+ℹ [@qilin/client-ui-renderer] entry: lib/types/index.js, lib/types/invariant.js
+ℹ [@qilin/client-ui-renderer] target: es2024
+ℹ [@qilin/client-ui-renderer] tsconfig: tsconfig.json
+ℹ [@qilin/client-ui-plan] entry: lib/types/index.js, lib/types/invariant.js
+ℹ [@qilin/client-ui-plan] target: es2024
+ℹ [@qilin/client-ui-plan] tsconfig: tsconfig.json
+ℹ [@qilin/client-ui-settings] entry: lib/types/index.js, lib/types/invariant.js
+ℹ [@qilin/client-ui-settings] target: es2024
+ℹ [@qilin/client-ui-settings] tsconfig: tsconfig.json
+ℹ [@qilin/client-ui-settings-models] entry: lib/types/index.js, lib/types/invariant.js
+ℹ [@qilin/client-ui-settings-models] target: es2024
+ℹ [@qilin/client-ui-settings-models] tsconfig: tsconfig.json
+ℹ [@qilin/client-ui-settings-general] entry: lib/types/index.js, lib/types/invariant.js
+ℹ [@qilin/client-ui-settings-general] target: es2024
+ℹ [@qilin/client-ui-settings-general] tsconfig: tsconfig.json
+ℹ [@qilin/client-ui-settings-plugin-inventory] entry: lib/types/index.js, lib/types/invariant.js
+ℹ [@qilin/client-ui-settings-plugin-inventory] target: es2024
+ℹ [@qilin/client-ui-settings-plugin-inventory] tsconfig: tsconfig.json
+ℹ [@qilin/client-ui-settings-plugins] entry: lib/types/index.js, lib/types/invariant.js
+ℹ [@qilin/client-ui-settings-plugins] target: es2024
+ℹ [@qilin/client-ui-settings-plugins] tsconfig: tsconfig.json
+ℹ [@qilin/client-ui-sidebar] entry: lib/types/index.js, lib/types/invariant.js
+ℹ [@qilin/client-ui-sidebar] target: es2024
+ℹ [@qilin/client-ui-sidebar] tsconfig: tsconfig.json
+ℹ [@qilin/client-ui-skill] entry: lib/types/index.js, lib/types/invariant.js
+ℹ [@qilin/client-ui-skill] target: es2024
+ℹ [@qilin/client-ui-skill] tsconfig: tsconfig.json
+ℹ [@qilin/client-ui-subagent] entry: lib/types/index.js, lib/types/invariant.js
+ℹ [@qilin/client-ui-subagent] target: es2024
+ℹ [@qilin/client-ui-subagent] tsconfig: tsconfig.json
+ℹ [@qilin/client-ui-theme] entry: lib/types/index.js, lib/types/invariant.js
+ℹ [@qilin/client-ui-theme] target: es2024
+ℹ [@qilin/client-ui-theme] tsconfig: tsconfig.json
+ℹ [@qilin/client-ui-tool] entry: lib/types/index.js, lib/types/invariant.js
+ℹ [@qilin/client-ui-tool] target: es2024
+ℹ [@qilin/client-ui-tool] tsconfig: tsconfig.json
+ℹ [@qilin/client-ui-trajectory] entry: lib/types/index.js, lib/types/invariant.js
+ℹ [@qilin/client-ui-trajectory] target: es2024
+ℹ [@qilin/client-ui-trajectory] tsconfig: tsconfig.json
+ℹ [@qilin/client-ui-user-questions] entry: lib/types/index.js, lib/types/invariant.js
+ℹ [@qilin/client-ui-user-questions] target: es2024
+ℹ [@qilin/client-ui-user-questions] tsconfig: tsconfig.json
+ℹ [@qilin/client-ui-workflow-run] entry: lib/types/index.js, lib/types/invariant.js
+ℹ [@qilin/client-ui-workflow-run] target: es2024
+ℹ [@qilin/client-ui-workflow-run] tsconfig: tsconfig.json
+ℹ [@qilin/client-ui-workspace] entry: lib/types/index.js, lib/types/invariant.js
+ℹ [@qilin/client-ui-workspace] target: es2024
+ℹ [@qilin/client-ui-workspace] tsconfig: tsconfig.json
+ℹ [@qilin/cordis-client-runner] entry: lib/types/index.js, lib/types/invariant.js
+ℹ [@qilin/cordis-client-runner] target: es2024
+ℹ [@qilin/cordis-client-runner] tsconfig: tsconfig.json
+ℹ [@qilin/client-ui-cordis] entry: lib/types/index.js, lib/types/invariant.js
+ℹ [@qilin/client-ui-cordis] target: es2024
+ℹ [@qilin/client-ui-cordis] tsconfig: tsconfig.json
+ℹ [@qilin/session-log-export] entry: lib/types/index.js, lib/types/invariant.js
+ℹ [@qilin/session-log-export] target: es2024
+ℹ [@qilin/session-log-export] tsconfig: tsconfig.json
+ℹ [@qilin/typert-registry] entry: lib/types/index.js, lib/types/invariant.js
+ℹ [@qilin/typert-registry] target: es2024
+ℹ [@qilin/typert-registry] tsconfig: tsconfig.json
+ℹ [@qilin/client-ui-slots] entry: lib/types/index.js
+ℹ [@qilin/client-ui-slots] target: es2024
+ℹ [@qilin/client-ui-slots] tsconfig: tsconfig.json
+ℹ [@qilin/client-ui-primitives] entry: lib/types/index.js
+ℹ [@qilin/client-ui-primitives] target: es2024
+ℹ [@qilin/client-ui-primitives] tsconfig: tsconfig.json
+ℹ [@qilin/client-ui-slots] entry: lib/types/invariant.js
+ℹ [@qilin/client-ui-slots] target: es2024
+ℹ [@qilin/client-ui-slots] tsconfig: tsconfig.json
+ℹ [@qilin/client-web] entry: lib/types/index.js
+ℹ [@qilin/client-web] target: es2024
+ℹ [@qilin/client-web] tsconfig: tsconfig.json
+ℹ [@qilin/api-gateway/client] entry: src/client/index.ts
+ℹ [@qilin/api-gateway/client] target: es2024
+ℹ [@qilin/api-gateway/client] tsconfig: tsconfig.json
+ℹ [@qilin/client-web] entry: lib/types/invariant.js
+ℹ [@qilin/client-web] target: es2024
+ℹ [@qilin/client-web] tsconfig: tsconfig.json
+ℹ [@qilin/api-remotes/client] entry: src/client/index.ts
+ℹ [@qilin/api-remotes/client] target: es2024
+ℹ [@qilin/api-remotes/client] tsconfig: tsconfig.json
+ℹ [@qilin/client-connection/client] entry: src/client/index.ts
+ℹ [@qilin/client-connection/client] target: es2024
+ℹ [@qilin/client-connection/client] tsconfig: tsconfig.json
+ℹ [@qilin/client-hmr/client] entry: src/client/index.ts
+ℹ [@qilin/client-hmr/client] target: es2024
+ℹ [@qilin/client-hmr/client] tsconfig: tsconfig.json
+ℹ [@qilin/client-locale/client] entry: src/client/index.ts
+ℹ [@qilin/client-locale/client] target: es2024
+ℹ [@qilin/client-locale/client] tsconfig: tsconfig.json
+ℹ [@qilin/client-modules/client] entry: src/client/index.ts
+ℹ [@qilin/client-modules/client] target: es2024
+ℹ [@qilin/client-modules/client] tsconfig: tsconfig.json
+ℹ [@qilin/client-runtime/client] entry: src/client/index.ts
+ℹ [@qilin/client-runtime/client] target: es2024
+ℹ [@qilin/client-runtime/client] tsconfig: tsconfig.json
+ℹ [@qilin/client-ui-primitives] entry: lib/types/invariant.js
+ℹ [@qilin/client-ui-primitives] target: es2024
+ℹ [@qilin/client-ui-primitives] tsconfig: tsconfig.json
+ℹ [@qilin/client-ui-agent-preset/client] entry: src/client/index.ts
+ℹ [@qilin/client-ui-agent-preset/client] target: es2024
+ℹ [@qilin/client-ui-agent-preset/client] tsconfig: tsconfig.json
+ℹ [@qilin/client-ui-attachment/client] entry: src/client/index.ts
+ℹ [@qilin/client-ui-attachment/client] target: es2024
+ℹ [@qilin/client-ui-attachment/client] tsconfig: tsconfig.json
+ℹ [@qilin/client-ui-brand-official/client] entry: src/client/index.ts
+ℹ [@qilin/client-ui-brand-official/client] target: es2024
+ℹ [@qilin/client-ui-brand-official/client] tsconfig: tsconfig.json
+ℹ [@qilin/client-ui-directory-picker-browse/client] entry: src/client/index.ts
+ℹ [@qilin/client-ui-directory-picker-browse/client] target: es2024
+ℹ [@qilin/client-ui-directory-picker-browse/client] tsconfig: tsconfig.json
+ℹ [@qilin/client-ui-commands/client] entry: src/client/index.ts
+ℹ [@qilin/client-ui-commands/client] target: es2024
+ℹ [@qilin/client-ui-commands/client] tsconfig: tsconfig.json
+ℹ [@qilin/client-ui-deliverables/client] entry: src/client/index.ts
+ℹ [@qilin/client-ui-deliverables/client] target: es2024
+ℹ [@qilin/client-ui-deliverables/client] tsconfig: tsconfig.json
+ℹ [@qilin/client-ui-directory-picker-native/client] entry: src/client/index.ts
+ℹ [@qilin/client-ui-directory-picker-native/client] target: es2024
+ℹ [@qilin/client-ui-directory-picker-native/client] tsconfig: tsconfig.json
+ℹ [@qilin/client-ui-goal/client] entry: src/client/index.ts
+ℹ [@qilin/client-ui-goal/client] target: es2024
+ℹ [@qilin/client-ui-goal/client] tsconfig: tsconfig.json
+ℹ [@qilin/client-ui-input-trigger/client] entry: src/client/index.ts
+ℹ [@qilin/client-ui-input-trigger/client] target: es2024
+ℹ [@qilin/client-ui-input-trigger/client] tsconfig: tsconfig.json
+ℹ [@qilin/client-ui-jobs/client] entry: src/client/index.ts
+ℹ [@qilin/client-ui-jobs/client] target: es2024
+ℹ [@qilin/client-ui-jobs/client] tsconfig: tsconfig.json
+ℹ [@qilin/client-ui-layout/client] entry: src/client/index.ts
+ℹ [@qilin/client-ui-layout/client] target: es2024
+ℹ [@qilin/client-ui-layout/client] tsconfig: tsconfig.json
+ℹ [@qilin/client-ui-message-feedback/client] entry: src/client/index.ts
+ℹ [@qilin/client-ui-message-feedback/client] target: es2024
+ℹ [@qilin/client-ui-message-feedback/client] tsconfig: tsconfig.json
+ℹ [@qilin/client-ui-permission-presets/client] entry: src/client/index.ts
+ℹ [@qilin/client-ui-permission-presets/client] target: es2024
+ℹ [@qilin/client-ui-permission-presets/client] tsconfig: tsconfig.json
+ℹ [@qilin/client-ui-plan/client] entry: src/client/index.ts
+ℹ [@qilin/client-ui-plan/client] target: es2024
+ℹ [@qilin/client-ui-plan/client] tsconfig: tsconfig.json
+ℹ [@qilin/client-ui-reference/client] entry: src/client/index.ts
+ℹ [@qilin/client-ui-reference/client] target: es2024
+ℹ [@qilin/client-ui-reference/client] tsconfig: tsconfig.json
+ℹ [@qilin/client-ui-model-selection/client] entry: src/client/index.ts
+ℹ [@qilin/client-ui-model-selection/client] target: es2024
+ℹ [@qilin/client-ui-model-selection/client] tsconfig: tsconfig.json
+ℹ [@qilin/client-ui-renderer/client] entry: src/client/index.ts
+ℹ [@qilin/client-ui-renderer/client] target: es2024
+ℹ [@qilin/client-ui-renderer/client] tsconfig: tsconfig.json
+ℹ [@qilin/client-ui-settings/client] entry: src/client/index.ts
+ℹ [@qilin/client-ui-settings/client] target: es2024
+ℹ [@qilin/client-ui-settings/client] tsconfig: tsconfig.json
+ℹ [@qilin/client-ui-settings-general/client] entry: src/client/index.ts
+ℹ [@qilin/client-ui-settings-general/client] target: es2024
+ℹ [@qilin/client-ui-settings-general/client] tsconfig: tsconfig.json
+ℹ [@qilin/client-ui-settings-models/client] entry: src/client/index.ts
+ℹ [@qilin/client-ui-settings-models/client] target: es2024
+ℹ [@qilin/client-ui-settings-models/client] tsconfig: tsconfig.json
+ℹ [@qilin/client-ui-settings-plugin-inventory/client] entry: src/client/index.ts
+ℹ [@qilin/client-ui-settings-plugin-inventory/client] target: es2024
+ℹ [@qilin/client-ui-settings-plugin-inventory/client] tsconfig: tsconfig.json
+ℹ [@qilin/client-ui-conversation/client] entry: src/client/index.ts
+ℹ [@qilin/client-ui-conversation/client] target: es2024
+ℹ [@qilin/client-ui-conversation/client] tsconfig: tsconfig.json
+ℹ [@qilin/client-ui-settings-plugins/client] entry: src/client/index.ts
+ℹ [@qilin/client-ui-settings-plugins/client] target: es2024
+ℹ [@qilin/client-ui-settings-plugins/client] tsconfig: tsconfig.json
+ℹ [@qilin/client-ui-sidebar/client] entry: src/client/index.ts
+ℹ [@qilin/client-ui-sidebar/client] target: es2024
+ℹ [@qilin/client-ui-sidebar/client] tsconfig: tsconfig.json
+ℹ [@qilin/client-ui-subagent/client] entry: src/client/index.ts
+ℹ [@qilin/client-ui-subagent/client] target: es2024
+ℹ [@qilin/client-ui-subagent/client] tsconfig: tsconfig.json
+ℹ [@qilin/client-ui-skill/client] entry: src/client/index.ts
+ℹ [@qilin/client-ui-skill/client] target: es2024
+ℹ [@qilin/client-ui-skill/client] tsconfig: tsconfig.json
+ℹ [@qilin/client-ui-tool/client] entry: src/client/index.ts
+ℹ [@qilin/client-ui-tool/client] target: es2024
+ℹ [@qilin/client-ui-tool/client] tsconfig: tsconfig.json
+ℹ [@qilin/client-ui-theme/client] entry: src/client/index.ts
+ℹ [@qilin/client-ui-theme/client] target: es2024
+ℹ [@qilin/client-ui-theme/client] tsconfig: tsconfig.json
+ℹ [@qilin/client-ui-trajectory/client] entry: src/client/index.ts
+ℹ [@qilin/client-ui-trajectory/client] target: es2024
+ℹ [@qilin/client-ui-trajectory/client] tsconfig: tsconfig.json
+ℹ [@qilin/client-ui-workflow-run/client] entry: src/client/index.ts
+ℹ [@qilin/client-ui-workflow-run/client] target: es2024
+ℹ [@qilin/client-ui-workflow-run/client] tsconfig: tsconfig.json
+ℹ [@qilin/client-ui-user-questions/client] entry: src/client/index.ts
+ℹ [@qilin/client-ui-user-questions/client] target: es2024
+ℹ [@qilin/client-ui-user-questions/client] tsconfig: tsconfig.json
+ℹ [@qilin/client-ui-workspace/client] entry: src/client/index.ts
+ℹ [@qilin/client-ui-workspace/client] target: es2024
+ℹ [@qilin/client-ui-workspace/client] tsconfig: tsconfig.json
+ℹ [@qilin/cordis-client-runner/client] entry: src/client/index.ts
+ℹ [@qilin/cordis-client-runner/client] target: es2024
+ℹ [@qilin/cordis-client-runner/client] tsconfig: tsconfig.json
+ℹ [@qilin/client-ui-cordis/client] entry: src/client/index.ts
+ℹ [@qilin/client-ui-cordis/client] target: es2024
+ℹ [@qilin/client-ui-cordis/client] tsconfig: tsconfig.json
+ℹ [@qilin/typert-registry/client] entry: src/client/index.ts
+ℹ [@qilin/typert-registry/client] target: es2024
+ℹ [@qilin/typert-registry/client] tsconfig: tsconfig.json
+ℹ [@qilin/session-log-export/client] entry: src/client/index.ts
+ℹ [@qilin/session-log-export/client] target: es2024
+ℹ [@qilin/session-log-export/client] tsconfig: tsconfig.json
+ℹ Build start
+ℹ [@qilin/client-locale] [ESM] lib/index.js      1.25 kB │ gzip: 0.62 kB
+ℹ [@qilin/client-locale] [ESM] lib/invariant.js  1.00 kB │ gzip: 0.54 kB
+ℹ [@qilin/client-locale] [ESM] 2 files, total: 2.25 kB
+ℹ [@qilin/client-ui-attachment] [ESM] lib/invariant.js  0.91 kB │ gzip: 0.48 kB
+ℹ [@qilin/client-ui-attachment] [ESM] lib/index.js      0.23 kB │ gzip: 0.18 kB
+ℹ [@qilin/client-ui-attachment] [ESM] 2 files, total: 1.14 kB
+ℹ [@qilin/client-ui-brand-official] [ESM] lib/invariant.js  0.92 kB │ gzip: 0.48 kB
+ℹ [@qilin/client-ui-brand-official] [ESM] lib/index.js      0.32 kB │ gzip: 0.25 kB
+ℹ [@qilin/client-ui-brand-official] [ESM] 2 files, total: 1.23 kB
+ℹ [@qilin/client-ui-conversation] [ESM] lib/index.js      1.50 kB │ gzip: 0.71 kB
+ℹ [@qilin/client-ui-conversation] [ESM] lib/invariant.js  1.05 kB │ gzip: 0.53 kB
+ℹ [@qilin/client-ui-conversation] [ESM] 2 files, total: 2.55 kB
+ℹ [@qilin/client-ui-directory-picker-browse] [ESM] lib/invariant.js  1.02 kB │ gzip: 0.52 kB
+ℹ [@qilin/client-ui-directory-picker-browse] [ESM] lib/index.js      0.52 kB │ gzip: 0.35 kB
+ℹ [@qilin/client-ui-directory-picker-browse] [ESM] 2 files, total: 1.53 kB
+ℹ [@qilin/client-ui-goal] [ESM] lib/invariant.js  0.98 kB │ gzip: 0.53 kB
+ℹ [@qilin/client-ui-goal] [ESM] lib/index.js      0.41 kB │ gzip: 0.29 kB
+ℹ [@qilin/client-ui-goal] [ESM] 2 files, total: 1.38 kB
+ℹ [@qilin/client-ui-jobs] [ESM] lib/invariant.js  1.00 kB │ gzip: 0.54 kB
+ℹ [@qilin/client-ui-jobs] [ESM] lib/index.js      0.41 kB │ gzip: 0.30 kB
+ℹ [@qilin/client-ui-jobs] [ESM] 2 files, total: 1.41 kB
+ℹ [@qilin/client-ui-layout] [ESM] lib/invariant.js  0.94 kB │ gzip: 0.51 kB
+ℹ [@qilin/client-ui-layout] [ESM] lib/index.js      0.18 kB │ gzip: 0.16 kB
+ℹ [@qilin/client-ui-layout] [ESM] 2 files, total: 1.13 kB
+ℹ [@qilin/client-ui-message-feedback] [ESM] lib/invariant.js  1.09 kB │ gzip: 0.56 kB
+ℹ [@qilin/client-ui-message-feedback] [ESM] lib/index.js      0.42 kB │ gzip: 0.30 kB
+ℹ [@qilin/client-ui-message-feedback] [ESM] 2 files, total: 1.51 kB
+ℹ [@qilin/client-ui-plan] [ESM] lib/invariant.js  0.94 kB │ gzip: 0.49 kB
+ℹ [@qilin/client-ui-plan] [ESM] lib/index.js      0.57 kB │ gzip: 0.38 kB
+ℹ [@qilin/client-ui-plan] [ESM] 2 files, total: 1.51 kB
+ℹ [@qilin/client-ui-reference] [ESM] lib/invariant.js  0.93 kB │ gzip: 0.51 kB
+ℹ [@qilin/client-ui-reference] [ESM] lib/index.js      0.42 kB │ gzip: 0.30 kB
+ℹ [@qilin/client-ui-reference] [ESM] 2 files, total: 1.35 kB
+ℹ [@qilin/client-ui-renderer] [ESM] lib/invariant.js  0.91 kB │ gzip: 0.48 kB
+ℹ [@qilin/client-ui-renderer] [ESM] lib/index.js      0.18 kB │ gzip: 0.16 kB
+ℹ [@qilin/client-ui-renderer] [ESM] 2 files, total: 1.08 kB
+ℹ [@qilin/client-ui-settings-general] [ESM] lib/invariant.js  1.08 kB │ gzip: 0.57 kB
+ℹ [@qilin/client-ui-settings-general] [ESM] lib/index.js      0.71 kB │ gzip: 0.42 kB
+ℹ [@qilin/client-ui-settings-general] [ESM] 2 files, total: 1.80 kB
+ℹ [@qilin/client-ui-skill] [ESM] lib/invariant.js  0.97 kB │ gzip: 0.52 kB
+ℹ [@qilin/client-ui-skill] [ESM] lib/index.js      0.41 kB │ gzip: 0.30 kB
+ℹ [@qilin/client-ui-skill] [ESM] 2 files, total: 1.38 kB
+ℹ [@qilin/client-ui-subagent] [ESM] lib/invariant.js  0.93 kB │ gzip: 0.51 kB
+ℹ [@qilin/client-ui-subagent] [ESM] lib/index.js      0.41 kB │ gzip: 0.30 kB
+ℹ [@qilin/client-ui-subagent] [ESM] 2 files, total: 1.34 kB
+ℹ [@qilin/client-ui-tool] [ESM] lib/invariant.js  0.89 kB │ gzip: 0.48 kB
+ℹ [@qilin/client-ui-tool] [ESM] lib/index.js      0.18 kB │ gzip: 0.16 kB
+ℹ [@qilin/client-ui-tool] [ESM] 2 files, total: 1.07 kB
+ℹ [@qilin/client-ui-user-questions] [ESM] lib/invariant.js  0.96 kB │ gzip: 0.51 kB
+ℹ [@qilin/client-ui-user-questions] [ESM] lib/index.js      0.72 kB │ gzip: 0.45 kB
+ℹ [@qilin/client-ui-user-questions] [ESM] 2 files, total: 1.68 kB
+ℹ [@qilin/api-gateway] [ESM] lib/index.js      20.07 kB │ gzip: 5.29 kB
+ℹ [@qilin/api-gateway] [ESM] lib/invariant.js   0.89 kB │ gzip: 0.49 kB
+ℹ [@qilin/api-gateway] [ESM] 2 files, total: 20.96 kB
+ℹ [@qilin/client-runtime] [ESM] lib/invariant.js  1.50 kB │ gzip: 0.77 kB
+ℹ [@qilin/client-runtime] [ESM] lib/index.js      0.25 kB │ gzip: 0.20 kB
+ℹ [@qilin/client-runtime] [ESM] 2 files, total: 1.74 kB
+ℹ [@qilin/client-ui-agent-preset] [ESM] lib/invariant.js  0.96 kB │ gzip: 0.51 kB
+ℹ [@qilin/client-ui-agent-preset] [ESM] lib/index.js      0.42 kB │ gzip: 0.30 kB
+ℹ [@qilin/client-ui-agent-preset] [ESM] 2 files, total: 1.38 kB
+ℹ [@qilin/client-ui-commands] [ESM] lib/invariant.js  0.96 kB │ gzip: 0.52 kB
+ℹ [@qilin/client-ui-commands] [ESM] lib/index.js      0.49 kB │ gzip: 0.34 kB
+ℹ [@qilin/client-ui-commands] [ESM] 2 files, total: 1.46 kB
+ℹ [@qilin/client-ui-deliverables] [ESM] lib/index.js      1.15 kB │ gzip: 0.65 kB
+ℹ [@qilin/client-ui-deliverables] [ESM] lib/invariant.js  0.98 kB │ gzip: 0.50 kB
+ℹ [@qilin/client-ui-deliverables] [ESM] 2 files, total: 2.13 kB
+ℹ [@qilin/client-ui-model-selection] [ESM] lib/invariant.js  0.96 kB │ gzip: 0.51 kB
+ℹ [@qilin/client-ui-model-selection] [ESM] lib/index.js      0.41 kB │ gzip: 0.29 kB
+ℹ [@qilin/client-ui-model-selection] [ESM] 2 files, total: 1.37 kB
+ℹ [@qilin/client-ui-permission-presets] [ESM] lib/invariant.js  0.99 kB │ gzip: 0.52 kB
+ℹ [@qilin/client-ui-permission-presets] [ESM] lib/index.js      0.46 kB │ gzip: 0.32 kB
+ℹ [@qilin/client-ui-permission-presets] [ESM] 2 files, total: 1.45 kB
+ℹ [@qilin/client-ui-directory-picker-native] [ESM] lib/invariant.js  1.02 kB │ gzip: 0.53 kB
+ℹ [@qilin/client-ui-directory-picker-native] [ESM] lib/index.js      0.49 kB │ gzip: 0.34 kB
+ℹ [@qilin/client-ui-directory-picker-native] [ESM] 2 files, total: 1.51 kB
+ℹ [@qilin/client-ui-settings] [ESM] lib/invariant.js  1.01 kB │ gzip: 0.54 kB
+ℹ [@qilin/client-ui-settings] [ESM] lib/index.js      0.25 kB │ gzip: 0.20 kB
+ℹ [@qilin/client-ui-settings] [ESM] 2 files, total: 1.26 kB
+ℹ [@qilin/client-ui-primitives] lib/invariant.js      1.00 kB │ gzip: 0.54 kB
+ℹ [@qilin/client-ui-primitives] lib/invariant.js.map  0.25 kB │ gzip: 0.18 kB
+ℹ [@qilin/client-ui-primitives] 2 files, total: 1.25 kB
+ℹ [@qilin/client-ui-settings-models] [ESM] lib/invariant.js  0.95 kB │ gzip: 0.50 kB
+ℹ [@qilin/client-ui-settings-models] [ESM] lib/index.js      0.24 kB │ gzip: 0.19 kB
+ℹ [@qilin/client-ui-settings-models] [ESM] 2 files, total: 1.19 kB
+ℹ [@qilin/client-ui-settings-plugin-inventory] [ESM] lib/invariant.js  0.70 kB │ gzip: 0.37 kB
+ℹ [@qilin/client-ui-settings-plugin-inventory] [ESM] lib/index.js      0.26 kB │ gzip: 0.20 kB
+ℹ [@qilin/client-ui-settings-plugin-inventory] [ESM] 2 files, total: 0.96 kB
+ℹ [@qilin/client-ui-sidebar] [ESM] lib/invariant.js  1.03 kB │ gzip: 0.56 kB
+ℹ [@qilin/client-ui-sidebar] [ESM] lib/index.js      0.18 kB │ gzip: 0.16 kB
+ℹ [@qilin/client-ui-sidebar] [ESM] 2 files, total: 1.22 kB
+ℹ [@qilin/client-ui-trajectory] [ESM] lib/invariant.js  1.02 kB │ gzip: 0.54 kB
+ℹ [@qilin/client-ui-trajectory] [ESM] lib/index.js      0.18 kB │ gzip: 0.16 kB
+ℹ [@qilin/client-ui-trajectory] [ESM] 2 files, total: 1.20 kB
+ℹ [@qilin/client-ui-workflow-run] [ESM] lib/invariant.js  0.79 kB │ gzip: 0.45 kB
+ℹ [@qilin/client-ui-workflow-run] [ESM] lib/index.js      0.19 kB │ gzip: 0.17 kB
+ℹ [@qilin/client-ui-workflow-run] [ESM] 2 files, total: 0.98 kB
+ℹ [@qilin/client-ui-workspace] [ESM] lib/invariant.js  1.04 kB │ gzip: 0.56 kB
+ℹ [@qilin/client-ui-workspace] [ESM] lib/index.js      0.46 kB │ gzip: 0.32 kB
+ℹ [@qilin/client-ui-workspace] [ESM] 2 files, total: 1.50 kB
+ℹ [@qilin/cordis-client-runner] [ESM] lib/invariant.js  1.08 kB │ gzip: 0.56 kB
+ℹ [@qilin/cordis-client-runner] [ESM] lib/index.js      0.43 kB │ gzip: 0.30 kB
+ℹ [@qilin/cordis-client-runner] [ESM] 2 files, total: 1.50 kB
+ℹ [@qilin/client-ui-cordis] [ESM] lib/invariant.js  1.10 kB │ gzip: 0.58 kB
+ℹ [@qilin/client-ui-cordis] [ESM] lib/index.js      0.41 kB │ gzip: 0.30 kB
+ℹ [@qilin/client-ui-cordis] [ESM] 2 files, total: 1.51 kB
+ℹ [@qilin/session-log-export] [ESM] lib/index.js      0.82 kB │ gzip: 0.49 kB
+ℹ [@qilin/session-log-export] [ESM] lib/invariant.js  0.66 kB │ gzip: 0.38 kB
+ℹ [@qilin/session-log-export] [ESM] 2 files, total: 1.48 kB
+✔ [@qilin/client-locale] Rebuilt in 5755ms.
+✔ [@qilin/client-ui-attachment] Rebuilt in 5756ms.
+✔ [@qilin/client-ui-brand-official] Rebuilt in 5756ms.
+✔ [@qilin/client-ui-conversation] Rebuilt in 5756ms.
+✔ [@qilin/client-ui-directory-picker-browse] Rebuilt in 5749ms.
+✔ [@qilin/client-ui-goal] Rebuilt in 5752ms.
+✔ [@qilin/client-ui-jobs] Rebuilt in 5750ms.
+✔ [@qilin/client-ui-layout] Rebuilt in 5752ms.
+✔ [@qilin/client-ui-message-feedback] Rebuilt in 5750ms.
+✔ [@qilin/client-ui-plan] Rebuilt in 5750ms.
+✔ [@qilin/client-ui-reference] Rebuilt in 5750ms.
+✔ [@qilin/client-ui-renderer] Rebuilt in 5750ms.
+✔ [@qilin/client-ui-settings-general] Rebuilt in 5750ms.
+✔ [@qilin/client-ui-skill] Rebuilt in 5750ms.
+✔ [@qilin/client-ui-subagent] Rebuilt in 5750ms.
+✔ [@qilin/client-ui-tool] Rebuilt in 5751ms.
+✔ [@qilin/client-ui-user-questions] Rebuilt in 5751ms.
+ℹ [@qilin/client-ui-input-trigger] [ESM] lib/invariant.js  1.00 kB │ gzip: 0.53 kB
+ℹ [@qilin/client-ui-input-trigger] [ESM] lib/index.js      0.41 kB │ gzip: 0.29 kB
+ℹ [@qilin/client-ui-input-trigger] [ESM] 2 files, total: 1.41 kB
+ℹ [@qilin/client-ui-settings-plugins] [ESM] lib/invariant.js  1.01 kB │ gzip: 0.53 kB
+ℹ [@qilin/client-ui-settings-plugins] [ESM] lib/index.js      0.56 kB │ gzip: 0.37 kB
+ℹ [@qilin/client-ui-settings-plugins] [ESM] 2 files, total: 1.57 kB
+ℹ [@qilin/client-ui-slots] lib/invariant.js      1.04 kB │ gzip: 0.56 kB
+ℹ [@qilin/client-ui-slots] lib/invariant.js.map  0.25 kB │ gzip: 0.18 kB
+ℹ [@qilin/client-ui-slots] 2 files, total: 1.30 kB
+ℹ [@qilin/api-remotes] [ESM] lib/index.js      7.70 kB │ gzip: 2.54 kB
+ℹ [@qilin/api-remotes] [ESM] lib/invariant.js  0.77 kB │ gzip: 0.43 kB
+ℹ [@qilin/api-remotes] [ESM] 2 files, total: 8.47 kB
+ℹ [@qilin/client-web] lib/invariant.js      1.02 kB │ gzip: 0.57 kB
+ℹ [@qilin/client-web] lib/invariant.js.map  0.25 kB │ gzip: 0.18 kB
+ℹ [@qilin/client-web] 2 files, total: 1.27 kB
+ℹ [@qilin/typert-registry] [ESM] lib/index.js      21.51 kB │ gzip: 4.88 kB
+ℹ [@qilin/typert-registry] [ESM] lib/invariant.js   0.97 kB │ gzip: 0.52 kB
+ℹ [@qilin/typert-registry] [ESM] 2 files, total: 22.47 kB
+✔ [@qilin/api-gateway] Rebuilt in 5761ms.
+✔ [@qilin/client-runtime] Rebuilt in 5761ms.
+✔ [@qilin/client-ui-agent-preset] Rebuilt in 5761ms.
+✔ [@qilin/client-ui-commands] Rebuilt in 5761ms.
+✔ [@qilin/client-ui-deliverables] Rebuilt in 5758ms.
+✔ [@qilin/client-ui-directory-picker-native] Rebuilt in 5755ms.
+✔ [@qilin/client-ui-model-selection] Rebuilt in 5755ms.
+✔ [@qilin/client-ui-permission-presets] Rebuilt in 5758ms.
+✔ [@qilin/client-ui-primitives] Rebuilt in 5759ms.
+ℹ [@qilin/client-modules] [ESM] lib/index.js      20.68 kB │ gzip: 7.19 kB
+ℹ [@qilin/client-modules] [ESM] lib/invariant.js   1.58 kB │ gzip: 0.84 kB
+ℹ [@qilin/client-modules] [ESM] 2 files, total: 22.25 kB
+ℹ [@qilin/client-hmr] [ESM] lib/index.js      4.78 kB │ gzip: 1.90 kB
+ℹ [@qilin/client-hmr] [ESM] lib/invariant.js  2.07 kB │ gzip: 1.04 kB
+ℹ [@qilin/client-hmr] [ESM] 2 files, total: 6.85 kB
+ℹ [@qilin/client-ui-theme] [ESM] lib/index.js      3.28 kB │ gzip: 1.37 kB
+ℹ [@qilin/client-ui-theme] [ESM] lib/invariant.js  1.02 kB │ gzip: 0.55 kB
+ℹ [@qilin/client-ui-theme] [ESM] 2 files, total: 4.30 kB
+✔ [@qilin/client-ui-settings] Rebuilt in 5758ms.
+✔ [@qilin/client-ui-settings-models] Rebuilt in 5759ms.
+✔ [@qilin/client-ui-settings-plugin-inventory] Rebuilt in 5759ms.
+✔ [@qilin/client-ui-sidebar] Rebuilt in 5759ms.
+✔ [@qilin/client-ui-slots] Rebuilt in 5760ms.
+✔ [@qilin/client-ui-trajectory] Rebuilt in 5760ms.
+✔ [@qilin/client-ui-workflow-run] Rebuilt in 5760ms.
+✔ [@qilin/client-ui-workspace] Rebuilt in 5760ms.
+✔ [@qilin/client-web] Rebuilt in 5760ms.
+✔ [@qilin/cordis-client-runner] Rebuilt in 5760ms.
+✔ [@qilin/client-ui-cordis] Rebuilt in 5760ms.
+✔ [@qilin/session-log-export] Rebuilt in 5760ms.
+ℹ [@qilin/client-connection] [ESM] lib/index.js      23.58 kB │ gzip: 8.15 kB
+ℹ [@qilin/client-connection] [ESM] lib/invariant.js   1.12 kB │ gzip: 0.60 kB
+ℹ [@qilin/client-connection] [ESM] 2 files, total: 24.70 kB
+✔ [@qilin/api-remotes] Rebuilt in 5768ms.
+✔ [@qilin/client-ui-input-trigger] Rebuilt in 5763ms.
+✔ [@qilin/client-ui-settings-plugins] Rebuilt in 5763ms.
+✔ [@qilin/typert-registry] Rebuilt in 5764ms.
+✔ [@qilin/client-hmr] Rebuilt in 5772ms.
+✔ [@qilin/client-modules] Rebuilt in 5772ms.
+✔ [@qilin/client-ui-theme] Rebuilt in 5766ms.
+ℹ [@qilin/api-gateway/client] [CJS] lib/client.js      18.54 kB │ gzip: 4.92 kB
+ℹ [@qilin/api-gateway/client] [CJS] lib/client.js.map  35.47 kB │ gzip: 9.53 kB
+ℹ [@qilin/api-gateway/client] [CJS] 2 files, total: 54.01 kB
+✔ [@qilin/client-connection] Rebuilt in 5775ms.
+✔ [@qilin/api-gateway/client] Rebuilt in 5790ms.
+ℹ [@qilin/client-ui-slots] lib/index.js      17.43 kB │ gzip: 5.40 kB
+ℹ [@qilin/client-ui-slots] lib/index.js.map   7.95 kB │ gzip: 2.18 kB
+ℹ [@qilin/client-ui-slots] 2 files, total: 25.38 kB
+✔ [@qilin/client-ui-slots] Rebuilt in 5793ms.
+ℹ [@qilin/client-ui-directory-picker-native/client] [CJS] lib/client.js      2.90 kB │ gzip: 1.21 kB
+ℹ [@qilin/client-ui-directory-picker-native/client] [CJS] lib/client.js.map  6.12 kB │ gzip: 2.44 kB
+ℹ [@qilin/client-ui-directory-picker-native/client] [CJS] 2 files, total: 9.02 kB
+ℹ [@qilin/client-ui-brand-official/client] [CJS] lib/client.js      1.94 kB │ gzip: 0.83 kB
+ℹ [@qilin/client-ui-brand-official/client] [CJS] lib/client.js.map  2.81 kB │ gzip: 1.06 kB
+ℹ [@qilin/client-ui-brand-official/client] [CJS] 2 files, total: 4.75 kB
+ℹ [@qilin/client-hmr/client] [CJS] lib/client.js       3.11 kB │ gzip: 1.37 kB
+ℹ [@qilin/client-hmr/client] [CJS] lib/client.js.map  11.29 kB │ gzip: 4.57 kB
+ℹ [@qilin/client-hmr/client] [CJS] 2 files, total: 14.40 kB
+✔ [@qilin/client-ui-directory-picker-native/client] Rebuilt in 5816ms.
+ℹ [@qilin/client-ui-layout/client] [CJS] lib/client.js      19.46 kB │ gzip:  6.07 kB
+ℹ [@qilin/client-ui-layout/client] [CJS] lib/client.js.map  37.57 kB │ gzip: 11.70 kB
+ℹ [@qilin/client-ui-layout/client] [CJS] 2 files, total: 57.03 kB
+✔ [@qilin/client-hmr/client] Rebuilt in 5825ms.
+✔ [@qilin/client-ui-brand-official/client] Rebuilt in 5825ms.
+✔ [@qilin/client-ui-layout/client] Rebuilt in 5824ms.
+ℹ [@qilin/client-ui-cordis/client] [CJS] lib/client.js      74.42 kB │ gzip: 14.83 kB
+ℹ [@qilin/client-ui-cordis/client] [CJS] lib/client.js.map  95.12 kB │ gzip: 22.00 kB
+ℹ [@qilin/client-ui-cordis/client] [CJS] 2 files, total: 169.54 kB
+ℹ [@qilin/client-ui-permission-presets/client] [CJS] lib/client.js      19.41 kB │ gzip: 5.94 kB
+ℹ [@qilin/client-ui-permission-presets/client] [CJS] lib/client.js.map  32.28 kB │ gzip: 9.66 kB
+ℹ [@qilin/client-ui-permission-presets/client] [CJS] 2 files, total: 51.70 kB
+ℹ [@qilin/client-ui-message-feedback/client] [CJS] lib/client.js      27.90 kB │ gzip:  7.88 kB
+ℹ [@qilin/client-ui-message-feedback/client] [CJS] lib/client.js.map  46.26 kB │ gzip: 13.47 kB
+ℹ [@qilin/client-ui-message-feedback/client] [CJS] 2 files, total: 74.16 kB
+ℹ [@qilin/client-ui-workflow-run/client] [CJS] lib/client.js      28.21 kB │ gzip:  6.81 kB
+ℹ [@qilin/client-ui-workflow-run/client] [CJS] lib/client.js.map  39.99 kB │ gzip: 10.58 kB
+ℹ [@qilin/client-ui-workflow-run/client] [CJS] 2 files, total: 68.20 kB
+ℹ [@qilin/client-ui-goal/client] [CJS] lib/client.js      19.22 kB │ gzip: 4.90 kB
+ℹ [@qilin/client-ui-goal/client] [CJS] lib/client.js.map  24.74 kB │ gzip: 6.98 kB
+ℹ [@qilin/client-ui-goal/client] [CJS] 2 files, total: 43.96 kB
+✔ [@qilin/client-ui-message-feedback/client] Rebuilt in 5833ms.
+✔ [@qilin/client-ui-permission-presets/client] Rebuilt in 5832ms.
+✔ [@qilin/client-ui-cordis/client] Rebuilt in 5830ms.
+✔ [@qilin/client-ui-goal/client] Rebuilt in 5834ms.
+✔ [@qilin/client-ui-workflow-run/client] Rebuilt in 5831ms.
+ℹ [@qilin/client-ui-subagent/client] [CJS] lib/client.js      42.11 kB │ gzip: 10.27 kB
+ℹ [@qilin/client-ui-subagent/client] [CJS] lib/client.js.map  56.95 kB │ gzip: 15.11 kB
+ℹ [@qilin/client-ui-subagent/client] [CJS] 2 files, total: 99.06 kB
+ℹ [@qilin/client-ui-settings-plugin-inventory/client] [CJS] lib/client.js      17.64 kB │ gzip: 4.85 kB
+ℹ [@qilin/client-ui-settings-plugin-inventory/client] [CJS] lib/client.js.map  17.69 kB │ gzip: 5.31 kB
+ℹ [@qilin/client-ui-settings-plugin-inventory/client] [CJS] 2 files, total: 35.33 kB
+ℹ [@qilin/client-ui-jobs/client] [CJS] lib/client.js      12.93 kB │ gzip: 4.28 kB
+ℹ [@qilin/client-ui-jobs/client] [CJS] lib/client.js.map  15.71 kB │ gzip: 5.36 kB
+ℹ [@qilin/client-ui-jobs/client] [CJS] 2 files, total: 28.64 kB
+✔ [@qilin/client-ui-subagent/client] Rebuilt in 5835ms.
+ℹ [@qilin/client-ui-deliverables/client] [CJS] lib/client.js      16.43 kB │ gzip: 5.64 kB
+ℹ [@qilin/client-ui-deliverables/client] [CJS] lib/client.js.map  24.40 kB │ gzip: 8.06 kB
+ℹ [@qilin/client-ui-deliverables/client] [CJS] 2 files, total: 40.83 kB
+✔ [@qilin/client-ui-jobs/client] Rebuilt in 5837ms.
+✔ [@qilin/client-ui-settings-plugin-inventory/client] Rebuilt in 5836ms.
+ℹ [@qilin/client-ui-plan/client] [CJS] lib/client.js      5.82 kB │ gzip: 2.27 kB
+ℹ [@qilin/client-ui-plan/client] [CJS] lib/client.js.map  8.33 kB │ gzip: 3.09 kB
+ℹ [@qilin/client-ui-plan/client] [CJS] 2 files, total: 14.15 kB
+ℹ [@qilin/session-log-export/client] [CJS] lib/client.js      11.32 kB │ gzip: 3.90 kB
+ℹ [@qilin/session-log-export/client] [CJS] lib/client.js.map  17.12 kB │ gzip: 5.45 kB
+ℹ [@qilin/session-log-export/client] [CJS] 2 files, total: 28.44 kB
+ℹ [@qilin/client-modules/client] [CJS] lib/client.js      13.53 kB │ gzip: 4.36 kB
+ℹ [@qilin/client-modules/client] [CJS] lib/client.js.map  32.92 kB │ gzip: 9.87 kB
+ℹ [@qilin/client-modules/client] [CJS] 2 files, total: 46.45 kB
+✔ [@qilin/client-ui-deliverables/client] Rebuilt in 5840ms.
+✔ [@qilin/client-modules/client] Rebuilt in 5845ms.
+✔ [@qilin/client-ui-plan/client] Rebuilt in 5841ms.
+✔ [@qilin/session-log-export/client] Rebuilt in 5838ms.
+ℹ [@qilin/client-ui-reference/client] [CJS] lib/client.js       5.40 kB │ gzip: 1.99 kB
+ℹ [@qilin/client-ui-reference/client] [CJS] lib/client.js.map  11.63 kB │ gzip: 3.87 kB
+ℹ [@qilin/client-ui-reference/client] [CJS] 2 files, total: 17.02 kB
+ℹ [@qilin/client-ui-settings-models/client] [CJS] lib/client.js      133.25 kB │ gzip: 31.93 kB
+ℹ [@qilin/client-ui-settings-models/client] [CJS] lib/client.js.map  201.70 kB │ gzip: 51.47 kB
+ℹ [@qilin/client-ui-settings-models/client] [CJS] 2 files, total: 334.96 kB
+ℹ [@qilin/cordis-client-runner/client] [CJS] lib/client.js      227.73 kB │ gzip: 46.76 kB
+ℹ [@qilin/cordis-client-runner/client] [CJS] lib/client.js.map  335.27 kB │ gzip: 68.28 kB
+ℹ [@qilin/cordis-client-runner/client] [CJS] 2 files, total: 563.00 kB
+✔ [@qilin/client-ui-reference/client] Rebuilt in 5844ms.
+ℹ [@qilin/client-ui-commands/client] Hint: consider adding deps.onlyBundle option to avoid unintended bundling of dependencies, or set deps.onlyBundle: false to disable this hint.
+See more at https://tsdown.dev/options/dependencies#deps-onlybundle
+Detected dependencies in bundle:
+- clsx
+ℹ [@qilin/client-ui-settings-general/client] Hint: consider adding deps.onlyBundle option to avoid unintended bundling of dependencies, or set deps.onlyBundle: false to disable this hint.
+See more at https://tsdown.dev/options/dependencies#deps-onlybundle
+Detected dependencies in bundle:
+- clsx
+ℹ [@qilin/client-ui-agent-preset/client] [CJS] lib/client.js       72.17 kB │ gzip: 17.72 kB
+ℹ [@qilin/client-ui-agent-preset/client] [CJS] lib/client.js.map  112.08 kB │ gzip: 29.61 kB
+ℹ [@qilin/client-ui-agent-preset/client] [CJS] 2 files, total: 184.25 kB
+✔ [@qilin/client-ui-settings-models/client] Rebuilt in 5842ms.
+✔ [@qilin/cordis-client-runner/client] Rebuilt in 5842ms.
+ℹ [@qilin/client-ui-model-selection/client] Hint: consider adding deps.onlyBundle option to avoid unintended bundling of dependencies, or set deps.onlyBundle: false to disable this hint.
+See more at https://tsdown.dev/options/dependencies#deps-onlybundle
+Detected dependencies in bundle:
+- clsx
+✔ [@qilin/client-ui-agent-preset/client] Rebuilt in 5850ms.
+ℹ [@qilin/client-ui-skill/client] [CJS] lib/client.js      16.25 kB │ gzip: 5.10 kB
+ℹ [@qilin/client-ui-skill/client] [CJS] lib/client.js.map  22.65 kB │ gzip: 7.92 kB
+ℹ [@qilin/client-ui-skill/client] [CJS] 2 files, total: 38.89 kB
+✔ [@qilin/client-ui-skill/client] Rebuilt in 5847ms.
+ℹ [@qilin/client-web] lib/index.js              9.98 kB │ gzip: 3.76 kB
+ℹ [@qilin/client-web] lib/index.js.map          4.57 kB │ gzip: 1.51 kB
+ℹ [@qilin/client-web] lib/boot-page.module.css  2.32 kB │ gzip: 0.89 kB
+ℹ [@qilin/client-web] lib/base.css              1.03 kB │ gzip: 0.62 kB
+ℹ [@qilin/client-web] 4 files, total: 17.89 kB
+ℹ [@qilin/client-ui-sidebar/client] Hint: consider adding deps.onlyBundle option to avoid unintended bundling of dependencies, or set deps.onlyBundle: false to disable this hint.
+See more at https://tsdown.dev/options/dependencies#deps-onlybundle
+Detected dependencies in bundle:
+- clsx
+ℹ [@qilin/client-ui-settings-plugins/client] Hint: consider adding deps.onlyBundle option to avoid unintended bundling of dependencies, or set deps.onlyBundle: false to disable this hint.
+See more at https://tsdown.dev/options/dependencies#deps-onlybundle
+Detected dependencies in bundle:
+- clsx
+✔ [@qilin/client-web] Rebuilt in 5850ms.
+ℹ [@qilin/client-ui-settings-general/client] [CJS] lib/client.js      26.73 kB │ gzip:  6.99 kB
+ℹ [@qilin/client-ui-settings-general/client] [CJS] lib/client.js.map  34.76 kB │ gzip: 10.16 kB
+ℹ [@qilin/client-ui-settings-general/client] [CJS] 2 files, total: 61.49 kB
+ℹ [@qilin/client-ui-model-selection/client] [CJS] lib/client.js      37.37 kB │ gzip:  9.70 kB
+ℹ [@qilin/client-ui-model-selection/client] [CJS] lib/client.js.map  53.20 kB │ gzip: 14.71 kB
+ℹ [@qilin/client-ui-model-selection/client] [CJS] 2 files, total: 90.58 kB
+✔ [@qilin/client-ui-settings-general/client] Rebuilt in 5853ms.
+ℹ [@qilin/client-ui-commands/client] [CJS] lib/client.js      45.82 kB │ gzip: 13.04 kB
+ℹ [@qilin/client-ui-commands/client] [CJS] lib/client.js.map  75.61 kB │ gzip: 21.07 kB
+ℹ [@qilin/client-ui-commands/client] [CJS] 2 files, total: 121.42 kB
+✔ [@qilin/client-ui-model-selection/client] Rebuilt in 5855ms.
+✔ [@qilin/client-ui-commands/client] Rebuilt in 5862ms.
+ℹ [@qilin/client-ui-input-trigger/client] Hint: consider adding deps.onlyBundle option to avoid unintended bundling of dependencies, or set deps.onlyBundle: false to disable this hint.
+See more at https://tsdown.dev/options/dependencies#deps-onlybundle
+Detected dependencies in bundle:
+- clsx
+ℹ [@qilin/client-ui-attachment/client] Hint: consider adding deps.onlyBundle option to avoid unintended bundling of dependencies, or set deps.onlyBundle: false to disable this hint.
+See more at https://tsdown.dev/options/dependencies#deps-onlybundle
+Detected dependencies in bundle:
+- clsx
+ℹ [@qilin/client-ui-user-questions/client] Hint: consider adding deps.onlyBundle option to avoid unintended bundling of dependencies, or set deps.onlyBundle: false to disable this hint.
+See more at https://tsdown.dev/options/dependencies#deps-onlybundle
+Detected dependencies in bundle:
+- clsx
+ℹ [@qilin/client-ui-sidebar/client] [CJS] lib/client.js      17.69 kB │ gzip: 4.99 kB
+ℹ [@qilin/client-ui-sidebar/client] [CJS] lib/client.js.map  18.30 kB │ gzip: 6.13 kB
+ℹ [@qilin/client-ui-sidebar/client] [CJS] 2 files, total: 35.99 kB
+✔ [@qilin/client-ui-sidebar/client] Rebuilt in 5862ms.
+ℹ [@qilin/client-ui-tool/client] Hint: consider adding deps.onlyBundle option to avoid unintended bundling of dependencies, or set deps.onlyBundle: false to disable this hint.
+See more at https://tsdown.dev/options/dependencies#deps-onlybundle
+Detected dependencies in bundle:
+- clsx
+ℹ [@qilin/client-ui-settings-plugins/client] [CJS] lib/client.js      51.00 kB │ gzip: 12.95 kB
+ℹ [@qilin/client-ui-settings-plugins/client] [CJS] lib/client.js.map  84.20 kB │ gzip: 21.86 kB
+ℹ [@qilin/client-ui-settings-plugins/client] [CJS] 2 files, total: 135.20 kB
+✔ [@qilin/client-ui-settings-plugins/client] Rebuilt in 5868ms.
+ℹ [@qilin/client-ui-input-trigger/client] [CJS] lib/client.js      36.83 kB │ gzip: 11.40 kB
+ℹ [@qilin/client-ui-input-trigger/client] [CJS] lib/client.js.map  60.47 kB │ gzip: 17.81 kB
+ℹ [@qilin/client-ui-input-trigger/client] [CJS] 2 files, total: 97.29 kB
+ℹ [@qilin/client-ui-attachment/client] [CJS] lib/client.js      35.87 kB │ gzip:  9.71 kB
+ℹ [@qilin/client-ui-attachment/client] [CJS] lib/client.js.map  43.69 kB │ gzip: 12.91 kB
+ℹ [@qilin/client-ui-attachment/client] [CJS] 2 files, total: 79.55 kB
+ℹ [@qilin/client-ui-user-questions/client] [CJS] lib/client.js      38.29 kB │ gzip:  9.52 kB
+ℹ [@qilin/client-ui-user-questions/client] [CJS] lib/client.js.map  46.91 kB │ gzip: 13.46 kB
+ℹ [@qilin/client-ui-user-questions/client] [CJS] 2 files, total: 85.20 kB
+✔ [@qilin/client-ui-attachment/client] Rebuilt in 5881ms.
+✔ [@qilin/client-ui-input-trigger/client] Rebuilt in 5877ms.
+✔ [@qilin/client-ui-user-questions/client] Rebuilt in 5876ms.
+ℹ [@qilin/client-ui-directory-picker-browse/client] Hint: consider adding deps.onlyBundle option to avoid unintended bundling of dependencies, or set deps.onlyBundle: false to disable this hint.
+See more at https://tsdown.dev/options/dependencies#deps-onlybundle
+Detected dependencies in bundle:
+- clsx
+ℹ [@qilin/client-ui-tool/client] [CJS] lib/client.js       78.71 kB │ gzip: 18.38 kB
+ℹ [@qilin/client-ui-tool/client] [CJS] lib/client.js.map  129.94 kB │ gzip: 32.81 kB
+ℹ [@qilin/client-ui-tool/client] [CJS] 2 files, total: 208.64 kB
+✔ [@qilin/client-ui-tool/client] Rebuilt in 5892ms.
+ℹ [@qilin/client-ui-workspace/client] Hint: consider adding deps.onlyBundle option to avoid unintended bundling of dependencies, or set deps.onlyBundle: false to disable this hint.
+See more at https://tsdown.dev/options/dependencies#deps-onlybundle
+Detected dependencies in bundle:
+- clsx
+ℹ [@qilin/client-ui-directory-picker-browse/client] [CJS] lib/client.js      49.74 kB │ gzip: 13.21 kB
+ℹ [@qilin/client-ui-directory-picker-browse/client] [CJS] lib/client.js.map  76.69 kB │ gzip: 23.01 kB
+ℹ [@qilin/client-ui-directory-picker-browse/client] [CJS] 2 files, total: 126.43 kB
+✔ [@qilin/client-ui-directory-picker-browse/client] Rebuilt in 5900ms.
+ℹ [@qilin/client-ui-theme/client] Hint: consider adding deps.onlyBundle option to avoid unintended bundling of dependencies, or set deps.onlyBundle: false to disable this hint.
+See more at https://tsdown.dev/options/dependencies#deps-onlybundle
+Detected dependencies in bundle:
+- clsx
+ℹ [@qilin/client-ui-conversation/client] Hint: consider adding deps.onlyBundle option to avoid unintended bundling of dependencies, or set deps.onlyBundle: false to disable this hint.
+See more at https://tsdown.dev/options/dependencies#deps-onlybundle
+Detected dependencies in bundle:
+- clsx
+ℹ [@qilin/client-ui-workspace/client] [CJS] lib/client.js      115.64 kB │ gzip: 25.77 kB
+ℹ [@qilin/client-ui-workspace/client] [CJS] lib/client.js.map  168.27 kB │ gzip: 42.36 kB
+ℹ [@qilin/client-ui-workspace/client] [CJS] 2 files, total: 283.91 kB
+✔ [@qilin/client-ui-workspace/client] Rebuilt in 5912ms.
+ℹ [@qilin/typert-registry/client] Hint: consider adding deps.onlyBundle option to avoid unintended bundling of dependencies, or set deps.onlyBundle: false to disable this hint.
+See more at https://tsdown.dev/options/dependencies#deps-onlybundle
+Detected dependencies in bundle:
+- zod
+ℹ [@qilin/client-locale/client] [CJS] lib/client.js       48.79 kB │ gzip: 13.97 kB
+ℹ [@qilin/client-locale/client] [CJS] lib/client.js.map  102.20 kB │ gzip: 27.61 kB
+ℹ [@qilin/client-locale/client] [CJS] 2 files, total: 150.99 kB
+ℹ [@qilin/client-ui-settings/client] [CJS] lib/client.js       50.49 kB │ gzip: 13.15 kB
+ℹ [@qilin/client-ui-settings/client] [CJS] lib/client.js.map  108.26 kB │ gzip: 27.75 kB
+ℹ [@qilin/client-ui-settings/client] [CJS] 2 files, total: 158.75 kB
+✔ [@qilin/client-locale/client] Rebuilt in 5930ms.
+✔ [@qilin/client-ui-settings/client] Rebuilt in 5926ms.
+ℹ [@qilin/client-ui-primitives] lib/index.js                          289.39 kB │ gzip: 91.94 kB
+ℹ [@qilin/client-ui-primitives] lib/index.js.map                       95.26 kB │ gzip: 21.25 kB
+ℹ [@qilin/client-ui-primitives] lib/markdown/MarkdownText.module.css    7.40 kB │ gzip:  2.46 kB
+ℹ [@qilin/client-ui-primitives] lib/TerminalBlock.module.css            7.09 kB │ gzip:  2.57 kB
+ℹ [@qilin/client-ui-primitives] lib/Menu.module.css                     5.57 kB │ gzip:  2.20 kB
+ℹ [@qilin/client-ui-primitives] lib/JsonTree.module.css                 4.15 kB │ gzip:  1.25 kB
+ℹ [@qilin/client-ui-primitives] lib/WebBlock.module.css                 3.41 kB │ gzip:  1.38 kB
+ℹ [@qilin/client-ui-primitives] lib/DiffBlock.module.css                2.99 kB │ gzip:  1.23 kB
+ℹ [@qilin/client-ui-primitives] lib/ReadBlock.module.css                2.83 kB │ gzip:  1.03 kB
+ℹ [@qilin/client-ui-primitives] lib/SearchBlock.module.css              2.82 kB │ gzip:  0.99 kB
+ℹ [@qilin/client-ui-primitives] lib/markdown/CodeBlock.module.css       2.52 kB │ gzip:  0.86 kB
+ℹ [@qilin/client-ui-primitives] lib/Modal.module.css                    2.14 kB │ gzip:  0.87 kB
+ℹ [@qilin/client-ui-primitives] lib/Toast.module.css                    1.84 kB │ gzip:  0.95 kB
+ℹ [@qilin/client-ui-primitives] lib/Button.module.css                   1.72 kB │ gzip:  0.67 kB
+ℹ [@qilin/client-ui-primitives] lib/StateDot.module.css                 1.56 kB │ gzip:  0.73 kB
+ℹ [@qilin/client-ui-primitives] lib/Tooltip.module.css                  1.40 kB │ gzip:  0.78 kB
+ℹ [@qilin/client-ui-primitives] lib/HoverCard.module.css                1.27 kB │ gzip:  0.70 kB
+ℹ [@qilin/client-ui-primitives] lib/RiskConfirmation.module.css         1.18 kB │ gzip:  0.48 kB
+ℹ [@qilin/client-ui-primitives] lib/DisclosureRow.module.css            1.03 kB │ gzip:  0.45 kB
+ℹ [@qilin/client-ui-primitives] lib/Input.module.css                    0.69 kB │ gzip:  0.32 kB
+ℹ [@qilin/client-ui-primitives] lib/markdown/JsonBlock.module.css       0.63 kB │ gzip:  0.30 kB
+ℹ [@qilin/client-ui-primitives] lib/OnboardingSurface.module.css        0.59 kB │ gzip:  0.35 kB
+ℹ [@qilin/client-ui-primitives] lib/Pill.module.css                     0.57 kB │ gzip:  0.27 kB
+ℹ [@qilin/client-ui-primitives] lib/markdown/MessageText.module.css     0.34 kB │ gzip:  0.24 kB
+ℹ [@qilin/client-ui-primitives] lib/ConnectionBanner.module.css         0.27 kB │ gzip:  0.19 kB
+ℹ [@qilin/client-ui-primitives] 25 files, total: 438.65 kB
+ℹ [@qilin/client-ui-theme/client] [CJS] lib/client.js       79.95 kB │ gzip: 18.38 kB
+ℹ [@qilin/client-ui-theme/client] [CJS] lib/client.js.map  105.80 kB │ gzip: 28.05 kB
+ℹ [@qilin/client-ui-theme/client] [CJS] 2 files, total: 185.75 kB
+✔ [@qilin/client-ui-primitives] Rebuilt in 5924ms.
+✔ [@qilin/client-ui-theme/client] Rebuilt in 5924ms.
+ℹ [@qilin/api-remotes/client] Hint: consider adding deps.onlyBundle option to avoid unintended bundling of dependencies, or set deps.onlyBundle: false to disable this hint.
+See more at https://tsdown.dev/options/dependencies#deps-onlybundle
+Detected dependencies in bundle:
+- zod
+ℹ [@qilin/client-ui-trajectory/client] Hint: consider adding deps.onlyBundle option to avoid unintended bundling of dependencies, or set deps.onlyBundle: false to disable this hint.
+See more at https://tsdown.dev/options/dependencies#deps-onlybundle
+Detected dependencies in bundle:
+- @tanstack/virtual-core
+- @tanstack/react-virtual
+- diff
+ℹ [@qilin/typert-registry/client] [CJS] lib/client.js       52.06 kB │ gzip: 11.17 kB
+ℹ [@qilin/typert-registry/client] [CJS] lib/client.js.map  124.96 kB │ gzip: 27.16 kB
+ℹ [@qilin/typert-registry/client] [CJS] 2 files, total: 177.02 kB
+✔ [@qilin/typert-registry/client] Rebuilt in 5933ms.
+ℹ [@qilin/client-ui-renderer/client] Hint: consider adding deps.onlyBundle option to avoid unintended bundling of dependencies, or set deps.onlyBundle: false to disable this hint.
+See more at https://tsdown.dev/options/dependencies#deps-onlybundle
+Detected dependencies in bundle:
+- use-sync-external-store
+ℹ [@qilin/client-connection/client] Hint: consider adding deps.onlyBundle option to avoid unintended bundling of dependencies, or set deps.onlyBundle: false to disable this hint.
+See more at https://tsdown.dev/options/dependencies#deps-onlybundle
+Detected dependencies in bundle:
+- zod
+ℹ [@qilin/client-ui-renderer/client] [CJS] lib/client.js      39.78 kB │ gzip: 10.78 kB
+ℹ [@qilin/client-ui-renderer/client] [CJS] lib/client.js.map  73.25 kB │ gzip: 20.21 kB
+ℹ [@qilin/client-ui-renderer/client] [CJS] 2 files, total: 113.04 kB
+✔ [@qilin/client-ui-renderer/client] Rebuilt in 5954ms.
+ℹ [@qilin/api-remotes/client] [CJS] lib/client.js      202.73 kB │ gzip: 31.57 kB
+ℹ [@qilin/api-remotes/client] [CJS] lib/client.js.map  481.81 kB │ gzip: 75.90 kB
+ℹ [@qilin/api-remotes/client] [CJS] 2 files, total: 684.55 kB
+✔ [@qilin/api-remotes/client] Rebuilt in 5959ms.
+ℹ [@qilin/client-runtime/client] Hint: consider adding deps.onlyBundle option to avoid unintended bundling of dependencies, or set deps.onlyBundle: false to disable this hint.
+See more at https://tsdown.dev/options/dependencies#deps-onlybundle
+Detected dependencies in bundle:
+- zod
+- zustand
+- immer
+ℹ [@qilin/client-ui-conversation/client] [CJS] lib/client.js      452.57 kB │ gzip: 106.99 kB
+ℹ [@qilin/client-ui-conversation/client] [CJS] lib/client.js.map  751.04 kB │ gzip: 191.87 kB
+ℹ [@qilin/client-ui-conversation/client] [CJS] 2 files, total: 1.20 MB
+✔ [@qilin/client-ui-conversation/client] Rebuilt in 5973ms.
+ℹ [@qilin/client-ui-trajectory/client] [CJS] lib/client.js      364.96 kB │ gzip:  73.30 kB
+ℹ [@qilin/client-ui-trajectory/client] [CJS] lib/client.js.map  580.88 kB │ gzip: 128.72 kB
+ℹ [@qilin/client-ui-trajectory/client] [CJS] 2 files, total: 945.83 kB
+✔ [@qilin/client-ui-trajectory/client] Rebuilt in 5967ms.
+ℹ [@qilin/client-connection/client] [CJS] lib/client.js      352.60 kB │ gzip:  77.66 kB
+ℹ [@qilin/client-connection/client] [CJS] lib/client.js.map  807.90 kB │ gzip: 170.37 kB
+ℹ [@qilin/client-connection/client] [CJS] 2 files, total: 1.16 MB
+✔ [@qilin/client-connection/client] Rebuilt in 5984ms.
+ℹ [@qilin/client-runtime/client] [CJS] lib/client.js      391.78 kB │ gzip:  89.69 kB
+ℹ [@qilin/client-runtime/client] [CJS] lib/client.js.map  955.41 kB │ gzip: 210.27 kB
+ℹ [@qilin/client-runtime/client] [CJS] 2 files, total: 1.35 MB
+✔ [@qilin/client-runtime/client] Rebuilt in 5998ms.
+dev-web: watching 43 qilin.client plugin packages and 3 statically linked library packages (polling 500ms), plus tsc -b tsconfig.client.json and the @qilin/web-frontend dist build:
+  packages/api/gateway
+  packages/api/remotes
+  packages/client/connection
+  packages/client/hmr
+  packages/client/locale
+  packages/client/modules
+  packages/client/runtime
+  packages/client/ui-agent-preset
+  packages/client/ui-attachment
+  packages/client/ui-brand-official
+  packages/client/ui-commands
+  packages/client/ui-conversation
+  packages/client/ui-deliverables
+  packages/client/ui-directory-picker-browse
+  packages/client/ui-directory-picker-native
+  packages/client/ui-goal
+  packages/client/ui-input-trigger
+  packages/client/ui-jobs
+  packages/client/ui-layout
+  packages/client/ui-message-feedback
+  packages/client/ui-model-selection
+  packages/client/ui-permission-presets
+  packages/client/ui-plan
+  packages/client/ui-reference
+  packages/client/ui-renderer
+  packages/client/ui-settings-general
+  packages/client/ui-settings-models
+  packages/client/ui-settings-plugin-inventory
+  packages/client/ui-settings-plugins
+  packages/client/ui-settings
+  packages/client/ui-sidebar
+  packages/client/ui-skill
+  packages/client/ui-subagent
+  packages/client/ui-theme
+  packages/client/ui-tool
+  packages/client/ui-trajectory
+  packages/client/ui-user-questions
+  packages/client/ui-workflow-run
+  packages/client/ui-workspace
+  packages/extensions/cordis-client-runner
+  packages/extensions/ui-cordis
+  packages/session-query/session-log-export
+  packages/typert/registry
+  packages/client/ui-primitives
+  packages/client/ui-slots
+  packages/client/web
+native/landlock-run/packages/linux-arm64 | [WARN] Unsupported platform: wanted: {"cpu":["arm64"],"os":["linux"],"libc":["any"]} (current: {"os":"darwin","cpu":"arm64","libc":"unknown"})
+native/landlock-run/packages/linux-x64   | [WARN] Unsupported platform: wanted: {"cpu":["x64"],"os":["linux"],"libc":["any"]} (current: {"os":"darwin","cpu":"arm64","libc":"unknown"})
+$ vite build --watch --no-emptyOutDir
+vite v6.4.3 building for production...
+
+watching for file changes...
+
+build started...
+transforming...
+✓ 336 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                                               0.67 kB │ gzip:   0.36 kB
+dist/assets/fonts/KaTeX_Size3-Regular-CTq5MqoE.woff           4.42 kB
+dist/assets/fonts/KaTeX_Size4-Regular-Dl5lxZxV.woff2          4.93 kB
+dist/assets/fonts/KaTeX_Size2-Regular-Dy4dx90m.woff2          5.21 kB
+dist/assets/fonts/KaTeX_Size1-Regular-mCD8mA8B.woff2          5.47 kB
+dist/assets/fonts/KaTeX_Size4-Regular-BF-4gkZK.woff           5.98 kB
+dist/assets/fonts/KaTeX_Size2-Regular-oD1tc_U0.woff           6.19 kB
+dist/assets/fonts/KaTeX_Size1-Regular-C195tn64.woff           6.50 kB
+dist/assets/fonts/KaTeX_Caligraphic-Regular-Di6jR-x-.woff2    6.91 kB
+dist/assets/fonts/KaTeX_Caligraphic-Bold-Dq_IR9rO.woff2       6.91 kB
+dist/assets/fonts/KaTeX_Size3-Regular-DgpXs0kz.ttf            7.59 kB
+dist/assets/fonts/KaTeX_Caligraphic-Regular-CTRA-rTL.woff     7.66 kB
+dist/assets/fonts/KaTeX_Caligraphic-Bold-BEiXGLvX.woff        7.72 kB
+dist/assets/fonts/KaTeX_Script-Regular-D3wIWfF6.woff2         9.64 kB
+dist/assets/fonts/KaTeX_SansSerif-Regular-DDBCnlJ7.woff2     10.34 kB
+dist/assets/fonts/KaTeX_Size4-Regular-DWFBv043.ttf           10.36 kB
+dist/assets/fonts/KaTeX_Script-Regular-D5yQViql.woff         10.59 kB
+dist/assets/fonts/KaTeX_Fraktur-Regular-CTYiF6lA.woff2       11.32 kB
+dist/assets/fonts/KaTeX_Fraktur-Bold-CL6g_b3V.woff2          11.35 kB
+dist/assets/fonts/KaTeX_Size2-Regular-B7gKUWhC.ttf           11.51 kB
+dist/assets/fonts/KaTeX_SansSerif-Italic-C3H0VqGB.woff2      12.03 kB
+dist/assets/fonts/KaTeX_SansSerif-Bold-D1sUS0GD.woff2        12.22 kB
+dist/assets/fonts/KaTeX_Size1-Regular-Dbsnue_I.ttf           12.23 kB
+dist/assets/fonts/KaTeX_SansSerif-Regular-CS6fqUqJ.woff      12.32 kB
+dist/assets/fonts/KaTeX_Caligraphic-Regular-wX97UBjC.ttf     12.34 kB
+dist/assets/fonts/KaTeX_Caligraphic-Bold-ATXxdsX0.ttf        12.37 kB
+dist/assets/fonts/KaTeX_Fraktur-Regular-Dxdc4cR9.woff        13.21 kB
+dist/assets/fonts/KaTeX_Fraktur-Bold-BsDP51OF.woff           13.30 kB
+dist/assets/fonts/KaTeX_Typewriter-Regular-CO6r4hn1.woff2    13.57 kB
+dist/assets/fonts/KaTeX_SansSerif-Italic-DN2j7dab.woff       14.11 kB
+dist/assets/fonts/KaTeX_SansSerif-Bold-DbIhKOiC.woff         14.41 kB
+dist/assets/fonts/KaTeX_Typewriter-Regular-C0xS9mPB.woff     16.03 kB
+dist/assets/fonts/KaTeX_Math-BoldItalic-CZnvNsCZ.woff2       16.40 kB
+dist/assets/fonts/KaTeX_Math-Italic-t53AETM-.woff2           16.44 kB
+dist/assets/fonts/KaTeX_Script-Regular-C5JkGWo-.ttf          16.65 kB
+dist/assets/fonts/KaTeX_Main-BoldItalic-DxDJ3AOS.woff2       16.78 kB
+dist/assets/fonts/KaTeX_Main-Italic-NWA7e6Wa.woff2           16.99 kB
+dist/assets/fonts/KaTeX_Math-BoldItalic-iY-2wyZ7.woff        18.67 kB
+dist/assets/fonts/KaTeX_Math-Italic-DA0__PXp.woff            18.75 kB
+dist/assets/fonts/KaTeX_Main-BoldItalic-SpSLRI95.woff        19.41 kB
+dist/assets/fonts/KaTeX_SansSerif-Regular-BNo7hRIc.ttf       19.44 kB
+dist/assets/fonts/KaTeX_Fraktur-Regular-CB_wures.ttf         19.57 kB
+dist/assets/fonts/KaTeX_Fraktur-Bold-BdnERNNW.ttf            19.58 kB
+dist/assets/fonts/KaTeX_Main-Italic-BMLOBm91.woff            19.68 kB
+dist/assets/fonts/KaTeX_SansSerif-Italic-YYjJ1zSn.ttf        22.36 kB
+dist/assets/fonts/KaTeX_SansSerif-Bold-CFMepnvq.ttf          24.50 kB
+dist/assets/fonts/KaTeX_Main-Bold-Cx986IdX.woff2             25.32 kB
+dist/assets/fonts/KaTeX_Main-Regular-B22Nviop.woff2          26.27 kB
+dist/assets/fonts/KaTeX_Typewriter-Regular-D3Ib7_Hf.ttf      27.56 kB
+dist/assets/fonts/KaTeX_AMS-Regular-BQhdFMY1.woff2           28.08 kB
+dist/assets/fonts/KaTeX_Main-Bold-Jm3AIy58.woff              29.91 kB
+dist/assets/fonts/KaTeX_Main-Regular-Dr94JaBh.woff           30.77 kB
+dist/assets/fonts/KaTeX_Math-BoldItalic-B3XSjfu4.ttf         31.20 kB
+dist/assets/fonts/KaTeX_Math-Italic-flOr_0UB.ttf             31.31 kB
+dist/assets/fonts/KaTeX_Main-BoldItalic-DzxPMmG6.ttf         32.97 kB
+dist/assets/fonts/KaTeX_AMS-Regular-DMm9YOAa.woff            33.52 kB
+dist/assets/fonts/KaTeX_Main-Italic-3WenGoN9.ttf             33.58 kB
+dist/assets/fonts/KaTeX_Main-Bold-waoOVXN0.ttf               51.34 kB
+dist/assets/fonts/KaTeX_Main-Regular-ypZvNtVU.ttf            53.58 kB
+dist/assets/fonts/KaTeX_AMS-Regular-DRggAlZN.ttf             63.63 kB
+dist/assets/vendor-CjyC-hUb.css                              29.64 kB │ gzip:   8.07 kB
+dist/assets/index-C6eRlFa6.css                               35.77 kB │ gzip:   7.34 kB
+dist/assets/langs/ini-BEwlwnbL.js                             1.57 kB │ gzip:   0.53 kB │ map:     2.50 kB
+dist/assets/langs/xml-sdJ4AIDG.js                             5.43 kB │ gzip:   1.24 kB │ map:     7.87 kB
+dist/assets/langs/toml-vGWfd6FD.js                            6.47 kB │ gzip:   1.31 kB │ map:     9.50 kB
+dist/assets/langs/kotlin-BdnUsdx6.js                          8.83 kB │ gzip:   2.16 kB │ map:    12.81 kB
+dist/assets/langs/yaml-Buea-lGh.js                           10.55 kB │ gzip:   2.29 kB │ map:    14.93 kB
+dist/assets/langs/rust-B1yitclQ.js                           15.11 kB │ gzip:   2.74 kB │ map:    21.49 kB
+dist/assets/langs/lua-BaeVxFsk.js                            15.58 kB │ gzip:   3.20 kB │ map:    22.14 kB
+dist/assets/langs/sql-CRqJ_cUM.js                            23.47 kB │ gzip:   7.48 kB │ map:    27.96 kB
+dist/assets/langs/scss-D5BDwBP9.js                           27.25 kB │ gzip:   4.24 kB │ map:    38.35 kB
+dist/assets/langs/java-CylS5w8V.js                           27.26 kB │ gzip:   4.31 kB │ map:    38.66 kB
+dist/assets/langs/go-C27-OAKa.js                             46.86 kB │ gzip:   5.23 kB │ map:    66.63 kB
+dist/assets/langs/css-CLj8gQPS.js                            49.08 kB │ gzip:  11.90 kB │ map:    60.67 kB
+dist/assets/langs/markdown-Cvjx9yec.js                       59.38 kB │ gzip:   5.66 kB │ map:    82.36 kB
+dist/assets/langs/python-B6aJPvgy.js                         70.00 kB │ gzip:   9.19 kB │ map:    95.27 kB
+dist/assets/langs/c-BIGW1oBm.js                              72.15 kB │ gzip:  10.52 kB │ map:    95.41 kB
+dist/assets/langs/swift-D82vCrfD.js                          86.73 kB │ gzip:  14.74 kB │ map:   114.54 kB
+dist/assets/langs/csharp-DSvCPggb.js                         90.23 kB │ gzip:  10.83 kB │ map:   126.38 kB
+dist/assets/langs/less-B1dDrJ26.js                           97.68 kB │ gzip:  14.83 kB │ map:   131.88 kB
+dist/assets/langs/php-DDkx9sim.js                           113.11 kB │ gzip:  28.72 kB │ map:   142.07 kB
+dist/assets/langs/mdx-Cmh6b_Ma.js                           136.16 kB │ gzip:  23.62 kB │ map:   176.75 kB
+dist/assets/langs/html-CfGypltT.js                          232.16 kB │ gzip:  28.45 kB │ map:   308.96 kB
+dist/assets/index-B_TWkLIP.js                               399.34 kB │ gzip: 135.96 kB │ map: 1,021.39 kB
+dist/assets/langs/ruby-DCxyoPen.js                          425.79 kB │ gzip:  41.53 kB │ map:   579.27 kB
+dist/assets/langs/cpp-DIPi6g--.js                           637.59 kB │ gzip:  47.33 kB │ map:   831.50 kB
+dist/assets/vendor-D22_Mp1f.js                              744.87 kB │ gzip: 179.68 kB │ map: 2,513.49 kB
+
+(!) Some chunks are larger than 500 kB after minification. Consider:
+- Using dynamic import() to code-split the application
+- Use build.rollupOptions.output.manualChunks to improve chunking: https://rollupjs.org/configuration-options/#output-manualchunks
+- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+built in 1159ms.

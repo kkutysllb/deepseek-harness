@@ -1,6 +1,6 @@
 {
-  "name": "@deepseek-ai/dsh-llm-pi-ai",
-  "description": "pi-ai-backed DeepSeek adapter for the DeepSeek Harness LLM seam (design-verification twin of dsh-llm-deepseek)",
+  "name": "@qilin/llm-pi-ai",
+  "description": "pi-ai-backed DeepSeek adapter for the DeepSeek Harness LLM seam (design-verification twin of qilin-llm-deepseek)",
   "version": "0.1.2-alpha.4",
   "publishConfig": {
     "access": "public"
@@ -28,31 +28,31 @@
   "license": "MIT",
   "peerDependencies": {
     "@deepseek-ai/cordis": "workspace:^",
-    "@deepseek-ai/dsh-attachment": "workspace:^",
-    "@deepseek-ai/dsh-authorization": "workspace:^",
-    "@deepseek-ai/dsh-credentials": "workspace:^",
-    "@deepseek-ai/dsh-fs": "workspace:^",
-    "@deepseek-ai/dsh-launch-environment": "workspace:^",
-    "@deepseek-ai/dsh-llm": "workspace:^",
-    "@deepseek-ai/dsh-settings": "workspace:^",
-    "@deepseek-ai/dsh-timeout": "workspace:^"
+    "@qilin/attachment": "workspace:^",
+    "@qilin/authorization": "workspace:^",
+    "@qilin/credentials": "workspace:^",
+    "@qilin/fs": "workspace:^",
+    "@qilin/launch-environment": "workspace:^",
+    "@qilin/llm": "workspace:^",
+    "@qilin/settings": "workspace:^",
+    "@qilin/timeout": "workspace:^"
   },
   "dependencies": {
-    "@deepseek-ai/dsh-brand": "workspace:^",
-    "@deepseek-ai/dsh-util-values": "workspace:^",
+    "@qilin/brand": "workspace:^",
+    "@qilin/util-values": "workspace:^",
     "@deepseek-ai/schemastery": "workspace:^",
-    "@earendil-works/pi-ai": "^0.84.2"
+    "@earendil-works/pi-ai": "0.84.2"
   },
   "devDependencies": {
     "@deepseek-ai/cordis": "workspace:^",
-    "@deepseek-ai/dsh-attachment": "workspace:^",
-    "@deepseek-ai/dsh-authorization": "workspace:^",
-    "@deepseek-ai/dsh-credentials": "workspace:^",
-    "@deepseek-ai/dsh-fs": "workspace:^",
-    "@deepseek-ai/dsh-launch-environment": "workspace:^",
-    "@deepseek-ai/dsh-llm": "workspace:^",
-    "@deepseek-ai/dsh-llm-deepseek": "workspace:^",
-    "@deepseek-ai/dsh-settings": "workspace:^",
-    "@deepseek-ai/dsh-timeout": "workspace:^"
+    "@qilin/attachment": "workspace:^",
+    "@qilin/authorization": "workspace:^",
+    "@qilin/credentials": "workspace:^",
+    "@qilin/fs": "workspace:^",
+    "@qilin/launch-environment": "workspace:^",
+    "@qilin/llm": "workspace:^",
+    "@qilin/llm-deepseek": "workspace:^",
+    "@qilin/settings": "workspace:^",
+    "@qilin/timeout": "workspace:^"
   }
 }

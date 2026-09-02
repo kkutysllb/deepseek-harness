@@ -8,14 +8,14 @@
  * Abort records synthetic error results for skipped calls so replay stays
  * valid. A terminal scheduler failure preserves already-recorded `tool/call`
  * events without fabricating results.
- * @module dsh-agent-loop/tool-calls
+ * @module qilin-agent-loop/tool-calls
  */
 
 import type { Context } from '@deepseek-ai/cordis'
-import { createToolResultMessage, type ToolCallBlock } from '@deepseek-ai/dsh-llm'
-import type { Session, SessionSeq, UserMessage } from '@deepseek-ai/dsh-session'
-import { TOOL_ABORTED_BEFORE_DISPATCH, TOOL_RUNTIME_SCHEDULER, type ToolExecutionInput, type ToolExecutionMode, type ToolExecutionResult, type ToolRunContext } from '@deepseek-ai/dsh-tools'
-import { assertNever } from '@deepseek-ai/dsh-util-values'
+import { createToolResultMessage, type ToolCallBlock } from '@qilin/llm'
+import type { Session, SessionSeq, UserMessage } from '@qilin/session'
+import { TOOL_ABORTED_BEFORE_DISPATCH, TOOL_RUNTIME_SCHEDULER, type ToolExecutionInput, type ToolExecutionMode, type ToolExecutionResult, type ToolRunContext } from '@qilin/tools'
+import { assertNever } from '@qilin/util-values'
 
 /** One tool call after argument parsing, ready to schedule. */
 interface PlannedCall {

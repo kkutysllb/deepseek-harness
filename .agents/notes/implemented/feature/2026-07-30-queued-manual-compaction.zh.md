@@ -18,7 +18,7 @@ Status: implemented
 
 ### `/compact` 是基于后端无关 seam 的命令
 
-`@deepseek-ai/dsh-command-compact` 通过 `ctx.commands` 注册一个无参数、面向用户的命令。它调用第三个抽象 `CompactionEngine` 操作 `compactNow(agent, signal)`，并把封闭的 `ManualCompactionError` 分类体系（`busy | changed | summary | commit | persistence`）映射为直接 UI 结果。`command/run` 和 `command/done` 保留命令生命周期，同时不进入模型历史，也不消耗模型循环轮次。
+`@qilin/command-compact` 通过 `ctx.commands` 注册一个无参数、面向用户的命令。它调用第三个抽象 `CompactionEngine` 操作 `compactNow(agent, signal)`，并把封闭的 `ManualCompactionError` 分类体系（`busy | changed | summary | commit | persistence`）映射为直接 UI 结果。`command/run` 和 `command/done` 保留命令生命周期，同时不进入模型历史，也不消耗模型循环轮次。
 
 命令插件会独立跟踪每个实际处理器 promise，不依赖命令执行器的中止感知等待。其复合生命周期 effect 先注销 `/compact`，再异步等待所有已开始的处理器结算，因此根级 teardown 只有在后端的闭合与 flush 工作结算后才会完全停稳。
 
@@ -34,7 +34,7 @@ Status: implemented
 
 ### 一个参数化事务拥有每一对标记
 
-`dsh-compaction-basic` 只有一个区域事务，由标记归属值（`number | null`）、稳定性规则（整个会话表层或所选区段）与可选 flush 参数化。它按同一顺序执行：
+`qilin-compaction-basic` 只有一个区域事务，由标记归属值（`number | null`）、稳定性规则（整个会话表层或所选区段）与可选 flush 参数化。它按同一顺序执行：
 
 1. 验证所选位置范围，并检查持久日志尾部；
 2. 拒绝活动的未匹配压缩标记；

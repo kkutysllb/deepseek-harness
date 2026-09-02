@@ -1,0 +1,2 @@
+$ node --import tsx/esm apps/cli/src/bin.ts --profile headless '请使用内置的读文件工具读取当前工作目录下 apps/cli/README.md 的开头部分,然后用一句中文概括该包的用途。除此之外不要做任何其他事。'
+该包提供 `qilin` 命令行启动器，用于按配置文件（profile）加载插件包补丁层组合并引导对应应用，支持 web、headless 等启动模式。

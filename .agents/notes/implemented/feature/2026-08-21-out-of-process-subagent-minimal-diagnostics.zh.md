@@ -56,9 +56,9 @@ Subagent failure (provider: <provider>; stage: <stage>; category: <category>; st
 | --- | --- | --- |
 | 协议终态事实 | ACP server 或子 Harness Session | 每个提供方只映射自身拥有的闭集值，并使用固定 unknown 回退 |
 | 当前失败 stage 与 operation-local 细节 | 单次提供方运行 | 只在失败点派生，并随运行丢弃；并发运行不共享诊断状态 |
-| 退出码与信号 | ACP 的 `dsh-subprocess` 句柄 | 仅在观测到受管结果后展示；绝不解析 stderr |
+| 退出码与信号 | ACP 的 `qilin-subprocess` 句柄 | 仅在观测到受管结果后展示；绝不解析 stderr |
 | SDK 错误 category | TypeScript SDK 客户端错误 class | 仅通过 `instanceof` 分类；Error 消息和 stderr tail 留在内部 |
-| 诊断字节与呈现 | `dsh-subagent`、前台工具与 Job 运行时 | 前台和一次性后台模式都把同一份有界文本与 assistant 输出分开 |
+| 诊断字节与呈现 | `qilin-subagent`、前台工具与 Job 运行时 | 前台和一次性后台模式都把同一份有界文本与 assistant 输出分开 |
 | 原始失败 | 子运行时、Error cause 链与 Host logger | 只供 Host 排障，绝不复制进父模型结果 |
 
 启动只有在提供方握手完成后才发布运行。启动清理成功时，私有子进程会先回滚到完全停稳再拒绝。清理失败时，普通失败会保留启动与 teardown/shutdown，取消后只保留清理事实，且不会宣称受管进程已经完全停稳。已发布运行的结果不会拒绝，而 `dispose()` 会独立报告安全 teardown 或 shutdown 事实，并继续使用后端既有的进程清理阶梯。

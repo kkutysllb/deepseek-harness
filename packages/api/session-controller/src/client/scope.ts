@@ -1,6 +1,6 @@
 /**
  * Client Agent-scope primitive: mint a Cordis context tagged with the owning
- * Agent's identity. The mechanism mirrors the host `dsh-scope` architecture
+ * Agent's identity. The mechanism mirrors the host `qilin-scope` architecture
  * (no-op plugin fiber + context tag + `Context.filter` routing predicate);
  * the shape deliberately diverges: the filter lives on the actx itself
  * instead of a separate carrier object, so scoped dispatch is plain cordis —
@@ -17,9 +17,9 @@
  */
 import { Context as CordisContext } from '@deepseek-ai/cordis'
 import type { Context, Fiber } from '@deepseek-ai/cordis'
-import type { ClientRemote } from '@deepseek-ai/dsh-api-gateway/client'
-import type { SessionId } from '@deepseek-ai/dsh-session/types'
-import type { TypertRemoteScopeApi } from '@deepseek-ai/dsh-typert-protocol'
+import type { ClientRemote } from '@qilin/api-gateway/client'
+import type { SessionId } from '@qilin/session/types'
+import type { TypertRemoteScopeApi } from '@qilin/typert-protocol'
 
 /** Client Cordis Context carrying one Agent identity and its scoped Remote namespaces. */
 export type AgentContext = Omit<Context, 'remote'> & {
@@ -27,7 +27,7 @@ export type AgentContext = Omit<Context, 'remote'> & {
 }
 
 /** Context tag written by {@link createScope}. */
-const kScope = Symbol('dsh.client.scope')
+const kScope = Symbol('openkylin.client.scope')
 
 /** A minted Agent scope and its disposal boundary. */
 export interface AgentScopeHandle {

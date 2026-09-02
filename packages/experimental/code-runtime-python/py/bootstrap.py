@@ -1,4 +1,4 @@
-"""CPython bootstrap for dsh-code-runtime-python.
+"""CPython bootstrap for qilin-code-runtime-python.
 
 Reads a :class:`BootMessage` on fd 3, applies resource limits and log capture,
 reads a :class:`RunMessage`, runs the model program as the body of an async
@@ -2393,7 +2393,7 @@ def _model_traceback(exc: BaseException, max_bytes: int) -> str:
         else:
             yield from traceback.format_exception_only(type(exc), exc)
         if truncated:
-            yield f"[dsh-code-runtime-python] exception chain truncated at {_MAX_TRACEBACK_CHAIN} links\n"
+            yield f"[qilin-code-runtime-python] exception chain truncated at {_MAX_TRACEBACK_CHAIN} links\n"
 
     return _join_bounded(emit(), max_bytes)
 

@@ -1,10 +1,10 @@
 import { describe, expect, it } from 'vitest'
 import { Context } from '@deepseek-ai/cordis'
-import SessionStore, { SessionId, SessionSeq } from '@deepseek-ai/dsh-session'
-import ToolRuntime from '@deepseek-ai/dsh-tools'
-import * as ToolTodo from '@deepseek-ai/dsh-tool-todo'
-import * as TodoInvariant from '@deepseek-ai/dsh-tool-todo/invariant'
-import InvariantRegistry from '@deepseek-ai/dsh-invariants'
+import SessionStore, { SessionId, SessionSeq } from '@qilin/session'
+import ToolRuntime from '@qilin/tools'
+import * as ToolTodo from '@qilin/tool-todo'
+import * as TodoInvariant from '@qilin/tool-todo/invariant'
+import InvariantRegistry from '@qilin/invariants'
 
 async function setup(): Promise<Context> {
   const ctx = new Context()

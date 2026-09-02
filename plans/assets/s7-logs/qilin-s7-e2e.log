@@ -1,0 +1,112 @@
+$ vitest run --config vitest.e2e.config.ts
+The plugin "vite-tsconfig-paths" is detected. Vite now supports tsconfig paths resolution natively via the resolve.tsconfigPaths option. You can remove the plugin and set resolve.tsconfigPaths: true in your Vite config instead.
+
+ RUN  v4.1.8 /Users/libing/kk_Projects/qilin-engine
+
+Starting default (STDIO) server...
+ ✓ packages/session/session-telemetry-otel/tests/loader-composition.e2e.ts (3 tests) 4356ms
+     ✓ exports redacted ledger records to the collector while the canonical log keeps the secret  1527ms
+     ✓ exports only prefixes ending in feedback under feedback-only mode  1444ms
+     ✓ keeps disabled feedback local and prints the stable warning  1384ms
+Secure MCP Filesystem Server running on stdio
+Client does not support MCP Roots, using allowed directories set from server args: [
+  '/var/folders/f5/wwjgctq529v381m5rw2lrfr00000gn/T/mcp-fs-e2e-PJeuid',
+  '/private/var/folders/f5/wwjgctq529v381m5rw2lrfr00000gn/T/mcp-fs-e2e-PJeuid'
+]
+ ✓ examples/jsonrpc-agent/tests/keyless-smoke.e2e.ts (4 tests) 6316ms
+     ✓ 'reports max-token turns with the defa…'  1623ms
+     ✓ 'reports max-token turns with mapping …'  1602ms
+     ✓ 'reports max-token turns with mapping …'  1580ms
+     ✓ rejects an invalid max-token success env value  1510ms
+ ✓ apps/cli/tests/built-bin.e2e.ts (18 tests) 6719ms
+     ✓ requires --profile and rejects removed commands  397ms
+     ✓ routes help and usage errors without activating startup-dependent rows  1581ms
+     ✓ runs the headless profile through its app-owned task positional  554ms
+     ✓ uses the launching endpoint and managed credential through the published entry  478ms
+     ✓ reports a patch-overlay boot failure without hanging  524ms
+     ✓ anchors a relative add spec to the invoking directory, not the profile  730ms
+     ✓ activates a dependency that gained qilin.bundle in a later update  635ms
+ ✓ examples/acp-agent/tests/acp.e2e.ts (3 tests | 1 skipped) 4155ms
+     ✓ emits only framed JSON-RPC on stdout  2049ms
+     ✓ session/new succeeds over real stdio (no model call)  2105ms
+ ✓ packages/mcp/mcp-client/tests/mcp-client.e2e.ts (22 tests) 9375ms
+     ✓ rejects a second instance with the same serverName on one root  352ms
+     ✓ disposes cleanly without error  361ms
+     ✓ auto-reconnects after a stdio crash and serves tool calls again  386ms
+     ✓ plugin unload during an outage stops reconnection and unregisters tools  661ms
+ ✓ apps/cli/tests/web-agent-presets.e2e.ts (30 tests) 2841ms
+     ✓ composes the intersection of installed Bundles and enabled preset rows  1272ms
+     ✓ applies a product-row edit only to later sessions on the preset  304ms
+ ✓ apps/cli/tests/headless-shutdown.e2e.ts (1 test) 3470ms
+     ✓ lets a second Ctrl+C force exit while the first signal is draining  3469ms
+ ✓ packages/subagent/subagent-dsh-sdk/tests/loader-composition.e2e.ts (1 test) 2650ms
+     ✓ runs the child runtime in the parent session workspace  2649ms
+ ✓ examples/headless-agent/tests/keyless-smoke.e2e.ts (1 test) 1840ms
+     ✓ boots the real Loader tree, runs a real bash tool round trip, and persists the turn  1840ms
+ ✓ packages/examples/acp-demo/tests/load-path.e2e.ts (1 test) 1825ms
+     ✓ boots via its bin and exposes only fresh text sessions  1824ms
+ ✓ examples/acp-agent/tests/escalation.e2e.ts (3 tests | 2 skipped) 2244ms
+     ✓ boots the tree — sandbox executor + approval service + bridge — and opens a session  2244ms
+ ✓ packages/subagent/subagent-claude-code/tests/loader-composition.e2e.ts (1 test) 1454ms
+     ✓ loads the Bundle default, two named Claude instances, their tools, and Codex without starting either product  1453ms
+ ✓ packages/context/time-context/tests/time-context.e2e.ts (1 test) 1284ms
+     ✓ uses the process zone and persists one ordered context event per request  1283ms
+ ✓ packages/subagent/subagent-acp/tests/loader-composition.e2e.ts (1 test) 1499ms
+     ✓ runs the child in the parent session workspace and announces it as the ACP session cwd  1498ms
+ ✓ packages/goal/goal/tests/goal.e2e.ts (1 test) 1221ms
+     ✓ persists the Loader-mounted snapshot without starting a goal round  1220ms
+ ✓ packages/examples/acp-demo/tests/built-bin.e2e.ts (3 tests) 409ms
+ ✓ packages/session/session-checkpoint-policy/tests/crash-recovery.e2e.ts (2 tests) 872ms
+     ✓ persists the complete request before model dispatch  442ms
+     ✓ persists tool intent before a side effect and repairs its missing result as unknown  429ms
+ ✓ packages/subagent/subagent-codex/tests/loader-composition.e2e.ts (1 test) 1116ms
+     ✓ loads the Bundle default, two named instances, their tools, and job controls without starting Codex  1116ms
+ ✓ examples/headless-agent/tests/code-mode.e2e.ts (7 tests | 2 skipped) 728ms
+ ✓ packages/api/remotes/tests/built-lib.e2e.ts (1 test) 227ms
+ ✓ packages/examples/agent-spine-demo/tests/multi-project-sandbox.e2e.ts (4 tests) 314ms
+ ✓ packages/sdk/server/tests/built-scope-carrier.e2e.ts (1 test) 198ms
+ ✓ packages/lsp/lsp-stdio/tests/typescript-server.e2e.ts (4 tests) 812ms
+     ✓ resolves the definition of a call site to its declaration  762ms
+ ✓ packages/lsp/lsp-stdio/tests/built-lib.e2e.ts (1 test) 205ms
+ ✓ packages/workflow/workflow-worker-thread/tests/built-worker.e2e.ts (1 test) 121ms
+ ✓ packages/shell/bash-sandbox/tests/seatbelt.e2e.ts (5 tests) 78ms
+ ✓ packages/code-runtime/code-runtime-worker-thread/tests/built-lib.e2e.ts (1 test) 121ms
+ ✓ packages/code-runtime/code-runtime-python/tests/protocol-mirror.e2e.ts (3 tests) 131ms
+ ✓ examples/acp-agent/tests/cleanup.e2e.ts (2 tests) 4ms
+ ✓ packages/sandbox/sandbox-local/tests/seatbelt.e2e.ts (5 tests) 67ms
+ ✓ packages/host/directory-picker-native/tests/built-worker.e2e.ts (1 test) 61ms
+ ✓ packages/session-query/session-query-sqlite/tests/load-path.e2e.ts (1 test) 21ms
+ ↓ examples/acp-agent/tests/hooks.e2e.ts (1 test | 1 skipped)
+ ↓ examples/headless-agent/tests/coding-task.e2e.ts (1 test | 1 skipped)
+ ↓ examples/headless-agent/tests/compaction.e2e.ts (1 test | 1 skipped)
+ ↓ examples/headless-agent/tests/full-loop.e2e.ts (1 test | 1 skipped)
+ ↓ examples/headless-agent/tests/real-model.e2e.ts (1 test | 1 skipped)
+ ↓ examples/headless-agent/tests/todo-write.e2e.ts (1 test | 1 skipped)
+ ↓ packages/context/agent-instructions/tests/agent-instructions.e2e.ts (3 tests | 3 skipped)
+ ↓ examples/headless-agent/tests/resume.e2e.ts (1 test | 1 skipped)
+ ↓ packages/core/agent-loop/tests/request-cache.e2e.ts (1 test | 1 skipped)
+ ↓ packages/llm/llm-deepseek/tests/adapter.e2e.ts (7 tests | 7 skipped)
+ ↓ packages/fs/tool-fs/tests/fs-tools.e2e.ts (2 tests | 2 skipped)
+ ↓ packages/e2b/e2b/tests/composition.e2e.ts (2 tests | 2 skipped)
+ ↓ packages/llm/llm-pi-ai/tests/adapter.e2e.ts (7 tests | 7 skipped)
+ ↓ packages/sandbox/sandbox-local/tests/bwrap.e2e.ts (8 tests | 8 skipped)
+ ↓ packages/llm/llm-pi-ai/tests/provider-apis.e2e.ts (5 tests | 5 skipped)
+ ↓ packages/sandbox/sandbox-local/tests/packed-install.e2e.ts (3 tests | 3 skipped)
+ ↓ packages/sandbox/sandbox-local/tests/landlock.e2e.ts (5 tests | 5 skipped)
+ ↓ packages/session/session-title-first-prompt-llm/tests/provider.e2e.ts (1 test | 1 skipped)
+ ↓ packages/shell/bash-sandbox/tests/bwrap.e2e.ts (4 tests | 4 skipped)
+ ↓ packages/shell/bash-sandbox/tests/landlock.e2e.ts (4 tests | 4 skipped)
+ ↓ packages/shell/pwsh-sandbox/tests/acl.e2e.ts (2 tests | 2 skipped)
+ ↓ packages/subagent/subagent-acp/tests/subagent-acp.e2e.ts (2 tests | 2 skipped)
+ ↓ packages/subagent/subagent-codex/tests/real-deepseek.e2e.ts (1 test | 1 skipped)
+ ↓ packages/subagent/subagent-spawn-in-process/tests/spawn-in-process.e2e.ts (1 test | 1 skipped)
+ ↓ packages/subagent/subagent-claude-code/tests/real-deepseek.e2e.ts (1 test | 1 skipped)
+ ↓ packages/web/web-search-deepseek/tests/deepseek.e2e.ts (1 test | 1 skipped)
+ ↓ packages/web/web-search-exa/tests/exa.e2e.ts (1 test | 1 skipped)
+ ↓ packages/web/web-search-perplexity/tests/perplexity.e2e.ts (1 test | 1 skipped)
+ ↓ packages/workflow/workflow-worker-thread/tests/workflow-worker-thread.e2e.ts (1 test | 1 skipped)
+
+ Test Files  32 passed | 29 skipped (61)
+      Tests  129 passed | 75 skipped (204)
+   Start at  04:23:45
+   Duration  17.10s (transform 1.83s, setup 1.28s, import 4.41s, tests 56.73s, environment 3ms)

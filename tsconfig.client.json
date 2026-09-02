@@ -43,7 +43,7 @@
     // so it cannot drag host-side Context augmentation into this program.
     { "path": "./packages/host/webserver" },
     // Compaction seam: ui-chat type-imports the canonical checkpoint contract
-    // from the cordis-free dsh-compaction/checkpoint leaf. Composite rootDir
+    // from the cordis-free qilin-compaction/checkpoint leaf. Composite rootDir
     // rules make that path depend on this project reference.
     { "path": "./packages/compaction/compaction" },
     { "path": "./packages/client/store" },
@@ -86,6 +86,7 @@
     { "path": "./packages/client/ui-message-feedback" },
     { "path": "./packages/client/ui-model-selection" },
     { "path": "./packages/client/ui-agent-preset" },
+    { "path": "./packages/client/ui-accounts" },
     { "path": "./packages/client/ui-permission-presets" },
     { "path": "./packages/client/ui-plan" },
     { "path": "./packages/client/ui-settings-plugins" },

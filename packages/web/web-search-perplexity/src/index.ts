@@ -2,13 +2,13 @@
  * Perplexity-backed `WebSearchProvider` plugin. It contributes to the
  * `ctx.web` registry without owning the service.
  *
- * @module @deepseek-ai/dsh-web-search-perplexity
+ * @module @qilin/web-search-perplexity
  */
 
 import type { Context } from '@deepseek-ai/cordis'
-import { launchEnvironmentOf } from '@deepseek-ai/dsh-launch-environment'
+import { launchEnvironmentOf } from '@qilin/launch-environment'
 import z from '@deepseek-ai/schemastery'
-import type {} from '@deepseek-ai/dsh-web'
+import type {} from '@qilin/web'
 import { PerplexitySearchProvider, PERPLEXITY_DEFAULT_BASE_URL, PERPLEXITY_DEFAULT_MAX_TOKENS, PERPLEXITY_DEFAULT_MODEL } from './provider.ts'
 
 export {

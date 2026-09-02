@@ -7,7 +7,7 @@ import { pathToFileURL } from 'node:url'
 import { Context } from '@deepseek-ai/cordis'
 import Include from '@deepseek-ai/cordis-plugin-include'
 import Loader from '@deepseek-ai/cordis-plugin-loader'
-import WebServer from '@deepseek-ai/dsh-host-webserver'
+import WebServer from '@qilin/host-webserver'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import * as Inspector from '../src/index.ts'
 
@@ -23,14 +23,14 @@ afterEach(async () => {
 
 describe('experimental Inspector through a real Loader composition', () => {
   it('loads the named-export Host face from cordis.yml and releases its endpoint', async () => {
-    root = await mkdtemp(join(tmpdir(), 'dsh-inspector-loader-'))
+    root = await mkdtemp(join(tmpdir(), 'qilin-inspector-loader-'))
     const configPath = join(root, 'cordis.yml')
     await writeFile(configPath, [
-      "- name: '@deepseek-ai/dsh-host-webserver'",
+      "- name: '@qilin/host-webserver'",
       '  config:',
       "    host: '127.0.0.1'",
       '    port: 0',
-      "- name: '@deepseek-ai/dsh-experimental-inspector'",
+      "- name: '@qilin/experimental-inspector'",
       '  config:',
       '    port: 0',
       '    captureFetch: false',
@@ -50,8 +50,8 @@ describe('experimental Inspector through a real Loader composition', () => {
     })
     context.loader.builtins.include = Include
     const modules = new Map<string, unknown>([
-      ['@deepseek-ai/dsh-host-webserver', WebServer],
-      ['@deepseek-ai/dsh-experimental-inspector', Inspector],
+      ['@qilin/host-webserver', WebServer],
+      ['@qilin/experimental-inspector', Inspector],
     ])
     context.loader.internal = {
       version: 'v2',
@@ -74,7 +74,7 @@ describe('experimental Inspector through a real Loader composition', () => {
     })
 
     const inspectorEntry = [...context.loader.entries()]
-      .find(entry => entry.options.name === '@deepseek-ai/dsh-experimental-inspector')
+      .find(entry => entry.options.name === '@qilin/experimental-inspector')
     expect(inspectorEntry?.fiber).toBeDefined()
     await inspectorEntry!.fiber!.dispose()
     expect(context.get('inspector')).toBeUndefined()

@@ -1,5 +1,5 @@
 {
-  "name": "@deepseek-ai/dsh-api-session-controller",
+  "name": "@qilin/api-session-controller",
   "description": "Session Remote commands, cold reads, and live control transport",
   "version": "0.1.2-alpha.4",
   "publishConfig": {
@@ -41,13 +41,13 @@
     "./src/*": "./src/*",
     "./package.json": "./package.json"
   },
-  "dsh": {
+  "openkylin": {
     "client": {
       "external": [
-        "@deepseek-ai/dsh-api-gateway/client"
+        "@qilin/api-gateway/client"
       ],
       "inject": [
-        "@deepseek-ai/dsh-api-gateway"
+        "@qilin/api-gateway"
       ],
       "platform": "web"
     }
@@ -68,80 +68,80 @@
   ],
   "license": "MIT",
   "dependencies": {
-    "@deepseek-ai/dsh-brand": "workspace:^",
-    "@deepseek-ai/dsh-deque": "workspace:^",
+    "@qilin/brand": "workspace:^",
+    "@qilin/deque": "workspace:^",
     "@deepseek-ai/schemastery": "workspace:^",
     "zod": "^4.4.3"
   },
   "peerDependencies": {
     "@deepseek-ai/cordis": "workspace:^",
-    "@deepseek-ai/dsh-agent": "workspace:^",
-    "@deepseek-ai/dsh-agent-default-model": "workspace:^",
-    "@deepseek-ai/dsh-agent-presets": "workspace:^",
-    "@deepseek-ai/dsh-api-gateway": "workspace:^",
-    "@deepseek-ai/dsh-attachment": "workspace:^",
-    "@deepseek-ai/dsh-client-connection": "workspace:^",
-    "@deepseek-ai/dsh-file-reference": "workspace:^",
-    "@deepseek-ai/dsh-jobs": "workspace:^",
-    "@deepseek-ai/dsh-llm": "workspace:^",
-    "@deepseek-ai/dsh-native-command": "workspace:^",
-    "@deepseek-ai/dsh-scope": "workspace:^",
-    "@deepseek-ai/dsh-session": "workspace:^",
-    "@deepseek-ai/dsh-session-persistence": "workspace:^",
-    "@deepseek-ai/dsh-session-projection": "workspace:^",
-    "@deepseek-ai/dsh-session-projection-cache": "workspace:^",
-    "@deepseek-ai/dsh-session-query": "workspace:^",
-    "@deepseek-ai/dsh-session-title": "workspace:^",
-    "@deepseek-ai/dsh-skill": "workspace:^",
-    "@deepseek-ai/dsh-subagent": "workspace:^",
-    "@deepseek-ai/dsh-typert-protocol": "workspace:^",
-    "@deepseek-ai/dsh-typert-registry": "workspace:^",
-    "@deepseek-ai/dsh-util-time": "workspace:^",
-    "@deepseek-ai/dsh-util-workspace-path": "workspace:^",
-    "@deepseek-ai/dsh-workspace": "workspace:^"
+    "@qilin/agent": "workspace:^",
+    "@qilin/agent-default-model": "workspace:^",
+    "@qilin/agent-presets": "workspace:^",
+    "@qilin/api-gateway": "workspace:^",
+    "@qilin/attachment": "workspace:^",
+    "@qilin/client-connection": "workspace:^",
+    "@qilin/file-reference": "workspace:^",
+    "@qilin/jobs": "workspace:^",
+    "@qilin/llm": "workspace:^",
+    "@qilin/native-command": "workspace:^",
+    "@qilin/scope": "workspace:^",
+    "@qilin/session": "workspace:^",
+    "@qilin/session-persistence": "workspace:^",
+    "@qilin/session-projection": "workspace:^",
+    "@qilin/session-projection-cache": "workspace:^",
+    "@qilin/session-query": "workspace:^",
+    "@qilin/session-title": "workspace:^",
+    "@qilin/skill": "workspace:^",
+    "@qilin/subagent": "workspace:^",
+    "@qilin/typert-protocol": "workspace:^",
+    "@qilin/typert-registry": "workspace:^",
+    "@qilin/util-time": "workspace:^",
+    "@qilin/util-workspace-path": "workspace:^",
+    "@qilin/workspace": "workspace:^"
   },
   "peerDependenciesMeta": {
-    "@deepseek-ai/dsh-jobs": {
+    "@qilin/jobs": {
       "optional": true
     },
-    "@deepseek-ai/dsh-session-persistence": {
+    "@qilin/session-persistence": {
       "optional": true
     },
-    "@deepseek-ai/dsh-session-projection-cache": {
+    "@qilin/session-projection-cache": {
       "optional": true
     }
   },
   "devDependencies": {
     "@deepseek-ai/cordis": "workspace:^",
-    "@deepseek-ai/dsh-agent": "workspace:^",
-    "@deepseek-ai/dsh-agent-default-model": "workspace:^",
-    "@deepseek-ai/dsh-agent-presets": "workspace:^",
-    "@deepseek-ai/dsh-api-gateway": "workspace:^",
-    "@deepseek-ai/dsh-attachment": "workspace:^",
-    "@deepseek-ai/dsh-client-connection": "workspace:^",
-    "@deepseek-ai/dsh-client-store": "workspace:^",
-    "@deepseek-ai/dsh-file-reference": "workspace:^",
-    "@deepseek-ai/dsh-jobs": "workspace:^",
-    "@deepseek-ai/dsh-llm": "workspace:^",
-    "@deepseek-ai/dsh-native-command": "workspace:^",
-    "@deepseek-ai/dsh-permission-presets": "workspace:^",
-    "@deepseek-ai/dsh-scope": "workspace:^",
-    "@deepseek-ai/dsh-session": "workspace:^",
-    "@deepseek-ai/dsh-session-persistence": "workspace:^",
-    "@deepseek-ai/dsh-session-projection": "workspace:^",
-    "@deepseek-ai/dsh-session-projection-cache": "workspace:^",
-    "@deepseek-ai/dsh-session-query": "workspace:^",
-    "@deepseek-ai/dsh-session-title": "workspace:^",
-    "@deepseek-ai/dsh-skill": "workspace:^",
-    "@deepseek-ai/dsh-storage": "workspace:^",
-    "@deepseek-ai/dsh-storage-domain": "workspace:^",
-    "@deepseek-ai/dsh-storage-json": "workspace:^",
-    "@deepseek-ai/dsh-subagent": "workspace:^",
-    "@deepseek-ai/dsh-typert-protocol": "workspace:^",
-    "@deepseek-ai/dsh-typert-registry": "workspace:^",
-    "@deepseek-ai/dsh-util-crypto": "workspace:^",
-    "@deepseek-ai/dsh-util-time": "workspace:^",
-    "@deepseek-ai/dsh-util-workspace-path": "workspace:^",
-    "@deepseek-ai/dsh-workspace": "workspace:^"
+    "@qilin/agent": "workspace:^",
+    "@qilin/agent-default-model": "workspace:^",
+    "@qilin/agent-presets": "workspace:^",
+    "@qilin/api-gateway": "workspace:^",
+    "@qilin/attachment": "workspace:^",
+    "@qilin/client-connection": "workspace:^",
+    "@qilin/client-store": "workspace:^",
+    "@qilin/file-reference": "workspace:^",
+    "@qilin/jobs": "workspace:^",
+    "@qilin/llm": "workspace:^",
+    "@qilin/native-command": "workspace:^",
+    "@qilin/permission-presets": "workspace:^",
+    "@qilin/scope": "workspace:^",
+    "@qilin/session": "workspace:^",
+    "@qilin/session-persistence": "workspace:^",
+    "@qilin/session-projection": "workspace:^",
+    "@qilin/session-projection-cache": "workspace:^",
+    "@qilin/session-query": "workspace:^",
+    "@qilin/session-title": "workspace:^",
+    "@qilin/skill": "workspace:^",
+    "@qilin/storage": "workspace:^",
+    "@qilin/storage-domain": "workspace:^",
+    "@qilin/storage-json": "workspace:^",
+    "@qilin/subagent": "workspace:^",
+    "@qilin/typert-protocol": "workspace:^",
+    "@qilin/typert-registry": "workspace:^",
+    "@qilin/util-crypto": "workspace:^",
+    "@qilin/util-time": "workspace:^",
+    "@qilin/util-workspace-path": "workspace:^",
+    "@qilin/workspace": "workspace:^"
   }
 }

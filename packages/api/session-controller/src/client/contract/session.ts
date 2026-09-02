@@ -7,11 +7,11 @@
  * must stub); implementation-internal entry points (history staging, wire-frame
  * dispatch) stay on the class, invisible out here.
  */
-import type { AttachmentIdType, ImageAttachmentRef } from '@deepseek-ai/dsh-attachment'
-import type { MessageId } from '@deepseek-ai/dsh-llm/brand'
-import type { SessionId, SessionSeq } from '@deepseek-ai/dsh-session/types'
-import type { RemoteResult } from '@deepseek-ai/dsh-typert-protocol'
-import type { ObservableSnapshot } from '@deepseek-ai/dsh-client-store'
+import type { AttachmentIdType, ImageAttachmentRef } from '@qilin/attachment'
+import type { MessageId } from '@qilin/llm/brand'
+import type { SessionId, SessionSeq } from '@qilin/session/types'
+import type { RemoteResult } from '@qilin/typert-protocol'
+import type { ObservableSnapshot } from '@qilin/client-store'
 import type { PromptContentPart, QueueAction, SessionRequestId } from '../../types.ts'
 import type { PendingSubmissionImage, SessionSnapshot } from './snapshot.ts'
 

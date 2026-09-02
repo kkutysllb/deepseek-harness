@@ -1,12 +1,12 @@
 import { describe, expect, expectTypeOf, it } from 'vitest'
 import { Context } from '@deepseek-ai/cordis'
-import { createUserMessage, ToolCallId, createMessage } from '@deepseek-ai/dsh-llm'
-import type { ContentBlock, Message, TokenUsage } from '@deepseek-ai/dsh-llm'
-import SessionStore, { Session, SessionId, SessionSeq, canonicalHeader } from '@deepseek-ai/dsh-session'
-import type { EpochHeader, SessionEvent, SessionSeq as SessionSeqType } from '@deepseek-ai/dsh-session'
-import SessionProjectionRegistry from '@deepseek-ai/dsh-session-projection'
-import TokenMeter from '@deepseek-ai/dsh-token-meter'
-import type { TokenMeasurement, TokenMeterConfig } from '@deepseek-ai/dsh-token-meter'
+import { createUserMessage, ToolCallId, createMessage } from '@qilin/llm'
+import type { ContentBlock, Message, TokenUsage } from '@qilin/llm'
+import SessionStore, { Session, SessionId, SessionSeq, canonicalHeader } from '@qilin/session'
+import type { EpochHeader, SessionEvent, SessionSeq as SessionSeqType } from '@qilin/session'
+import SessionProjectionRegistry from '@qilin/session-projection'
+import TokenMeter from '@qilin/token-meter'
+import type { TokenMeasurement, TokenMeterConfig } from '@qilin/token-meter'
 
 function header(model: string, extras: Omit<EpochHeader, 'config'> = {}): EpochHeader {
   return canonicalHeader({ config: { provider: 'mock', model }, ...extras })

@@ -3,13 +3,13 @@ description: "面向用户与维护者的授权 flow 注册表：获取配置无
 kind: "package-reference"
 ---
 
-# @deepseek-ai/dsh-authorization
+# @qilin/authorization
 
 [English](README.md) | 中文
 
 ## 概述
 
-`dsh-authorization` 通过询问人来获取配置无法提供的凭据：插件为每个凭据注册一个 flow，配置 UI 或其他界面发起一次尝试，其 notice 与提问恰好抵达发出请求的那个页面。人用 flow 提供的方法之一登录、粘贴一个码或回答一个问题；flow 结束时，其凭据记录已提交到 `dsh-credentials` 存储，而只有观察到这次提交时，尝试才报告 `authorized`。拒绝或撤销的尝试以 `cancelled` 结算而非报错，因此界面能区分「人说了不」与「flow 出了故障」。当凭据必须交互式获取时选择它：它建立在凭据 seam 的记录半侧之上、需要挂载该存储，且本身不随附任何 flow——由你的插件注册。
+`qilin-authorization` 通过询问人来获取配置无法提供的凭据：插件为每个凭据注册一个 flow，配置 UI 或其他界面发起一次尝试，其 notice 与提问恰好抵达发出请求的那个页面。人用 flow 提供的方法之一登录、粘贴一个码或回答一个问题；flow 结束时，其凭据记录已提交到 `qilin-credentials` 存储，而只有观察到这次提交时，尝试才报告 `authorized`。拒绝或撤销的尝试以 `cancelled` 结算而非报错，因此界面能区分「人说了不」与「flow 出了故障」。当凭据必须交互式获取时选择它：它建立在凭据 seam 的记录半侧之上、需要挂载该存储，且本身不随附任何 flow——由你的插件注册。
 
 ## 目录
 
@@ -37,8 +37,8 @@ kind: "package-reference"
 
 ```ts
 import type { Context } from '@deepseek-ai/cordis'
-import type { AuthorizationSession } from '@deepseek-ai/dsh-authorization'
-import { credentialKey } from '@deepseek-ai/dsh-credentials'
+import type { AuthorizationSession } from '@qilin/authorization'
+import { credentialKey } from '@qilin/credentials'
 
 declare const ctx: Context
 declare const exchangeCode: (code: string, signal: AbortSignal) => Promise<{ token: string }>

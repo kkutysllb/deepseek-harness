@@ -1,6 +1,6 @@
 {
-  "name": "@deepseek-ai/dsh-brand",
-  "description": "Stateless branded primitive types for the DeepSeek Harness",
+  "name": "@qilin/brand",
+  "description": "Stateless branded primitive types for the OpenKylin",
   "version": "0.1.2-alpha.4",
   "publishConfig": {
     "access": "public"

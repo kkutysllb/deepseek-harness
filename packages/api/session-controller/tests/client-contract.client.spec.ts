@@ -1,6 +1,6 @@
 import { describe, expect, expectTypeOf, it, vi } from 'vitest'
-import type { PromptContentPart as AttachmentPromptContentPart } from '@deepseek-ai/dsh-attachment/types'
-import { SessionSeq, type SessionSeqCursor } from '@deepseek-ai/dsh-session/types'
+import type { PromptContentPart as AttachmentPromptContentPart } from '@qilin/attachment/types'
+import { SessionSeq, type SessionSeqCursor } from '@qilin/session/types'
 import {
   MutableSessionEventSource, type SessionLiveEventEntry,
 } from '../src/client/contract/events.ts'

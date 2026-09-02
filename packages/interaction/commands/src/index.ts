@@ -1,19 +1,19 @@
 /**
  * Plugin-owned human-command registry shared by interactive UI adapters.
- * @module @deepseek-ai/dsh-commands
+ * @module @qilin/commands
  */
 
 import { Context } from '@deepseek-ai/cordis'
-import { randomUUID } from '@deepseek-ai/dsh-util-crypto'
-import type { Agent } from '@deepseek-ai/dsh-agent'
-import { AttachmentError, admitEncodedImages } from '@deepseek-ai/dsh-attachment'
-import type { EncodedImageAttachment } from '@deepseek-ai/dsh-attachment/types'
-import type { ImageBlock } from '@deepseek-ai/dsh-llm'
-import { NamedEntries, ScopedLayers } from '@deepseek-ai/dsh-scope'
-import type { ScopeKey, ScopeLayer } from '@deepseek-ai/dsh-scope'
-import { SessionSeq } from '@deepseek-ai/dsh-session'
-import type { Session, SessionEvent, SessionEventMap } from '@deepseek-ai/dsh-session'
-import { TypertRemoteService, Remote } from '@deepseek-ai/dsh-typert-protocol'
+import { randomUUID } from '@qilin/util-crypto'
+import type { Agent } from '@qilin/agent'
+import { AttachmentError, admitEncodedImages } from '@qilin/attachment'
+import type { EncodedImageAttachment } from '@qilin/attachment/types'
+import type { ImageBlock } from '@qilin/llm'
+import { NamedEntries, ScopedLayers } from '@qilin/scope'
+import type { ScopeKey, ScopeLayer } from '@qilin/scope'
+import { SessionSeq } from '@qilin/session'
+import type { Session, SessionEvent, SessionEventMap } from '@qilin/session'
+import { TypertRemoteService, Remote } from '@qilin/typert-protocol'
 import { CommandId } from './brand.ts'
 import type {
   CommandDescriptor,

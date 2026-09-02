@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import type { SessionEvent, SurfaceEvent, SurfaceEventType } from '@deepseek-ai/dsh-session'
+import type { SessionEvent, SurfaceEvent, SurfaceEventType } from '@qilin/session'
 import {
   Session,
   SessionId,
@@ -10,8 +10,8 @@ import {
   isReplacementSurfaceEvent,
   isSurfaceEligibleType,
   isSurfaceEvent,
-} from '@deepseek-ai/dsh-session'
-import { SurfaceManager } from '@deepseek-ai/dsh-session/surface'
+} from '@qilin/session'
+import { SurfaceManager } from '@qilin/session/surface'
 import {
   createMessage,
   createToolResultMessage,
@@ -19,7 +19,7 @@ import {
   freezeMessage,
   ToolCallId,
   MessageId,
-} from '@deepseek-ai/dsh-llm'
+} from '@qilin/llm'
 
 type TestSurfaceOp = 'append' | { op: 'replace'; start: number; end: number }
 

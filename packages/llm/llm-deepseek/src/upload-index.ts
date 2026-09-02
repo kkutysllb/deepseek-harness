@@ -1,12 +1,12 @@
-/** Durable DeepSeek attachment-to-file-id index. @module dsh-llm-deepseek/upload-index */
+/** Durable DeepSeek attachment-to-file-id index. @module qilin-llm-deepseek/upload-index */
 
 import { createHash } from 'node:crypto'
 import { readFile, mkdir } from 'node:fs/promises'
 import { dirname, join } from 'node:path'
-import { withFileLock, writeFileAtomic } from '@deepseek-ai/dsh-atomic-write'
-import { resolveDshHome } from '@deepseek-ai/dsh-home-paths'
-import { ImageVariantId } from '@deepseek-ai/dsh-attachment'
-import type { AttachmentId, ImageVariantId as ImageVariantIdType } from '@deepseek-ai/dsh-attachment'
+import { withFileLock, writeFileAtomic } from '@qilin/atomic-write'
+import { resolveDshHome } from '@qilin/home-paths'
+import { ImageVariantId } from '@qilin/attachment'
+import type { AttachmentId, ImageVariantId as ImageVariantIdType } from '@qilin/attachment'
 import { DeepSeekFileId, DeepSeekFileScope } from './file-id.ts'
 import type { DeepSeekFileId as DeepSeekFileIdType, DeepSeekFileScope as DeepSeekFileScopeType } from './file-id.ts'
 
@@ -114,7 +114,7 @@ export class DeepSeekUploadIndex {
   readonly path: string
 
   /**
-   * @param path - explicit test path; omission uses `DSH_HOME/llm-deepseek/files-v3.json`.
+   * @param path - explicit test path; omission uses `OPENKYLIN_HOME/llm-deepseek/files-v3.json`.
    */
   constructor(path = join(resolveDshHome(), 'llm-deepseek', 'files-v3.json')) {
     this.path = path

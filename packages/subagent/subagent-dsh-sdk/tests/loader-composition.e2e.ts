@@ -13,12 +13,12 @@ import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { fileURLToPath, pathToFileURL } from 'node:url'
 import { describe, expect, it } from 'vitest'
-import { type SessionEvent } from '@deepseek-ai/dsh-session'
-import { runLoaderSmoke } from '@deepseek-ai/dsh-loader-smoke'
+import { type SessionEvent } from '@qilin/session'
+import { runLoaderSmoke } from '@qilin/loader-smoke'
 
 const fixtureDir = new URL('./fixtures/loader/', import.meta.url)
 const driver = fileURLToPath(new URL('driver.ts', fixtureDir))
-const configPath = fileURLToPath(new URL('dsh-sdk.patch.yml', fixtureDir))
+const configPath = fileURLToPath(new URL('qilin-sdk.patch.yml', fixtureDir))
 const childConfigPath = fileURLToPath(new URL('child.patch.yml', fixtureDir))
 const childMockPath = fileURLToPath(new URL('child-mock-llm.ts', fixtureDir))
 const repoTsconfig = fileURLToPath(new URL('../../../../tsconfig.json', import.meta.url))
@@ -51,16 +51,16 @@ async function childLaunch(failure = false): Promise<{
   childHome: string
   env: Record<string, string>
 }> {
-  const childHome = await mkdtemp(join(tmpdir(), 'dsh-sdk-subagent-home-'))
+  const childHome = await mkdtemp(join(tmpdir(), 'qilin-sdk-subagent-home-'))
   const childPatch = join(childHome, 'child.patch.yml')
   await writeFile(childPatch, (await readFile(childConfigPath, 'utf8'))
     .replace("'./child-mock-llm.ts'", JSON.stringify(pathToFileURL(childMockPath).href)))
   return {
     childHome,
     env: {
-      DSH_TEST_CHILD_PATCHES: JSON.stringify([childPatch]),
-      DSH_TEST_CHILD_HOME: childHome,
-      ...(failure ? { DSH_TEST_CHILD_FAILURE: '1' } : {}),
+      OPENKYLIN_TEST_CHILD_PATCHES: JSON.stringify([childPatch]),
+      OPENKYLIN_TEST_CHILD_HOME: childHome,
+      ...(failure ? { OPENKYLIN_TEST_CHILD_FAILURE: '1' } : {}),
     },
   }
 }
@@ -74,8 +74,8 @@ describe('SDK subagent routing and diagnostics through the production profile', 
     let workspace = ''
     try {
       const { stderr } = await runLoaderSmoke({
-        label: 'dsh-sdk-subagent cwd composition smoke',
-        tempDirPrefix: 'dsh-sdk-subagent-cwd-e2e-',
+        label: 'qilin-sdk-subagent cwd composition smoke',
+        tempDirPrefix: 'qilin-sdk-subagent-cwd-e2e-',
         binScript: driver,
         libBinScript: driver,
         configPath,
@@ -86,8 +86,8 @@ describe('SDK subagent routing and diagnostics through the production profile', 
         processTimeoutMs: 120_000,
         env: {
           ...child.env,
-          DSH_TEST_CHILD_DEFAULT_ROUTE: '1',
-          DSH_TEST_PARENT_MODEL_RECORD: '.parent-model-routes',
+          OPENKYLIN_TEST_CHILD_DEFAULT_ROUTE: '1',
+          OPENKYLIN_TEST_PARENT_MODEL_RECORD: '.parent-model-routes',
         },
         inspect: async (cwd) => {
           // The child reports realpaths; canonicalize the temp workspace to match.
@@ -146,8 +146,8 @@ describe('SDK subagent routing and diagnostics through the production profile', 
     let events: SessionEvent[] = []
     try {
       const { stderr } = await runLoaderSmoke({
-        label: 'dsh-sdk-subagent diagnostic composition smoke',
-        tempDirPrefix: 'dsh-sdk-subagent-diagnostic-e2e-',
+        label: 'qilin-sdk-subagent diagnostic composition smoke',
+        tempDirPrefix: 'qilin-sdk-subagent-diagnostic-e2e-',
         binScript: driver,
         libBinScript: driver,
         configPath,

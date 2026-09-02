@@ -108,7 +108,7 @@
   color: transparent;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
-  animation: dsh-turn-status-shimmer 1.8s linear infinite;
+  animation: qilin-turn-status-shimmer 1.8s linear infinite;
 }
 
 .turnStatusClock {
@@ -122,7 +122,7 @@
   -webkit-text-fill-color: var(--dsw-alias-label-caption);
 }
 
-@keyframes dsh-turn-status-shimmer {
+@keyframes qilin-turn-status-shimmer {
   to {
     background-position: 0 0;
   }

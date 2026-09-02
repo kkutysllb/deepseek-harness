@@ -1,6 +1,6 @@
 {
-  "name": "@deepseek-ai/dsh-experimental-code-runtime-python",
-  "description": "CPython subprocess implementation of the DeepSeek Harness code-execution seam",
+  "name": "@qilin/experimental-code-runtime-python",
+  "description": "CPython subprocess implementation of the OpenKylin code-execution seam",
   "version": "0.1.2-alpha.4",
   "repository": {
     "type": "git",
@@ -24,16 +24,16 @@
   ],
   "license": "MIT",
   "peerDependencies": {
-    "@deepseek-ai/dsh-code-runtime": "workspace:^",
-    "@deepseek-ai/dsh-timeout": "workspace:^",
+    "@qilin/code-runtime": "workspace:^",
+    "@qilin/timeout": "workspace:^",
     "@deepseek-ai/cordis": "workspace:^",
-    "@deepseek-ai/dsh-util-values": "workspace:^"
+    "@qilin/util-values": "workspace:^"
   },
   "devDependencies": {
-    "@deepseek-ai/dsh-code-runtime": "workspace:^",
-    "@deepseek-ai/dsh-timeout": "workspace:^",
+    "@qilin/code-runtime": "workspace:^",
+    "@qilin/timeout": "workspace:^",
     "@deepseek-ai/cordis": "workspace:^",
-    "@deepseek-ai/dsh-util-values": "workspace:^"
+    "@qilin/util-values": "workspace:^"
   },
   "dependencies": {
     "@deepseek-ai/schemastery": "workspace:^"

@@ -1,6 +1,6 @@
 /**
  * Quick comprehensive documentation-standard tests: the reference example
- * stays valid, the consolidated `dsh-doc` skill carries no stale copied
+ * stays valid, the consolidated `qilin-doc` skill carries no stale copied
  * website values or prototype-era language, and the kind system maps each
  * label to exactly one skill template. These run in `pnpm run test` and
  * `pnpm run test:docs` to guard the standard between heavier corpus gates.
@@ -30,7 +30,7 @@ function packageReadmes(): string[] {
 }
 
 /**
- * The kind system: each label maps to exactly one template in the dsh-doc
+ * The kind system: each label maps to exactly one template in the qilin-doc
  * skill. The check derives the expected kind from the same mechanical facts
  * the skill documents; a kind without a template, a template without a kind,
  * or a document whose kind does not match its position fails here.
@@ -45,7 +45,7 @@ const KIND_TEMPLATES: Readonly<Record<string, string>> = {
 /**
  * Audited packages whose entry is a plain module API rather than a Cordis
  * plugin (`apply` export or a default service export) or an installable
- * bundle (`dsh.bundle.patch`). Each entry names why the package is a
+ * bundle (`openkylin.bundle.patch`). Each entry names why the package is a
  * library; the check re-derives the entry shape so a stale entry fails loud.
  */
 const PACKAGE_LIBRARIES: Readonly<Record<string, string>> = {
@@ -102,12 +102,12 @@ function packageDir(file: string): string {
   return file.replaceAll('\\', '/').replace(/\/README\.zh\.md$/, '').replace(/\/README\.md$/, '')
 }
 
-/** Whether the package manifest declares `dsh.bundle.patch`. */
+/** Whether the package manifest declares `openkylin.bundle.patch`. */
 function declaresBundle(dir: string): boolean {
   const manifest = resolve(root, dir, 'package.json')
   if (!existsSync(manifest)) return false
-  const metadata = JSON.parse(readFileSync(manifest, 'utf8')) as { dsh?: { bundle?: { patch?: string } } }
-  return metadata.dsh?.bundle?.patch !== undefined
+  const metadata = JSON.parse(readFileSync(manifest, 'utf8')) as { openkylin?: { bundle?: { patch?: string } } }
+  return metadata.openkylin?.bundle?.patch !== undefined
 }
 
 /** The expected kind for one package README, from the facts the skill documents. */
@@ -140,7 +140,7 @@ function packageReadmeStructureErrors(file: string, source: string): string[] {
   return required.flatMap(([pattern, label]) => pattern.test(source) ? [] : [`missing ${label}`])
 }
 
-describe('dsh-doc skill consolidation', () => {
+describe('qilin-doc skill consolidation', () => {
   it('carries no prototype-era language', () => {
     const files = [
       '.agents/skills/dsh-doc/SKILL.md',

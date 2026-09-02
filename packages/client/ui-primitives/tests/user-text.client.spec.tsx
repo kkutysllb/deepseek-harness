@@ -24,16 +24,16 @@ describe('projectUserText', () => {
   })
 
   it('folds the wire session form to its label with the session glyph', () => {
-    const host = project('看看 @[查看并分析图片](dsh-session:InNlc3Npb24tNDM0) 的结论')
+    const host = project('看看 @[查看并分析图片](qilin-session:InNlc3Npb24tNDM0) 的结论')
     const chip = host.querySelector('[data-ref-chip="session"]')!
     expect(chip.textContent).toBe('查看并分析图片')
-    expect(chip.getAttribute('title')).toBe('@[查看并分析图片](dsh-session:InNlc3Npb24tNDM0)')
+    expect(chip.getAttribute('title')).toBe('@[查看并分析图片](qilin-session:InNlc3Npb24tNDM0)')
     expect(chip.querySelector('svg')).not.toBeNull()
     expect(host.textContent).toBe('看看 查看并分析图片 的结论')
   })
 
   it('prefers the wire fold over the bare-token scan on the same range', () => {
-    const host = project('@[a](dsh-session:x)', [])
+    const host = project('@[a](qilin-session:x)', [])
     expect(host.querySelectorAll('[data-ref-chip]').length).toBe(1)
     expect(host.querySelector('[data-ref-chip="session"]')!.textContent).toBe('a')
   })

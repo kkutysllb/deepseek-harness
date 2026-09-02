@@ -1,6 +1,6 @@
 {
-  "name": "@deepseek-ai/dsh-e2b",
-  "description": "Shared E2B sandbox lifecycle for DeepSeek Harness provider adapters",
+  "name": "@qilin/e2b",
+  "description": "Shared E2B sandbox lifecycle for OpenKylin provider adapters",
   "version": "0.1.2-alpha.4",
   "publishConfig": {
     "access": "public"
@@ -35,18 +35,18 @@
   },
   "devDependencies": {
     "@deepseek-ai/cordis": "workspace:^",
-    "@deepseek-ai/dsh-agent": "workspace:^",
-    "@deepseek-ai/dsh-app-boot": "workspace:^",
-    "@deepseek-ai/dsh-bash-local": "workspace:^",
-    "@deepseek-ai/dsh-fs-e2b": "workspace:^",
-    "@deepseek-ai/dsh-loader-smoke": "workspace:^",
-    "@deepseek-ai/dsh-lsp": "workspace:^",
-    "@deepseek-ai/dsh-lsp-stdio": "workspace:^",
-    "@deepseek-ai/dsh-sandbox-policy": "workspace:^",
-    "@deepseek-ai/dsh-session": "workspace:^",
-    "@deepseek-ai/dsh-session-projection": "workspace:^",
-    "@deepseek-ai/dsh-subprocess-e2b": "workspace:^",
-    "@deepseek-ai/dsh-terminal": "workspace:^",
-    "@deepseek-ai/dsh-terminal-bash": "workspace:^"
+    "@qilin/agent": "workspace:^",
+    "@qilin/app-boot": "workspace:^",
+    "@qilin/bash-local": "workspace:^",
+    "@qilin/fs-e2b": "workspace:^",
+    "@qilin/loader-smoke": "workspace:^",
+    "@qilin/lsp": "workspace:^",
+    "@qilin/lsp-stdio": "workspace:^",
+    "@qilin/sandbox-policy": "workspace:^",
+    "@qilin/session": "workspace:^",
+    "@qilin/session-projection": "workspace:^",
+    "@qilin/subprocess-e2b": "workspace:^",
+    "@qilin/terminal": "workspace:^",
+    "@qilin/terminal-bash": "workspace:^"
   }
 }

@@ -6,12 +6,12 @@ import { pathToFileURL } from 'node:url'
 import { Context } from '@deepseek-ai/cordis'
 import Loader from '@deepseek-ai/cordis-plugin-loader'
 import Include from '@deepseek-ai/cordis-plugin-include'
-import AgentRegistry, { type Agent } from '@deepseek-ai/dsh-agent'
-import { SessionId } from '@deepseek-ai/dsh-session'
-import SessionProjectionRegistry from '@deepseek-ai/dsh-session-projection'
-import { createScope } from '@deepseek-ai/dsh-scope'
-import AgentPresets, { mountPreset } from '@deepseek-ai/dsh-agent-presets'
-import DeepSeekLlmApiExtensionRegistry from '@deepseek-ai/dsh-deepseek-llm-api-extensions'
+import AgentRegistry, { type Agent } from '@qilin/agent'
+import { SessionId } from '@qilin/session'
+import SessionProjectionRegistry from '@qilin/session-projection'
+import { createScope } from '@qilin/scope'
+import AgentPresets, { mountPreset } from '@qilin/agent-presets'
+import DeepSeekLlmApiExtensionRegistry from '@qilin/deepseek-llm-api-extensions'
 import * as PluginInventory from '../src/index.ts'
 
 const contexts: Context[] = []
@@ -37,7 +37,7 @@ async function packagePlugin(
 }
 
 async function harness(enabled?: boolean): Promise<{ ctx: Context; root: string; disposeInventory: () => Promise<void> }> {
-  const root = await mkdtemp(join(tmpdir(), 'dsh-plugin-packages-'))
+  const root = await mkdtemp(join(tmpdir(), 'qilin-plugin-packages-'))
   roots.push(root)
   const ctx = new Context()
   contexts.push(ctx)

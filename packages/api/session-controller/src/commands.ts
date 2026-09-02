@@ -2,21 +2,21 @@
 
 import { randomUUID } from 'node:crypto'
 import type { Context } from '@deepseek-ai/cordis'
-import { brandString } from '@deepseek-ai/dsh-brand'
-import type { Agent, ModelSelection as AgentModelSelection } from '@deepseek-ai/dsh-agent'
-import { AttachmentError, admitPromptContent } from '@deepseek-ai/dsh-attachment'
-import type { ImageAttachmentRef } from '@deepseek-ai/dsh-attachment'
+import { brandString } from '@qilin/brand'
+import type { Agent, ModelSelection as AgentModelSelection } from '@qilin/agent'
+import { AttachmentError, admitPromptContent } from '@qilin/attachment'
+import type { ImageAttachmentRef } from '@qilin/attachment'
 import {
   ReasoningEffortId, createUserMessage, freezeMessage,
-} from '@deepseek-ai/dsh-llm'
-import type { MessageSource } from '@deepseek-ai/dsh-llm'
-import { SessionLogOffset, SessionSeq } from '@deepseek-ai/dsh-session'
-import type { SessionEvent, SessionHeader, SessionId, UserMessage } from '@deepseek-ai/dsh-session'
-import { SessionQueryError, type SessionObservation } from '@deepseek-ai/dsh-session-query'
-import { SessionTitleInvalidError } from '@deepseek-ai/dsh-session-title'
-import { canonicalClientTimeZone } from '@deepseek-ai/dsh-util-time'
-import { RemoteError, remoteErrorOf } from '@deepseek-ai/dsh-typert-protocol'
-import type { Workspace } from '@deepseek-ai/dsh-workspace'
+} from '@qilin/llm'
+import type { MessageSource } from '@qilin/llm'
+import { SessionLogOffset, SessionSeq } from '@qilin/session'
+import type { SessionEvent, SessionHeader, SessionId, UserMessage } from '@qilin/session'
+import { SessionQueryError, type SessionObservation } from '@qilin/session-query'
+import { SessionTitleInvalidError } from '@qilin/session-title'
+import { canonicalClientTimeZone } from '@qilin/util-time'
+import { RemoteError, remoteErrorOf } from '@qilin/typert-protocol'
+import type { Workspace } from '@qilin/workspace'
 import {
   ApiSessionAgentController,
   ApiSessionCwdConflict,

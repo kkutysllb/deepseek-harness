@@ -1,6 +1,6 @@
 /**
  * Browser wire client. The plugin selects fixture or HTTP transport, provides
- * the shared API client, and lets API Gateway own the connection loop.
+ * the account/auth client, and lets API Gateway own the connection loop.
  */
 import type { Context } from '@deepseek-ai/cordis'
 import {
@@ -11,7 +11,8 @@ import {
   type ConnectionSinks,
   type ConnectionState,
 } from './connection.ts'
-import { createFixtureConnectionRpc } from './fixture.ts'
+import { createFixtureConnectionRpc, FixtureAuthClient } from './fixture.ts'
+import { AuthClient, UnauthorizedSignal, type AuthError, type IAuthClient } from './auth-client.ts'
 import { createWebConnectionRpc, type RpcFetch, type RpcStreamOpen } from './rpc.ts'
 import { isLoopbackHostname } from '../loopback-hostname.ts'
 import type { ClientConnectionRpc } from '../rpc.ts'
@@ -53,6 +54,14 @@ export type {
   ClientConnectionRpc, ConnectionRpcFailure, ConnectionRpcResult,
 } from '../rpc.ts'
 export type { RpcFetch } from './rpc.ts'
+
+export {
+  AuthClient,
+  AuthError,
+  UnauthorizedSignal,
+} from './auth-client.ts'
+export { FixtureAuthClient } from './fixture.ts'
+export type { AccountUpdate, AccountView, AuthClientOptions, IAuthClient, IssuedLogin, SetupStatus } from './auth-client.ts'
 
 /** Observable identity and Host facts for the active connection generation. */
 export interface ConnectionGenerationState {
@@ -103,7 +112,7 @@ export interface ClientTransportHooks {
 
 /** Page global carrying {@link ClientTransportHooks}; absent in the served web app. */
 interface ClientTransportGlobal {
-  __DSH_TRANSPORT__?: ClientTransportHooks
+  __OPENKYLIN_TRANSPORT__?: ClientTransportHooks
 }
 
 /**
@@ -124,6 +133,15 @@ export interface ConnectionHandle {
   readonly state: ConnectionStateSource
   /** Generic logical RPC channels over the same Connection transport. */
   readonly rpc: ClientConnectionRpc
+  /** Account/auth surface client (session probes and admin user management). */
+  readonly auth: IAuthClient
+  /**
+   * Subscribe to session-loss (401) events from any auth carrier: account
+   * calls share one signal, so the UI subscribes once.
+   * @param listener - receives each 401 AuthError.
+   * @returns unsubscribe function.
+   */
+  onUnauthorized(listener: (error: AuthError) => void): () => void
   /** Reset retry progression and replace the current attempt immediately. */
   reconnect(): void
   /**
@@ -185,8 +203,12 @@ export function apply(ctx: Context): void {
   const pageLocation = typeof location === 'undefined' ? undefined : location
   const fixture = pageLocation !== undefined && new URLSearchParams(pageLocation.search).has('fixture')
   const fixtureRpc = fixture ? createFixtureConnectionRpc() : undefined
-  const transport = (globalThis as ClientTransportGlobal).__DSH_TRANSPORT__
+  const transport = (globalThis as ClientTransportGlobal).__OPENKYLIN_TRANSPORT__
   const rpc = fixtureRpc ?? createWebConnectionRpc(transport?.fetch, transport?.openStream)
+  // One shared 401 signal for the whole handle: account/auth failures (real
+  // client or fixture stub) land in one channel, so consumers subscribe once.
+  const unauthorized = new UnauthorizedSignal()
+  const auth: IAuthClient = fixture ? new FixtureAuthClient() : new AuthClient({ unauthorized })
   let generationSource: ConnectionGenerationSource | undefined
   let owner: ConnectionOwner | undefined
   let generationId = 0
@@ -241,8 +263,12 @@ export function apply(ctx: Context): void {
       },
     },
     rpc,
+    auth,
     reconnect() {
       owner?.controller.reconnect()
+    },
+    onUnauthorized(listener) {
+      return unauthorized.subscribe(listener)
     },
     registerGenerationSource(source) {
       if (generationSource !== undefined) {

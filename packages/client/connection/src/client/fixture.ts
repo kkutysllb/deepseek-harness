@@ -1,12 +1,14 @@
 // Standalone browser fixture for UI development without a server.
 
+import { AuthError } from './auth-client.ts'
+import type { AccountUpdate, AccountView, IAuthClient, IssuedLogin, SetupStatus } from './auth-client.ts'
 import {
   createAssistantMessage,
   createToolResultMessage,
   createUserMessage,
-} from '@deepseek-ai/dsh-llm/message'
-import { brandString } from '@deepseek-ai/dsh-brand'
-import type { MessageId, ToolCallId } from '@deepseek-ai/dsh-llm/brand'
+} from '@qilin/llm/message'
+import { brandString } from '@qilin/brand'
+import type { MessageId, ToolCallId } from '@qilin/llm/brand'
 import type {
   AssistantMessage,
   ContentBlock,
@@ -15,25 +17,25 @@ import type {
   TokenUsage,
   ToolResultMessage,
   UserMessage,
-} from '@deepseek-ai/dsh-llm'
-import type { AttachmentIdType, ImageAttachmentRef } from '@deepseek-ai/dsh-attachment'
+} from '@qilin/llm'
+import type { AttachmentIdType, ImageAttachmentRef } from '@qilin/attachment'
 import type {
   SessionEvent,
   SessionId,
-} from '@deepseek-ai/dsh-session/types'
-import { SessionSeq } from '@deepseek-ai/dsh-session/types'
-import type { JsonValue } from '@deepseek-ai/dsh-util-values'
-import { isChunkRow, packChunkRuns } from '@deepseek-ai/dsh-session/chunk-rows'
-import type { ChunkRow } from '@deepseek-ai/dsh-session/chunk-rows'
-import type { TodoItem } from '@deepseek-ai/dsh-tool-todo/client'
+} from '@qilin/session/types'
+import { SessionSeq } from '@qilin/session/types'
+import type { JsonValue } from '@qilin/util-values'
+import { isChunkRow, packChunkRuns } from '@qilin/session/chunk-rows'
+import type { ChunkRow } from '@qilin/session/chunk-rows'
+import type { TodoItem } from '@qilin/tool-todo/client'
 // Type-only: the brand constructor is host-side; the fixture casts at its
 // wire-fabrication boundary (the schema layer's one-cast-point posture).
-import type { CommandId } from '@deepseek-ai/dsh-commands/brand'
-import type { CommandDescriptor, CommandExecution, CommandResult } from '@deepseek-ai/dsh-commands/types'
-import type { CredentialInfo } from '@deepseek-ai/dsh-credentials/types'
-import type { DirectoryListing as FixtureDirectoryListing } from '@deepseek-ai/dsh-host-directory-picker/types'
-import type { SettingsDescribeValue, SettingsNamespaceView } from '@deepseek-ai/dsh-settings/types'
-import { deriveEventMessage, foldSurface } from '@deepseek-ai/dsh-session/surface'
+import type { CommandId } from '@qilin/commands/brand'
+import type { CommandDescriptor, CommandExecution, CommandResult } from '@qilin/commands/types'
+import type { CredentialInfo } from '@qilin/credentials/types'
+import type { DirectoryListing as FixtureDirectoryListing } from '@qilin/host-directory-picker/types'
+import type { SettingsDescribeValue, SettingsNamespaceView } from '@qilin/settings/types'
+import { deriveEventMessage, foldSurface } from '@qilin/session/surface'
 import type { RpcResult } from './api.ts'
 import { randomUuid } from './random-uuid.ts'
 import type {
@@ -1639,7 +1641,7 @@ function backscanTodos(log: readonly SessionEvent[]): TodoItem[] | undefined {
   return undefined
 }
 
-/** Fixture-local mirror of the goal projection value (dsh-goal's GoalProjection shape). */
+/** Fixture-local mirror of the goal projection value (qilin-goal's GoalProjection shape). */
 interface FxGoalProjection {
   goal: {
     id: string
@@ -1894,9 +1896,9 @@ function createFixtureWorld(options: FixtureOptions): FixtureWorld {
    * roster a GUI journey sees after writing is the text it wrote.
    */
   const fixturePresets = new Map<string, { trust: 'system' | 'user'; content: string }>([
-    ['standard', { trust: 'system', content: "- id: tool-bash\n  name: '@deepseek-ai/dsh-tool-bash'\n" }],
-    ['minimal', { trust: 'system', content: "- id: tool-web-search\n  name: '@deepseek-ai/dsh-tool-web-search'\n" }],
-    ['my-agent', { trust: 'user', content: "- id: tool-read\n  name: '@deepseek-ai/dsh-tool-read'\n" }],
+    ['standard', { trust: 'system', content: "- id: tool-bash\n  name: '@qilin/tool-bash'\n" }],
+    ['minimal', { trust: 'system', content: "- id: tool-web-search\n  name: '@qilin/tool-web-search'\n" }],
+    ['my-agent', { trust: 'user', content: "- id: tool-read\n  name: '@qilin/tool-read'\n" }],
   ])
   let fixtureDefaultPreset = 'standard'
   const nextTurn = new Map<SessionId, number>([[sid('fx-alpha'), 75]])
@@ -2263,7 +2265,7 @@ function createFixtureWorld(options: FixtureOptions): FixtureWorld {
             label,
             ...item.cwd === undefined ? {} : { cwd: item.cwd },
             createdAt: item.updatedAt,
-            mention: `@[${label}](dsh-session:${encoded})`,
+            mention: `@[${label}](qilin-session:${encoded})`,
           }
         })
       return { ok: true, value }
@@ -2975,7 +2977,7 @@ function createFixtureWorld(options: FixtureOptions): FixtureWorld {
       })
       // The host echoes the prompt's requestId as the user source's rpcId;
       // the Session object retires its local submission echo on it. The
-      // user-rpc source member is declared by dsh-api-session-controller,
+      // user-rpc source member is declared by qilin-api-session-controller,
       // which this standalone fixture does not import — hence the assertion.
       const promptSource = { kind: 'user', rpcId: request.requestId } as MessageSource
       if (mode === 'steer' && replays.has(id)) {
@@ -3624,5 +3626,127 @@ function fixtureOptionsFromLocation(): FixtureOptions {
     failWorkspaceAttach: query.get('fixtureAttach') === 'fail',
     dropSessionCreateResponse: query.get('fixtureSessionCreate') === 'drop-response',
     createFrameOrder: query.get('fixtureFrames') === 'workspace-first' ? 'workspace-first' : 'session-first',
+  }
+}
+
+/** The fixture's hardcoded login identity (the one account the stub signs in). */
+const FIXTURE_ADMIN_EMAIL = 'admin@fixture.dev'
+const FIXTURE_USER_EMAIL = 'user@fixture.dev'
+
+/**
+ * In-memory account/auth stub mirroring the real surface's happy paths plus
+ * its two management protections, so fixture-mode UI development exercises
+ * the same screens and error states without a server. The stub starts
+ * signed-out: me() answers 401 and login signs the fixture admin in.
+ */
+export class FixtureAuthClient implements IAuthClient {
+  private readonly users: AccountView[] = [
+    FixtureAuthClient.row('fixture-admin', FIXTURE_ADMIN_EMAIL, 'admin'),
+    FixtureAuthClient.row('fixture-user', FIXTURE_USER_EMAIL, 'user'),
+  ]
+  private authenticated = false
+
+  private static row(id: string, email: string, systemRole: 'admin' | 'user'): AccountView {
+    return {
+      id,
+      email,
+      systemRole,
+      needsSetup: false,
+      oauthProvider: null,
+      oauthId: null,
+      sessionVersion: 1,
+      createdAt: 0,
+      updatedAt: 0,
+      disabledAt: null,
+    }
+  }
+
+  /** Run one synchronous stub step with Promise semantics (rejections included). */
+  private respond<T>(run: () => T): Promise<T> {
+    return Promise.resolve().then(run)
+  }
+
+  private requireSignedIn(): void {
+    if (!this.authenticated) throw new AuthError(401, 'not_authenticated', 'the fixture is signed out')
+  }
+
+  /** @inheritdoc */
+  me(): Promise<AccountView> {
+    return this.respond(() => {
+      this.requireSignedIn()
+      return { ...this.users[0] as AccountView }
+    })
+  }
+
+  /** @inheritdoc */
+  setupStatus(): Promise<SetupStatus> {
+    return this.respond(() => ({ needsSetup: false, registrationEnabled: false }))
+  }
+
+  /** @inheritdoc */
+  login(email: string, password: string, _rememberMe = false): Promise<IssuedLogin> {
+    return this.respond(() => {
+      if (email !== FIXTURE_ADMIN_EMAIL || password === '') throw new AuthError(401, 'invalid_credentials', 'Incorrect email or password')
+      this.authenticated = true
+      return { user: { ...this.users[0] as AccountView }, accessToken: 'fixture-session' }
+    })
+  }
+
+  /** @inheritdoc */
+  initialize(email: string, password: string, rememberMe = true): Promise<IssuedLogin> {
+    return this.login(email, password, rememberMe)
+  }
+
+  /** @inheritdoc */
+  logout(): Promise<void> {
+    return this.respond(() => {
+      this.authenticated = false
+    })
+  }
+
+  /** @inheritdoc */
+  changePassword(_currentPassword: string, _newPassword: string): Promise<void> {
+    return this.respond(() => {
+      this.requireSignedIn()
+    })
+  }
+
+  /** @inheritdoc */
+  listUsers(): Promise<AccountView[]> {
+    return this.respond(() => {
+      this.requireSignedIn()
+      return this.users.map(user => ({ ...user }))
+    })
+  }
+
+  /** @inheritdoc */
+  updateUser(id: string, update: AccountUpdate): Promise<AccountView> {
+    return this.respond(() => {
+      this.requireSignedIn()
+      const target = this.users.find(user => user.id === id)
+      if (target === undefined) throw new AuthError(404, 'not_found', 'unknown admin user endpoint')
+      if (id === this.users[0]?.id) throw new AuthError(400, 'self_protected', 'cannot demote or disable the calling administrator')
+      const enabledAdmins = this.users.filter(user => user.systemRole === 'admin' && user.disabledAt === null).length
+      const removesAdmin = target.systemRole === 'admin' && target.disabledAt === null && (update.systemRole === 'user' || update.disabled === true)
+      if (removesAdmin && enabledAdmins === 1) throw new AuthError(409, 'last_admin_protected', 'last_admin_protected')
+      const next: AccountView = {
+        ...target,
+        ...(update.systemRole !== undefined ? { systemRole: update.systemRole } : {}),
+        ...(update.disabled !== undefined ? { disabledAt: update.disabled ? Date.now() : null } : {}),
+      }
+      this.users[this.users.indexOf(target)] = next
+      return { ...next }
+    })
+  }
+
+  /** @inheritdoc */
+  resetPassword(id: string, newPassword: string): Promise<AccountView> {
+    return this.respond(() => {
+      this.requireSignedIn()
+      if (newPassword.length < 8) throw new AuthError(400, 'weak_password', 'A password of at least 8 characters is required.')
+      const target = this.users.find(user => user.id === id)
+      if (target === undefined) throw new AuthError(404, 'not_found', 'unknown admin user endpoint')
+      return { ...target }
+    })
   }
 }

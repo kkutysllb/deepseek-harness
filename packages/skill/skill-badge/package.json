@@ -1,6 +1,6 @@
 {
-  "name": "@deepseek-ai/dsh-skill-badge",
-  "description": "Bundled dsh badge skill provider for DeepSeek Harness",
+  "name": "@qilin/skill-badge",
+  "description": "Bundled openkylin badge skill provider for DeepSeek Harness",
   "version": "0.1.2-alpha.4",
   "publishConfig": {
     "access": "public"
@@ -27,11 +27,11 @@
   ],
   "license": "MIT",
   "peerDependencies": {
-    "@deepseek-ai/dsh-skill": "workspace:^",
+    "@qilin/skill": "workspace:^",
     "@deepseek-ai/cordis": "workspace:^"
   },
   "devDependencies": {
-    "@deepseek-ai/dsh-skill": "workspace:^",
+    "@qilin/skill": "workspace:^",
     "@deepseek-ai/cordis": "workspace:^"
   }
 }

@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
-import { SessionLogOffset } from '@deepseek-ai/dsh-session'
-import type { SessionEvent } from '@deepseek-ai/dsh-session'
+import { SessionLogOffset } from '@qilin/session'
+import type { SessionEvent } from '@qilin/session'
 import {
   ScheduleId,
   ScheduleInputError,
