@@ -1,9 +1,9 @@
-# QiLin 引擎整体技术架构
+# OpenKylin 引擎整体技术架构
 
 > [!WARNING]
-> 历史参考，非现行架构。本文与 `modules/`、`diagrams/` 描述的是 QiLin 早期基于 LangGraph 的 Python 引擎（`qilin/` + `app/`，已退役）。现行引擎是本仓库的 TypeScript 插件树（`@qilin/*`，架构见 [architecture.md](../architecture.md)）；本文仅作设计谱系与决策追溯使用。
+> 历史参考，非现行架构。本文与 `modules/`、`diagrams/` 描述的是 OpenKylin 早期基于 LangGraph 的 Python 引擎（`openkylin/` + `app/`，已退役）。现行引擎是本仓库的 TypeScript 插件树（`@qilin/*`，架构见 [architecture.md](../architecture.md)）；本文仅作设计谱系与决策追溯使用。
 
-> QiLin Engine — Overall Technical Architecture
+> OpenKylin Engine — Overall Technical Architecture
 >
 > 版本 / Version: 2.0.0 · 更新 / Updated: 2026-08
 
@@ -13,13 +13,13 @@
 
 ### 1. 概述
 
-**QiLin** 是一个面向生产场景的智能体（Agent）引擎框架，提供从模型调用、工具执行、记忆管理、权限授权、技能扩展到端到端运行调度的完整能力栈。其设计目标是：在不牺牲可扩展性的前提下，把 LangGraph 的图执行能力与长生命周期任务（队列、定时、后台运行）封装为可独立部署、嵌入式运行、也可服务化托管的引擎。
+**OpenKylin** 是一个面向生产场景的智能体（Agent）引擎框架，提供从模型调用、工具执行、记忆管理、权限授权、技能扩展到端到端运行调度的完整能力栈。其设计目标是：在不牺牲可扩展性的前提下，把 LangGraph 的图执行能力与长生命周期任务（队列、定时、后台运行）封装为可独立部署、嵌入式运行、也可服务化托管的引擎。
 
 核心设计哲学：
 
 | 设计原则 | 落地手段 |
 |---------|---------|
-| **嵌入式优先** | `QiLinClient` 暴露纯 Python API，无需启动 LangGraph Server / Gateway 进程 |
+| **嵌入式优先** | `OpenKylinClient` 暴露纯 Python API，无需启动 LangGraph Server / Gateway 进程 |
 | **服务化可托管** | 同一份代码可被 Gateway / Service 进程加载，对外暴露 HTTP/SSE |
 | **配置驱动 / 热重载** | `config.yaml` + 环境变量双重配置，文件签名变更即热重载 |
 | **子代理是一等公民** | SubAgent 执行器与 Lead Agent 同构，可无限嵌套、并行、审批门控 |
@@ -28,7 +28,7 @@
 
 ### 2. 分层架构
 
-QiLin 采用经典的"内核 + 外延 + 服务面"三层架构：
+OpenKylin 采用经典的"内核 + 外延 + 服务面"三层架构：
 
 ```
 ┌────────────────────────────────────────────────────────────┐
@@ -57,7 +57,7 @@ QiLin 采用经典的"内核 + 外延 + 服务面"三层架构：
 
 #### 2.2 引擎内核（Engine Core）
 
-内核层是 QiLin 的核心，由 15 个相互协作的子系统组成：
+内核层是 OpenKylin 的核心，由 15 个相互协作的子系统组成：
 
 | 模块 | 职责 |
 |------|------|
@@ -81,14 +81,14 @@ QiLin 采用经典的"内核 + 外延 + 服务面"三层架构：
 
 服务面负责把内核的能力暴露给外部消费者：
 
-- **TUI** (`qilin.tui`)：基于 Textual 的终端工作台，支持交互式会话、流式渲染、命令面板、剪贴板视图
-- **Embedded Client** (`QiLinClient`)：纯 Python 编程接口，可在同进程内启用 `client.chat()` / `client.stream()`
+- **TUI** (`openkylin.tui`)：基于 Textual 的终端工作台，支持交互式会话、流式渲染、命令面板、剪贴板视图
+- **Embedded Client** (`OpenKylinClient`)：纯 Python 编程接口，可在同进程内启用 `client.chat()` / `client.stream()`
 - **Gateway** (`app/gateway`)：FastAPI HTTP Agent Server，提供 agents / threads / runs / memory / skills / mcp / uploads / artifacts / channels / scheduled_tasks 等 20+ 组 REST 路由，内置 JWT 认证、CSRF / CORS 防护、trace 中间件与 GitHub Webhook 接入
 - **Channels** (`app/channels`)：IM 渠道接入层，统一管理飞书 / Discord / Slack / Telegram / 钉钉 / 企微 / 微信 / GitHub 8 大渠道的连接、消息收发、去重与运行策略
-- **Scheduler API** (`app/scheduler`)：定时任务的 HTTP 管理服务，复用 `qilin.scheduler` 调度内核
+- **Scheduler API** (`app/scheduler`)：定时任务的 HTTP 管理服务，复用 `openkylin.scheduler` 调度内核
 - **LangGraph Server 兼容**：内核本身遵循 LangGraph API 协议，可被 `langgraph dev` / `langgraph up` 直接加载
 
-> 注：`app/` 服务面随 `qilin` wheel 一并分发，需通过 `qilin[gateway]` / `qilin[channels]` extras 安装依赖后启用。
+> 注：`app/` 服务面随 `openkylin` wheel 一并分发，需通过 `openkylin[gateway]` / `openkylin[channels]` extras 安装依赖后启用。
 
 ### 3. 关键运行机制
 
@@ -123,7 +123,7 @@ flowchart LR
 
 #### 3.3 子代理递归执行
 
-子代理是 QiLin 区分于普通图执行器的关键能力：
+子代理是 OpenKylin 区分于普通图执行器的关键能力：
 
 - 拥有独立 LangGraph 实例、独立 checkpoint 通道、独立 callbacks
 - 可以再嵌套子代理，深度可配置（默认递归 ≤ 配置上限）
@@ -183,7 +183,7 @@ v2.0.0 在单智能体基座上新增编排层，运行形态由 `orchestration.
 
 ```
 1) 命令行 config_path 参数
-2) QILIN_CONFIG_PATH 环境变量
+2) OPENKYLIN_CONFIG_PATH 环境变量
 3) 工程根目录 config.yaml
 4) 源码树内 backend/config.yaml（向后兼容）
 ```
@@ -196,17 +196,17 @@ v2.0.0 在单智能体基座上新增编排层，运行形态由 `orchestration.
 
 #### 4.3 环境变量约定
 
-所有环境变量名以 `QILIN_` 为前缀，例如：
+所有环境变量名以 `OPENKYLIN_` 为前缀，例如：
 
 ```
-QILIN_CONFIG_PATH
-QILIN_HOME
-QILIN_HOST_BASE_DIR
-QILIN_SANDBOX_HOST
-QILIN_SANDBOX_BIND_HOST
-QILIN_ENV                       # 部署环境标签 (dev/staging/prod)
-QILIN_TUI                       # 启用 TUI 替代 headless
-QILIN_FILE_IO_WORKERS           # 文件 I/O 工作线程数
+OPENKYLIN_CONFIG_PATH
+OPENKYLIN_HOME
+OPENKYLIN_HOST_BASE_DIR
+OPENKYLIN_SANDBOX_HOST
+OPENKYLIN_SANDBOX_BIND_HOST
+OPENKYLIN_ENV                       # 部署环境标签 (dev/staging/prod)
+OPENKYLIN_TUI                       # 启用 TUI 替代 headless
+OPENKYLIN_FILE_IO_WORKERS           # 文件 I/O 工作线程数
 ```
 
 ### 5. 可观测性
@@ -288,11 +288,11 @@ flowchart LR
 
 ### 1. Overview
 
-**QiLin** is a production-grade agent-engine framework that consolidates model orchestration, tool execution, memory management, fine-grained authorization, skill extensions, and end-to-end run scheduling into a single deployable unit. The engine is designed for three runtime modes: embedded (same-process Python), hosted (LangGraph Server / Gateway), or hybrid (both concurrently), without code duplication.
+**OpenKylin** is a production-grade agent-engine framework that consolidates model orchestration, tool execution, memory management, fine-grained authorization, skill extensions, and end-to-end run scheduling into a single deployable unit. The engine is designed for three runtime modes: embedded (same-process Python), hosted (LangGraph Server / Gateway), or hybrid (both concurrently), without code duplication.
 
 | Principle | Implementation |
 |-----------|----------------|
-| **Embedded-first** | `QiLinClient` exposes a pure-Python API; no LangGraph Server / Gateway required |
+| **Embedded-first** | `OpenKylinClient` exposes a pure-Python API; no LangGraph Server / Gateway required |
 | **Service-ready** | The same code can be loaded by a Gateway / service and exposed via HTTP/SSE |
 | **Config-driven hot reload** | `config.yaml` plus env vars; signature change triggers reload |
 | **Sub-agents are first-class** | SubAgent executor is isomorphic with Lead Agent — infinite nesting, parallel, gateable |
@@ -348,14 +348,14 @@ flowchart LR
 
 #### 2.3 Service Surface
 
-- **TUI** (`qilin.tui`) — Textual-based terminal workbench: interactive sessions, streaming, command palette, clipboard view
-- **Embedded Client** (`QiLinClient`) — Pure-Python API; `client.chat()` / `client.stream()` in process
+- **TUI** (`openkylin.tui`) — Textual-based terminal workbench: interactive sessions, streaming, command palette, clipboard view
+- **Embedded Client** (`OpenKylinClient`) — Pure-Python API; `client.chat()` / `client.stream()` in process
 - **Gateway** (`app/gateway`) — FastAPI HTTP Agent Server: 20+ REST route groups (agents / threads / runs / memory / skills / mcp / uploads / artifacts / channels / scheduled_tasks), with JWT auth, CSRF / CORS protection, trace middleware, and GitHub webhook ingestion
 - **Channels** (`app/channels`) — IM channel adapter layer: Feishu / Discord / Slack / Telegram / DingTalk / WeCom / WeChat / GitHub, covering connection, messaging, dedupe, and run policies
-- **Scheduler API** (`app/scheduler`) — HTTP management service for scheduled tasks, reusing the `qilin.scheduler` kernel
+- **Scheduler API** (`app/scheduler`) — HTTP management service for scheduled tasks, reusing the `openkylin.scheduler` kernel
 - **LangGraph Server compatible** — Kernel follows LangGraph API contract; loadable via `langgraph dev`
 
-> Note: the `app/` service surface ships in the wheel; install `qilin[gateway]` / `qilin[channels]` to enable it.
+> Note: the `app/` service surface ships in the wheel; install `openkylin[gateway]` / `openkylin[channels]` to enable it.
 
 ### 3. Runtime Mechanisms
 
@@ -380,7 +380,7 @@ From declaration to invocation, tools pass through four layers:
 
 #### 3.3 Sub-Agent Recursion
 
-Sub-agents are the defining capability of QiLin versus plain graph runners:
+Sub-agents are the defining capability of OpenKylin versus plain graph runners:
 
 - Each sub-agent has its own LangGraph instance, checkpoint channel, callbacks
 - Arbitrary nesting (with configured depth cap)
@@ -438,7 +438,7 @@ Governance & observability: `authz.principal.normalize_agent_identity` adds an a
 
 ```
 1) CLI config_path argument
-2) QILIN_CONFIG_PATH environment variable
+2) OPENKYLIN_CONFIG_PATH environment variable
 3) Project root config.yaml
 4) Source-tree backend/config.yaml (backward compat)
 ```
@@ -451,17 +451,17 @@ Governance & observability: `authz.principal.normalize_agent_identity` adds an a
 
 #### 4.3 Env Var Convention
 
-All env vars are prefixed with `QILIN_`:
+All env vars are prefixed with `OPENKYLIN_`:
 
 ```
-QILIN_CONFIG_PATH
-QILIN_HOME
-QILIN_HOST_BASE_DIR
-QILIN_SANDBOX_HOST
-QILIN_SANDBOX_BIND_HOST
-QILIN_ENV                       # deployment label (dev/staging/prod)
-QILIN_TUI                       # enable TUI over headless
-QILIN_FILE_IO_WORKERS           # file I/O worker count
+OPENKYLIN_CONFIG_PATH
+OPENKYLIN_HOME
+OPENKYLIN_HOST_BASE_DIR
+OPENKYLIN_SANDBOX_HOST
+OPENKYLIN_SANDBOX_BIND_HOST
+OPENKYLIN_ENV                       # deployment label (dev/staging/prod)
+OPENKYLIN_TUI                       # enable TUI over headless
+OPENKYLIN_FILE_IO_WORKERS           # file I/O worker count
 ```
 
 ### 5. Observability
@@ -532,4 +532,4 @@ Each skill passes through `skillscan.orchestrator` doing both static analysis an
 
 ---
 
-> 维护者 / Maintainer: QiLin Team · 反馈 / Feedback: 请提交 Issue
+> 维护者 / Maintainer: OpenKylin Team · 反馈 / Feedback: 请提交 Issue

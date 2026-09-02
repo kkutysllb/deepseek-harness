@@ -352,7 +352,7 @@ describe('real Loader composition', () => {
       { kind: 'script', placement: 'head', text: 'H' },
       { kind: 'script', placement: 'body', text: 'B' },
     ])).toBe('<script>H</script><main>x</main><script>B</script>'
-      + '<script>(globalThis.__QILIN_BOOT_READY__ ??= Promise.withResolvers()).resolve()</script>')
+      + '<script>(globalThis.__OPENKYLIN_BOOT_READY__ ??= Promise.withResolvers()).resolve()</script>')
   })
 
   it('fails the fiber when the port is already taken (fail-loud at activation)', { timeout: 60_000 }, async () => {

@@ -10,10 +10,10 @@
 import type { Readable, Writable } from 'node:stream'
 
 /** Namespace prefix reserved for DeepSeek Harness-managed child environment facts. */
-export const QILIN_ENV_PREFIX = 'QILIN_' as const
+export const OPENKYLIN_ENV_PREFIX = 'OPENKYLIN_' as const
 
-/** One environment key inside the managed {@link QILIN_ENV_PREFIX} namespace. */
-export type QilinEnvironmentKey = `${typeof QILIN_ENV_PREFIX}${string}`
+/** One environment key inside the managed {@link OPENKYLIN_ENV_PREFIX} namespace. */
+export type QilinEnvironmentKey = `${typeof OPENKYLIN_ENV_PREFIX}${string}`
 
 /** Trusted DeepSeek Harness variables for one child-process execution. */
 export type QilinEnvironment = Readonly<Record<QilinEnvironmentKey, string>>
@@ -97,7 +97,7 @@ export interface SubprocessSpawnSpec {
    * Explicit environment entries merged onto the implementation's scrubbed
    * parent base (see `scrubbedParentEnv`), with no namespace validation. A
    * string is a deliberate caller opt-in, so a forwarded credential-shaped
-   * entry or current `QILIN_*` fact survives the scrub; `undefined` is a
+   * entry or current `OPENKYLIN_*` fact survives the scrub; `undefined` is a
    * tombstone that removes an ordinary ambient entry from the child.
    */
   env?: NodeJS.ProcessEnv | undefined

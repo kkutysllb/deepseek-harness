@@ -16,7 +16,7 @@ const RESERVED_PATH_SEGMENTS = new Set(['', '.', '..'])
 
 /** User-facing workspace instruction loader configuration. */
 export interface Config {
-  /** Harness home containing the fixed user-global `AGENTS.md`; defaults to `$QILIN_HOME` or `~/.qilin`. */
+  /** Harness home containing the fixed user-global `AGENTS.md`; defaults to `$OPENKYLIN_HOME` or `~/.openkylin`. */
   dshHome?: string
   /** Directory entries that identify the project root while walking upward from the session cwd. */
   projectRootMarkers?: string[]

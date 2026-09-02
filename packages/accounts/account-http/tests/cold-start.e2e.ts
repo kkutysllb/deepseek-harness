@@ -9,7 +9,7 @@ import * as AccountHttp from '../src/index.ts'
 import { defaultAccountsDbPath } from '@qilin/account-core'
 
 /**
- * End-to-end cold start: a pristine QILIN_HOME (no accounts database, no auth
+ * End-to-end cold start: a pristine OPENKYLIN_HOME (no accounts database, no auth
  * config) boots the real composition with DEFAULT configuration only — the
  * engine derives every path itself — and a first-run journey walks
  * setup-status → register → login → me → change-password → logout.
@@ -47,8 +47,8 @@ interface Server {
 async function mountCold(): Promise<Server> {
   const home = await mkdtemp(join(tmpdir(), 'account-http-e2e-home-'))
   homes.push(home)
-  const previousHome = process.env.QILIN_HOME
-  process.env.QILIN_HOME = home
+  const previousHome = process.env.OPENKYLIN_HOME
+  process.env.OPENKYLIN_HOME = home
   const ctx = new Context()
   ctx.provide('apiProxy', proxyStub)
   ctx.plugin(HttpServer, { host: '127.0.0.1', port: 0 })
@@ -65,8 +65,8 @@ async function mountCold(): Promise<Server> {
     home,
     dispose: async () => {
       await ctx.fiber.dispose()
-      if (previousHome === undefined) delete process.env.QILIN_HOME
-      else process.env.QILIN_HOME = previousHome
+      if (previousHome === undefined) delete process.env.OPENKYLIN_HOME
+      else process.env.OPENKYLIN_HOME = previousHome
     },
   }
 }
@@ -91,7 +91,7 @@ describe('cold start to first admin', () => {
     const { origin, home, dispose } = await mountCold()
     disposes.push(dispose)
 
-    // The engine derived the database path from QILIN_HOME alone.
+    // The engine derived the database path from OPENKYLIN_HOME alone.
     const dbPath = defaultAccountsDbPath(process.env)
     expect(dbPath).toContain(home)
 

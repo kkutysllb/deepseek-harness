@@ -12,12 +12,12 @@ describe('qilin-acp-app bundle', () => {
     const root = fileURLToPath(new URL('..', import.meta.url))
     const manifest = JSON.parse(readFileSync(resolve(root, 'package.json'), 'utf8')) as {
       dependencies?: Record<string, string>
-      qilin?: { bundle?: { patch?: string } }
+      openkylin?: { bundle?: { patch?: string } }
     }
-    expect(manifest.qilin?.bundle?.patch).toBe('./cordis.patch.yml')
+    expect(manifest.openkylin?.bundle?.patch).toBe('./cordis.patch.yml')
     expect(manifest.dependencies).toHaveProperty('@qilin/acp')
     const patches = yaml.load(
-      readFileSync(resolve(root, manifest.qilin!.bundle!.patch!), 'utf8'),
+      readFileSync(resolve(root, manifest.openkylin!.bundle!.patch!), 'utf8'),
       { schema: entryListSchema },
     ) as Array<{
       id?: string

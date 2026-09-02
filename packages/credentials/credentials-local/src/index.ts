@@ -1,15 +1,15 @@
 /**
- * File-backed credentials provider over `$QILIN_HOME/.credentials.yaml`, layered
+ * File-backed credentials provider over `$OPENKYLIN_HOME/.credentials.yaml`, layered
  * against the environment by how much each layer is trusted:
  *
  * ```text
  * inherited process environment      (read-only, wins)
- * > $QILIN_HOME/.credentials.yaml      (provider-managed, writable)
+ * > $OPENKYLIN_HOME/.credentials.yaml      (provider-managed, writable)
  * > <invocation cwd>/.env            (read-only fallback)
- * > $QILIN_HOME/.env                   (read-only fallback)
+ * > $OPENKYLIN_HOME/.env                   (read-only fallback)
  * ```
  *
- * The inherited environment wins because `DEEPSEEK_API_KEY=… qilin`, a CI
+ * The inherited environment wins because `DEEPSEEK_API_KEY=… openkylin`, a CI
  * secret, or a container `-e` is this run's explicit intent; it cannot be
  * edited from inside, so it must be *visibly* read-only rather than silently
  * shadow writes. Everything below it loses to the managed store, so a key the
@@ -64,7 +64,7 @@ export const CREDENTIALS_FILENAME = '.credentials.yaml'
 export interface Config {
   /** Credentials document path; defaults to `.credentials.yaml` under the harness home. */
   path?: string
-  /** Harness home used when `path` is omitted; defaults to `$QILIN_HOME` or `~/.qilin`. */
+  /** Harness home used when `path` is omitted; defaults to `$OPENKYLIN_HOME` or `~/.openkylin`. */
   dshHome?: string
   /** Watch the document and hot-publish external edits; defaults to true. */
   watch?: boolean
@@ -509,7 +509,7 @@ function sameJsonValue(left: unknown, right: unknown): boolean {
     && sameJsonValue((left as Record<string, unknown>)[key], (right as Record<string, unknown>)[key]))
 }
 
-/** File-backed credentials provider (`$QILIN_HOME/.credentials.yaml`). */
+/** File-backed credentials provider (`$OPENKYLIN_HOME/.credentials.yaml`). */
 export class LocalCredentialProvider extends CredentialProvider {
   /* jscpd:ignore-start -- deliberate config-surface and lifecycle symmetry with
      settings-file (prefer symmetry for parallel values); extracting the shared
@@ -795,7 +795,7 @@ export class LocalCredentialProvider extends CredentialProvider {
     if (this.inherited(ref) !== undefined) {
       throw new Error(
         `credentials-local: "${ref}" is supplied read-only by the launching environment, so ${verb} would be`
-        + ' shadowed; unset it in the shell you start qilin from instead',
+        + ' shadowed; unset it in the shell you start openkylin from instead',
       )
     }
   }

@@ -111,7 +111,7 @@ export function clientBundle(
 ): BuildFaceConfig {
   const lib = clientLibraryConfig(id, libEntry, options.lib)
   return ({ env }) => {
-    const face = buildFace(env?.QILIN_BUILD_FACE)
+    const face = buildFace(env?.OPENKYLIN_BUILD_FACE)
     const clientEntry = face === undefined ? 'src/client/index.ts' : 'lib/types/client/index.js'
     const client = clientConfig(id, clientEntry)
     const node = [lib, ...(options.companions ?? [])]
@@ -190,7 +190,7 @@ export function clientLibrary(id: string, libEntry: readonly string[]): BuildFac
  * @returns ENV-selected tsdown config for the Client build face.
  */
 export function clientOnly(configs: readonly UserConfig[]): BuildFaceConfig {
-  return ({ env }) => buildFace(env?.QILIN_BUILD_FACE) === 'host'
+  return ({ env }) => buildFace(env?.OPENKYLIN_BUILD_FACE) === 'host'
     ? [SKIP_WORKSPACE_BUILD]
     : [...configs]
 }
@@ -210,7 +210,7 @@ type BuildFaceConfig = (inlineConfig: Pick<UserConfig, 'env'>) => UserConfig[]
 
 function buildFace(value: unknown): BuildFace {
   if (value === undefined || value === 'host' || value === 'client') return value
-  throw new Error(`tsdown: --env.QILIN_BUILD_FACE must be host or client, received ${String(value)}`)
+  throw new Error(`tsdown: --env.OPENKYLIN_BUILD_FACE must be host or client, received ${String(value)}`)
 }
 
 function clientLibraryConfig(
@@ -329,7 +329,7 @@ interface WorkspaceManifest {
   readonly dependencies?: Record<string, string>
   readonly peerDependencies?: Record<string, string>
   readonly optionalDependencies?: Record<string, string>
-  readonly qilin?: { readonly client?: { readonly external?: unknown } }
+  readonly openkylin?: { readonly client?: { readonly external?: unknown } }
 }
 
 const manifestCache = new Map<string, WorkspaceManifest>()
@@ -381,11 +381,11 @@ function productionExternals(id: string): readonly RegExp[] {
 }
 
 /**
- * Module-table specifiers one `qilin.client` declaration requests. Matching is
+ * Module-table specifiers one `openkylin.client` declaration requests. Matching is
  * exact, never normalized: a package declares the specifier its own code
  * imports, and the loader keys static entries the same way.
  * @param subject - package name, used in diagnostics.
- * @param declaration - the package's `qilin.client` object.
+ * @param declaration - the package's `openkylin.client` object.
  * @returns the requested specifiers, empty when the package declares none.
  * @throws {Error} when `external` is not a string array.
  */
@@ -393,12 +393,12 @@ export function requestedExternals(
   subject: string,
   declaration: { readonly external?: unknown },
 ): ReadonlySet<string> {
-  return new Set(optionalStringArray(subject, 'qilin.client.external', declaration.external) ?? [])
+  return new Set(optionalStringArray(subject, 'openkylin.client.external', declaration.external) ?? [])
 }
 
 /**
  * Module-table specifiers one package requests. The shell baseline is implicit
- * for every dynamic bundle; `qilin.client.external` only adds package-specific
+ * for every dynamic bundle; `openkylin.client.external` only adds package-specific
  * dynamic rows or subpaths.
  * @param id - package name, as spelled at the preset call site.
  * @returns the baseline plus the package's explicit requests.
@@ -409,7 +409,7 @@ function clientExternals(id: string): ReadonlySet<string> {
   const externals = new Set([
     ...PLATFORM_MODULES,
     ...PRELOADED_CLIENT_EXTERNALS,
-    ...requestedExternals(id, workspaceManifest(id).qilin?.client ?? {}),
+    ...requestedExternals(id, workspaceManifest(id).openkylin?.client ?? {}),
   ])
   clientExternalCache.set(id, externals)
   return externals
@@ -493,7 +493,7 @@ function clientConfig(id: string, entry: string): UserConfig {
         if (VENDORED_LIBRARY.test(source)) return null // vendored library: inline, no shared identity
         if (INLINE_SAFE.test(source) || GENERATED_REMOTE.test(source)) return null // wire contribution: inline is the point
         throw new Error(
-          `client bundle purity: "${source}" is not in the default client externals or ${id}'s qilin.client.external, an inline-safe wire layer, or a generated /remote contribution — `
+          `client bundle purity: "${source}" is not in the default client externals or ${id}'s openkylin.client.external, an inline-safe wire layer, or a generated /remote contribution — `
           + 'cross-plugin value imports are forbidden; declare a non-default module request or collaborate through cordis services '
           + '(type-only imports are erased and never reach this gate)',
         )

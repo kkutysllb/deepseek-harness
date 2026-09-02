@@ -62,7 +62,7 @@ describe('session format guard through the assembled app', () => {
       configPath,
       binArgs: [configPath, 'Try to resume.'],
       tsconfigPath,
-      env: { QILIN_SNAPSHOT_FILE: replayFixture },
+      env: { OPENKYLIN_SNAPSHOT_FILE: replayFixture },
       expectedExitCode: 1,
       prepare: async (runCwd) => {
         sessionPath = await seedSession(join(runCwd, '.sessions'), runCwd, SESSION_FORMAT_VERSION + 99, closedTurn())
@@ -87,7 +87,7 @@ describe('session format guard through the assembled app', () => {
       configPath,
       binArgs: [configPath, 'Try to resume.'],
       tsconfigPath,
-      env: { QILIN_SNAPSHOT_FILE: replayFixture },
+      env: { OPENKYLIN_SNAPSHOT_FILE: replayFixture },
       expectedExitCode: 1,
       prepare: async (runCwd) => {
         sessionPath = await seedSession(join(runCwd, '.sessions'), runCwd, SESSION_FORMAT_VERSION, [

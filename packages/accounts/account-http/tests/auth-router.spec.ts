@@ -388,7 +388,7 @@ describe('auth-disabled valve at the router', () => {
       newPassword: 'longenough',
     }), change.response)
     expect(change.state.status).toBe(400)
-    expect((JSON.parse(change.state.body ?? '{}') as { error: { message: string } }).error.message).toContain('QILIN_AUTH_DISABLED=1')
+    expect((JSON.parse(change.state.body ?? '{}') as { error: { message: string } }).error.message).toContain('OPENKYLIN_AUTH_DISABLED=1')
   })
 })
 

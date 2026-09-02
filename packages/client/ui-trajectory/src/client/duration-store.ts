@@ -8,6 +8,6 @@ import {
  */
 export function createTrajectoryDurationStore(): SnapshotStore<boolean> {
   return createSnapshotStore(false, {
-    persist: { name: 'qilin.trajectory.duration' },
+    persist: { name: 'openkylin.trajectory.duration' },
   })
 }

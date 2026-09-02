@@ -80,7 +80,7 @@ describe('package payload constraints', () => {
   it('includes a declared profile patch without a package-name allowlist', () => {
     expect(expectedDshPackageFiles({
       name: '@qilin/private-profile',
-      qilin: { bundle: { patch: './cordis.patch.yml' } },
+      openkylin: { bundle: { patch: './cordis.patch.yml' } },
     })).toEqual([
       'lib/index.js',
       'lib/invariant.js',

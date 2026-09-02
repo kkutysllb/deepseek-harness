@@ -9,7 +9,7 @@ English | [中文](README.zh.md)
 
 ## Summary
 
-A tool call can hang for a long time — a slow web fetch, a search that never returns — and without a limit the model waits indefinitely, stalling the whole session. `qilin-tool-call-timeout-policy` arms a cooperative deadline for calls that declare a limit: it asks the tool to stop through `exec.signal`, then maps a settled cancellation to a clear `Error: tool call timed out after <ms>ms` result. A tool that ignores or slowly handles cancellation keeps the caller waiting until it settles; the plugin never hard-stops downstream work. The limit comes from each tool's own configuration, so the plugin itself is zero-config, and it ships enabled in the `qilin` base bundle.
+A tool call can hang for a long time — a slow web fetch, a search that never returns — and without a limit the model waits indefinitely, stalling the whole session. `qilin-tool-call-timeout-policy` arms a cooperative deadline for calls that declare a limit: it asks the tool to stop through `exec.signal`, then maps a settled cancellation to a clear `Error: tool call timed out after <ms>ms` result. A tool that ignores or slowly handles cancellation keeps the caller waiting until it settles; the plugin never hard-stops downstream work. The limit comes from each tool's own configuration, so the plugin itself is zero-config, and it ships enabled in the `openkylin` base bundle.
 
 ## Table of Contents
 
@@ -25,7 +25,7 @@ A tool call can hang for a long time — a slow web fetch, a search that never r
 <a id="use-this-package"></a>
 ## Use this package
 
-The common path is one line: add the plugin to the composition — the `qilin` base bundle already has it. Tools that have a limit configured are protected automatically; every other tool is untouched.
+The common path is one line: add the plugin to the composition — the `openkylin` base bundle already has it. Tools that have a limit configured are protected automatically; every other tool is untouched.
 
 ### When to choose it
 

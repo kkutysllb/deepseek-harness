@@ -1,11 +1,11 @@
 /**
  * Keyless snapshot coverage for the TypeScript SDK path: each scenario spawns
- * the real `qilin --profile sdk` runtime through
+ * the real `openkylin --profile sdk` runtime through
  * `@qilin/sdk-client`, drives one turn over stdio JSON-RPC,
  * and pins the SDK `RunResult`, the complete notification stream, and the
  * persisted session logs. Replay serves recorded model
- * responses via `llm-replay` (`cordis.snapshot.yml`); `QILIN_SNAPSHOT=record`
- * re-records against the live API; `QILIN_SNAPSHOT=refresh` replays committed
+ * responses via `llm-replay` (`cordis.snapshot.yml`); `OPENKYLIN_SNAPSHOT=record`
+ * re-records against the live API; `OPENKYLIN_SNAPSHOT=refresh` replays committed
  * fixtures and rewrites expected outputs.
  */
 
@@ -64,14 +64,14 @@ const MINIMAL_BASH_DESCRIPTION = `Run commands in a bash shell
 * Please avoid commands that may produce a very large amount of output.
 * Please run long lived commands in the background, e.g. 'sleep 10 &' or start a server in the background.`
 
-const mode = process.env.QILIN_SNAPSHOT ?? 'replay'
+const mode = process.env.OPENKYLIN_SNAPSHOT ?? 'replay'
 const recording = mode === 'record'
 const refreshing = mode === 'refresh'
 const RUNTIME_WORKSPACE_ENTRIES = [
   '.agents',
   '.child-dsh',
-  '.qilin',
-  '.qilin-sdk-background-release',
+  '.openkylin',
+  '.openkylin-sdk-background-release',
   '.replay-fixtures',
   '.snapshot-patches',
 ] as const
@@ -110,10 +110,10 @@ interface SdkAssertions {
 
 const SDK_ASSERTIONS: Readonly<Record<string, SdkAssertions>> = {
   'subagent-dsh-sdk-diagnostic': {
-    environment: { QILIN_TEST_CHILD_PATCH: dshSdkDiagnosticChildPatch },
+    environment: { OPENKYLIN_TEST_CHILD_PATCH: dshSdkDiagnosticChildPatch },
   },
   'persistent-tools': {
-    environment: { QILIN_SYSTEM_PROMPT: MINIMAL_SYSTEM_PROMPT },
+    environment: { OPENKYLIN_SYSTEM_PROMPT: MINIMAL_SYSTEM_PROMPT },
     expectedTools: { bash: ['command'], str_replace_editor: ['command', 'path'] },
     expectedSystem: MINIMAL_SYSTEM_PROMPT,
     expectedToolDescriptions: { bash: MINIMAL_BASH_DESCRIPTION },
@@ -123,7 +123,7 @@ const SDK_ASSERTIONS: Readonly<Record<string, SdkAssertions>> = {
     },
   },
   'subagent-dsh-sdk-dynamic-route': {
-    environment: { QILIN_TEST_PARENT_PROVIDER: 'deepseek-official' },
+    environment: { OPENKYLIN_TEST_PARENT_PROVIDER: 'deepseek-official' },
     dshSdkChild: {
       config: dshSdkChildConfig,
       agentConfig: {
@@ -473,7 +473,7 @@ function authoredPatches(scenario: CorpusScenario, replaying: boolean): string[]
   ]
 }
 
-/** One SDK-controlled recorded scenario against a fresh `qilin --profile sdk` subprocess. */
+/** One SDK-controlled recorded scenario against a fresh `openkylin --profile sdk` subprocess. */
 async function runScenario(scenario: CorpusScenario): Promise<{
   results: RunResult[]
   notifications: HarnessNotification[]
@@ -484,7 +484,7 @@ async function runScenario(scenario: CorpusScenario): Promise<{
   cwd: string
 }> {
   const cwd = await mkdtemp(join(tmpdir(), `sdk-snapshot-${scenario.name}-`))
-  const dshHome = join(cwd, '.qilin')
+  const dshHome = join(cwd, '.openkylin')
   const sessionsRoot = join(dshHome, 'sessions')
   const replayFixtures = recording ? [] : await hydrateReplayFixtures(scenario, cwd)
   const fixtureContents = await Promise.all((await fixtureFiles(scenario)).map(file => readFile(file, 'utf8')))
@@ -504,8 +504,8 @@ async function runScenario(scenario: CorpusScenario): Promise<{
     await mkdir(childHome, { recursive: true })
     childSessionsRoot = join(childHome, 'sessions')
     childEnvironment = {
-      QILIN_TEST_CHILD_PATCHES: JSON.stringify([childPatch]),
-      QILIN_TEST_CHILD_HOME: childHome,
+      OPENKYLIN_TEST_CHILD_PATCHES: JSON.stringify([childPatch]),
+      OPENKYLIN_TEST_CHILD_HOME: childHome,
     }
   }
   const workspaceDir = join(scenario.dir, 'workspace')
@@ -520,18 +520,18 @@ async function runScenario(scenario: CorpusScenario): Promise<{
   const [parentFixture, ...childFixtures] = replayFixtures
   const env: Record<string, string> = {
     ...Object.fromEntries(Object.entries(process.env).filter(([, value]) => value !== undefined)) as Record<string, string>,
-    QILIN_SNAPSHOT: mode,
-    QILIN_SNAPSHOT_PROVIDER: route.provider,
-    QILIN_SNAPSHOT_MODEL: route.model,
-    QILIN_TELEMETRY_DISABLED: '1',
-    QILIN_AGENTS_HOME: join(cwd, '.agents'),
+    OPENKYLIN_SNAPSHOT: mode,
+    OPENKYLIN_SNAPSHOT_PROVIDER: route.provider,
+    OPENKYLIN_SNAPSHOT_MODEL: route.model,
+    OPENKYLIN_TELEMETRY_DISABLED: '1',
+    OPENKYLIN_AGENTS_HOME: join(cwd, '.agents'),
     NODE_OPTIONS: [process.env.NODE_OPTIONS, '--disable-warning=ExperimentalWarning'].filter(Boolean).join(' '),
     ...parentFixture === undefined ? {} : {
-      QILIN_SNAPSHOT_FILE: parentFixture,
-      ...childFixtures.length > 0 ? { QILIN_SNAPSHOT_CHILD_FILES: childFixtures.join(delimiter) } : {},
+      OPENKYLIN_SNAPSHOT_FILE: parentFixture,
+      ...childFixtures.length > 0 ? { OPENKYLIN_SNAPSHOT_CHILD_FILES: childFixtures.join(delimiter) } : {},
     },
     ...!recording && scenario.manifest.replay?.override === true
-      ? { QILIN_SNAPSHOT_OVERRIDE: join(scenario.dir, 'replay.override.json') }
+      ? { OPENKYLIN_SNAPSHOT_OVERRIDE: join(scenario.dir, 'replay.override.json') }
       : {},
     ...scenario.manifest.environment,
     ...assertions.environment,
@@ -724,7 +724,7 @@ async function verifyHeaders(
 describe('TypeScript SDK snapshots over the jsonrpc runtime', () => {
   for (const scenario of sdkScenarios) {
     const scenarioTest = recording && scenario.manifest.recording === 'authored' ? it.skip : it
-    scenarioTest(`${mode}s ${scenario.name} through qilin --profile sdk`, async () => {
+    scenarioTest(`${mode}s ${scenario.name} through openkylin --profile sdk`, async () => {
       const scenarioDir = scenario.dir
       const notificationsExpectedPath = join(scenarioDir, 'notifications.expected.jsonl')
       const resultExpectedPath = join(scenarioDir, 'result.expected.json')

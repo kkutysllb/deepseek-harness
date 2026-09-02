@@ -2661,9 +2661,9 @@ function hasPackageSurface(model: PackageModel): boolean {
 }
 
 function isDualFacePackage(manifest: Record<string, unknown>): boolean {
-  const qilin = manifest.qilin
-  const client = qilin !== null && typeof qilin === 'object'
-    ? (qilin as Record<string, unknown>).client
+  const openkylin = manifest.openkylin
+  const client = openkylin !== null && typeof openkylin === 'object'
+    ? (openkylin as Record<string, unknown>).client
     : undefined
   return client !== null
     && typeof client === 'object'

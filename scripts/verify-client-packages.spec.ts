@@ -149,7 +149,7 @@ describe('package modes', () => {
     }))
     expect(found).toHaveLength(2)
     expect(found.join('\n')).toContain('does not use the staticLinked preset')
-    expect(found.join('\n')).toContain('has no dynamic qilin.client row')
+    expect(found.join('\n')).toContain('has no dynamic openkylin.client row')
   })
 
   it('requires every preloaded external to have a parser preload row', () => {
@@ -200,7 +200,7 @@ describe('module requests', () => {
     expect(collectClientPackageViolations(facts([], {
       declarations: [gateway, stale, live],
     }))).toEqual([
-      stale.manifest + ': qilin.client.external "@qilin/api-gateway/client"'
+      stale.manifest + ': openkylin.client.external "@qilin/api-gateway/client"'
       + ' has no runtime import or re-export in production source; remove the stale declaration',
     ])
   })
@@ -219,7 +219,7 @@ describe('module requests', () => {
       },
     }), manifest: 'packages/api/session-controller/package.json' }
     expect(collectClientPackageViolations(facts([], { declarations: [gateway, subject] }))).toEqual([
-      subject.manifest + ': qilin.client.external "@qilin/api-gateway/client"'
+      subject.manifest + ': openkylin.client.external "@qilin/api-gateway/client"'
       + ' has no runtime import or re-export in production source; remove the stale declaration',
     ])
   })
@@ -230,7 +230,7 @@ describe('module requests', () => {
       declarations: [ui],
       platformModules: ['react'],
     }))).toEqual([
-      ui.manifest + ': qilin.client.external repeats baseline module "react"; remove the explicit declaration',
+      ui.manifest + ': openkylin.client.external repeats baseline module "react"; remove the explicit declaration',
     ])
   })
 
@@ -241,8 +241,8 @@ describe('module requests', () => {
     })
     const found = collectClientPackageViolations(facts([], { declarations: [ui] }))
     expect(found).toHaveLength(6)
-    expect(found.join('\n')).toContain('qilin.client.external contains an empty value')
-    expect(found.join('\n')).toContain('qilin.client.inject contains an empty value')
+    expect(found.join('\n')).toContain('openkylin.client.external contains an empty value')
+    expect(found.join('\n')).toContain('openkylin.client.inject contains an empty value')
     expect(found.join('\n')).toContain('names its own row')
     expect(found.join('\n')).toContain('has no supplier')
   })
@@ -262,7 +262,7 @@ describe('module requests', () => {
     }), manifest: 'packages/api/b/package.json' }
     const found = collectClientPackageViolations(facts([], { declarations: [a, b] }))
     expect(found).toHaveLength(1)
-    expect(found[0]).toContain('synchronous qilin.client.external cycle')
+    expect(found[0]).toContain('synchronous openkylin.client.external cycle')
   })
 })
 
@@ -272,9 +272,9 @@ describe('manifest declarations', () => {
     roots.push(root)
     const files: Record<string, unknown> = {
       'packages/g/a/package.json': {
-        name: '@f/a', qilin: { client: { external: 'react', inject: ['@f/b', 1] } },
+        name: '@f/a', openkylin: { client: { external: 'react', inject: ['@f/b', 1] } },
       },
-      'packages/g/b/package.json': { name: '@f/b', qilin: { client: {} } },
+      'packages/g/b/package.json': { name: '@f/b', openkylin: { client: {} } },
     }
     for (const [path, value] of Object.entries(files)) {
       mkdirSync(dirname(join(root, path)), { recursive: true })
@@ -284,8 +284,8 @@ describe('manifest declarations', () => {
     const result = readClientDeclarations(root)
     expect(result.declarations).toHaveLength(2)
     expect(result.malformed).toEqual([
-      'packages/g/a/package.json: @f/a qilin.client.external must be a string array',
-      'packages/g/a/package.json: @f/a qilin.client.inject must be a string array',
+      'packages/g/a/package.json: @f/a openkylin.client.external must be a string array',
+      'packages/g/a/package.json: @f/a openkylin.client.inject must be a string array',
     ])
   })
 
@@ -312,7 +312,7 @@ describe('manifest declarations', () => {
     const slots = declaration('ui-slots', { dynamic: false })
     const manifest = {
       name: subject.name,
-      qilin: { client: { external: subject.external, inject: subject.inject, platform: 'web' } },
+      openkylin: { client: { external: subject.external, inject: subject.inject, platform: 'web' } },
       dependencies: subject.dependencies,
       peerDependencies: subject.peerDependencies,
       devDependencies: subject.devDependencies,
@@ -328,12 +328,12 @@ describe('manifest declarations', () => {
     }))).toEqual([subject.manifest])
 
     const fixed = JSON.parse(readFileSync(join(root, subject.manifest), 'utf8')) as {
-      qilin: { client: { external: string[]; inject: string[] } }
+      openkylin: { client: { external: string[]; inject: string[] } }
       dependencies?: Record<string, string>
       peerDependencies: Record<string, string>
       devDependencies: Record<string, string>
     }
-    expect(fixed.qilin.client).toMatchObject({
+    expect(fixed.openkylin.client).toMatchObject({
       external: ['@qilin/missing'],
       inject: ['@qilin/agent'],
     })

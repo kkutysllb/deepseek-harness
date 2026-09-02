@@ -16,11 +16,11 @@ describe('qilin-sdk-minimal bundle', () => {
     const root = fileURLToPath(new URL('..', import.meta.url))
     const manifest = JSON.parse(readFileSync(resolve(root, 'package.json'), 'utf8')) as {
       dependencies?: Record<string, string>
-      qilin?: { bundle?: { patch?: string } }
+      openkylin?: { bundle?: { patch?: string } }
     }
-    expect(manifest.qilin?.bundle?.patch).toBe('./cordis.patch.yml')
+    expect(manifest.openkylin?.bundle?.patch).toBe('./cordis.patch.yml')
     const patches = yaml.load(
-      readFileSync(resolve(root, manifest.qilin!.bundle!.patch!), 'utf8'),
+      readFileSync(resolve(root, manifest.openkylin!.bundle!.patch!), 'utf8'),
       { schema: entryListSchema },
     ) as Array<{ insert?: Array<{ id?: string; inject?: string[]; name?: string; config?: Record<string, unknown>; disabled?: unknown }> }>
     expect(patches).toHaveLength(1)
@@ -67,13 +67,13 @@ describe('qilin-sdk-minimal bundle', () => {
     })
     expect(rows.find(row => row.id === 'llm-deepseek')?.config).toEqual({
       apiKeyEnv: 'DEEPSEEK_API_KEY',
-      defaultContextWindow: { __jsExpr: 'Number(process.env.QILIN_CONTEXT_WINDOW ?? 1000000)' },
+      defaultContextWindow: { __jsExpr: 'Number(process.env.OPENKYLIN_CONTEXT_WINDOW ?? 1000000)' },
       streamIdleTimeoutMs: 172800000,
     })
     expect(rows.find(row => row.id === 'system-prompt')?.config).toEqual({
       includeHarnessIdentity: false,
       includeRuntimeContext: false,
-      persona: { __jsExpr: "process.env.QILIN_SYSTEM_PROMPT ?? 'You are a helpful software engineer assistant.'" },
+      persona: { __jsExpr: "process.env.OPENKYLIN_SYSTEM_PROMPT ?? 'You are a helpful software engineer assistant.'" },
     })
     expect(rows.find(row => row.id === 'agent-loop')?.config).toEqual({ agents: [] })
     expect(rows.find(row => row.id === 'terminal-bash')).toMatchObject({

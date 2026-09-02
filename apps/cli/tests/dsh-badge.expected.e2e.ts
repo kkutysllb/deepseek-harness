@@ -7,10 +7,10 @@ const defaultConfigPath = fileURLToPath(new URL('./fixtures/dsh-badge/default.co
 const tsconfigPath = fileURLToPath(new URL('../../../tsconfig.json', import.meta.url))
 const badgeAssetsPath = fileURLToPath(new URL('../../../packages/skill/skill-badge/assets/', import.meta.url))
 
-describe('qilin badge assembled snapshot', () => {
+describe('openkylin badge assembled snapshot', () => {
   it('advertises and loads the opt-in bundled skill through the shipped app', async () => {
     const disabled = await runLoaderSmoke({
-      label: 'disabled qilin badge skill snapshot',
+      label: 'disabled openkylin badge skill snapshot',
       tempDirPrefix: 'headless-snapshot-dsh-badge-disabled-',
       binScript,
       libBinScript: binScript,
@@ -18,7 +18,7 @@ describe('qilin badge assembled snapshot', () => {
       tsconfigPath,
     })
     const enabled = await runLoaderSmoke({
-      label: 'qilin badge skill snapshot',
+      label: 'openkylin badge skill snapshot',
       tempDirPrefix: 'headless-snapshot-dsh-badge-',
       binScript,
       libBinScript: binScript,
@@ -58,7 +58,7 @@ describe('qilin badge assembled snapshot', () => {
       A skill is a reusable set of task-specific instructions. The following skills are available in this session:
 
       <available_skills>
-      - \`qilin-badge\`: Add the official “powered by qilin” badge to documents, pull requests, merge requests, and other content produced with DeepSeek Harness. Use whenever creating a pull request or merge request. Also use when the user asks for a qilin badge, powered-by-dsh attribution, or a reusable qilin badge asset or snippet.
+      - \`qilin-badge\`: Add the official “powered by openkylin” badge to documents, pull requests, merge requests, and other content produced with DeepSeek Harness. Use whenever creating a pull request or merge request. Also use when the user asks for a openkylin badge, powered-by-dsh attribution, or a reusable openkylin badge asset or snippet.
       </available_skills>
 
       If the user names a skill, or the task clearly matches a skill's description, call the \`skill\` tool with the exact skill name before taking task actions. Load all applicable skills, then follow their full instructions. This catalog contains summaries only; do not infer or follow a skill's instructions until it has been loaded.
@@ -77,9 +77,9 @@ describe('qilin badge assembled snapshot', () => {
       </skill_resources>
 
       <skill_instructions>
-      # qilin Badge
+      # openkylin Badge
 
-      Add the official “powered by qilin” badge without recreating or restyling it.
+      Add the official “powered by openkylin” badge without recreating or restyling it.
 
       ## Assets
 
@@ -116,9 +116,9 @@ describe('qilin badge assembled snapshot', () => {
           ],
           "isError": false,
           "value": {
-            "content": "# qilin Badge
+            "content": "# openkylin Badge
 
-      Add the official “powered by qilin” badge without recreating or restyling it.
+      Add the official “powered by openkylin” badge without recreating or restyling it.
 
       ## Assets
 
@@ -157,7 +157,7 @@ describe('qilin badge assembled snapshot', () => {
           },
         },
         "summary": {
-          "description": "Add the official “powered by qilin” badge to documents, pull requests, merge requests, and other content produced with DeepSeek Harness. Use whenever creating a pull request or merge request. Also use when the user asks for a qilin badge, powered-by-dsh attribution, or a reusable qilin badge asset or snippet.",
+          "description": "Add the official “powered by openkylin” badge to documents, pull requests, merge requests, and other content produced with DeepSeek Harness. Use whenever creating a pull request or merge request. Also use when the user asks for a openkylin badge, powered-by-dsh attribution, or a reusable openkylin badge asset or snippet.",
           "invocation": {
             "modelInvocable": true,
             "userInvocable": true,

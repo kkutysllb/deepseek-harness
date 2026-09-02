@@ -32,7 +32,7 @@ let testHome: string
 
 beforeEach(() => {
   testHome = mkdtempSync(join(tmpdir(), 'qilin-llm-deepseek-'))
-  vi.stubEnv('QILIN_HOME', testHome)
+  vi.stubEnv('OPENKYLIN_HOME', testHome)
 })
 
 afterEach(async () => {
@@ -2195,7 +2195,7 @@ describe('plugin registration and config', () => {
 
   it('takes DEEPSEEK_BASE_URL from any environment layer, with explicit config still on top', () => {
     const trusted = createLaunchEnvironmentSnapshot([
-      { source: 'user-env', path: '/home/.qilin/.env', values: { DEEPSEEK_BASE_URL: 'https://user.example' } },
+      { source: 'user-env', path: '/home/.openkylin/.env', values: { DEEPSEEK_BASE_URL: 'https://user.example' } },
     ])
     expect(resolveAdapterOptions({}, trusted).baseURL).toBe('https://user.example')
     // The product trusts the project it is launched in, so a checkout can

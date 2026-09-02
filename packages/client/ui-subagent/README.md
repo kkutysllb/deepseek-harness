@@ -1,5 +1,5 @@
 ---
-description: "Subagent conversation catalog, continuation routing UI, and '@' reference source for the qilin web client."
+description: "Subagent conversation catalog, continuation routing UI, and '@' reference source for the openkylin web client."
 kind: "package-reference"
 ---
 

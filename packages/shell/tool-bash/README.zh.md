@@ -9,7 +9,7 @@ kind: "package-reference"
 
 ## 概述
 
-`qilin-tool-bash` 为 agent 提供 `bash` 工具，通过已挂载的 shell 执行器运行命令并返回 stdout、stderr 与退出标记。每次调用都运行在全新 shell 中——cwd、变量或函数都不会保留——而 `run_in_background` 把长时间运行的命令变成后台任务，agent 用 `job_output` 收集、用 `job_kill` 停止。每次调用都运行在来自 `qilin-shell-env` 的受管 `QILIN_*` 环境中；在沙箱执行器下，被拒绝的命令可以携带更宽的 `sandbox_permissions` 模式和一句 `justification`，经用户审批后在同一轮次内重试一次。非零退出只会被报告、不会失败，因此由 agent 决定如何应对。请与 `qilin-bash-local` 或 `qilin-bash-sandbox` 等执行器提供方以及 `qilin-shell-env` 插件一起挂载。
+`qilin-tool-bash` 为 agent 提供 `bash` 工具，通过已挂载的 shell 执行器运行命令并返回 stdout、stderr 与退出标记。每次调用都运行在全新 shell 中——cwd、变量或函数都不会保留——而 `run_in_background` 把长时间运行的命令变成后台任务，agent 用 `job_output` 收集、用 `job_kill` 停止。每次调用都运行在来自 `qilin-shell-env` 的受管 `OPENKYLIN_*` 环境中；在沙箱执行器下，被拒绝的命令可以携带更宽的 `sandbox_permissions` 模式和一句 `justification`，经用户审批后在同一轮次内重试一次。非零退出只会被报告、不会失败，因此由 agent 决定如何应对。请与 `qilin-bash-local` 或 `qilin-bash-sandbox` 等执行器提供方以及 `qilin-shell-env` 插件一起挂载。
 
 ## 目录
 
@@ -110,7 +110,7 @@ kind: "package-reference"
 
 - [shell 包映射](../README.zh.md)——bash 能力家族及其角色。
 - [Bash 执行器子系统](../../../docs/subsystems/shell.zh.md)——请求／spec 词汇、结果与后台进程。
-- [shell-env](../shell-env/README.zh.md)——每次调用都会收到的受管 `QILIN_*` 环境。
+- [shell-env](../shell-env/README.zh.md)——每次调用都会收到的受管 `OPENKYLIN_*` 环境。
 - [tool-jobs](../../jobs/tool-jobs/README.zh.md)——后台运行的 `job_output`、`job_list` 与 `job_kill` 控制。
 - [bash stdin/env Agent Note](../../../.agents/notes/implemented/architecture/2026-06-30-bash-stdin-env-trusted-plugin-api.zh.md)——为什么工具不暴露 stdin 或 env。
 - [沙箱 Agent Note](../../../.agents/notes/implemented/feature/2026-07-06-sandbox.zh.md)——升权与模式切换的理由。

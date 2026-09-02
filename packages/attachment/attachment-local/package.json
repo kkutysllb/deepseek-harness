@@ -1,6 +1,6 @@
 {
   "name": "@qilin/attachment-local",
-  "description": "Private content-addressed QILIN_HOME attachment storage",
+  "description": "Private content-addressed OPENKYLIN_HOME attachment storage",
   "version": "0.1.2-alpha.3",
   "publishConfig": {
     "access": "public"

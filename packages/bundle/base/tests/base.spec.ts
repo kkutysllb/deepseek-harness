@@ -1,5 +1,5 @@
 /**
- * The bundle's substance is its patch file: the `qilin.bundle.patch` manifest
+ * The bundle's substance is its patch file: the `openkylin.bundle.patch` manifest
  * field must name a real, parseable patch list.
  */
 
@@ -12,17 +12,17 @@ import { entryListSchema } from '@deepseek-ai/cordis-plugin-include'
 import { evaluate } from '@deepseek-ai/cordis-plugin-loader'
 
 describe('qilin-base bundle', () => {
-  it('declares a parseable patch list through the qilin.bundle.patch manifest field', () => {
+  it('declares a parseable patch list through the openkylin.bundle.patch manifest field', () => {
     const root = fileURLToPath(new URL('..', import.meta.url))
     const manifest = JSON.parse(
       readFileSync(resolve(root, 'package.json'), 'utf8'),
     ) as {
       dependencies?: Record<string, string>
-      qilin?: { bundle?: { patch?: string } }
+      openkylin?: { bundle?: { patch?: string } }
     }
-    expect(manifest.qilin?.bundle?.patch).toBe('./cordis.patch.yml')
+    expect(manifest.openkylin?.bundle?.patch).toBe('./cordis.patch.yml')
     const parsed = yaml.load(
-      readFileSync(resolve(root, manifest.qilin!.bundle!.patch!), 'utf8'),
+      readFileSync(resolve(root, manifest.openkylin!.bundle!.patch!), 'utf8'),
       { schema: entryListSchema },
     )
     expect(Array.isArray(parsed)).toBe(true)
@@ -33,7 +33,7 @@ describe('qilin-base bundle', () => {
     expect(rows.length).toBeGreaterThan(50)
     expect(rows.some(row => row.id === 'agent-loop')).toBe(true)
     expect(rows.find(row => row.id === 'session-telemetry-otel')?.config?.['mode']).toEqual({
-      __jsExpr: "process.env.QILIN_TELEMETRY_MODE || 'FEEDBACK_ONLY'",
+      __jsExpr: "process.env.OPENKYLIN_TELEMETRY_MODE || 'FEEDBACK_ONLY'",
     })
     expect(rows.find(row => row.id === 'hmr')).toMatchObject({
       disabled: true,

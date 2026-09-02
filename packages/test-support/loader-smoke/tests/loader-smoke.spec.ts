@@ -37,7 +37,7 @@ describe('runLoaderSmoke', () => {
       marker: 'present',
       input: '',
     })
-    expect(canonicalTempPath(output.dshHome)).toBe(canonicalTempPath(join(output.cwd, '.qilin')))
+    expect(canonicalTempPath(output.dshHome)).toBe(canonicalTempPath(join(output.cwd, '.openkylin')))
     expect(canonicalTempPath(output.agentsHome)).toBe(canonicalTempPath(join(output.cwd, '.agents')))
     expect(result.stderr).toContain('fixture stderr')
     expect(existsSync(output.cwd)).toBe(false)

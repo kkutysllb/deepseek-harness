@@ -21,9 +21,9 @@ import { apply, inject } from '@qilin/client-ui-sidebar/client'
 usePinnedBrowserLanguages('zh-CN')
 
 beforeEach(() => {
-  vi.stubEnv('QILIN_CLIENT_COMMIT_HASH', 'abc1234')
-  vi.stubEnv('QILIN_CLIENT_GIT_DIRTY', 'true')
-  vi.stubEnv('QILIN_CLIENT_VERSION', '1.2.3-rc.4')
+  vi.stubEnv('OPENKYLIN_CLIENT_COMMIT_HASH', 'abc1234')
+  vi.stubEnv('OPENKYLIN_CLIENT_GIT_DIRTY', 'true')
+  vi.stubEnv('OPENKYLIN_CLIENT_VERSION', '1.2.3-rc.4')
 })
 
 afterEach(() => {

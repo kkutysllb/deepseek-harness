@@ -33,7 +33,7 @@ Choose the service when a plugin or tool must search or fetch without hard-codin
 
 ### Minimal configuration
 
-Load the service and let a single mounted backend auto-select, or pin a provider id with `searchProvider`/`fetchProvider`. The environment variables `$QILIN_WEB_SEARCH_PROVIDER` and `$QILIN_WEB_FETCH_PROVIDER` feed the same fields and are not a separate priority chain.
+Load the service and let a single mounted backend auto-select, or pin a provider id with `searchProvider`/`fetchProvider`. The environment variables `$OPENKYLIN_WEB_SEARCH_PROVIDER` and `$OPENKYLIN_WEB_FETCH_PROVIDER` feed the same fields and are not a separate priority chain.
 
 ```yaml
 - name: '@qilin/web'

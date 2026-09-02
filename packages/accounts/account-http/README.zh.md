@@ -47,7 +47,7 @@ kind: "package-reference"
 <a id="defense-in-depth"></a>
 ## 纵深防御
 
-旧版 Origin 白名单恰好守护凭证类 POST（`login/local`、`register`、`logout`、`initialize`）——跨站 Origin 直接拒绝。凭证端点共享一个按 IP 的固定窗口预算（默认 10 次 / 300 秒，时钟可注入，表有界并带清扫与驱逐），超限应答 429 附 `Retry-After`。`QILIN_AUTH_DISABLED=1`（生产环境之外）让合成 `default` admin 透明通过所有链路，同时停用改密、CSRF 与白名单——并带有 `account-auth` 的生产启动拒绝与操作员警告。
+旧版 Origin 白名单恰好守护凭证类 POST（`login/local`、`register`、`logout`、`initialize`）——跨站 Origin 直接拒绝。凭证端点共享一个按 IP 的固定窗口预算（默认 10 次 / 300 秒，时钟可注入，表有界并带清扫与驱逐），超限应答 429 附 `Retry-After`。`OPENKYLIN_AUTH_DISABLED=1`（生产环境之外）让合成 `default` admin 透明通过所有链路，同时停用改密、CSRF 与白名单——并带有 `account-auth` 的生产启动拒绝与操作员警告。
 
 -----
 

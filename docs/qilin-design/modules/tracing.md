@@ -1,6 +1,6 @@
 # tracing 模块（tracing module）
 
-> QiLin engine · tracing subsystem · 双语 / Bilingual
+> OpenKylin engine · tracing subsystem · 双语 / Bilingual
 
 ---
 
@@ -8,7 +8,7 @@
 
 ### 职责
 
-`qilin.tracing` 提供可观测性适配层。它围绕"请求级 trace_id" 与"Run 级事件流"，把 QiLin 的所有内部动作暴露给 Langfuse、Monocle 等追踪平台。
+`openkylin.tracing` 提供可观测性适配层。它围绕"请求级 trace_id" 与"Run 级事件流"，把 OpenKylin 的所有内部动作暴露给 Langfuse、Monocle 等追踪平台。
 
 - **trace 上下文**：`trace_context.py` + 全局 `ContextVar` `_current_trace_id`
 - **元数据桥接**：`metadata.py` 把 trace_id 注入 LangChain call metadata，使 Langfuse / Monocle 自动跟随
@@ -58,7 +58,7 @@ tracing:
 
 ### Responsibility
 
-`qilin.tracing` is the observability adapter layer. Built around "request-level trace_id" and "run-level event streams", it surfaces QiLin's internal actions to Langfuse, Monocle, etc.
+`openkylin.tracing` is the observability adapter layer. Built around "request-level trace_id" and "run-level event streams", it surfaces OpenKylin's internal actions to Langfuse, Monocle, etc.
 
 - **Trace context** — `trace_context.py` + global `ContextVar` `_current_trace_id`
 - **Metadata bridging** — `metadata.py` injects `trace_id` into LangChain call metadata for Langfuse / Monocle to follow

@@ -38,7 +38,7 @@ kind: "package-reference"
 | 字段 | 默认值 | 含义 |
 |---|---|---|
 | `providerName` | `qilin-sdk` | `ctx.subagents` 上的注册表名称 |
-| `dshBin` | SDK 依赖 | 显式 qilin CLI 模块，在插件加载时解析并校验；省略则使用 SDK 依赖 |
+| `dshBin` | SDK 依赖 | 显式 openkylin CLI 模块，在插件加载时解析并校验；省略则使用 SDK 依赖 |
 | `profile` | `sdk` | 子进程命名的 profile |
 | `patches` | `[]` | 每次启动的有序 profile patch 文件，在插件加载时解析并校验 |
 | `dshHome` | 必填 | 每个嵌套子进程的绝对隔离 Harness home |

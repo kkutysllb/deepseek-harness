@@ -38,24 +38,24 @@ describe('ShellEnvRegistry', () => {
     const registry = new ShellEnvRegistry(ctx, { dshHome: './test-dsh-home' })
 
     expect(registry.collect(execution())).toEqual({
-      QILIN_HOME: resolve('./test-dsh-home'),
-      QILIN_SHELL: '1',
+      OPENKYLIN_HOME: resolve('./test-dsh-home'),
+      OPENKYLIN_SHELL: '1',
     })
     expect(registry.collect(execution('session-a'))).toEqual({
-      QILIN_HOME: resolve('./test-dsh-home'),
-      QILIN_SESSION_ID: 'session-a',
-      QILIN_SHELL: '1',
+      OPENKYLIN_HOME: resolve('./test-dsh-home'),
+      OPENKYLIN_SESSION_ID: 'session-a',
+      OPENKYLIN_SHELL: '1',
     })
   })
 
-  it('resolves QILIN_HOME from the ambient override or the user-home default', () => {
-    vi.stubEnv('QILIN_HOME', './ambient-dsh-home')
+  it('resolves OPENKYLIN_HOME from the ambient override or the user-home default', () => {
+    vi.stubEnv('OPENKYLIN_HOME', './ambient-dsh-home')
     const fromEnvironment = new ShellEnvRegistry(new Context())
-    expect(fromEnvironment.collect(execution()).QILIN_HOME).toBe(resolve('./ambient-dsh-home'))
+    expect(fromEnvironment.collect(execution()).OPENKYLIN_HOME).toBe(resolve('./ambient-dsh-home'))
 
-    vi.stubEnv('QILIN_HOME', undefined)
+    vi.stubEnv('OPENKYLIN_HOME', undefined)
     const fromDefault = new ShellEnvRegistry(new Context())
-    expect(fromDefault.collect(execution()).QILIN_HOME).toBe(join(homedir(), '.qilin'))
+    expect(fromDefault.collect(execution()).OPENKYLIN_HOME).toBe(join(homedir(), '.openkylin'))
   })
 
   it('collects declared contributor variables and omits unavailable values', () => {
@@ -64,31 +64,31 @@ describe('ShellEnvRegistry', () => {
     registry.register({
       name: 'optional-session-fact',
       variables: {
-        QILIN_SESSION_OPTIONAL: { description: 'Optional session-scoped test fact.' },
+        OPENKYLIN_SESSION_OPTIONAL: { description: 'Optional session-scoped test fact.' },
       },
-      resolve: exec => exec.agent === undefined ? {} : { QILIN_SESSION_OPTIONAL: exec.agent.session.header.id },
+      resolve: exec => exec.agent === undefined ? {} : { OPENKYLIN_SESSION_OPTIONAL: exec.agent.session.header.id },
     })
     registry.register({
       name: 'always-available-fact',
       variables: {
-        QILIN_ALWAYS_AVAILABLE: { description: 'Always-available test fact.' },
+        OPENKYLIN_ALWAYS_AVAILABLE: { description: 'Always-available test fact.' },
       },
-      resolve: () => ({ QILIN_ALWAYS_AVAILABLE: 'yes' }),
+      resolve: () => ({ OPENKYLIN_ALWAYS_AVAILABLE: 'yes' }),
     })
 
-    expect(registry.collect(execution())).not.toHaveProperty('QILIN_SESSION_OPTIONAL')
-    expect(registry.collect(execution()).QILIN_ALWAYS_AVAILABLE).toBe('yes')
-    expect(registry.collect(execution('session-b')).QILIN_SESSION_OPTIONAL).toBe('session-b')
+    expect(registry.collect(execution())).not.toHaveProperty('OPENKYLIN_SESSION_OPTIONAL')
+    expect(registry.collect(execution()).OPENKYLIN_ALWAYS_AVAILABLE).toBe('yes')
+    expect(registry.collect(execution('session-b')).OPENKYLIN_SESSION_OPTIONAL).toBe('session-b')
     expect(registry.list()).toEqual([
       {
         contributor: 'always-available-fact',
         description: 'Always-available test fact.',
-        key: 'QILIN_ALWAYS_AVAILABLE',
+        key: 'OPENKYLIN_ALWAYS_AVAILABLE',
       },
       {
         contributor: 'optional-session-fact',
         description: 'Optional session-scoped test fact.',
-        key: 'QILIN_SESSION_OPTIONAL',
+        key: 'OPENKYLIN_SESSION_OPTIONAL',
       },
     ])
   })
@@ -98,48 +98,48 @@ describe('ShellEnvRegistry', () => {
     const registry = new ShellEnvRegistry(ctx, { dshHome: './test-dsh-home' })
     registry.register({
       name: 'first',
-      variables: { QILIN_SHARED: { description: 'First owner.' } },
-      resolve: () => ({ QILIN_SHARED: 'first' }),
+      variables: { OPENKYLIN_SHARED: { description: 'First owner.' } },
+      resolve: () => ({ OPENKYLIN_SHARED: 'first' }),
     })
 
     expect(() => registry.register({
       name: 'second',
-      variables: { QILIN_SHARED: { description: 'Second owner.' } },
-      resolve: () => ({ QILIN_SHARED: 'second' }),
-    })).toThrow(/QILIN_SHARED.*first.*second|QILIN_SHARED.*second.*first/)
+      variables: { OPENKYLIN_SHARED: { description: 'Second owner.' } },
+      resolve: () => ({ OPENKYLIN_SHARED: 'second' }),
+    })).toThrow(/OPENKYLIN_SHARED.*first.*second|OPENKYLIN_SHARED.*second.*first/)
   })
 
   it('rejects duplicate contributor names and malformed declarations', () => {
     const registry = new ShellEnvRegistry(new Context(), { dshHome: './test-dsh-home' })
     registry.register({
       name: 'declared',
-      variables: { QILIN_DECLARED: { description: 'Declared fact.' } },
+      variables: { OPENKYLIN_DECLARED: { description: 'Declared fact.' } },
       resolve: () => ({}),
     })
 
     expect(() => registry.register({
       name: 'declared',
-      variables: { QILIN_ANOTHER: { description: 'Another fact.' } },
+      variables: { OPENKYLIN_ANOTHER: { description: 'Another fact.' } },
       resolve: () => ({}),
     })).toThrow(/already registered/)
     expect(() => registry.register({
       name: ' ',
-      variables: { QILIN_BLANK_NAME: { description: 'Blank owner.' } },
+      variables: { OPENKYLIN_BLANK_NAME: { description: 'Blank owner.' } },
       resolve: () => ({}),
     })).toThrow(/name must be non-empty/)
     expect(() => registry.register({
       name: 'invalid-key',
-      variables: { dsh_invalid: { description: 'Invalid key.' } } as unknown as Record<'QILIN_INVALID', { description: string }>,
+      variables: { dsh_invalid: { description: 'Invalid key.' } } as unknown as Record<'OPENKYLIN_INVALID', { description: string }>,
       resolve: () => ({}),
     })).toThrow(/invalid key/)
     expect(() => registry.register({
       name: 'reserved-key',
-      variables: { QILIN_HOME: { description: 'Reserved key.' } },
+      variables: { OPENKYLIN_HOME: { description: 'Reserved key.' } },
       resolve: () => ({}),
     })).toThrow(/reserved key/)
     expect(() => registry.register({
       name: 'blank-description',
-      variables: { QILIN_BLANK_DESCRIPTION: { description: ' ' } },
+      variables: { OPENKYLIN_BLANK_DESCRIPTION: { description: ' ' } },
       resolve: () => ({}),
     })).toThrow(/must describe/)
   })
@@ -149,22 +149,22 @@ describe('ShellEnvRegistry', () => {
     const registry = new ShellEnvRegistry(ctx, { dshHome: './test-dsh-home' })
     registry.register({
       name: 'drifted-provider',
-      variables: { QILIN_DECLARED: { description: 'Declared fact.' } },
-      resolve: () => ({ QILIN_UNDECLARED: 'bad' }),
+      variables: { OPENKYLIN_DECLARED: { description: 'Declared fact.' } },
+      resolve: () => ({ OPENKYLIN_UNDECLARED: 'bad' }),
     })
 
-    expect(() => registry.collect(execution())).toThrow(/drifted-provider.*QILIN_UNDECLARED/)
+    expect(() => registry.collect(execution())).toThrow(/drifted-provider.*OPENKYLIN_UNDECLARED/)
   })
 
   it('rejects non-string values returned by a contributor', () => {
     const registry = new ShellEnvRegistry(new Context(), { dshHome: './test-dsh-home' })
     registry.register({
       name: 'wrong-value-type',
-      variables: { QILIN_STRING: { description: 'String fact.' } },
-      resolve: () => ({ QILIN_STRING: 42 }) as unknown as Record<'QILIN_STRING', string>,
+      variables: { OPENKYLIN_STRING: { description: 'String fact.' } },
+      resolve: () => ({ OPENKYLIN_STRING: 42 }) as unknown as Record<'OPENKYLIN_STRING', string>,
     })
 
-    expect(() => registry.collect(execution())).toThrow(/wrong-value-type.*non-string.*QILIN_STRING/)
+    expect(() => registry.collect(execution())).toThrow(/wrong-value-type.*non-string.*OPENKYLIN_STRING/)
   })
 
   it('removes an effect-scoped contributor when its plugin is disposed', async () => {
@@ -175,28 +175,28 @@ describe('ShellEnvRegistry', () => {
       apply(inner: Context) {
         inner.shellEnv.register({
           name: 'temporary',
-          variables: { QILIN_TEMPORARY: { description: 'Temporary fact.' } },
-          resolve: () => ({ QILIN_TEMPORARY: 'present' }),
+          variables: { OPENKYLIN_TEMPORARY: { description: 'Temporary fact.' } },
+          resolve: () => ({ OPENKYLIN_TEMPORARY: 'present' }),
         })
       },
     })
 
-    expect(registry.collect(execution()).QILIN_TEMPORARY).toBe('present')
+    expect(registry.collect(execution()).OPENKYLIN_TEMPORARY).toBe('present')
     await fiber.dispose()
-    expect(registry.collect(execution())).not.toHaveProperty('QILIN_TEMPORARY')
+    expect(registry.collect(execution())).not.toHaveProperty('OPENKYLIN_TEMPORARY')
   })
 
   it('returns an explicit contributor disposer', () => {
     const registry = new ShellEnvRegistry(new Context(), { dshHome: './test-dsh-home' })
     const dispose = registry.register({
       name: 'explicit-disposal',
-      variables: { QILIN_EXPLICIT_DISPOSAL: { description: 'Explicitly disposed fact.' } },
-      resolve: () => ({ QILIN_EXPLICIT_DISPOSAL: 'present' }),
+      variables: { OPENKYLIN_EXPLICIT_DISPOSAL: { description: 'Explicitly disposed fact.' } },
+      resolve: () => ({ OPENKYLIN_EXPLICIT_DISPOSAL: 'present' }),
     })
 
-    expect(registry.collect(execution()).QILIN_EXPLICIT_DISPOSAL).toBe('present')
+    expect(registry.collect(execution()).OPENKYLIN_EXPLICIT_DISPOSAL).toBe('present')
     dispose()
-    expect(registry.collect(execution())).not.toHaveProperty('QILIN_EXPLICIT_DISPOSAL')
+    expect(registry.collect(execution())).not.toHaveProperty('OPENKYLIN_EXPLICIT_DISPOSAL')
   })
 
   it('the plugin registers the service and the persistence contributor on load', async () => {
@@ -207,18 +207,18 @@ describe('ShellEnvRegistry', () => {
       {
         contributor: 'session-persistence',
         description: 'Absolute target path of the current session JSONL when the active persistence backend provides one.',
-        key: 'QILIN_SESSION_JSONL',
+        key: 'OPENKYLIN_SESSION_JSONL',
       },
     ])
   })
 
-  it('the persistence contributor resolves QILIN_SESSION_JSONL only for a jsonl backend', async () => {
+  it('the persistence contributor resolves OPENKYLIN_SESSION_JSONL only for a jsonl backend', async () => {
     const ctx = new Context()
     await ctx.plugin(BashEnvPlugin)
     ctx.provide('sessionPersistence', {
       locate: () => ({ kind: 'jsonl' as const, path: 'C:\\sessions\\s.jsonl' }),
     })
-    expect(ctx.shellEnv.collect(execution('sess-p')).QILIN_SESSION_JSONL).toBe('C:\\sessions\\s.jsonl')
+    expect(ctx.shellEnv.collect(execution('sess-p')).OPENKYLIN_SESSION_JSONL).toBe('C:\\sessions\\s.jsonl')
   })
 
   it('the persistence contributor omits the variable for a non-jsonl backend', async () => {
@@ -227,12 +227,12 @@ describe('ShellEnvRegistry', () => {
     ctx.provide('sessionPersistence', {
       locate: () => ({ kind: 'sqlite' as const, path: 'C:\\sessions\\s.db' }),
     })
-    expect(ctx.shellEnv.collect(execution('sess-p'))).not.toHaveProperty('QILIN_SESSION_JSONL')
+    expect(ctx.shellEnv.collect(execution('sess-p'))).not.toHaveProperty('OPENKYLIN_SESSION_JSONL')
   })
 
   it('the persistence contributor omits the variable without a persistence backend', async () => {
     const ctx = new Context()
     await ctx.plugin(BashEnvPlugin)
-    expect(ctx.shellEnv.collect(execution('sess-p'))).not.toHaveProperty('QILIN_SESSION_JSONL')
+    expect(ctx.shellEnv.collect(execution('sess-p'))).not.toHaveProperty('OPENKYLIN_SESSION_JSONL')
   })
 })

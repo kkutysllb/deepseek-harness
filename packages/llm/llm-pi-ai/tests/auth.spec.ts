@@ -11,7 +11,7 @@ const CODEX = recordKeyFor('openai-codex')
 
 const dirs: string[] = []
 
-/** A context whose credential records live in a throwaway `$QILIN_HOME`. */
+/** A context whose credential records live in a throwaway `$OPENKYLIN_HOME`. */
 async function stored(): Promise<Context> {
   const dir = await mkdtemp(join(tmpdir(), 'qilin-pi-auth-'))
   dirs.push(dir)

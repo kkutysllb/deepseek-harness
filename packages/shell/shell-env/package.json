@@ -1,6 +1,6 @@
 {
   "name": "@qilin/shell-env",
-  "description": "Tool-independent managed QILIN_* shell environment registry",
+  "description": "Tool-independent managed OPENKYLIN_* shell environment registry",
   "version": "0.1.2-alpha.3",
   "publishConfig": {
     "access": "public"

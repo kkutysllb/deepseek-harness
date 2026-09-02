@@ -13,20 +13,20 @@ import {
 
 describe('escape valve request (contract G)', () => {
   it('keeps the legacy environment variable contract', () => {
-    expect(AUTH_DISABLED_ENV_VAR).toBe('QILIN_AUTH_DISABLED')
-    expect(PRODUCTION_ENV_VARS).toEqual(['QILIN_ENV', 'ENVIRONMENT'])
+    expect(AUTH_DISABLED_ENV_VAR).toBe('OPENKYLIN_AUTH_DISABLED')
+    expect(PRODUCTION_ENV_VARS).toEqual(['OPENKYLIN_ENV', 'ENVIRONMENT'])
     expect(PRODUCTION_ENV_VALUES).toEqual(['prod', 'production'])
   })
 
   it('recognizes only the exact value 1 as a request', () => {
     const table: { env: Record<string, string>; requested: boolean }[] = [
       { env: {}, requested: false },
-      { env: { QILIN_AUTH_DISABLED: '1' }, requested: true },
-      { env: { QILIN_AUTH_DISABLED: '0' }, requested: false },
-      { env: { QILIN_AUTH_DISABLED: 'true' }, requested: false },
-      { env: { QILIN_AUTH_DISABLED: '' }, requested: false },
-      { env: { QILIN_AUTH_DISABLED: ' 1' }, requested: false },
-      { env: { QILIN_AUTH_DISABLED: '1 ' }, requested: false },
+      { env: { OPENKYLIN_AUTH_DISABLED: '1' }, requested: true },
+      { env: { OPENKYLIN_AUTH_DISABLED: '0' }, requested: false },
+      { env: { OPENKYLIN_AUTH_DISABLED: 'true' }, requested: false },
+      { env: { OPENKYLIN_AUTH_DISABLED: '' }, requested: false },
+      { env: { OPENKYLIN_AUTH_DISABLED: ' 1' }, requested: false },
+      { env: { OPENKYLIN_AUTH_DISABLED: '1 ' }, requested: false },
     ]
     for (const { env, requested } of table) {
       expect(isAuthDisabledRequested(env), JSON.stringify(env)).toBe(requested)
@@ -38,14 +38,14 @@ describe('explicit production detection (contract G)', () => {
   it('marks production through either variable, trimmed and case-insensitive', () => {
     const table: { env: Record<string, string>; production: boolean }[] = [
       { env: {}, production: false },
-      { env: { QILIN_ENV: 'production' }, production: true },
-      { env: { QILIN_ENV: 'prod' }, production: true },
-      { env: { QILIN_ENV: 'PROD' }, production: true },
-      { env: { QILIN_ENV: '  Production  ' }, production: true },
+      { env: { OPENKYLIN_ENV: 'production' }, production: true },
+      { env: { OPENKYLIN_ENV: 'prod' }, production: true },
+      { env: { OPENKYLIN_ENV: 'PROD' }, production: true },
+      { env: { OPENKYLIN_ENV: '  Production  ' }, production: true },
       { env: { ENVIRONMENT: 'prod' }, production: true },
-      { env: { QILIN_ENV: 'dev' }, production: false },
-      { env: { QILIN_ENV: 'staging' }, production: false },
-      { env: { QILIN_ENV: 'productionism' }, production: false },
+      { env: { OPENKYLIN_ENV: 'dev' }, production: false },
+      { env: { OPENKYLIN_ENV: 'staging' }, production: false },
+      { env: { OPENKYLIN_ENV: 'productionism' }, production: false },
       { env: { ENVIRONMENT: '' }, production: false },
     ]
     for (const { env, production } of table) {
@@ -61,16 +61,16 @@ describe('two-state resolution (contract G)', () => {
   })
 
   it('passes through transparently when requested outside production', () => {
-    expect(resolveAuthDisabled({ QILIN_AUTH_DISABLED: '1' })).toBe(true)
-    expect(resolveAuthDisabled({ QILIN_AUTH_DISABLED: '1', QILIN_ENV: 'dev' })).toBe(true)
-    expect(authDisabledWarning({ QILIN_AUTH_DISABLED: '1' })).toContain('authentication is bypassed')
+    expect(resolveAuthDisabled({ OPENKYLIN_AUTH_DISABLED: '1' })).toBe(true)
+    expect(resolveAuthDisabled({ OPENKYLIN_AUTH_DISABLED: '1', OPENKYLIN_ENV: 'dev' })).toBe(true)
+    expect(authDisabledWarning({ OPENKYLIN_AUTH_DISABLED: '1' })).toContain('authentication is bypassed')
   })
 
   it('refuses to disable inside an explicit production environment', () => {
     for (const env of [
-      { QILIN_AUTH_DISABLED: '1', QILIN_ENV: 'production' },
-      { QILIN_AUTH_DISABLED: '1', QILIN_ENV: 'prod' },
-      { QILIN_AUTH_DISABLED: '1', ENVIRONMENT: 'production' },
+      { OPENKYLIN_AUTH_DISABLED: '1', OPENKYLIN_ENV: 'production' },
+      { OPENKYLIN_AUTH_DISABLED: '1', OPENKYLIN_ENV: 'prod' },
+      { OPENKYLIN_AUTH_DISABLED: '1', ENVIRONMENT: 'production' },
     ]) {
       expect(resolveAuthDisabled(env), JSON.stringify(env)).toBe(false)
       expect(authDisabledWarning(env), JSON.stringify(env)).toBeNull()
@@ -84,25 +84,25 @@ describe('boot-time fail-loud guard (contract G)', () => {
   })
 
   it('allows an active escape valve outside production', () => {
-    expect(() => { assertAuthDisabledAllowed({ QILIN_AUTH_DISABLED: '1' }) }).not.toThrow()
-    expect(() => { assertAuthDisabledAllowed({ QILIN_AUTH_DISABLED: '1', QILIN_ENV: 'dev' }) }).not.toThrow()
+    expect(() => { assertAuthDisabledAllowed({ OPENKYLIN_AUTH_DISABLED: '1' }) }).not.toThrow()
+    expect(() => { assertAuthDisabledAllowed({ OPENKYLIN_AUTH_DISABLED: '1', OPENKYLIN_ENV: 'dev' }) }).not.toThrow()
   })
 
   it('allows production without the flag', () => {
-    expect(() => { assertAuthDisabledAllowed({ QILIN_ENV: 'production' }) }).not.toThrow()
+    expect(() => { assertAuthDisabledAllowed({ OPENKYLIN_ENV: 'production' }) }).not.toThrow()
   })
 
   it('refuses a production deployment that asks to disable authentication', () => {
     for (const env of [
-      { QILIN_AUTH_DISABLED: '1', QILIN_ENV: 'production' },
-      { QILIN_AUTH_DISABLED: '1', ENVIRONMENT: 'prod' },
+      { OPENKYLIN_AUTH_DISABLED: '1', OPENKYLIN_ENV: 'production' },
+      { OPENKYLIN_AUTH_DISABLED: '1', ENVIRONMENT: 'prod' },
     ]) {
       try {
         assertAuthDisabledAllowed(env)
         expect.unreachable(JSON.stringify(env))
       } catch (error) {
         expect(error).toBeInstanceOf(AuthDisabledProhibitedError)
-        expect((error as Error).message).toContain('QILIN_AUTH_DISABLED')
+        expect((error as Error).message).toContain('OPENKYLIN_AUTH_DISABLED')
         expect((error as Error).name).toBe('AuthDisabledProhibitedError')
       }
     }

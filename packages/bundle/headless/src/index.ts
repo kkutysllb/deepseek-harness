@@ -118,7 +118,7 @@ function streamReasoning(
       case 'reasoning-delta':
         if (chunk.text === '') return
         if (!open) {
-          stderr.write('qilin: reasoning:\n')
+          stderr.write('openkylin: reasoning:\n')
           open = true
         }
         stderr.write(chunk.text)
@@ -150,7 +150,7 @@ function streamReasoning(
 
 /** Report an unexpected direct-driver failure and request a failing exit. */
 function fail(io: HeadlessIo, error: unknown): void {
-  io.stderr.write(`qilin: ${error instanceof Error ? error.message : String(error)}\n`)
+  io.stderr.write(`openkylin: ${error instanceof Error ? error.message : String(error)}\n`)
   io.exit(1)
 }
 
@@ -200,7 +200,7 @@ async function run(ctx: Context, task: string, io: HeadlessIo): Promise<void> {
   const outcome = summarize(agent.session.events, firstSeq)
   io.stdout.write(outcome.text + '\n')
   if (outcome.reason?.kind === 'error') {
-    io.stderr.write(`qilin: ${outcome.reason.error.code}: ${outcome.reason.error.message}\n`)
+    io.stderr.write(`openkylin: ${outcome.reason.error.code}: ${outcome.reason.error.message}\n`)
   }
   io.exit(outcome.reason?.kind === 'completed' ? 0 : 1)
 }

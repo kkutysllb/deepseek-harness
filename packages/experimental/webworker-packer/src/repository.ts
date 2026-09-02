@@ -4,14 +4,14 @@
  *
  * The library half takes all of this as parameters. Keeping the lookup here is what
  * lets the same library pack a different tree, and what keeps `pack.ts` free of
- * assumptions about pnpm workspaces or the `qilin` CLI.
+ * assumptions about pnpm workspaces or the `openkylin` CLI.
  * @module @qilin/experimental-webworker-packer/src/repository
  */
 import { execFileSync } from 'node:child_process'
 import { existsSync, mkdtempSync, readFileSync, readdirSync, rmSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { join, relative } from 'node:path'
-import { QILIN_HOME_ENV } from '@qilin/home-paths'
+import { OPENKYLIN_HOME_ENV } from '@qilin/home-paths'
 import type { ConfigTree, ImageTree, PackResult } from './pack.ts'
 
 /**
@@ -22,10 +22,10 @@ import type { ConfigTree, ImageTree, PackResult } from './pack.ts'
  */
 const WORKSPACE_SCAN_ROOTS = ['vendor', 'packages', 'native/landlock-run/packages', 'apps']
 
-/** Composition entry point package: the `qilin` CLI, run from source. */
+/** Composition entry point package: the `openkylin` CLI, run from source. */
 const CLI_PACKAGE = 'apps/cli'
 
-/** Composition entry point: the `qilin` CLI, run from source. */
+/** Composition entry point: the `openkylin` CLI, run from source. */
 const CLI_ENTRY = `${CLI_PACKAGE}/src/bin.ts`
 
 /** Repository-owned deterministic filesystem content offered by the preview. */
@@ -75,7 +75,7 @@ export function indexWorkspacePackages(repoRoot: string): Map<string, string> {
 /**
  * Compose one profile through the real CLI dump path, leaving `!!js`
  * unevaluated. The dump runs against a throwaway Harness home and default
- * layers only, so the image is the shipped profile: the machine's `$QILIN_HOME`
+ * layers only, so the image is the shipped profile: the machine's `$OPENKYLIN_HOME`
  * — its profile manifest with locally installed bundles, and its patch files —
  * would otherwise leak this machine's plugins into the image and break the
  * same-tree-same-bytes guarantee.
@@ -89,14 +89,14 @@ export function composeProfile(repoRoot: string, profile: string): string {
     return execFileSync(
       process.execPath,
       ['--import', 'tsx/esm', join(repoRoot, CLI_ENTRY), '--profile', profile, '--dump-default-config'],
-      { cwd: repoRoot, encoding: 'utf8', maxBuffer: 64 * 1024 * 1024, env: { ...process.env, [QILIN_HOME_ENV]: home } },
+      { cwd: repoRoot, encoding: 'utf8', maxBuffer: 64 * 1024 * 1024, env: { ...process.env, [OPENKYLIN_HOME_ENV]: home } },
     )
   } finally {
     rmSync(home, { recursive: true, force: true })
   }
 }
 
-/** One `qilin.configTrees` declaration entry, validated field by field. */
+/** One `openkylin.configTrees` declaration entry, validated field by field. */
 interface ConfigTreeDeclaration {
   mount: string
   path: string
@@ -105,7 +105,7 @@ interface ConfigTreeDeclaration {
 
 /**
  * Config trees the CLI package declares for deployment images
- * (`qilin.configTrees` in its package.json): `path` is relative to the CLI
+ * (`openkylin.configTrees` in its package.json): `path` is relative to the CLI
  * package root, `mount` is the image path, `scanRoster` feeds the tree's yml
  * plugin rows into the pack roster. The CLI owns its config layout; this
  * reader follows the declaration instead of naming directories. A malformed
@@ -116,17 +116,17 @@ interface ConfigTreeDeclaration {
 export function configTrees(repoRoot: string): ConfigTree[] {
   const packageDir = join(repoRoot, CLI_PACKAGE)
   const manifest = JSON.parse(readFileSync(join(packageDir, 'package.json'), 'utf8')) as {
-    qilin?: { configTrees?: unknown }
+    openkylin?: { configTrees?: unknown }
   }
-  const declared = manifest.qilin?.configTrees
+  const declared = manifest.openkylin?.configTrees
   if (declared === undefined) return []
   if (!Array.isArray(declared)) {
-    throw new Error(`vfs image: ${CLI_PACKAGE} qilin.configTrees must be an array`)
+    throw new Error(`vfs image: ${CLI_PACKAGE} openkylin.configTrees must be an array`)
   }
   const mounts = new Set<string>()
   return declared.map((entry, index) => {
     const tree = entry as Partial<ConfigTreeDeclaration> | null
-    const at = `${CLI_PACKAGE} qilin.configTrees[${String(index)}]`
+    const at = `${CLI_PACKAGE} openkylin.configTrees[${String(index)}]`
     if (tree === null || typeof tree !== 'object'
       || typeof tree.mount !== 'string' || tree.mount === ''
       || typeof tree.path !== 'string' || tree.path === ''

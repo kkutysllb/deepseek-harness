@@ -11,7 +11,7 @@ afterEach(() => {
 
 describe('DocumentTitle', () => {
   it('projects a durable title and restores the product title', () => {
-    vi.stubEnv('QILIN_CLIENT_TITLE', 'DeepSeek Harness')
+    vi.stubEnv('OPENKYLIN_CLIENT_TITLE', 'DeepSeek Harness')
     document.title = 'stale title'
     const mounted = render(<DocumentTitle productTitle="DeepSeek Harness" />)
     expect(document.title).toBe('DeepSeek Harness')
@@ -26,8 +26,8 @@ describe('DocumentTitle', () => {
   })
 
   it('uses the generic title when the build provides no title', () => {
-    vi.stubEnv('QILIN_CLIENT_TITLE', '')
-    delete process.env.QILIN_CLIENT_TITLE
+    vi.stubEnv('OPENKYLIN_CLIENT_TITLE', '')
+    delete process.env.OPENKYLIN_CLIENT_TITLE
     const mounted = render(<DocumentTitle title="First title" productTitle="DSH Local Build" />)
     expect(document.title).toBe('First title — DSH Local Build')
     mounted.unmount()

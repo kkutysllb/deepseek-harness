@@ -6,7 +6,7 @@ English | [中文](2026-08-27-inspector-development-mount.zh.md)
 
 ## Problem
 
-`@qilin/experimental-inspector` is a private package no published qilin installation carries, yet development launches need to mount it into the shipped Web composition on demand. A row in a shipped bundle patch cannot express this: `verify-cordis-config` requires every named row of a bundle patch to resolve from that bundle's own `dependencies` — disabled rows included — and a published manifest must not depend on an unpublished package.
+`@qilin/experimental-inspector` is a private package no published openkylin installation carries, yet development launches need to mount it into the shipped Web composition on demand. A row in a shipped bundle patch cannot express this: `verify-cordis-config` requires every named row of a bundle patch to resolve from that bundle's own `dependencies` — disabled rows included — and a published manifest must not depend on an unpublished package.
 
 ## Decision
 

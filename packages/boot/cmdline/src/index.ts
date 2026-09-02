@@ -1,5 +1,5 @@
 /**
- * @qilin/cmdline — the command line a qilin launcher hands to the app
+ * @qilin/cmdline — the command line a openkylin launcher hands to the app
  * it boots.
  *
  * The launcher parses only its own flags (`--profile`, `--patch`, the config
@@ -21,7 +21,7 @@ import type { Context } from '@deepseek-ai/cordis'
 
 /**
  * The invocation's inner arguments: everything after the launcher's own flags,
- * verbatim and in argv order. `qilin --profile tui --resume abc` yields
+ * verbatim and in argv order. `openkylin --profile tui --resume abc` yields
  * `['--resume', 'abc']`.
  */
 export interface CmdlineArgs {

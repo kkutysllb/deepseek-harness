@@ -34,7 +34,7 @@ kind: "package-reference"
 <a id="auth-disabled-escape-valve"></a>
 ## auth-disabled 逃生阀
 
-`resolveAuthDisabled` 只在显式生产环境(`QILIN_ENV` / `ENVIRONMENT` 取 `prod` 或 `production`)之外认可显式的 `QILIN_AUTH_DISABLED=1`;未配置即鉴权开启。`assertAuthDisabledAllowed` 是启动期的 fail-loud 守卫:在生产环境里请求关闭鉴权的部署会拒绝装配,而不是带着「鉴权已开」的实情静默服务。`authDisabledWarning` 在逃生阀激活期间返回面向运维的警示文案。
+`resolveAuthDisabled` 只在显式生产环境(`OPENKYLIN_ENV` / `ENVIRONMENT` 取 `prod` 或 `production`)之外认可显式的 `OPENKYLIN_AUTH_DISABLED=1`;未配置即鉴权开启。`assertAuthDisabledAllowed` 是启动期的 fail-loud 守卫:在生产环境里请求关闭鉴权的部署会拒绝装配,而不是带着「鉴权已开」的实情静默服务。`authDisabledWarning` 在逃生阀激活期间返回面向运维的警示文案。
 
 -----
 

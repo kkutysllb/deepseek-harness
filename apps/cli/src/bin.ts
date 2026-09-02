@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * Command-line entry for qilin.
+ * Command-line entry for openkylin.
  * @module @qilin/cli/bin
  */
 
@@ -27,7 +27,7 @@ switch (invocation.mode) {
   case 'profile': {
     const { runProfile } = await import('./profile-boot.ts')
     await runProfile({
-      environment: loadLayeredEnv('qilin'),
+      environment: loadLayeredEnv('openkylin'),
       profile: invocation.profile,
       patchFiles: invocation.patches,
       args: invocation.args,
@@ -46,5 +46,5 @@ switch (invocation.mode) {
   }
   default:
     invocation satisfies never
-    throw new Error(`qilin: unhandled invocation mode ${JSON.stringify(invocation)}`)
+    throw new Error(`openkylin: unhandled invocation mode ${JSON.stringify(invocation)}`)
 }

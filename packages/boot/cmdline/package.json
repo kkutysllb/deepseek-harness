@@ -1,6 +1,6 @@
 {
   "name": "@qilin/cmdline",
-  "description": "Immutable command-line handoff from a qilin launcher to any app plugin that injects cmdlineArgs",
+  "description": "Immutable command-line handoff from a openkylin launcher to any app plugin that injects cmdlineArgs",
   "version": "0.1.2-alpha.3",
   "publishConfig": {
     "access": "public"

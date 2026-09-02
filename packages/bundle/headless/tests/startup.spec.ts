@@ -98,7 +98,7 @@ describe('headless command-line provider', () => {
 
   it('prints its own help and leaves the runner pending', async () => {
     const { task, observed } = await bootStartup(['--help'])
-    expect(observed.out).toContain('qilin --profile headless')
+    expect(observed.out).toContain('openkylin --profile headless')
     expect(observed.out).toContain('stream reasoning to stderr')
     expect(task).toBeUndefined()
     expect(observed.runnerConfig).toBeUndefined()

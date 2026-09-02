@@ -15,7 +15,7 @@
 - id: session-persistence-jsonl
   name: '@qilin/session-persistence-jsonl'
   config:
-    root: !!js process.env.QILIN_SNAPSHOT_SESSIONS_ROOT ?? dshHomePath('sessions')
+    root: !!js process.env.OPENKYLIN_SNAPSHOT_SESSIONS_ROOT ?? dshHomePath('sessions')
     compression: none
 
 - id: sandbox

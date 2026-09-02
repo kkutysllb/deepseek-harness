@@ -33,7 +33,7 @@ kind: "package-reference"
 
 ### 最小配置
 
-加载服务并让唯一挂载的后端自动选择，或用 `searchProvider`／`fetchProvider` 固定提供方 id。环境变量 `$QILIN_WEB_SEARCH_PROVIDER` 与 `$QILIN_WEB_FETCH_PROVIDER` 提供相同字段，不是另一条优先级链。
+加载服务并让唯一挂载的后端自动选择，或用 `searchProvider`／`fetchProvider` 固定提供方 id。环境变量 `$OPENKYLIN_WEB_SEARCH_PROVIDER` 与 `$OPENKYLIN_WEB_FETCH_PROVIDER` 提供相同字段，不是另一条优先级链。
 
 ```yaml
 - name: '@qilin/web'

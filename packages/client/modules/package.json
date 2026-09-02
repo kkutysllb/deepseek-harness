@@ -1,6 +1,6 @@
 {
   "name": "@qilin/client-modules",
-  "description": "Client module system, dual-face: node half composes the __DSH_BOOT__ entry graph (incremental qilin.client scan, bundle route, index tap, webPlugins service); browser half is the lazy-CJS module table the vendored cordis Loader consumes as its internal seam",
+  "description": "Client module system, dual-face: node half composes the __DSH_BOOT__ entry graph (incremental openkylin.client scan, bundle route, index tap, webPlugins service); browser half is the lazy-CJS module table the vendored cordis Loader consumes as its internal seam",
   "version": "0.1.2-alpha.3",
   "publishConfig": {
     "access": "public"
@@ -29,7 +29,7 @@
     "./src/*": "./src/*",
     "./package.json": "./package.json"
   },
-  "qilin": {
+  "openkylin": {
     "client": {
       "platform": "web",
       "inject": [],

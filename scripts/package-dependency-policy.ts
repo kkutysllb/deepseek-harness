@@ -1,9 +1,9 @@
 /** Explicit exceptions and Host packages for the published dependency policy. */
 
-/** Packages treated as Client/Host packages without declaring `qilin.client`. */
+/** Packages treated as Client/Host packages without declaring `openkylin.client`. */
 const CLIENT_FACE_INCLUDE: readonly string[] = []
 
-/** Packages exempted from automatic Client/Host treatment despite declaring `qilin.client`. */
+/** Packages exempted from automatic Client/Host treatment despite declaring `openkylin.client`. */
 const CLIENT_FACE_EXCLUDE: readonly string[] = [
   '@qilin/api-session-controller',
   '@qilin/api-workspace-controller',

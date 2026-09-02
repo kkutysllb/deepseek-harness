@@ -2,7 +2,7 @@
  * Directory-picker browsing surface, node half. Pure UI plugin: the empty
  * apply exists so the plugin appears in the host cordis.yml / Loader; the
  * browser half ships via exports["./client"], discovered through the
- * package.json qilin.client declaration. The listing and creation primitives it
+ * package.json openkylin.client declaration. The listing and creation primitives it
  * drives live in `@qilin/host-directory-picker-browse`.
  */
 

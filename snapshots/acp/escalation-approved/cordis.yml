@@ -1,4 +1,4 @@
-# ACP snapshot-record patch over the shipped `acp` profile. The qilin
+# ACP snapshot-record patch over the shipped `acp` profile. The openkylin
 # launcher owns environment loading, plugin resolution, and process shutdown;
 # stdout remains reserved for ACP JSON-RPC.
 
@@ -16,19 +16,19 @@
 - id: sandbox-policy
   name: '@qilin/sandbox-policy'
   config:
-    mode: !!js "process.env.QILIN_PERMISSION_MODE ?? (process.env.QILIN_SNAPSHOT === undefined ? 'workspace-write' : 'danger-full-access')"
+    mode: !!js "process.env.OPENKYLIN_PERMISSION_MODE ?? (process.env.OPENKYLIN_SNAPSHOT === undefined ? 'workspace-write' : 'danger-full-access')"
     workspaceRoot: !!js process.cwd()
 
 - id: approval
   name: '@qilin/user-approval'
   config:
-    policy: !!js "(process.env.QILIN_PERMISSION_MODE ?? (process.env.QILIN_SNAPSHOT === undefined ? 'workspace-write' : 'danger-full-access')) === 'danger-full-access' ? 'never' : 'ask'"
+    policy: !!js "(process.env.OPENKYLIN_PERMISSION_MODE ?? (process.env.OPENKYLIN_SNAPSHOT === undefined ? 'workspace-write' : 'danger-full-access')) === 'danger-full-access' ? 'never' : 'ask'"
 
 - id: session-persistence-jsonl
   name: '@qilin/session-persistence-jsonl'
   config:
-    root: !!js process.env.QILIN_SNAPSHOT_SESSIONS_ROOT ?? dshHomePath('sessions')
-    compression: !!js "process.env.QILIN_SNAPSHOT === undefined ? 'zstd' : 'none'"
+    root: !!js process.env.OPENKYLIN_SNAPSHOT_SESSIONS_ROOT ?? dshHomePath('sessions')
+    compression: !!js "process.env.OPENKYLIN_SNAPSHOT === undefined ? 'zstd' : 'none'"
 
 - id: acp
   name: '@qilin/acp'

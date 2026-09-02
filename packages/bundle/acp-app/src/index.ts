@@ -24,12 +24,12 @@ export const ACP_APP_STARTUP_SERVICE = 'acpAppStartup'
  */
 function acpCommand(): Command {
   return new Command()
-    .name('qilin --profile acp')
+    .name('openkylin --profile acp')
     .description('Serve automation clients over Agent Client Protocol stdio.')
     .helpOption('-h, --help', 'show this help')
     .addHelpText('after', `
 Example:
-  qilin --profile acp     serve ACP until the client disconnects
+  openkylin --profile acp     serve ACP until the client disconnects
 `)
 }
 

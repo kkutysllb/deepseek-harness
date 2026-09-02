@@ -78,7 +78,7 @@ const SQLITE_CONSTRAINT_FOREIGNKEY = 787
 export interface SqliteAccountStoreOptions {
   /** Database file path, or `:memory:`; defaults to `<harness home>/qilin-accounts/accounts.db`. */
   readonly path?: string
-  /** Environment consulted for `QILIN_HOME` when `path` is omitted; defaults to `process.env`. */
+  /** Environment consulted for `OPENKYLIN_HOME` when `path` is omitted; defaults to `process.env`. */
   readonly env?: NodeJS.ProcessEnv
   /** Milliseconds a write waits on a competing SQLite lock; defaults to 5000. */
   readonly busyTimeoutMs?: number
@@ -90,8 +90,8 @@ export interface SqliteAccountStoreOptions {
 
 /**
  * Resolve the default database location: `qilin-accounts/accounts.db` inside
- * the harness home (`QILIN_HOME`, falling back to `~/.qilin`).
- * @param env - environment consulted for `QILIN_HOME`; defaults to `process.env`.
+ * the harness home (`OPENKYLIN_HOME`, falling back to `~/.openkylin`).
+ * @param env - environment consulted for `OPENKYLIN_HOME`; defaults to `process.env`.
  * @returns the default database file path.
  */
 export function defaultAccountsDbPath(env: NodeJS.ProcessEnv = process.env): string {

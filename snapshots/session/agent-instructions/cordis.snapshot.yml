@@ -20,9 +20,9 @@
   name: '@qilin/agent-instructions'
   config:
     maxBytes: 65536
-    dshHome: !!js process.cwd() + '/.qilin'
+    dshHome: !!js process.cwd() + '/.openkylin'
     projectRootMarkers:
-      - .qilin-project
+      - .openkylin-project
 
 - id: system-prompt
   name: '@qilin/system-prompt'

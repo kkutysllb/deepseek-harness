@@ -1,6 +1,6 @@
 /**
  * Tool-independent shell environment plugin: owns the `ctx.shellEnv` registry of
- * trusted, per-execution `QILIN_*` variables consumed by the model-facing shell
+ * trusted, per-execution `OPENKYLIN_*` variables consumed by the model-facing shell
  * tools (`qilin-tool-bash`, `qilin-tool-pwsh`). Built-in shell facts are owned by
  * the registry itself while plugins can register additional, enumerable facts
  * with effect-scoped disposal.
@@ -10,9 +10,9 @@
 
 import { Service, type Context } from '@deepseek-ai/cordis'
 import z from '@deepseek-ai/schemastery'
-import { QILIN_ENV_PREFIX } from '@qilin/shell'
+import { OPENKYLIN_ENV_PREFIX } from '@qilin/shell'
 import type { QilinEnvironment, QilinEnvironmentKey } from '@qilin/shell'
-import { QILIN_HOME_ENV, resolveDshHome } from '@qilin/home-paths'
+import { OPENKYLIN_HOME_ENV, resolveDshHome } from '@qilin/home-paths'
 import type { ToolExecution } from '@qilin/tools'
 import type {} from '@qilin/session-persistence'
 
@@ -27,7 +27,7 @@ export const inject: string[] = []
 
 /** Plugin config (all optional — the built-in facts resolve without defaults). */
 export interface Config {
-  /** DeepSeek Harness home directory exposed as `QILIN_HOME`; defaults to `$QILIN_HOME` or `~/.qilin`. */
+  /** DeepSeek Harness home directory exposed as `OPENKYLIN_HOME`; defaults to `$OPENKYLIN_HOME` or `~/.openkylin`. */
   dshHome?: string
 }
 
@@ -36,7 +36,7 @@ export const Config: z<Config> = z.object({
   dshHome: z.string(),
 })
 
-/** Model-visible metadata for one managed `QILIN_*` environment variable. */
+/** Model-visible metadata for one managed `OPENKYLIN_*` environment variable. */
 export interface BashEnvVariable {
   /** Concise description of the environment fact represented by the variable. */
   description: string
@@ -50,7 +50,7 @@ export interface BashEnvVariable {
 export interface BashEnvContributor {
   /** Stable contributor name used in diagnostics and duplicate detection. */
   name: string
-  /** Complete set of `QILIN_*` keys this contributor may return. */
+  /** Complete set of `OPENKYLIN_*` keys this contributor may return. */
   variables: Readonly<Record<QilinEnvironmentKey, BashEnvVariable>>
   /**
    * Resolve this contributor's available values for one tool execution.
@@ -64,23 +64,23 @@ export interface BashEnvContributor {
 export interface BashEnvVariableInfo extends BashEnvVariable {
   /** Contributor that owns the variable. */
   contributor: string
-  /** Declared `QILIN_*` environment variable name. */
+  /** Declared `OPENKYLIN_*` environment variable name. */
   key: QilinEnvironmentKey
 }
 
-const QILIN_SHELL_KEY = `${QILIN_ENV_PREFIX}SHELL` as const
-const QILIN_SESSION_ID_KEY = `${QILIN_ENV_PREFIX}SESSION_ID` as const
-const QILIN_SESSION_JSONL_KEY = `${QILIN_ENV_PREFIX}SESSION_JSONL` as const
+const OPENKYLIN_SHELL_KEY = `${OPENKYLIN_ENV_PREFIX}SHELL` as const
+const OPENKYLIN_SESSION_ID_KEY = `${OPENKYLIN_ENV_PREFIX}SESSION_ID` as const
+const OPENKYLIN_SESSION_JSONL_KEY = `${OPENKYLIN_ENV_PREFIX}SESSION_JSONL` as const
 const RESERVED_BASH_ENV_KEYS = new Set<QilinEnvironmentKey>([
-  QILIN_HOME_ENV,
-  QILIN_SHELL_KEY,
-  QILIN_SESSION_ID_KEY,
+  OPENKYLIN_HOME_ENV,
+  OPENKYLIN_SHELL_KEY,
+  OPENKYLIN_SESSION_ID_KEY,
 ])
 const BASH_ENV_KEY_SUFFIX = /^[A-Z][A-Z0-9_]*$/
 
 /**
- * Registry (`ctx.shellEnv`) for trusted, per-execution `QILIN_*` variables.
- * The namespace is rebuilt for every model shell call: ambient `QILIN_*` values
+ * Registry (`ctx.shellEnv`) for trusted, per-execution `OPENKYLIN_*` variables.
+ * The namespace is rebuilt for every model shell call: ambient `OPENKYLIN_*` values
  * are discarded by the executor, then the registry's current snapshot is
  * injected. Built-in shell facts remain owned by the registry itself while
  * plugins can register additional, enumerable facts with effect-scoped
@@ -118,8 +118,8 @@ export class ShellEnvRegistry extends Service {
 
       const variables = Object.entries(contributor.variables) as [QilinEnvironmentKey, BashEnvVariable][]
       for (const [key, variable] of variables) {
-        if (!key.startsWith(QILIN_ENV_PREFIX)
-          || !BASH_ENV_KEY_SUFFIX.test(key.slice(QILIN_ENV_PREFIX.length))) {
+        if (!key.startsWith(OPENKYLIN_ENV_PREFIX)
+          || !BASH_ENV_KEY_SUFFIX.test(key.slice(OPENKYLIN_ENV_PREFIX.length))) {
           throw new Error(`bash env contributor "${contributor.name}" declared invalid key "${key}"`)
         }
         if (RESERVED_BASH_ENV_KEYS.has(key)) {
@@ -145,17 +145,17 @@ export class ShellEnvRegistry extends Service {
   }
 
   /**
-   * Build the trusted `QILIN_*` snapshot for one shell tool execution.
+   * Build the trusted `OPENKYLIN_*` snapshot for one shell tool execution.
    * @param execution - the current tool execution.
    * @returns an immutable environment overlay containing built-ins and current contributions.
    */
   collect(execution: ToolExecution): QilinEnvironment {
     const values: Record<QilinEnvironmentKey, string> = {
-      [QILIN_HOME_ENV]: this.dshHome,
-      [QILIN_SHELL_KEY]: '1',
+      [OPENKYLIN_HOME_ENV]: this.dshHome,
+      [OPENKYLIN_SHELL_KEY]: '1',
     }
     if (execution.agent !== undefined) {
-      values[QILIN_SESSION_ID_KEY] = execution.agent.session.header.id
+      values[OPENKYLIN_SESSION_ID_KEY] = execution.agent.session.header.id
     }
 
     for (const contributor of [...this.contributors.values()].sort((left, right) => left.name.localeCompare(right.name))) {
@@ -194,7 +194,7 @@ export class ShellEnvRegistry extends Service {
 
 /**
  * Load the shell-env plugin: register the `ctx.shellEnv` service and the
- * shell-agnostic persistence contributor (`QILIN_SESSION_JSONL`).
+ * shell-agnostic persistence contributor (`OPENKYLIN_SESSION_JSONL`).
  * @param ctx - Cordis context that owns the service and registrations.
  * @param config - home-directory configuration for the built-in variables.
  */
@@ -203,7 +203,7 @@ export function apply(ctx: Context, config: Config = {}): void {
   registry.register({
     name: 'session-persistence',
     variables: {
-      [QILIN_SESSION_JSONL_KEY]: {
+      [OPENKYLIN_SESSION_JSONL_KEY]: {
         description: 'Absolute target path of the current session JSONL when the active persistence backend provides one.',
       },
     },
@@ -211,7 +211,7 @@ export function apply(ctx: Context, config: Config = {}): void {
       const agent = execution.agent
       if (agent === undefined) return {}
       const location = ctx.get('sessionPersistence')?.locate(agent.session.header)
-      return location?.kind === 'jsonl' ? { [QILIN_SESSION_JSONL_KEY]: location.path } : {}
+      return location?.kind === 'jsonl' ? { [OPENKYLIN_SESSION_JSONL_KEY]: location.path } : {}
     },
   })
 }

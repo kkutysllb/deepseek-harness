@@ -58,7 +58,7 @@ The plugin path must be absolute. A patch file contributes configuration but doe
 Start the Web UI with that overlay:
 
 ```sh
-pnpm qilin web --patch ./scratch-plugin/cordis.yml
+pnpm openkylin web --patch ./scratch-plugin/cordis.yml
 ```
 
 Open `http://127.0.0.1:3080`. The terminal prints `[hello-plugin] plugin loaded!` during startup.

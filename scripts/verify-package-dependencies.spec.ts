@@ -158,14 +158,14 @@ describe('package dependency scope', () => {
     expect(PACKAGE_DEPENDENCY_POLICY.peerRequiredHostExports['@qilin/typert-protocol']).toBeUndefined()
   })
 
-  it('discovers the Client directory, qilin.client declarations, and configured Host packages', () => {
+  it('discovers the Client directory, openkylin.client declarations, and configured Host packages', () => {
     const packages = [
       pkg('@f/static', 'packages/client/static/package.json'),
-      pkg('@f/dynamic-client', 'packages/client/dynamic/package.json', { qilin: { client: {} } }),
-      pkg('@f/dual', 'packages/api/dual/package.json', { qilin: { client: {} } }),
+      pkg('@f/dynamic-client', 'packages/client/dynamic/package.json', { openkylin: { client: {} } }),
+      pkg('@f/dual', 'packages/api/dual/package.json', { openkylin: { client: {} } }),
       pkg('@f/export-only', 'packages/api/export-only/package.json', { exports: { './client': './lib/client.js' } }),
       pkg('@f/forced-client', 'packages/api/forced/package.json'),
-      pkg('@f/excluded', 'packages/api/excluded/package.json', { qilin: { client: {} } }),
+      pkg('@f/excluded', 'packages/api/excluded/package.json', { openkylin: { client: {} } }),
       pkg('@f/host', 'packages/core/host/package.json'),
     ]
 
@@ -188,7 +188,7 @@ describe('package dependency scope', () => {
   it('rejects stale, redundant, overlapping, and unknown configuration', () => {
     const packages = [
       pkg('@f/client', 'packages/client/client/package.json'),
-      pkg('@f/dual', 'packages/api/dual/package.json', { qilin: { client: {} } }),
+      pkg('@f/dual', 'packages/api/dual/package.json', { openkylin: { client: {} } }),
       pkg('@f/host', 'packages/core/host/package.json'),
     ]
     const found = discoverPackageDependencyScope(packages, policy({
@@ -201,7 +201,7 @@ describe('package dependency scope', () => {
       expect.stringContaining('clientFaceInclude redundantly names automatically discovered package @f/dual'),
       expect.stringContaining('@f/host appears in both clientFaceInclude and clientFaceExclude'),
       expect.stringContaining('clientFaceExclude cannot exempt packages/client package @f/client'),
-      expect.stringContaining('clientFaceExclude names @f/host, which declares no qilin.client entry'),
+      expect.stringContaining('clientFaceExclude names @f/host, which declares no openkylin.client entry'),
       expect.stringContaining('hostPackages redundantly names Client-faced package @f/dual'),
       expect.stringContaining('unknown release package @f/missing'),
     ]))
@@ -267,7 +267,7 @@ describe('face-aware source classification', () => {
     const root = mkdtempSync(join(tmpdir(), 'qilin-package-faces-'))
     roots.push(root)
     const subject = pkg('@f/dual', 'packages/g/dual/package.json', {
-      qilin: { client: { inject: ['@f/injected'] } },
+      openkylin: { client: { inject: ['@f/injected'] } },
     })
     const files = {
       'packages/g/dual/src/index.ts': [

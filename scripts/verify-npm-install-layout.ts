@@ -1,4 +1,4 @@
-/** Verify npm's physical package placement for two incompatible qilin releases. */
+/** Verify npm's physical package placement for two incompatible openkylin releases. */
 
 import { readFileSync } from 'node:fs'
 import { posix, resolve } from 'node:path'
@@ -10,16 +10,16 @@ import {
   type RegistryIndex,
 } from './benchmark-npm-resolution.ts'
 
-const QILIN_PACKAGE = '@qilin/cli'
-const QILIN_SCOPE = '@qilin'
+const OPENKYLIN_PACKAGE = '@qilin/cli'
+const OPENKYLIN_SCOPE = '@qilin'
 const CORDIS_PACKAGE = '@deepseek-ai/cordis'
-const NESTED_QILIN_ALIAS = 'qilin-previous'
-const NESTED_QILIN_PATH = `node_modules/${NESTED_QILIN_ALIAS}`
+const NESTED_OPENKYLIN_ALIAS = 'qilin-previous'
+const NESTED_OPENKYLIN_PATH = `node_modules/${NESTED_OPENKYLIN_ALIAS}`
 const DEPENDENCY_FIELDS = ['dependencies', 'optionalDependencies', 'peerDependencies'] as const
 const TIMEOUT_MS = 300_000
 
 /** Synthetic incompatible versions used to expose cross-release placement errors. */
-export const SYNTHETIC_QILIN_VERSIONS = ['0.1.0', '0.2.0'] as const
+export const SYNTHETIC_OPENKYLIN_VERSIONS = ['0.1.0', '0.2.0'] as const
 
 interface MutableRegistryManifest {
   name: string
@@ -37,7 +37,7 @@ export interface QilinInstallLayoutSummary {
 }
 
 function isDshPackage(name: string): boolean {
-  return name.startsWith(`${QILIN_SCOPE}/`)
+  return name.startsWith(`${OPENKYLIN_SCOPE}/`)
 }
 
 function cloneForVersion(manifest: object, version: string): MutableRegistryManifest {
@@ -54,10 +54,10 @@ function cloneForVersion(manifest: object, version: string): MutableRegistryMani
 }
 
 /**
- * Replace the working release with two incompatible, internally consistent qilin releases.
+ * Replace the working release with two incompatible, internally consistent openkylin releases.
  * @param index - Registry metadata containing the working release.
  * @param sourceVersion - Workspace version copied into each synthetic release.
- * @returns Registry metadata containing both synthetic qilin releases and unchanged external packages.
+ * @returns Registry metadata containing both synthetic openkylin releases and unchanged external packages.
  */
 export function buildDualDshRegistry(index: RegistryIndex, sourceVersion: string): RegistryIndex {
   const output = new Map(index)
@@ -70,12 +70,12 @@ export function buildDualDshRegistry(index: RegistryIndex, sourceVersion: string
     const source = versions.get(sourceVersion)
     if (source === undefined) throw new Error(`${name} has no workspace version ${sourceVersion}`)
     dshPackages++
-    output.set(name, new Map(SYNTHETIC_QILIN_VERSIONS.map(version => [
+    output.set(name, new Map(SYNTHETIC_OPENKYLIN_VERSIONS.map(version => [
       version,
       cloneForVersion(source, version),
     ])))
   }
-  if (dshPackages === 0) throw new Error('registry contains no qilin packages')
+  if (dshPackages === 0) throw new Error('registry contains no openkylin packages')
   return output
 }
 
@@ -111,12 +111,12 @@ function setDifference(left: ReadonlySet<string>, right: ReadonlySet<string>): s
 }
 
 /**
- * Assert that npm isolates both qilin releases while sharing the Cordis runtime.
+ * Assert that npm isolates both openkylin releases while sharing the Cordis runtime.
  * @param packageLock - Metadata-only package lock produced by npm.
- * @returns Counts for the verified qilin packages and dependency edges.
+ * @returns Counts for the verified openkylin packages and dependency edges.
  */
 export function assertDualDshInstallLayout(packageLock: NpmPackageLock): QilinInstallLayoutSummary {
-  const [nestedVersion, rootVersion] = SYNTHETIC_QILIN_VERSIONS
+  const [nestedVersion, rootVersion] = SYNTHETIC_OPENKYLIN_VERSIONS
   const errors: string[] = []
   const namesByVersion = new Map<string, Set<string>>([
     [nestedVersion, new Set()],
@@ -130,15 +130,15 @@ export function assertDualDshInstallLayout(packageLock: NpmPackageLock): QilinIn
     if (name === undefined || !isDshPackage(name)) continue
     const version = manifest.version
     if (version !== nestedVersion && version !== rootVersion) {
-      errors.push(`${path}: expected qilin version ${nestedVersion} or ${rootVersion}, got ${String(version)}`)
+      errors.push(`${path}: expected openkylin version ${nestedVersion} or ${rootVersion}, got ${String(version)}`)
       continue
     }
     namesByVersion.get(version)?.add(name)
     const expectedPath = version === rootVersion
       ? `node_modules/${name}`
-      : name === QILIN_PACKAGE
-        ? NESTED_QILIN_PATH
-        : `${NESTED_QILIN_PATH}/node_modules/${name}`
+      : name === OPENKYLIN_PACKAGE
+        ? NESTED_OPENKYLIN_PATH
+        : `${NESTED_OPENKYLIN_PATH}/node_modules/${name}`
     if (path !== expectedPath) {
       errors.push(`${path}: expected ${name}@${version} at ${expectedPath}`)
     }
@@ -167,8 +167,8 @@ export function assertDualDshInstallLayout(packageLock: NpmPackageLock): QilinIn
 
   const nestedNames = namesByVersion.get(nestedVersion) ?? new Set<string>()
   const rootNames = namesByVersion.get(rootVersion) ?? new Set<string>()
-  if (!nestedNames.has(QILIN_PACKAGE)) errors.push(`${NESTED_QILIN_PATH}: missing ${QILIN_PACKAGE}@${nestedVersion}`)
-  if (!rootNames.has(QILIN_PACKAGE)) errors.push(`node_modules/${QILIN_PACKAGE}: missing ${QILIN_PACKAGE}@${rootVersion}`)
+  if (!nestedNames.has(OPENKYLIN_PACKAGE)) errors.push(`${NESTED_OPENKYLIN_PATH}: missing ${OPENKYLIN_PACKAGE}@${nestedVersion}`)
+  if (!rootNames.has(OPENKYLIN_PACKAGE)) errors.push(`node_modules/${OPENKYLIN_PACKAGE}: missing ${OPENKYLIN_PACKAGE}@${rootVersion}`)
   const onlyNested = setDifference(nestedNames, rootNames)
   const onlyRoot = setDifference(rootNames, nestedNames)
   if (onlyNested.length > 0) errors.push(`only ${nestedVersion} contains: ${onlyNested.join(', ')}`)
@@ -193,15 +193,15 @@ function workspaceVersion(root: string): string {
 async function main(): Promise<void> {
   const root = resolve(import.meta.dirname, '..')
   const index = buildDualDshRegistry(buildRegistryIndex(root), workspaceVersion(root))
-  const [nestedVersion, rootVersion] = SYNTHETIC_QILIN_VERSIONS
+  const [nestedVersion, rootVersion] = SYNTHETIC_OPENKYLIN_VERSIONS
   const result = await resolveNpmPackageLock(index, {
-    [QILIN_PACKAGE]: rootVersion,
-    [NESTED_QILIN_ALIAS]: `npm:${QILIN_PACKAGE}@${nestedVersion}`,
+    [OPENKYLIN_PACKAGE]: rootVersion,
+    [NESTED_OPENKYLIN_ALIAS]: `npm:${OPENKYLIN_PACKAGE}@${nestedVersion}`,
   }, TIMEOUT_MS)
   if (result.archiveRequests !== 0) throw new Error(`npm requested ${String(result.archiveRequests)} package archive(s)`)
   const summary = assertDualDshInstallLayout(result.packageLock)
   console.log(
-    `verify-npm-install-layout: ${String(summary.dshPackagesPerVersion)} qilin package(s) per release and `
+    `verify-npm-install-layout: ${String(summary.dshPackagesPerVersion)} openkylin package(s) per release and `
     + `${String(summary.checkedDshEdges)} internal edge(s) verified in ${(result.durationMs / 1000).toFixed(2)} s; `
     + `both releases share one Cordis installation; ${String(result.unknownPackages.length)} unavailable optional `
     + 'package name(s) ignored by npm.',

@@ -32,7 +32,7 @@ kind: "package-reference"
 `kind` selects the document template directly; every kind maps to exactly one template that exists in this skill, and no template exists without a kind. Derive the kind mechanically, in this order:
 
 1. The README is `packages/README.md` or `packages/<group>/README.md` → `package-group`.
-2. The package manifest declares `qilin.bundle.patch` → `package-bundle`.
+2. The package manifest declares `openkylin.bundle.patch` → `package-bundle`.
 3. The package is in the audited library registry of `scripts/doc-standard.spec.ts` → `package-library`.
 4. Everything else — a service default export or an `apply` plugin — is `package-reference`.
 
@@ -41,9 +41,9 @@ kind: "package-reference"
 | `package-group` | `packages/README.md`, `packages/<group>/README.md` | [package-group.md](../templates/package-group.md) | Group map: orient the capability family, map its direct packages, explain composition relationships, and link package-owned details. |
 | `package-reference` | `packages/<group>/<package>/README.md` with a plugin entry | [package-reference.md](../templates/package-reference.md) | Package contract: follow the [package README review standard](review.md#package-readme-review) and the canonical [package documentation requirements](../../../../docs/cookbook/adding-a-package.md#4-write-the-package-readme). |
 | `package-library` | `packages/<group>/<package>/README.md` with a plain module entry | [package-library.md](../templates/package-library.md) | Library contract: consumer entry points and boundaries; no profile-install path and no mount configuration. |
-| `package-bundle` | `packages/<group>/<package>/README.md` declaring `qilin.bundle.patch` | [package-bundle.md](../templates/package-bundle.md) | Installable layer: the verified `qilin plugin` install path, layer semantics, and patch document. |
+| `package-bundle` | `packages/<group>/<package>/README.md` declaring `openkylin.bundle.patch` | [package-bundle.md](../templates/package-bundle.md) | Installable layer: the verified `openkylin plugin` install path, layer semantics, and patch document. |
 
-Before assigning `package-library` or `package-bundle`, inspect the facts: read `package.json` for `qilin.bundle.patch` and `src/index.ts` for the entry shape (`apply` export or a default service export is a plugin; a plain module API is a library). `qilin plugin --profile <name> add <package>` installs any npm dependency, but the profile reconcile activates a layer only for a package that declares `qilin.bundle`; never present that command as an install path for a library or a plain plugin. The documentation check derives the expected kind from these same facts, rejects another value, and rejects `name`, `audience`, `tags`, and README-local `i18n` metadata. Add a new kind only with a distinct template, an unambiguous repository position or declared owner, and a focused check that maps documents to it.
+Before assigning `package-library` or `package-bundle`, inspect the facts: read `package.json` for `openkylin.bundle.patch` and `src/index.ts` for the entry shape (`apply` export or a default service export is a plugin; a plain module API is a library). `openkylin plugin --profile <name> add <package>` installs any npm dependency, but the profile reconcile activates a layer only for a package that declares `openkylin.bundle`; never present that command as an install path for a library or a plain plugin. The documentation check derives the expected kind from these same facts, rejects another value, and rejects `name`, `audience`, `tags`, and README-local `i18n` metadata. Add a new kind only with a distinct template, an unambiguous repository position or declared owner, and a focused check that maps documents to it.
 
 ## Description quality
 

@@ -1,5 +1,5 @@
 ---
-description: "The bundled 'powered by qilin' badge skill for users and maintainers enabling, using, or debugging the optional badge provider."
+description: "The bundled 'powered by openkylin' badge skill for users and maintainers enabling, using, or debugging the optional badge provider."
 kind: "package-reference"
 ---
 
@@ -9,7 +9,7 @@ English | [中文](README.zh.md)
 
 ## Summary
 
-Agents can load the official "powered by qilin" badge skill from this bundled provider and follow its instructions for adding attribution badges to documents, pull requests, and other content produced with DeepSeek Harness. The provider has no configuration, and the shipped CLI composition includes the plugin disabled, so deployments enable it explicitly. The skill ships both Markdown snippets and a packaged PNG for systems that cannot reliably import remote images.
+Agents can load the official "powered by openkylin" badge skill from this bundled provider and follow its instructions for adding attribution badges to documents, pull requests, and other content produced with DeepSeek Harness. The provider has no configuration, and the shipped CLI composition includes the plugin disabled, so deployments enable it explicitly. The skill ships both Markdown snippets and a packaged PNG for systems that cannot reliably import remote images.
 
 ## Table of Contents
 
@@ -25,7 +25,7 @@ Agents can load the official "powered by qilin" badge skill from this bundled pr
 <a id="use-this-package"></a>
 ## Use this package
 
-Enable the plugin to make the `qilin-badge` skill available in the session skill catalog; the model can then load it like any other skill and follow its instructions for adding a "powered by qilin" badge.
+Enable the plugin to make the `qilin-badge` skill available in the session skill catalog; the model can then load it like any other skill and follow its instructions for adding a "powered by openkylin" badge.
 
 ### When to choose it
 

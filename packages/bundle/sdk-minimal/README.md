@@ -9,7 +9,7 @@ English | [中文](README.zh.md)
 
 ## Summary
 
-Use `qilin --profile sdk-minimal` when an SDK client needs a small, explicit coding-agent runtime. The profile advertises a platform-selected persistent shell and `str_replace_editor`, persists sessions as uncompressed JSONL, and selects the model from the SDK initialization request. It supplies a complete Cordis tree and deliberately excludes `qilin-base`, Web, settings, managed credentials, telemetry, compaction, workspace instructions, skills, jobs, and subagents. Its danger-full-access policy lets the shell and editor modify any path available to the process, so use it only with an isolated workspace.
+Use `openkylin --profile sdk-minimal` when an SDK client needs a small, explicit coding-agent runtime. The profile advertises a platform-selected persistent shell and `str_replace_editor`, persists sessions as uncompressed JSONL, and selects the model from the SDK initialization request. It supplies a complete Cordis tree and deliberately excludes `qilin-base`, Web, settings, managed credentials, telemetry, compaction, workspace instructions, skills, jobs, and subagents. Its danger-full-access policy lets the shell and editor modify any path available to the process, so use it only with an isolated workspace.
 
 ## Table of Contents
 
@@ -25,16 +25,16 @@ Use `qilin --profile sdk-minimal` when an SDK client needs a small, explicit cod
 <a id="use-this-package"></a>
 ## Use this package
 
-Launch the profile directly or select it from the Python SDK. Supply an explicit `QILIN_HOME`, use a disposable workspace, and provide the model credential through `DEEPSEEK_API_KEY`.
+Launch the profile directly or select it from the Python SDK. Supply an explicit `OPENKYLIN_HOME`, use a disposable workspace, and provide the model credential through `DEEPSEEK_API_KEY`.
 
 ```sh
-export QILIN_HOME=/absolute/path/to/example-dsh-home
-qilin --profile sdk-minimal
+export OPENKYLIN_HOME=/absolute/path/to/example-dsh-home
+openkylin --profile sdk-minimal
 ```
 
-`QILIN_CONTEXT_WINDOW` sets the fallback capacity for a model absent from the adapter's advisory catalog. `QILIN_SYSTEM_PROMPT` replaces the default persona. The SDK initialization request is the sole model selection and overrides environment defaults.
+`OPENKYLIN_CONTEXT_WINDOW` sets the fallback capacity for a model absent from the adapter's advisory catalog. `OPENKYLIN_SYSTEM_PROMPT` replaces the default persona. The SDK initialization request is the sole model selection and overrides environment defaults.
 
-Use `qilin plugin --profile sdk-minimal` to manage persistent external dependencies. Profile, home, and ordered `--patch` files can replace rows or insert bundles above the complete default tree. The shipped template applies patches only at startup.
+Use `openkylin plugin --profile sdk-minimal` to manage persistent external dependencies. Profile, home, and ordered `--patch` files can replace rows or insert bundles above the complete default tree. The shipped template applies patches only at startup.
 
 The profile mounts exactly one persistent shell stack: Bash on Linux and macOS, or PowerShell on Windows. Both stacks use a 300-second timeout and one owner-scoped terminal; the other platform's rows remain disabled.
 
@@ -46,7 +46,7 @@ The profile mounts exactly one persistent shell stack: Bash on Linux and macOS, 
 <details>
 <summary>Implementation internals — click to expand</summary>
 
-The bundle's single insert is the complete application tree: SDK stdio startup and JSON-RPC serving, one environment-configured DeepSeek adapter, the explicit agent core, local subprocess and unrestricted filesystem providers, a platform-selected persistent shell PTY, the string-replace editor, and uncompressed JSONL persistence under `$QILIN_HOME/sessions`. It does not inherit another bundle, so every extra row is an explicit profile change.
+The bundle's single insert is the complete application tree: SDK stdio startup and JSON-RPC serving, one environment-configured DeepSeek adapter, the explicit agent core, local subprocess and unrestricted filesystem providers, a platform-selected persistent shell PTY, the string-replace editor, and uncompressed JSONL persistence under `$OPENKYLIN_HOME/sessions`. It does not inherit another bundle, so every extra row is an explicit profile change.
 
 ### Source map
 
@@ -77,7 +77,7 @@ The bundle's single insert is the complete application tree: SDK stdio startup a
 
 #### What the model sees
 
-The system prompt is `QILIN_SYSTEM_PROMPT` or `You are a helpful software engineer assistant.`. The only advertised tools are owner-scoped persistent `bash` on Linux/macOS or `pwsh` on Windows, plus `str_replace_editor`; runtime context, workspace instructions, skills, jobs controls, compaction, and Harness identity are absent.
+The system prompt is `OPENKYLIN_SYSTEM_PROMPT` or `You are a helpful software engineer assistant.`. The only advertised tools are owner-scoped persistent `bash` on Linux/macOS or `pwsh` on Windows, plus `str_replace_editor`; runtime context, workspace instructions, skills, jobs controls, compaction, and Harness identity are absent.
 
 #### Token effect
 
@@ -91,7 +91,7 @@ Stable for a fixed persona, platform, provider, model, and bundle patch stack. P
 
 <a id="known-limitations-and-deferred-work"></a>
 
-- **The composition intentionally omits shared product services** — select `qilin --profile sdk` when settings, managed credentials, policy presets, telemetry, Web tools, or the full default tool roster are required.
+- **The composition intentionally omits shared product services** — select `openkylin --profile sdk` when settings, managed credentials, policy presets, telemetry, Web tools, or the full default tool roster are required.
 - **User patches can expand the tree and corrupt stdout** — profile customization is trusted application composition; a plugin that writes ordinary text to stdout can break JSON-RPC framing.
 
 <a id="dev-note"></a>

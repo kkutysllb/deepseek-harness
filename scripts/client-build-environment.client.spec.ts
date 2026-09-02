@@ -20,7 +20,7 @@ import {
 import { clientBundle } from '../packages/client/tsdown.client.ts'
 
 const root = resolve(import.meta.dirname, '..')
-const PROBE_NAME = 'QILIN_CLIENT_BUILD_TEST'
+const PROBE_NAME = 'OPENKYLIN_CLIENT_BUILD_TEST'
 const COMMIT_HASH = '0123456789abcdef0123456789abcdef01234567'
 const PROBE_KEY = `process.env.${PROBE_NAME}`
 const originalProbe = process.env[PROBE_NAME]
@@ -80,64 +80,64 @@ function repositoryFixture(version = '1.2.3-rc.4'): string {
 describe('client build environment', () => {
   it('requires an exact public environment for a named artifact profile', () => {
     const expected = {
-      QILIN_CLIENT_BUILD_PROFILE: 'official',
-      QILIN_CLIENT_COMMIT_HASH: COMMIT_HASH.slice(0, 7),
-      QILIN_CLIENT_TITLE: 'DeepSeek Harness',
-      QILIN_CLIENT_VERSION: '1.2.3',
+      OPENKYLIN_CLIENT_BUILD_PROFILE: 'official',
+      OPENKYLIN_CLIENT_COMMIT_HASH: COMMIT_HASH.slice(0, 7),
+      OPENKYLIN_CLIENT_TITLE: 'DeepSeek Harness',
+      OPENKYLIN_CLIENT_VERSION: '1.2.3',
     } as const
 
     expect(() => { assertClientBuildEnvironment({ PATH: '/bin', ...expected }, expected) }).not.toThrow()
-    expect(() => { assertClientBuildEnvironment({}, expected) }).toThrow(/QILIN_CLIENT_TITLE/)
-    expect(() => { assertClientBuildEnvironment({ QILIN_CLIENT_TITLE: 'Other' }, expected) }).toThrow(/QILIN_CLIENT_TITLE/)
+    expect(() => { assertClientBuildEnvironment({}, expected) }).toThrow(/OPENKYLIN_CLIENT_TITLE/)
+    expect(() => { assertClientBuildEnvironment({ OPENKYLIN_CLIENT_TITLE: 'Other' }, expected) }).toThrow(/OPENKYLIN_CLIENT_TITLE/)
     expect(() => {
-      assertClientBuildEnvironment({ ...expected, QILIN_CLIENT_UNDECLARED: 'value' }, expected)
-    }).toThrow(/QILIN_CLIENT_UNDECLARED/)
+      assertClientBuildEnvironment({ ...expected, OPENKYLIN_CLIENT_UNDECLARED: 'value' }, expected)
+    }).toThrow(/OPENKYLIN_CLIENT_UNDECLARED/)
   })
 
   it('inherits public values by default and isolates an explicit official profile', () => {
     const parent = {
       PATH: '/bin',
-      QILIN_BUILD_CLIENT_PROFILE: 'official',
-      QILIN_CLIENT_BUILD_PROFILE: 'local',
-      QILIN_CLIENT_COMMIT_HASH: COMMIT_HASH.slice(0, 7),
-      QILIN_CLIENT_GIT_DIRTY: 'true',
-      QILIN_CLIENT_TITLE: 'Local title',
-      QILIN_CLIENT_VERSION: '1.2.3',
-      QILIN_CLIENT_EXTRA: 'local-extra',
+      OPENKYLIN_BUILD_CLIENT_PROFILE: 'official',
+      OPENKYLIN_CLIENT_BUILD_PROFILE: 'local',
+      OPENKYLIN_CLIENT_COMMIT_HASH: COMMIT_HASH.slice(0, 7),
+      OPENKYLIN_CLIENT_GIT_DIRTY: 'true',
+      OPENKYLIN_CLIENT_TITLE: 'Local title',
+      OPENKYLIN_CLIENT_VERSION: '1.2.3',
+      OPENKYLIN_CLIENT_EXTRA: 'local-extra',
     }
 
-    expect(resolveClientBuildEnvironment({ QILIN_CLIENT_TITLE: 'Local title' })).toEqual({
-      QILIN_CLIENT_TITLE: 'Local title',
+    expect(resolveClientBuildEnvironment({ OPENKYLIN_CLIENT_TITLE: 'Local title' })).toEqual({
+      OPENKYLIN_CLIENT_TITLE: 'Local title',
     })
     expect(resolveClientBuildEnvironment(parent)).toEqual({
-      QILIN_CLIENT_BUILD_PROFILE: 'official',
-      QILIN_CLIENT_COMMIT_HASH: COMMIT_HASH.slice(0, 7),
-      QILIN_CLIENT_TITLE: 'DeepSeek Harness',
-      QILIN_CLIENT_VERSION: '1.2.3',
+      OPENKYLIN_CLIENT_BUILD_PROFILE: 'official',
+      OPENKYLIN_CLIENT_COMMIT_HASH: COMMIT_HASH.slice(0, 7),
+      OPENKYLIN_CLIENT_TITLE: 'DeepSeek Harness',
+      OPENKYLIN_CLIENT_VERSION: '1.2.3',
     })
     expect(() => {
-      resolveClientBuildEnvironment({ QILIN_BUILD_CLIENT_PROFILE: 'official' })
-    }).toThrow(/QILIN_CLIENT_COMMIT_HASH/)
+      resolveClientBuildEnvironment({ OPENKYLIN_BUILD_CLIENT_PROFILE: 'official' })
+    }).toThrow(/OPENKYLIN_CLIENT_COMMIT_HASH/)
     expect(() => {
       resolveClientBuildEnvironment({
-        QILIN_BUILD_CLIENT_PROFILE: 'official',
-        QILIN_CLIENT_COMMIT_HASH: COMMIT_HASH.slice(0, 7),
+        OPENKYLIN_BUILD_CLIENT_PROFILE: 'official',
+        OPENKYLIN_CLIENT_COMMIT_HASH: COMMIT_HASH.slice(0, 7),
       })
-    }).toThrow(/QILIN_CLIENT_VERSION/)
+    }).toThrow(/OPENKYLIN_CLIENT_VERSION/)
     expect(() => { resolveClientBuildEnvironment({}, 'unknown') }).toThrow(/unknown client build profile/)
     expect(clientBuildProcessEnvironment(parent, {
-      QILIN_CLIENT_BUILD_PROFILE: 'official',
-      QILIN_CLIENT_COMMIT_HASH: COMMIT_HASH.slice(0, 7),
-      QILIN_CLIENT_TITLE: 'DeepSeek Harness',
-      QILIN_CLIENT_VERSION: '1.2.3',
+      OPENKYLIN_CLIENT_BUILD_PROFILE: 'official',
+      OPENKYLIN_CLIENT_COMMIT_HASH: COMMIT_HASH.slice(0, 7),
+      OPENKYLIN_CLIENT_TITLE: 'DeepSeek Harness',
+      OPENKYLIN_CLIENT_VERSION: '1.2.3',
     })).toEqual({
       PATH: '/bin',
-      QILIN_CLIENT_BUILD_PROFILE: 'official',
-      QILIN_CLIENT_COMMIT_HASH: COMMIT_HASH.slice(0, 7),
-      QILIN_CLIENT_TITLE: 'DeepSeek Harness',
-      QILIN_CLIENT_VERSION: '1.2.3',
+      OPENKYLIN_CLIENT_BUILD_PROFILE: 'official',
+      OPENKYLIN_CLIENT_COMMIT_HASH: COMMIT_HASH.slice(0, 7),
+      OPENKYLIN_CLIENT_TITLE: 'DeepSeek Harness',
+      OPENKYLIN_CLIENT_VERSION: '1.2.3',
     })
-    expect(repositoryCommitHash('/unused', { QILIN_CLIENT_COMMIT_HASH: COMMIT_HASH })).toBe(COMMIT_HASH.slice(0, 7))
+    expect(repositoryCommitHash('/unused', { OPENKYLIN_CLIENT_COMMIT_HASH: COMMIT_HASH })).toBe(COMMIT_HASH.slice(0, 7))
   })
 
   it('owns repository version, commit, and dirty metadata for complete builds', () => {
@@ -147,20 +147,20 @@ describe('client build environment', () => {
     expect(repositoryVersion(fixtureRoot)).toBe('1.2.3-rc.4')
     expect(repositoryGitDirty(fixtureRoot)).toBe(false)
     expect(repositoryClientBuildEnvironment(fixtureRoot, {
-      QILIN_CLIENT_COMMIT_HASH: COMMIT_HASH,
-      QILIN_CLIENT_EXTRA: 'preserved',
-      QILIN_CLIENT_GIT_DIRTY: 'true',
-      QILIN_CLIENT_VERSION: 'spoofed',
+      OPENKYLIN_CLIENT_COMMIT_HASH: COMMIT_HASH,
+      OPENKYLIN_CLIENT_EXTRA: 'preserved',
+      OPENKYLIN_CLIENT_GIT_DIRTY: 'true',
+      OPENKYLIN_CLIENT_VERSION: 'spoofed',
     })).toEqual({
-      QILIN_CLIENT_COMMIT_HASH: COMMIT_HASH.slice(0, 7),
-      QILIN_CLIENT_EXTRA: 'preserved',
-      QILIN_CLIENT_VERSION: '1.2.3-rc.4',
+      OPENKYLIN_CLIENT_COMMIT_HASH: COMMIT_HASH.slice(0, 7),
+      OPENKYLIN_CLIENT_EXTRA: 'preserved',
+      OPENKYLIN_CLIENT_VERSION: '1.2.3-rc.4',
     })
     expect(officialClientBuildEnvironment(fixtureRoot)).toEqual({
-      QILIN_CLIENT_BUILD_PROFILE: 'official',
-      QILIN_CLIENT_COMMIT_HASH: commit,
-      QILIN_CLIENT_TITLE: 'DeepSeek Harness',
-      QILIN_CLIENT_VERSION: '1.2.3-rc.4',
+      OPENKYLIN_CLIENT_BUILD_PROFILE: 'official',
+      OPENKYLIN_CLIENT_COMMIT_HASH: commit,
+      OPENKYLIN_CLIENT_TITLE: 'DeepSeek Harness',
+      OPENKYLIN_CLIENT_VERSION: '1.2.3-rc.4',
     })
 
     write(join(fixtureRoot, '.gitignore'), 'ignored.txt\n')
@@ -184,11 +184,11 @@ describe('client build environment', () => {
     write(join(fixtureRoot, 'untracked.txt'), 'untracked\n')
     expect(repositoryGitDirty(fixtureRoot)).toBe(true)
     expect(repositoryClientBuildEnvironment(fixtureRoot, {
-      QILIN_CLIENT_COMMIT_HASH: COMMIT_HASH,
+      OPENKYLIN_CLIENT_COMMIT_HASH: COMMIT_HASH,
     })).toEqual({
-      QILIN_CLIENT_COMMIT_HASH: COMMIT_HASH.slice(0, 7),
-      QILIN_CLIENT_GIT_DIRTY: 'true',
-      QILIN_CLIENT_VERSION: '1.2.3-rc.4',
+      OPENKYLIN_CLIENT_COMMIT_HASH: COMMIT_HASH.slice(0, 7),
+      OPENKYLIN_CLIENT_GIT_DIRTY: 'true',
+      OPENKYLIN_CLIENT_VERSION: '1.2.3-rc.4',
     })
 
     rmSync(join(fixtureRoot, 'untracked.txt'))
@@ -207,25 +207,25 @@ describe('client build environment', () => {
 
     expect(repositoryGitDirty(fixtureRoot)).toBeUndefined()
     expect(repositoryClientBuildEnvironment(fixtureRoot, {
-      QILIN_CLIENT_COMMIT_HASH: COMMIT_HASH,
-      QILIN_CLIENT_GIT_DIRTY: 'true',
+      OPENKYLIN_CLIENT_COMMIT_HASH: COMMIT_HASH,
+      OPENKYLIN_CLIENT_GIT_DIRTY: 'true',
     })).toEqual({
-      QILIN_CLIENT_COMMIT_HASH: COMMIT_HASH.slice(0, 7),
-      QILIN_CLIENT_VERSION: '2.0.0',
+      OPENKYLIN_CLIENT_COMMIT_HASH: COMMIT_HASH.slice(0, 7),
+      OPENKYLIN_CLIENT_VERSION: '2.0.0',
     })
   })
 
   it('defines only public client values over a non-enumerable fallback', () => {
     expect(clientBuildEnvironmentDefines({
       PATH: '/bin',
-      QILIN_TEST_API_KEY: 'secret',
-      QILIN_CLIENT_VARIANT: 'quoted "value"',
-      QILIN_CLIENT_EMPTY: '',
-      QILIN_CLIENT_UNSET: undefined,
+      OPENKYLIN_TEST_API_KEY: 'secret',
+      OPENKYLIN_CLIENT_VARIANT: 'quoted "value"',
+      OPENKYLIN_CLIENT_EMPTY: '',
+      OPENKYLIN_CLIENT_UNSET: undefined,
     })).toEqual({
       'process.env': '{}',
-      'process.env.QILIN_CLIENT_EMPTY': '""',
-      'process.env.QILIN_CLIENT_VARIANT': '"quoted \\"value\\""',
+      'process.env.OPENKYLIN_CLIENT_EMPTY': '""',
+      'process.env.OPENKYLIN_CLIENT_VARIANT': '"quoted \\"value\\""',
     })
   })
 
@@ -235,7 +235,7 @@ describe('client build environment', () => {
     const configs = clientBundle('@qilin/client-ui-sidebar', [
       'lib/types/index.js',
       'lib/types/invariant.js',
-    ])({ env: { QILIN_BUILD_FACE: 'client' } })
+    ])({ env: { OPENKYLIN_BUILD_FACE: 'client' } })
     if (!Array.isArray(configs)) throw new TypeError('client bundle config must be an array')
     const dynamic = configs.find(config => config.name === '@qilin/client-ui-sidebar/client')
     expect(dynamic?.define).toMatchObject({
@@ -261,16 +261,16 @@ describe('client build environment', () => {
 
   it('binds the recorded environment to a complete set of client artifacts', () => {
     const officialEnvironment = {
-      QILIN_CLIENT_BUILD_PROFILE: 'official',
-      QILIN_CLIENT_COMMIT_HASH: COMMIT_HASH.slice(0, 7),
-      QILIN_CLIENT_TITLE: 'DeepSeek Harness',
-      QILIN_CLIENT_VERSION: '1.2.3',
+      OPENKYLIN_CLIENT_BUILD_PROFILE: 'official',
+      OPENKYLIN_CLIENT_COMMIT_HASH: COMMIT_HASH.slice(0, 7),
+      OPENKYLIN_CLIENT_TITLE: 'DeepSeek Harness',
+      OPENKYLIN_CLIENT_VERSION: '1.2.3',
     }
     const official = buildFixture(officialEnvironment)
     const defaultBuild = buildFixture({})
 
     expect(readClientBuildRecord(official, officialEnvironment).environment).toEqual(officialEnvironment)
-    expect(() => { readClientBuildRecord(defaultBuild, officialEnvironment) }).toThrow(/QILIN_CLIENT_/)
+    expect(() => { readClientBuildRecord(defaultBuild, officialEnvironment) }).toThrow(/OPENKYLIN_CLIENT_/)
     expect(() => { readClientBuildRecord(join(defaultBuild, 'missing')) }).toThrow(/record.*missing/)
 
     write(join(official, 'apps/web/dist/index.html'), '<main>changed</main>')
@@ -284,7 +284,7 @@ describe('client build environment', () => {
       if (typeof document !== 'object' || document === null || Array.isArray(document)) {
         throw new TypeError(`${path} must contain a workflow object`)
       }
-      expect(JSON.stringify(document), path).not.toContain('QILIN_CLIENT_')
+      expect(JSON.stringify(document), path).not.toContain('OPENKYLIN_CLIENT_')
     }
   })
 })

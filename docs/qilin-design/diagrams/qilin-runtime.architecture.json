@@ -2,10 +2,10 @@
   "schema_version": 1,
   "diagram_type": "architecture",
   "meta": {
-    "title": "QiLin 麒麟智能体引擎 · 运行时架构",
+    "title": "OpenKylin 麒麟智能体引擎 · 运行时架构",
     "quality_profile": "showcase",
     "repository": {
-      "url": "https://github.com/kkutysllb/QiLin",
+      "url": "https://github.com/kkutysllb/OpenKylin",
       "revision": "f616ecc48321a2c3b891c5715e375f45d6966504"
     },
     "viewBox": [1760, 1320]
@@ -35,11 +35,11 @@
       "id": "client",
       "type": "frontend",
       "label": "Embedded Client / TUI",
-      "sublabel": "QiLinClient · Textual 终端工作台",
+      "sublabel": "OpenKylinClient · Textual 终端工作台",
       "pos": [860, 100],
       "size": [300, 88],
       "tag": "service surface",
-      "sources": [{ "path": "qilin/client.py", "label": "嵌入式入口" }]
+      "sources": [{ "path": "openkylin/client.py", "label": "嵌入式入口" }]
     },
 
     {
@@ -50,7 +50,7 @@
       "pos": [80, 300],
       "size": [300, 96],
       "tag": "core · kernel",
-      "sources": [{ "path": "qilin/agents/factory.py", "label": "make_lead_agent" }]
+      "sources": [{ "path": "openkylin/agents/factory.py", "label": "make_lead_agent" }]
     },
     {
       "id": "subagents",
@@ -60,7 +60,7 @@
       "pos": [440, 300],
       "size": [300, 96],
       "tag": "core · kernel",
-      "sources": [{ "path": "qilin/subagents/registry.py", "label": "子代理注册表" }]
+      "sources": [{ "path": "openkylin/subagents/registry.py", "label": "子代理注册表" }]
     },
     {
       "id": "orchestration",
@@ -70,7 +70,7 @@
       "pos": [820, 300],
       "size": [340, 96],
       "tag": "core · multi-agent",
-      "sources": [{ "path": "qilin/orchestration/graph.py", "label": "OrchestratorGraph" }]
+      "sources": [{ "path": "openkylin/orchestration/graph.py", "label": "OrchestratorGraph" }]
     },
 
     {
@@ -81,7 +81,7 @@
       "pos": [80, 500],
       "size": [340, 96],
       "tag": "core · extensions",
-      "sources": [{ "path": "qilin/tools/tools.py", "label": "工具装配" }]
+      "sources": [{ "path": "openkylin/tools/tools.py", "label": "工具装配" }]
     },
     {
       "id": "sandbox",
@@ -91,7 +91,7 @@
       "pos": [480, 500],
       "size": [340, 96],
       "tag": "core · isolation",
-      "sources": [{ "path": "qilin/sandbox/sandbox_provider.py", "label": "SandboxProvider" }]
+      "sources": [{ "path": "openkylin/sandbox/sandbox_provider.py", "label": "SandboxProvider" }]
     },
     {
       "id": "safety",
@@ -101,7 +101,7 @@
       "pos": [880, 500],
       "size": [280, 96],
       "tag": "core · safety",
-      "sources": [{ "path": "qilin/authz/rbac.py", "label": "RBAC 资源授权" }]
+      "sources": [{ "path": "openkylin/authz/rbac.py", "label": "RBAC 资源授权" }]
     },
 
     {
@@ -112,7 +112,7 @@
       "pos": [80, 720],
       "size": [340, 96],
       "tag": "core · execution",
-      "sources": [{ "path": "qilin/runtime/runs/manager.py", "label": "LangGraph 运行器" }]
+      "sources": [{ "path": "openkylin/runtime/runs/manager.py", "label": "LangGraph 运行器" }]
     },
     {
       "id": "persistence",
@@ -122,7 +122,7 @@
       "pos": [480, 720],
       "size": [340, 96],
       "tag": "core · state",
-      "sources": [{ "path": "qilin/persistence/engine.py", "label": "存储引擎" }]
+      "sources": [{ "path": "openkylin/persistence/engine.py", "label": "存储引擎" }]
     },
     {
       "id": "models",
@@ -132,7 +132,7 @@
       "pos": [880, 720],
       "size": [280, 96],
       "tag": "foundation · models",
-      "sources": [{ "path": "qilin/models/factory.py", "label": "模型工厂" }]
+      "sources": [{ "path": "openkylin/models/factory.py", "label": "模型工厂" }]
     },
 
     {
@@ -143,7 +143,7 @@
       "pos": [80, 940],
       "size": [380, 96],
       "tag": "foundation · observability",
-      "sources": [{ "path": "qilin/tracing/factory.py", "label": "Tracing 路由" }]
+      "sources": [{ "path": "openkylin/tracing/factory.py", "label": "Tracing 路由" }]
     },
     {
       "id": "support",
@@ -153,7 +153,7 @@
       "pos": [520, 940],
       "size": [340, 96],
       "tag": "foundation · utilities",
-      "sources": [{ "path": "qilin/reflection/resolvers.py", "label": "变量解析" }]
+      "sources": [{ "path": "openkylin/reflection/resolvers.py", "label": "变量解析" }]
     },
 
     {

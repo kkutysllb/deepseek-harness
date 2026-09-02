@@ -54,4 +54,4 @@ Status: implemented
 
 完成安装的 worktree 会自动消除仅由配对记录引起的冲突，同时仍由人工处理配对文档冲突并评判翻译质量。GitHub 托管的可合并性计算不会运行 worktree 本地的可执行命令，因此仍须由贡献者或 agent 将 base 分支合入当前分支并推送结果提交，远端冲突标记才会消失。
 
-安装脚本会在 worktree 配置中预留 `merge.qilin-translation-pairing.*`，并拒绝与之冲突的自定义值。与仓库贡献者钩子一样，自动组合依赖已安装的 Node 依赖；运行时不可用时会产生可见的未解决文本结果，而不是选择陈旧元数据。
+安装脚本会在 worktree 配置中预留 `merge.openkylin-translation-pairing.*`，并拒绝与之冲突的自定义值。与仓库贡献者钩子一样，自动组合依赖已安装的 Node 依赖；运行时不可用时会产生可见的未解决文本结果，而不是选择陈旧元数据。

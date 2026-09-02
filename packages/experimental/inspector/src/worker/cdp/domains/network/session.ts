@@ -214,7 +214,7 @@ export class NetworkDomain {
     session.sendEvent('Network.requestWillBeSent', {
       requestId: event.requestId,
       loaderId: 'qilin-inspector-loader',
-      documentURL: 'qilin://host',
+      documentURL: 'openkylin://host',
       request: {
         url: event.url,
         method: event.method,

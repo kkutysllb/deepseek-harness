@@ -5,19 +5,19 @@
  */
 
 /** Virtual filesystem root; `process.cwd()` and every absolute path start here. */
-export const QILIN_ROOT = '/dsh'
+export const OPENKYLIN_ROOT = '/dsh'
 
-/** `$QILIN_HOME`: durable-state directory inside the image. */
-export const QILIN_HOME = `${QILIN_ROOT}/home`
+/** `$OPENKYLIN_HOME`: durable-state directory inside the image. */
+export const OPENKYLIN_HOME = `${OPENKYLIN_ROOT}/home`
 
 /** Flat, symlink-free package tree resolved by the worker module loader. */
-export const QILIN_NODE_MODULES = `${QILIN_ROOT}/node_modules`
+export const OPENKYLIN_NODE_MODULES = `${OPENKYLIN_ROOT}/node_modules`
 
 /** Directory holding the composed cordis.yml and the agent-preset tree. */
-export const QILIN_CONFIG = `${QILIN_ROOT}/config`
+export const OPENKYLIN_CONFIG = `${OPENKYLIN_ROOT}/config`
 
 /** Default (empty) workspace directory. */
-export const QILIN_WORKSPACE = `${QILIN_ROOT}/workspace`
+export const OPENKYLIN_WORKSPACE = `${OPENKYLIN_ROOT}/workspace`
 
 /** Temporary directory reported by `os.tmpdir()`. */
-export const QILIN_TMP = `${QILIN_ROOT}/tmp`
+export const OPENKYLIN_TMP = `${OPENKYLIN_ROOT}/tmp`

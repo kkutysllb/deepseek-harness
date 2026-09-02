@@ -7,8 +7,8 @@ import { clientBuildEnvironmentDefines } from '../../scripts/client-build-enviro
 
 const src = (rel: string): string => fileURLToPath(new URL(rel, import.meta.url))
 const STANDALONE_ERROR = 'apps/web is not a standalone application: bare Vite cannot inject window.__DSH_BOOT__. '
-  + 'From a repository checkout, run `pnpm qilin web`; an installed package uses `qilin web`. '
-  + 'For client-plugin HMR, run `pnpm qilin web` together with `pnpm run dev:web`.'
+  + 'From a repository checkout, run `pnpm openkylin web`; an installed package uses `openkylin web`. '
+  + 'For client-plugin HMR, run `pnpm openkylin web` together with `pnpm run dev:web`.'
 const DEFAULT_CLIENT_TITLE = 'DSH Local Build'
 
 /** Escape build-time text before placing it in the HTML title element. */
@@ -18,7 +18,7 @@ function escapeHtmlText(value: string): string {
 
 /** Project the public build title into the initial HTML document. */
 function clientDocumentTitle(): Plugin {
-  const title = escapeHtmlText(process.env.QILIN_CLIENT_TITLE ?? DEFAULT_CLIENT_TITLE)
+  const title = escapeHtmlText(process.env.OPENKYLIN_CLIENT_TITLE ?? DEFAULT_CLIENT_TITLE)
   return {
     name: 'qilin-client-document-title',
     transformIndexHtml(html) {

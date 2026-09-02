@@ -1,5 +1,5 @@
 /**
- * Config-dump entry for `qilin --profile <name> --dump-config`: compose the
+ * Config-dump entry for `openkylin --profile <name> --dump-config`: compose the
  * profile's patch layers through the include plugin's patch algorithm without
  * booting or evaluating `!!js`, with one source layer per bundle, the
  * profile's own patch file, and each `--patch` overlay.
@@ -16,7 +16,7 @@ import {
 } from '@qilin/app-boot'
 import { homePatchPath, prepareProfile, PROFILE_ROOT_FILENAME } from './profile-boot.ts'
 
-const NAME = 'qilin'
+const NAME = 'openkylin'
 
 /* v8 ignore start -- built-bin acceptance drives this boot-free dispatch */
 /**

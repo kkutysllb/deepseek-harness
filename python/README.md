@@ -9,11 +9,11 @@ Python packages for driving DeepSeek Harness as a subprocess. The client SDK com
 | Directory | Dist / module | Role |
 |---|---|---|
 | [sdk](sdk/README.md) | `openkylin-sdk` / `openkylin_sdk` | High-level turns API and lower-level JSON-RPC client |
-| [sdk-runtime](sdk-runtime/README.md) | `openkylin-runtime-bin` / `openkylin_runtime` | Bundled `qilin` CLI executable and native sidecars |
+| [sdk-runtime](sdk-runtime/README.md) | `openkylin-runtime-bin` / `openkylin_runtime` | Bundled `openkylin` CLI executable and native sidecars |
 
 ## Behavior
 
-The SDK starts the matching bundled `qilin --profile sdk` runtime unless the caller selects another `qilin` executable or profile. The runnable minimal example selects the shipped standalone `sdk-minimal` profile; the same runtime also packages `qilin web` and its frontend assets for separate CLI use. Every launch requires an explicitly selected Harness home; Python never silently reads `~/.qilin`. The [SDK reference](sdk/README.md) and [runtime carrier reference](sdk-runtime/README.md) own runtime selection, profiles, patches, and external plugin management.
+The SDK starts the matching bundled `openkylin --profile sdk` runtime unless the caller selects another `openkylin` executable or profile. The runnable minimal example selects the shipped standalone `sdk-minimal` profile; the same runtime also packages `openkylin web` and its frontend assets for separate CLI use. Every launch requires an explicitly selected Harness home; Python never silently reads `~/.openkylin`. The [SDK reference](sdk/README.md) and [runtime carrier reference](sdk-runtime/README.md) own runtime selection, profiles, patches, and external plugin management.
 
 ## Contributor workflows
 

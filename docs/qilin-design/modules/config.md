@@ -1,6 +1,6 @@
 # config 模块（config module）
 
-> QiLin engine · config subsystem · 双语 / Bilingual
+> OpenKylin engine · config subsystem · 双语 / Bilingual
 
 ---
 
@@ -8,10 +8,10 @@
 
 ### 职责
 
-`qilin.config` 是 QiLin 的"配置大脑"，全部基于 Pydantic 2 BaseModel，提供类型安全的配置加载、env 解析、热重载、版本号提示。
+`openkylin.config` 是 OpenKylin 的"配置大脑"，全部基于 Pydantic 2 BaseModel，提供类型安全的配置加载、env 解析、热重载、版本号提示。
 
 - **核心对象**：`AppConfig` 是根配置对象，把所有子配置（models / sandbox / skills / memory / tools / subagents / guardrails / authorization / integrations / scheduler / persistence / tracing ...）聚合成单棵配置树
-- **加载策略**：按优先级读取 CLI 参数 → `QILIN_CONFIG_PATH` 环境变量 → 工程根目录 `config.yaml` → 源码树 `backend/config.yaml`
+- **加载策略**：按优先级读取 CLI 参数 → `OPENKYLIN_CONFIG_PATH` 环境变量 → 工程根目录 `config.yaml` → 源码树 `backend/config.yaml`
 - **热重载**：基于 `config_signature` 的内容哈希检测；签名变化触发 reload；某些结构性配置（如 sandbox / database / checkpointer）需要进程重启
 - **env 解析**：`$VAR` 形式的值会在加载时通过 `os.getenv` 解析
 - **版本提示**：`config.example.yaml` 与 `config.yaml` 的 `config_version` 数字不一致时提示用户升级
@@ -90,7 +90,7 @@ models:
 
 sandbox:
   type: aio_sandbox
-  provider: qilin.community.aio_sandbox.aio_sandbox_provider:AioSandboxProvider
+  provider: openkylin.community.aio_sandbox.aio_sandbox_provider:AioSandboxProvider
 
 memory:
   backend: qilinmem
@@ -114,7 +114,7 @@ logging:
 ### 关联模块
 
 - **上游**：CLI / TUI 在启动时加载 `AppConfig`
-- **下游**：所有运行时模块通过 `qilin.config.app_config.get_app_config()` 读取配置
+- **下游**：所有运行时模块通过 `openkylin.config.app_config.get_app_config()` 读取配置
 
 ---
 
@@ -122,10 +122,10 @@ logging:
 
 ### Responsibility
 
-`qilin.config` is QiLin's "config brain", fully based on Pydantic 2 BaseModel. It provides type-safe config loading, env resolution, hot reload, and version hints.
+`openkylin.config` is OpenKylin's "config brain", fully based on Pydantic 2 BaseModel. It provides type-safe config loading, env resolution, hot reload, and version hints.
 
 - **Core object** — `AppConfig` is the root config aggregating all sub-configs (models, sandbox, skills, memory, tools, subagents, guardrails, authorization, integrations, scheduler, persistence, tracing, ...)
-- **Load order** — CLI arg → `QILIN_CONFIG_PATH` env → project-root `config.yaml` → source-tree `backend/config.yaml`
+- **Load order** — CLI arg → `OPENKYLIN_CONFIG_PATH` env → project-root `config.yaml` → source-tree `backend/config.yaml`
 - **Hot reload** — File signature (path + mtime + content hash) detection; structural fields require process restart
 - **Env resolution** — `$VAR` form resolved via `os.getenv` at load time
 - **Version hints** — Mismatch between `config.example.yaml` and user `config.yaml` `config_version` triggers upgrade prompt
@@ -202,7 +202,7 @@ models:
 
 sandbox:
   type: aio_sandbox
-  provider: qilin.community.aio_sandbox.aio_sandbox_provider:AioSandboxProvider
+  provider: openkylin.community.aio_sandbox.aio_sandbox_provider:AioSandboxProvider
 
 memory:
   backend: qilinmem
@@ -222,4 +222,4 @@ guardrails:
 ### Related Modules
 
 - **Upstream** — CLI / TUI load `AppConfig` at startup
-- **Downstream** — All runtime modules read via `qilin.config.app_config.get_app_config()`
+- **Downstream** — All runtime modules read via `openkylin.config.app_config.get_app_config()`

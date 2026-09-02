@@ -8,8 +8,8 @@
     apiKeyEnv: DEEPSEEK_API_KEY
     streamIdleTimeoutMs: 172800000
     models:
-      - id: !!js process.env.QILIN_MODEL ?? 'deepseek-v4-flash'
-        contextWindow: !!js Number(process.env.QILIN_CONTEXT_WINDOW ?? 1000000)
+      - id: !!js process.env.OPENKYLIN_MODEL ?? 'deepseek-v4-flash'
+        contextWindow: !!js Number(process.env.OPENKYLIN_CONTEXT_WINDOW ?? 1000000)
 
 - id: sandbox-policy
   name: '@qilin/sandbox-policy'
@@ -122,7 +122,7 @@
   name: '@qilin/system-prompt'
   config:
     includeHarnessIdentity: false
-    persona: !!js process.env.QILIN_SYSTEM_PROMPT ?? 'You are a helpful software engineer assistant.'
+    persona: !!js process.env.OPENKYLIN_SYSTEM_PROMPT ?? 'You are a helpful software engineer assistant.'
 
 - id: session-persistence-jsonl
   name: '@qilin/session-persistence-jsonl'

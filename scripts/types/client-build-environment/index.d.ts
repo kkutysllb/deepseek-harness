@@ -2,6 +2,6 @@
 declare const process: {
   readonly env: {
     readonly NODE_ENV?: string
-    readonly [name: `QILIN_CLIENT_${string}`]: string | undefined
+    readonly [name: `OPENKYLIN_CLIENT_${string}`]: string | undefined
   }
 }

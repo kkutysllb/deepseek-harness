@@ -1,6 +1,6 @@
 /**
- * Node half of the client module system (`qilin.client` dual-face package): scans
- * the host Loader's entries for packages declaring `qilin.client`, composes the
+ * Node half of the client module system (`openkylin.client` dual-face package): scans
+ * the host Loader's entries for packages declaring `openkylin.client`, composes the
  * `window.__DSH_BOOT__` entry graph (wire single source: {@link WebBootEntry}
  * in `./client/manifest.ts`) in module-graph order, serves one-or-more-plugin
  * combo scripts plus their source maps,
@@ -48,7 +48,7 @@ declare module '@deepseek-ai/cordis' {
   }
 }
 
-/** package.json `qilin.client` declaration fields, validated one by one after reading the file. */
+/** package.json `openkylin.client` declaration fields, validated one by one after reading the file. */
 interface QilinClientDeclaration {
   inject?: string[]
   platform: string
@@ -197,20 +197,20 @@ function exactPackageSpecifier(specifier: string): string | undefined {
   return specifier.length > 0 && !specifier.includes('/') ? specifier : undefined
 }
 
-/** Narrow an unknown parsed JSON value to the `qilin.client` declaration, throwing on malformed fields. */
+/** Narrow an unknown parsed JSON value to the `openkylin.client` declaration, throwing on malformed fields. */
 function parseDshClient(pkgName: string, value: unknown): QilinClientDeclaration | undefined {
   if (value === undefined) return undefined
   if (typeof value !== 'object' || value === null) {
-    throw new Error(`client-modules: ${pkgName} has a non-object qilin.client declaration`)
+    throw new Error(`client-modules: ${pkgName} has a non-object openkylin.client declaration`)
   }
   const decl = value as Record<string, unknown>
   if (typeof decl.platform !== 'string') {
-    throw new Error(`client-modules: ${pkgName} qilin.client.platform must be a string`)
+    throw new Error(`client-modules: ${pkgName} openkylin.client.platform must be a string`)
   }
-  const inject = optionalStringArray(pkgName, 'qilin.client.inject', decl.inject)
-  const external = optionalStringArray(pkgName, 'qilin.client.external', decl.external)
+  const inject = optionalStringArray(pkgName, 'openkylin.client.inject', decl.inject)
+  const external = optionalStringArray(pkgName, 'openkylin.client.external', decl.external)
   if (decl.immediately !== undefined && typeof decl.immediately !== 'boolean') {
-    throw new Error(`client-modules: ${pkgName} qilin.client.immediately must be a boolean`)
+    throw new Error(`client-modules: ${pkgName} openkylin.client.immediately must be a boolean`)
   }
   return {
     platform: decl.platform,
@@ -456,7 +456,7 @@ export function orderByModuleGraph(entries: readonly WebBootEntry[]): WebBootEnt
       if (dependency === entry) {
         throw new Error(
           `client-modules: "${entry.id}" requests module "${name}" that it answers itself `
-          + '— a row must not declare its own package in qilin.client.external',
+          + '— a row must not declare its own package in openkylin.client.external',
         )
       }
       if (dependency !== undefined) visit(dependency)
@@ -524,7 +524,7 @@ window.__ModuleLoader__={
 }
 
 /**
- * The web plugin table service: incremental `qilin.client` scan + wire composition
+ * The web plugin table service: incremental `openkylin.client` scan + wire composition
  * + bundle route + index injection rows. Construction runs the activation scan
  * synchronously — a malformed declaration or missing bundle among the
  * already-loaded entries aggregates into one loud throw (FAILED fiber; the
@@ -748,10 +748,10 @@ export class ClientModuleRegistry extends Service {
     }
     const { packageName, path: pkgPath } = located
     const pkg = JSON.parse(readFileSync(pkgPath, 'utf8')) as Record<string, unknown>
-    const qilin = pkg.qilin
+    const openkylin = pkg.openkylin
     const decl = parseDshClient(
       packageName,
-      qilin !== null && typeof qilin === 'object' ? (qilin as Record<string, unknown>).client : undefined,
+      openkylin !== null && typeof openkylin === 'object' ? (openkylin as Record<string, unknown>).client : undefined,
     )
     if (decl === undefined || decl.platform !== 'web') {
       this.pkgMeta.set(sourceKey, null)
@@ -759,7 +759,7 @@ export class ClientModuleRegistry extends Service {
     }
     const clientRel = clientExportOf(packageName, pkg.exports)
     if (clientRel === undefined) {
-      throw new Error(`client-modules: ${packageName} declares qilin.client but exports no "./client" bundle`)
+      throw new Error(`client-modules: ${packageName} declares openkylin.client but exports no "./client" bundle`)
     }
     const meta: PkgMeta = {
       clientPath: join(dirname(pkgPath), clientRel),

@@ -145,7 +145,7 @@ describe('Conversation inject API', () => {
     let removeCustom: (() => void) | undefined
     try {
       await b.runtime.flush()
-      localStorage.setItem(`qilin.conversation.${ROOT}`, JSON.stringify({
+      localStorage.setItem(`openkylin.conversation.${ROOT}`, JSON.stringify({
         draft: '', view: 'custom', viewRequest: null,
       }))
 

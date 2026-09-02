@@ -48,10 +48,10 @@
       name: '@qilin/subagent-dsh-sdk'
       config:
         profile: sdk
-        patches: !!js JSON.parse(process.env.QILIN_TEST_CHILD_PATCHES ?? '[]')
-        dshHome: !!js process.env.QILIN_TEST_CHILD_HOME
+        patches: !!js JSON.parse(process.env.OPENKYLIN_TEST_CHILD_PATCHES ?? '[]')
+        dshHome: !!js process.env.OPENKYLIN_TEST_CHILD_HOME
         provider: mock
         model: mock-routed
         env:
-          QILIN_TELEMETRY_DISABLED: '1'
-          QILIN_TEST_CHILD_FAILURE: !!js String(process.env.QILIN_TEST_CHILD_FAILURE ?? '')
+          OPENKYLIN_TELEMETRY_DISABLED: '1'
+          OPENKYLIN_TEST_CHILD_FAILURE: !!js String(process.env.OPENKYLIN_TEST_CHILD_FAILURE ?? '')

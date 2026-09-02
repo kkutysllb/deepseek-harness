@@ -14,7 +14,7 @@ const NO_RUNTIME_INVARIANT_MARKER = 'No runtime invariant:'
 
 interface PackageManifest {
   name?: string
-  qilin?: unknown
+  openkylin?: unknown
   exports?: Record<string, { types?: string; default?: string } | string | undefined>
   files?: string[]
   peerDependencies?: Record<string, string>
@@ -101,7 +101,7 @@ function checkManifest(
   const developmentOnlyInvariant = usesFlattenedPackageDependencies(
     owner.manifestPath,
     owner.packageName,
-    manifest.qilin,
+    manifest.openkylin,
   )
   const expectedRange = 'workspace:^'
   const peerRange = manifest.peerDependencies?.['@qilin/invariants']

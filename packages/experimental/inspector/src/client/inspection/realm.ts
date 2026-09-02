@@ -5,8 +5,8 @@ import { inspectorId } from '../../shared/identity.ts'
 import type { InspectorSourceDescriptor } from '../../shared/bridge/messages/observation.ts'
 import { bridgeCapabilities } from '../cdp/index.ts'
 
-const CLIENT_SOURCE_STORAGE_KEY = 'qilin.experimental-inspector.client-source-id.v0'
-const CLIENT_SOURCE_LOCK_PREFIX = 'qilin.experimental-inspector.client-source:'
+const CLIENT_SOURCE_STORAGE_KEY = 'openkylin.experimental-inspector.client-source-id.v0'
+const CLIENT_SOURCE_LOCK_PREFIX = 'openkylin.experimental-inspector.client-source:'
 
 /** Owns one browser realm's stable source id across transport reconnects. */
 export class ClientRealmSource {

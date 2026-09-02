@@ -53,8 +53,8 @@ describe('plugin apply', () => {
   it('derives the store and switch paths from the environment when config omits them', async () => {
     const home = await mkdtemp(join(tmpdir(), 'account-http-plugin-default-'))
     homes.push(home)
-    const previousHome = process.env.QILIN_HOME
-    process.env.QILIN_HOME = home
+    const previousHome = process.env.OPENKYLIN_HOME
+    process.env.OPENKYLIN_HOME = home
     try {
       const routes: WebRoute[] = []
       const ctx = new Context()
@@ -72,8 +72,8 @@ describe('plugin apply', () => {
       expect(routes).toHaveLength(2)
       await ctx.fiber.dispose()
     } finally {
-      if (previousHome === undefined) delete process.env.QILIN_HOME
-      else process.env.QILIN_HOME = previousHome
+      if (previousHome === undefined) delete process.env.OPENKYLIN_HOME
+      else process.env.OPENKYLIN_HOME = previousHome
     }
   })
 
@@ -110,13 +110,13 @@ describe('plugin apply', () => {
     expect((response as unknown as { __status?: number }).__status).toBe(500)
   })
 
-  it('boots with the valve warning when QILIN_AUTH_DISABLED is set', async () => {
-    const saved = process.env.QILIN_AUTH_DISABLED
-    const savedProd = process.env.QILIN_ENV
+  it('boots with the valve warning when OPENKYLIN_AUTH_DISABLED is set', async () => {
+    const saved = process.env.OPENKYLIN_AUTH_DISABLED
+    const savedProd = process.env.OPENKYLIN_ENV
     const savedEnvironment = process.env.ENVIRONMENT
-    delete process.env.QILIN_ENV
+    delete process.env.OPENKYLIN_ENV
     delete process.env.ENVIRONMENT
-    process.env.QILIN_AUTH_DISABLED = '1'
+    process.env.OPENKYLIN_AUTH_DISABLED = '1'
     try {
       const routes: WebRoute[] = []
       const ctx = new Context()
@@ -135,10 +135,10 @@ describe('plugin apply', () => {
       expect(warn).toHaveBeenCalled()
       await ctx.fiber.dispose()
     } finally {
-      if (saved === undefined) delete process.env.QILIN_AUTH_DISABLED
-      else process.env.QILIN_AUTH_DISABLED = saved
-      if (savedProd === undefined) delete process.env.QILIN_ENV
-      else process.env.QILIN_ENV = savedProd
+      if (saved === undefined) delete process.env.OPENKYLIN_AUTH_DISABLED
+      else process.env.OPENKYLIN_AUTH_DISABLED = saved
+      if (savedProd === undefined) delete process.env.OPENKYLIN_ENV
+      else process.env.OPENKYLIN_ENV = savedProd
       if (savedEnvironment === undefined) delete process.env.ENVIRONMENT
       else process.env.ENVIRONMENT = savedEnvironment
     }
@@ -147,7 +147,7 @@ describe('plugin apply', () => {
 
 describe('plugin apply: admin route fault path', () => {
   it('routes a dispatch fault into the logger warn seam with a 500', async () => {
-    process.env.QILIN_AUTH_DISABLED = '1'
+    process.env.OPENKYLIN_AUTH_DISABLED = '1'
     try {
       const routes: WebRoute[] = []
       const ctx = new Context()
@@ -180,7 +180,7 @@ describe('plugin apply: admin route fault path', () => {
       expect(warnings.length).toBeGreaterThanOrEqual(1)
       await ctx.fiber.dispose()
     } finally {
-      delete process.env.QILIN_AUTH_DISABLED
+      delete process.env.OPENKYLIN_AUTH_DISABLED
     }
   })
 })

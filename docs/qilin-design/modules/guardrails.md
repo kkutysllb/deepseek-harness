@@ -1,6 +1,6 @@
 # guardrails 模块（guardrails module）
 
-> QiLin engine · guardrails subsystem · 双语 / Bilingual
+> OpenKylin engine · guardrails subsystem · 双语 / Bilingual
 
 ---
 
@@ -8,7 +8,7 @@
 
 ### 职责
 
-`qilin.guardrails` 是 QiLin 的"中间件式安全围栏"。它独立于工具调用，可在 Lead Agent 的输入端、输出端、tool-call 端注入"组织级安全策略"，比如：
+`openkylin.guardrails` 是 OpenKylin 的"中间件式安全围栏"。它独立于工具调用，可在 Lead Agent 的输入端、输出端、tool-call 端注入"组织级安全策略"，比如：
 
 - 屏蔽已知 PII（信用卡号、身份证、SSN）
 - 屏蔽 prompt injection（用户消息或上游第三方 Agent 输出含 `"ignore previous instructions"`）
@@ -59,7 +59,7 @@ guardrails:
 
 ### Responsibility
 
-`qilin.guardrails` is QiLin's "middleware-style safety perimeter". It is independent of tool calls and can inject organization-level safety policies at the lead agent's input, output, and tool-call edges:
+`openkylin.guardrails` is OpenKylin's "middleware-style safety perimeter". It is independent of tool calls and can inject organization-level safety policies at the lead agent's input, output, and tool-call edges:
 
 - Mask PII (credit cards, IDs, SSNs)
 - Block prompt injection ("ignore previous instructions")

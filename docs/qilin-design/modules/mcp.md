@@ -1,6 +1,6 @@
 # mcp 模块（mcp module）
 
-> QiLin engine · mcp subsystem · 双语 / Bilingual
+> OpenKylin engine · mcp subsystem · 双语 / Bilingual
 
 ---
 
@@ -8,7 +8,7 @@
 
 ### 职责
 
-`qilin.mcp` 是 Model Context Protocol（MCP）适配层。QiLin 既能作为 MCP 客户端消费外部 MCP 服务器的工具，也能通过缓存层减少重复发现。
+`openkylin.mcp` 是 Model Context Protocol（MCP）适配层。OpenKylin 既能作为 MCP 客户端消费外部 MCP 服务器的工具，也能通过缓存层减少重复发现。
 
 - **客户端管理**：通过 `langchain-mcp-adapters` 包装 stdio / SSE / HTTP MCP 服务器
 - **连接池**：按工具调用复用连接，避免每次跑 agent 都重新拉取
@@ -59,7 +59,7 @@ extensions:
 
 ### Responsibility
 
-`qilin.mcp` is QiLin's Model Context Protocol adapter. QiLin is both:
+`openkylin.mcp` is OpenKylin's Model Context Protocol adapter. OpenKylin is both:
 
 - **MCP client** — Consume tools from external MCP servers
 - **MCP-aware runtime** — Use caching layer to avoid re-discovery

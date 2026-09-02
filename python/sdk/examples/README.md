@@ -2,7 +2,7 @@
 
 English | [中文](README.zh.md)
 
-Runnable Python SDK example over the sole application launcher, `qilin --profile sdk-minimal`. The Python client owns JSON-RPC stdio; the profile owns the agent composition, persistence, execution policy, and plugins.
+Runnable Python SDK example over the sole application launcher, `openkylin --profile sdk-minimal`. The Python client owns JSON-RPC stdio; the profile owns the agent composition, persistence, execution policy, and plugins.
 
 ## Run the minimal agent
 
@@ -17,7 +17,7 @@ python python/sdk/examples/minimal.py \
   "Inspect the repository and fix the failing tests."
 ```
 
-Set `DEEPSEEK_BASE_URL` for a compatible proxy, `QILIN_MODEL` for the script's default model, or `QILIN_SYSTEM_PROMPT` for the deployment persona. `--model` is the single runtime model selection; no matching environment variable is required. `--profile` can select another SDK-serving profile. The selected home stores the generated `sdk-minimal` profile and uncompressed JSONL session logs under `sessions/`; the script never reads `~/.qilin` implicitly.
+Set `DEEPSEEK_BASE_URL` for a compatible proxy, `OPENKYLIN_MODEL` for the script's default model, or `OPENKYLIN_SYSTEM_PROMPT` for the deployment persona. `--model` is the single runtime model selection; no matching environment variable is required. `--profile` can select another SDK-serving profile. The selected home stores the generated `sdk-minimal` profile and uncompressed JSONL session logs under `sessions/`; the script never reads `~/.openkylin` implicitly.
 
 The shipped [`@qilin/sdk-minimal` bundle](../../../packages/bundle/sdk-minimal/README.md) is the complete explicit Cordis tree for this mode. It exposes exactly:
 
@@ -30,15 +30,15 @@ The persistent PTY and editor can modify any path available to the runtime proce
 
 ## Add plugins
 
-Use the runtime wheel's `qilin` command against the same explicit home for persistent profile changes:
+Use the runtime wheel's `openkylin` command against the same explicit home for persistent profile changes:
 
 ```sh
-export QILIN_HOME=/absolute/path/to/example-dsh-home
-qilin plugin --profile sdk-minimal add file:/absolute/path/to/my-plugin-bundle
+export OPENKYLIN_HOME=/absolute/path/to/example-dsh-home
+openkylin plugin --profile sdk-minimal add file:/absolute/path/to/my-plugin-bundle
 ```
 
 Use `sdk-minimal` in that command to extend this example, or `sdk` to extend the full base-backed SDK profile. The Python call can also pass additional absolute patch paths in `patches=(...)`; later files win. A selected profile must retain `@qilin/sdk-app` or another JSON-RPC server row. The example accepts no complete Cordis file or arbitrary process argv.
 
-The same runtime wheel packages the `web` profile and its frontend assets for direct CLI use: `qilin web` starts that separate application. A Python SDK client cannot select `web` because it has no JSON-RPC server row.
+The same runtime wheel packages the `web` profile and its frontend assets for direct CLI use: `openkylin web` starts that separate application. A Python SDK client cannot select `web` because it has no JSON-RPC server row.
 
 See the [Python SDK tutorial](../../../docs/user/guide/python-sdk.md) and [SDK reference](../README.md).

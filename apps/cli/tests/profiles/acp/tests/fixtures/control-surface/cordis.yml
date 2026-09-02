@@ -1,4 +1,4 @@
-# Keyless generic ACP v1 control-surface patch over `qilin --profile acp`.
+# Keyless generic ACP v1 control-surface patch over `openkylin --profile acp`.
 
 - id: llm-deepseek
   name: '@qilin/llm-deepseek'
@@ -13,7 +13,7 @@
 - id: session-persistence-jsonl
   name: '@qilin/session-persistence-jsonl'
   config:
-    root: !!js process.env.QILIN_CONFORMANCE_PERSISTENCE_ROOT
+    root: !!js process.env.OPENKYLIN_CONFORMANCE_PERSISTENCE_ROOT
     compression: none
 
 - insert:

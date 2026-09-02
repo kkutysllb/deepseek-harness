@@ -1,6 +1,6 @@
 {
   "name": "@qilin/headless",
-  "description": "The qilin one-shot bundle: a direct core Agent/Session runner over qilin-base with no Host, HTTP, or browser layer",
+  "description": "The openkylin one-shot bundle: a direct core Agent/Session runner over qilin-base with no Host, HTTP, or browser layer",
   "version": "0.1.2-alpha.3",
   "publishConfig": {
     "access": "public"
@@ -38,7 +38,7 @@
     "lib/types/**/*.d.ts"
   ],
   "license": "MIT",
-  "qilin": {
+  "openkylin": {
     "bundle": {
       "patch": "./cordis.patch.yml"
     }

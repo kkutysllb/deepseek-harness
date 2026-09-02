@@ -27,4 +27,4 @@
 - id: session-persistence-jsonl
   config:
     root: './.sessions'
-    compression: !!js "process.env.QILIN_SNAPSHOT === undefined ? 'zstd' : 'none'"
+    compression: !!js "process.env.OPENKYLIN_SNAPSHOT === undefined ? 'zstd' : 'none'"

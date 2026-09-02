@@ -19,7 +19,7 @@ import { afterEach, beforeEach, describe, expect, it } from 'vitest'
 
 /** Published-entry acceptance for argument errors, profile lifecycle, and boot-free config dumps. */
 const repoRoot = fileURLToPath(new URL('../../../', import.meta.url))
-// The qilin built bin cold-starts slowly on the contended self-hosted Windows pool; the
+// The openkylin built bin cold-starts slowly on the contended self-hosted Windows pool; the
 // execa deadline, its error text, the outer vitest case budget, and waitForFile all
 // share this value so a widening cannot leave a stale 25s diagnostic behind.
 const SPAWN_TIMEOUT_MS = 60_000
@@ -48,7 +48,7 @@ async function runBuiltBin(
     ...cwd === undefined ? {} : { cwd },
   })
   if (result.timedOut) {
-    throw new Error(`qilin built bin did not exit within ${SPAWN_TIMEOUT_MS / 1_000}s. stdout:\n${result.stdout}\nstderr:\n${result.stderr}`)
+    throw new Error(`openkylin built bin did not exit within ${SPAWN_TIMEOUT_MS / 1_000}s. stdout:\n${result.stdout}\nstderr:\n${result.stderr}`)
   }
   return { stdout: result.stdout, code: result.exitCode ?? -1, stderr: result.stderr }
 }
@@ -56,7 +56,7 @@ async function runBuiltBin(
 async function waitForFile(file: string): Promise<void> {
   const deadline = Date.now() + SPAWN_TIMEOUT_MS
   while (!existsSync(file)) {
-    if (Date.now() >= deadline) throw new Error(`qilin profile lifecycle marker did not appear: ${file}`)
+    if (Date.now() >= deadline) throw new Error(`openkylin profile lifecycle marker did not appear: ${file}`)
     await new Promise(resolve => setTimeout(resolve, 20))
   }
 }
@@ -71,7 +71,7 @@ interface ProfileLifecycleFixture {
 
 /**
  * A minimal custom profile: one lifecycle-marker plugin bundle listed in
- * qilin.profile.bundles, no qilin-base — proving out-of-box composition machinery without
+ * openkylin.profile.bundles, no qilin-base — proving out-of-box composition machinery without
  * booting the entire product tree.
  */
 function createProfileLifecycleFixture(): ProfileLifecycleFixture {
@@ -98,7 +98,7 @@ function createProfileLifecycleFixture(): ProfileLifecycleFixture {
     '  }, 20)',
     '  // Echo the mounted generation so the hot-reload e2e can assert both an',
     '  // applied override and its removal reverting to this bundle default.',
-    "  writeFileSync(join(process.env.QILIN_HOME, 'config-echo'), String(config.generation ?? 'bundle-default'))",
+    "  writeFileSync(join(process.env.OPENKYLIN_HOME, 'config-echo'), String(config.generation ?? 'bundle-default'))",
     "  writeFileSync(process.env.RAW_READY_FILE, 'ready')",
     '  void ctx.loader.await().then(() => {',
     "    if (active) writeFileSync(process.env.RAW_SETTLED_FILE, 'settled')",
@@ -121,7 +121,7 @@ function createProfileLifecycleFixture(): ProfileLifecycleFixture {
     name: 'qilin-lifecycle-bundle',
     version: '0.0.0',
     type: 'module',
-    qilin: { bundle: { patch: './cordis.patch.yml' } },
+    openkylin: { bundle: { patch: './cordis.patch.yml' } },
   }, undefined, 2))
   const profileDir = join(home, 'profiles', 'lifecycle')
   mkdirSync(join(profileDir, 'node_modules'), { recursive: true })
@@ -129,7 +129,7 @@ function createProfileLifecycleFixture(): ProfileLifecycleFixture {
     name: 'qilin-profile-lifecycle',
     private: true,
     dependencies: {},
-    qilin: { profile: { bundles: ['qilin-lifecycle-bundle'] } },
+    openkylin: { profile: { bundles: ['qilin-lifecycle-bundle'] } },
   }, undefined, 2))
   // Hand-place the "installed" bundle where profile resolution finds it.
   writeFileSync(join(profileDir, 'cordis.patch.yml'), '[]\n')
@@ -154,7 +154,7 @@ function startProfileLifecycle(fixture: ProfileLifecycleFixture, args: readonly 
     killSignal: 'SIGKILL',
     reject: false,
     env: {
-      QILIN_HOME: fixture.home,
+      OPENKYLIN_HOME: fixture.home,
       RAW_READY_FILE: fixture.ready,
       RAW_SETTLED_FILE: fixture.settled,
       RAW_DISPOSED_FILE: fixture.disposed,
@@ -203,7 +203,7 @@ function createEnvironmentProbeProfile(home: string, project: string): void {
     name: 'qilin-profile-environment-probe',
     private: true,
     dependencies: {},
-    qilin: { profile: { bundles: ['@qilin/base'] } },
+    openkylin: { profile: { bundles: ['@qilin/base'] } },
   }, undefined, 2))
   writeFileSync(join(profileDir, 'cordis.patch.yml'), [
     '- insert:',
@@ -260,7 +260,7 @@ function createStartupFixture(): StartupFixture {
     '    interrupted = true',
     "    process.emit('SIGTERM')",
     '  }, 20)',
-    "  writeFileSync(join(process.env.QILIN_HOME, 'config-echo'), String(config.generation ?? 'bundle-default'))",
+    "  writeFileSync(join(process.env.OPENKYLIN_HOME, 'config-echo'), String(config.generation ?? 'bundle-default'))",
     "  writeFileSync(process.env.RAW_READY_FILE, 'ready')",
     '  ctx.effect(() => () => { clearInterval(heartbeat) })',
     '}',
@@ -271,7 +271,7 @@ function createStartupFixture(): StartupFixture {
     "import { join } from 'node:path'",
     "export const name = 'reload-witness'",
     'export function apply(ctx, config = {}) {',
-    "  writeFileSync(join(process.env.QILIN_HOME, 'witness'), String(config.generation ?? 'bundle-default'))",
+    "  writeFileSync(join(process.env.OPENKYLIN_HOME, 'witness'), String(config.generation ?? 'bundle-default'))",
     '}',
     '',
   ].join('\n'))
@@ -293,13 +293,13 @@ function createStartupFixture(): StartupFixture {
     name: 'qilin-startup-bundle',
     version: '0.0.0',
     type: 'module',
-    qilin: { bundle: { patch: './cordis.patch.yml' } },
+    openkylin: { bundle: { patch: './cordis.patch.yml' } },
   }, undefined, 2))
   writeFileSync(join(profileDir, 'package.json'), JSON.stringify({
     name: 'qilin-profile-startup',
     private: true,
     dependencies: {},
-    qilin: { profile: { bundles: ['qilin-startup-bundle'] } },
+    openkylin: { profile: { bundles: ['qilin-startup-bundle'] } },
   }, undefined, 2))
   writeFileSync(join(profileDir, 'cordis.patch.yml'), '[]\n')
   return {
@@ -319,14 +319,14 @@ function startStartupProfile(fixture: StartupFixture, args: readonly string[]) {
     timeout: SPAWN_TIMEOUT_MS,
     killSignal: 'SIGKILL',
     env: {
-      QILIN_HOME: fixture.home,
+      OPENKYLIN_HOME: fixture.home,
       RAW_READY_FILE: fixture.ready,
       RAW_INTERRUPT_FILE: fixture.interrupt,
     },
   })
 }
 
-describe.skipIf(!existsSync(dshBin))('qilin BUILT bin (node lib/bin.js, no tsx)', () => {
+describe.skipIf(!existsSync(dshBin))('openkylin BUILT bin (node lib/bin.js, no tsx)', () => {
   it('requires --profile and rejects removed commands', async () => {
     const bare = await runBuiltBin()
     expect(bare.code).toBe(1)
@@ -334,8 +334,8 @@ describe.skipIf(!existsSync(dshBin))('qilin BUILT bin (node lib/bin.js, no tsx)'
     expect(bare.stderr).toContain('--profile <name> is required')
     const help = await runBuiltBin(['--help'])
     expect(help.code).toBe(0)
-    expect(help.stdout).toContain('qilin --profile web')
-    expect(help.stdout).toContain('qilin plugin --profile')
+    expect(help.stdout).toContain('openkylin --profile web')
+    expect(help.stdout).toContain('openkylin plugin --profile')
     expect(help.stdout).not.toMatch(/^\s+(?:tui|meta|upgrade)\b/mu)
     for (const removed of [['tui'], ['--config', 'x.yml'], ['-p', 'task'], ['run', 'task']]) {
       const result = await runBuiltBin(removed)
@@ -347,51 +347,51 @@ describe.skipIf(!existsSync(dshBin))('qilin BUILT bin (node lib/bin.js, no tsx)'
     const home = mkdtempSync(join(tmpdir(), 'qilin-app-help-'))
     try {
       const web = await runBuiltBin(['--profile', 'web', '--help'], {
-        QILIN_HOME: home,
-        QILIN_TELEMETRY_DISABLED: '1',
+        OPENKYLIN_HOME: home,
+        OPENKYLIN_TELEMETRY_DISABLED: '1',
       })
       expect(web.code).toBe(0)
       expect(web.stderr).toBe('')
-      expect(web.stdout).toContain('Usage: qilin --profile web')
+      expect(web.stdout).toContain('Usage: openkylin --profile web')
       expect(web.stdout).toContain('--port <port>')
-      expect(web.stdout).not.toContain('qilin web: http://')
+      expect(web.stdout).not.toContain('openkylin web: http://')
 
       const wildcardHost = await runBuiltBin(['web', '--host', '0.0.0.0'], {
-        QILIN_HOME: home,
-        QILIN_TELEMETRY_DISABLED: '1',
+        OPENKYLIN_HOME: home,
+        OPENKYLIN_TELEMETRY_DISABLED: '1',
       })
       expect(wildcardHost.code).toBe(1)
       expect(wildcardHost.stdout).toBe('')
       expect(wildcardHost.stderr).toContain('--host 0.0.0.0 is intentionally not supported yet for safety: it would expose remote code execution to the network; use 127.0.0.1 instead')
-      expect(wildcardHost.stderr).not.toContain('qilin web: http://')
+      expect(wildcardHost.stderr).not.toContain('openkylin web: http://')
 
       const headlessHelp = await runBuiltBin(['--profile', 'headless', '--help'], {
-        QILIN_HOME: home,
-        QILIN_TELEMETRY_DISABLED: '1',
+        OPENKYLIN_HOME: home,
+        OPENKYLIN_TELEMETRY_DISABLED: '1',
       })
       expect(headlessHelp.code).toBe(0)
       expect(headlessHelp.stderr).toBe('')
-      expect(headlessHelp.stdout).toContain('Usage: qilin --profile headless')
+      expect(headlessHelp.stdout).toContain('Usage: openkylin --profile headless')
 
       const sdkHelp = await runBuiltBin(['--profile', 'sdk', '--help'], {
-        QILIN_HOME: home,
-        QILIN_TELEMETRY_DISABLED: '1',
+        OPENKYLIN_HOME: home,
+        OPENKYLIN_TELEMETRY_DISABLED: '1',
       })
       expect(sdkHelp.code).toBe(0)
       expect(sdkHelp.stderr).toBe('')
-      expect(sdkHelp.stdout).toContain('Usage: qilin --profile sdk')
+      expect(sdkHelp.stdout).toContain('Usage: openkylin --profile sdk')
 
       const acpHelp = await runBuiltBin(['--profile', 'acp', '--help'], {
-        QILIN_HOME: home,
-        QILIN_TELEMETRY_DISABLED: '1',
+        OPENKYLIN_HOME: home,
+        OPENKYLIN_TELEMETRY_DISABLED: '1',
       })
       expect(acpHelp.code).toBe(0)
       expect(acpHelp.stderr).toBe('')
-      expect(acpHelp.stdout).toContain('Usage: qilin --profile acp')
+      expect(acpHelp.stdout).toContain('Usage: openkylin --profile acp')
 
       const missingTask = await runBuiltBin(['--profile', 'headless'], {
-        QILIN_HOME: home,
-        QILIN_TELEMETRY_DISABLED: '1',
+        OPENKYLIN_HOME: home,
+        OPENKYLIN_TELEMETRY_DISABLED: '1',
       })
       expect(missingTask.code).toBe(1)
       expect(missingTask.stderr).toContain('a task is required')
@@ -411,8 +411,8 @@ describe.skipIf(!existsSync(dshBin))('qilin BUILT bin (node lib/bin.js, no tsx)'
     ].join('\n'))
     try {
       const result = await runBuiltBin(['--profile', 'sdk', '--patch', patch], {
-        QILIN_HOME: home,
-        QILIN_TELEMETRY_DISABLED: '1',
+        OPENKYLIN_HOME: home,
+        OPENKYLIN_TELEMETRY_DISABLED: '1',
         DEEPSEEK_API_KEY: 'built-sdk-startup-failure-no-call',
       }, home)
       expect(result.code).toBe(1)
@@ -433,8 +433,8 @@ describe.skipIf(!existsSync(dshBin))('qilin BUILT bin (node lib/bin.js, no tsx)'
       killSignal: 'SIGKILL',
       env: {
         ...process.env,
-        QILIN_HOME: home,
-        QILIN_TELEMETRY_DISABLED: '1',
+        OPENKYLIN_HOME: home,
+        OPENKYLIN_TELEMETRY_DISABLED: '1',
         DEEPSEEK_API_KEY: 'built-sdk-profile-no-call',
       },
       extendEnv: false,
@@ -494,11 +494,11 @@ describe.skipIf(!existsSync(dshBin))('qilin BUILT bin (node lib/bin.js, no tsx)'
       killSignal: 'SIGKILL',
       env: {
         ...process.env,
-        QILIN_HOME: home,
-        QILIN_TELEMETRY_DISABLED: '1',
+        OPENKYLIN_HOME: home,
+        OPENKYLIN_TELEMETRY_DISABLED: '1',
         DEEPSEEK_API_KEY: apiKey,
         DEEPSEEK_BASE_URL: server.baseURL,
-        QILIN_PERMISSION_MODE: 'danger-full-access',
+        OPENKYLIN_PERMISSION_MODE: 'danger-full-access',
       },
       extendEnv: false,
     })
@@ -574,14 +574,14 @@ describe.skipIf(!existsSync(dshBin))('qilin BUILT bin (node lib/bin.js, no tsx)'
     const home = mkdtempSync(join(tmpdir(), 'qilin-built-headless-'))
     try {
       const result = await runBuiltBin(['--profile', 'headless', 'answer', 'from', 'the', 'published', 'entry'], {
-        QILIN_HOME: home,
-        QILIN_TELEMETRY_DISABLED: '1',
+        OPENKYLIN_HOME: home,
+        OPENKYLIN_TELEMETRY_DISABLED: '1',
         DEEPSEEK_API_KEY: apiKey,
         DEEPSEEK_BASE_URL: server.baseURL,
       })
       expect(result.code, result.stderr).toBe(0)
       expect(result.stdout).toBe('published headless profile reached the mock')
-      expect(result.stderr).toBe('qilin: reasoning:\nInspecting the published entry.')
+      expect(result.stderr).toBe('openkylin: reasoning:\nInspecting the published entry.')
       expect(server.requests.length).toBeGreaterThan(0)
       expect(server.requests.every(request => request.path === '/chat/completions')).toBe(true)
       expect(JSON.stringify(server.requests.map(request => request.body))).toContain('answer from the published entry')
@@ -592,7 +592,7 @@ describe.skipIf(!existsSync(dshBin))('qilin BUILT bin (node lib/bin.js, no tsx)'
   }, SPAWN_TIMEOUT_MS + 30_000)
 
   it('does not load a project environment for --version', async () => {
-    const project = mkdtempSync(join(tmpdir(), 'qilin-version-project-'))
+    const project = mkdtempSync(join(tmpdir(), 'openkylin-version-project-'))
     writeFileSync(join(project, '.env'), 'PATH=/project-only-path\n')
     try {
       const result = await runBuiltBin(['--version'], {}, project)
@@ -605,10 +605,10 @@ describe.skipIf(!existsSync(dshBin))('qilin BUILT bin (node lib/bin.js, no tsx)'
   it('fails loud on a nonexistent profile with the plugin-command hint', async () => {
     const home = mkdtempSync(join(tmpdir(), 'qilin-missing-profile-'))
     try {
-      const result = await runBuiltBin(['--profile', 'nope'], { QILIN_HOME: home })
+      const result = await runBuiltBin(['--profile', 'nope'], { OPENKYLIN_HOME: home })
       expect(result.code).toBe(1)
       expect(result.stderr).toContain('profile "nope" does not exist')
-      expect(result.stderr).toContain('qilin plugin --profile nope add')
+      expect(result.stderr).toContain('openkylin plugin --profile nope add')
     } finally {
       rmSync(home, { recursive: true, force: true })
     }
@@ -629,8 +629,8 @@ describe.skipIf(!existsSync(dshBin))('qilin BUILT bin (node lib/bin.js, no tsx)'
       const result = await runBuiltBin(
         ['--profile', 'environment-probe'],
         {
-          QILIN_HOME: home,
-          QILIN_TELEMETRY_DISABLED: '1',
+          OPENKYLIN_HOME: home,
+          OPENKYLIN_TELEMETRY_DISABLED: '1',
           DEEPSEEK_API_KEY: undefined,
           DEEPSEEK_BASE_URL: server.baseURL,
         },
@@ -657,14 +657,14 @@ describe.skipIf(!existsSync(dshBin))('qilin BUILT bin (node lib/bin.js, no tsx)'
   it('reports a patch-overlay boot failure without hanging', async () => {
     // The HMR main watcher's initial scan once refreshed the include
     // mid-initial-apply, deadlocking the failing apply's rollback against the
-    // refresh drain: qilin exited 13 with no diagnostic instead of settling
+    // refresh drain: openkylin exited 13 with no diagnostic instead of settling
     // ([Agent Note](../../../.agents/notes/implemented/bug-fix/2026-08-03-hmr-initial-scan-boot-deadlock.md)).
     const home = mkdtempSync(join(tmpdir(), 'qilin-invalid-patch-'))
     try {
       const result = await runBuiltBin(['--profile', 'web', '--patch', invalidProvider], {
-        QILIN_HOME: home,
+        OPENKYLIN_HOME: home,
         DEEPSEEK_API_KEY: 'keyless-invalid-config',
-        QILIN_TELEMETRY_DISABLED: '1',
+        OPENKYLIN_TELEMETRY_DISABLED: '1',
       })
       expect(result.code).toBe(1)
       expect(result.stdout).toBe('')
@@ -720,7 +720,7 @@ describe.skipIf(!existsSync(dshBin))('qilin BUILT bin (node lib/bin.js, no tsx)'
       writeFileSync(profilePatch, '[]\n')
       await waitForFile(fixture.ready)
       expect(readFileSync(configFile, 'utf8')).toBe('bundle-default')
-      // The home-level user layer ($QILIN_HOME/cordis.patch.yml) is live too
+      // The home-level user layer ($OPENKYLIN_HOME/cordis.patch.yml) is live too
       // and outranks the per-profile layer.
       rmSync(fixture.ready)
       writeFileSync(join(fixture.home, 'cordis.patch.yml'), [
@@ -820,7 +820,7 @@ describe.skipIf(!existsSync(dshBin))('qilin BUILT bin (node lib/bin.js, no tsx)'
   }, SPAWN_TIMEOUT_MS + 30_000)
 
   it('anchors a relative add spec to the invoking directory, not the profile', async () => {
-    // `qilin plugin --profile x add .` from a plugin checkout must install THAT
+    // `openkylin plugin --profile x add .` from a plugin checkout must install THAT
     // checkout — pnpm's cwd is the profile directory, so an un-anchored `.`
     // would self-link the profile.
     const home = mkdtempSync(join(tmpdir(), 'qilin-plugin-anchor-'))
@@ -829,7 +829,7 @@ describe.skipIf(!existsSync(dshBin))('qilin BUILT bin (node lib/bin.js, no tsx)'
       writeFileSync(join(checkout, 'package.json'), JSON.stringify({
         name: 'anchored-bundle',
         version: '1.0.0',
-        qilin: { bundle: { patch: './cordis.patch.yml' } },
+        openkylin: { bundle: { patch: './cordis.patch.yml' } },
       }))
       writeFileSync(join(checkout, 'cordis.patch.yml'), '[]\n')
       const result = await execa(process.execPath, [dshBin, 'plugin', '--profile', 'anchor', 'add', '.'], {
@@ -838,19 +838,19 @@ describe.skipIf(!existsSync(dshBin))('qilin BUILT bin (node lib/bin.js, no tsx)'
         timeout: SPAWN_TIMEOUT_MS,
         killSignal: 'SIGKILL',
         reject: false,
-        env: { QILIN_HOME: home },
+        env: { OPENKYLIN_HOME: home },
       })
       expect(result.exitCode).toBe(0)
       const manifest = JSON.parse(readFileSync(join(home, 'profiles', 'anchor', 'package.json'), 'utf8')) as {
         dependencies: Record<string, string>
-        qilin: { profile: { bundles: string[] } }
+        openkylin: { profile: { bundles: string[] } }
       }
       expect(Object.keys(manifest.dependencies)).toEqual(['anchored-bundle'])
-      expect(manifest.qilin.profile.bundles).toContain('anchored-bundle')
+      expect(manifest.openkylin.profile.bundles).toContain('anchored-bundle')
 
       const removed = await runBuiltBin(
         ['plugin', '--profile', 'anchor', 'remove', 'anchored-bundle'],
-        { QILIN_HOME: home },
+        { OPENKYLIN_HOME: home },
         checkout,
       )
       expect(removed.code).toBe(0)
@@ -858,20 +858,20 @@ describe.skipIf(!existsSync(dshBin))('qilin BUILT bin (node lib/bin.js, no tsx)'
         readFileSync(join(home, 'profiles', 'anchor', 'package.json'), 'utf8'),
       ) as {
         dependencies?: Record<string, string>
-        qilin: { profile: { bundles: string[] } }
+        openkylin: { profile: { bundles: string[] } }
       }
       expect(Object.keys(afterRemove.dependencies ?? {})).toEqual([])
-      expect(afterRemove.qilin.profile.bundles).not.toContain('anchored-bundle')
+      expect(afterRemove.openkylin.profile.bundles).not.toContain('anchored-bundle')
     } finally {
       rmSync(home, { recursive: true, force: true })
       rmSync(checkout, { recursive: true, force: true })
     }
   }, SPAWN_TIMEOUT_MS * 2 + 30_000)
 
-  it('activates a dependency that gained qilin.bundle in a later update', async () => {
+  it('activates a dependency that gained openkylin.bundle in a later update', async () => {
     // Reconcile runs against the INSTALLED state on every successful pnpm
     // run, so `update` (not only `add`) activates a package whose newer
-    // version declares qilin.bundle. Simulated without a registry: hand-place
+    // version declares openkylin.bundle. Simulated without a registry: hand-place
     // the installed package, flip its manifest, and run a benign pnpm verb.
     const home = mkdtempSync(join(tmpdir(), 'qilin-plugin-update-'))
     try {
@@ -882,24 +882,24 @@ describe.skipIf(!existsSync(dshBin))('qilin BUILT bin (node lib/bin.js, no tsx)'
         name: 'qilin-profile-up',
         private: true,
         dependencies: { 'late-bundle': 'file:./late-bundle' },
-        qilin: { profile: { bundles: ['@qilin/base'] } },
+        openkylin: { profile: { bundles: ['@qilin/base'] } },
       }))
       writeFileSync(join(profileDir, 'cordis.patch.yml'), '[]\n')
-      // v1: no qilin manifest — a plain dependency.
+      // v1: no openkylin manifest — a plain dependency.
       writeFileSync(join(installed, 'package.json'), JSON.stringify({ name: 'late-bundle', version: '1.0.0' }))
-      const first = await runBuiltBin(['plugin', '--profile', 'up', 'root'], { QILIN_HOME: home })
+      const first = await runBuiltBin(['plugin', '--profile', 'up', 'root'], { OPENKYLIN_HOME: home })
       expect(first.code).toBe(0)
-      let manifest = JSON.parse(readFileSync(join(profileDir, 'package.json'), 'utf8')) as { qilin: { profile: { bundles: string[] } } }
-      expect(manifest.qilin.profile.bundles).toEqual(['@qilin/base'])
-      // v2: the installed package now declares qilin.bundle (an update landed).
+      let manifest = JSON.parse(readFileSync(join(profileDir, 'package.json'), 'utf8')) as { openkylin: { profile: { bundles: string[] } } }
+      expect(manifest.openkylin.profile.bundles).toEqual(['@qilin/base'])
+      // v2: the installed package now declares openkylin.bundle (an update landed).
       writeFileSync(join(installed, 'package.json'), JSON.stringify({
-        name: 'late-bundle', version: '2.0.0', qilin: { bundle: { patch: './cordis.patch.yml' } },
+        name: 'late-bundle', version: '2.0.0', openkylin: { bundle: { patch: './cordis.patch.yml' } },
       }))
       writeFileSync(join(installed, 'cordis.patch.yml'), '[]\n')
-      const second = await runBuiltBin(['plugin', '--profile', 'up', 'root'], { QILIN_HOME: home })
+      const second = await runBuiltBin(['plugin', '--profile', 'up', 'root'], { OPENKYLIN_HOME: home })
       expect(second.code).toBe(0)
-      manifest = JSON.parse(readFileSync(join(profileDir, 'package.json'), 'utf8')) as { qilin: { profile: { bundles: string[] } } }
-      expect(manifest.qilin.profile.bundles).toEqual(['@qilin/base', 'late-bundle'])
+      manifest = JSON.parse(readFileSync(join(profileDir, 'package.json'), 'utf8')) as { openkylin: { profile: { bundles: string[] } } }
+      expect(manifest.openkylin.profile.bundles).toEqual(['@qilin/base', 'late-bundle'])
     } finally {
       rmSync(home, { recursive: true, force: true })
     }
@@ -911,7 +911,7 @@ describe.skipIf(!existsSync(dshBin))('qilin BUILT bin (node lib/bin.js, no tsx)'
     afterEach(() => { rmSync(home, { recursive: true, force: true }) })
 
     it('prints the web profile bundle layers without a user layer', async () => {
-      const { stdout, code, stderr } = await runBuiltBin(['--profile', 'web', '--dump-default-config'], { QILIN_HOME: home })
+      const { stdout, code, stderr } = await runBuiltBin(['--profile', 'web', '--dump-default-config'], { OPENKYLIN_HOME: home })
       expect(code).toBe(0)
       expect(stderr).toBe('')
       expect(stdout).toContain("name: '@qilin/agent-loop'")
@@ -924,7 +924,7 @@ describe.skipIf(!existsSync(dshBin))('qilin BUILT bin (node lib/bin.js, no tsx)'
     it('prints the headless profile without Host or browser layers', async () => {
       const { stdout, code, stderr } = await runBuiltBin(
         ['--profile', 'headless', '--dump-default-config'],
-        { QILIN_HOME: home },
+        { OPENKYLIN_HOME: home },
       )
       expect(code).toBe(0)
       expect(stderr).toBe('')
@@ -937,7 +937,7 @@ describe.skipIf(!existsSync(dshBin))('qilin BUILT bin (node lib/bin.js, no tsx)'
     it('prints the exact standalone sdk-minimal tree without qilin-base', async () => {
       const { stdout, code, stderr } = await runBuiltBin(
         ['--profile', 'sdk-minimal', '--dump-default-config'],
-        { QILIN_HOME: home },
+        { OPENKYLIN_HOME: home },
       )
       expect(code).toBe(0)
       expect(stderr).toBe('')
@@ -984,7 +984,7 @@ describe.skipIf(!existsSync(dshBin))('qilin BUILT bin (node lib/bin.js, no tsx)'
 
     it('composes the profile user layer and a --patch overlay in order', async () => {
       // Auto-init the web profile first, then write its user layer.
-      const init = await runBuiltBin(['--profile', 'web', '--dump-default-config'], { QILIN_HOME: home })
+      const init = await runBuiltBin(['--profile', 'web', '--dump-default-config'], { OPENKYLIN_HOME: home })
       expect(init.code).toBe(0)
       const profilePatch = join(home, 'profiles', 'web', 'cordis.patch.yml')
       writeFileSync(profilePatch, [
@@ -1011,7 +1011,7 @@ describe.skipIf(!existsSync(dshBin))('qilin BUILT bin (node lib/bin.js, no tsx)'
       ].join('\n'))
       const { stdout, code, stderr } = await runBuiltBin(
         ['--profile', 'web', '--patch', overlay, '--dump-config'],
-        { QILIN_HOME: home },
+        { OPENKYLIN_HOME: home },
       )
       expect(code).toBe(0)
       expect(stdout).toContain('provider: configured-provider')

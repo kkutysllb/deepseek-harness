@@ -1,4 +1,4 @@
-# Agent Note: One qilin launcher for application profiles
+# Agent Note: One openkylin launcher for application profiles
 
 Status: implemented
 
@@ -14,7 +14,7 @@ The Python SDK distributes a native executable through four platform wheels. Its
 
 ### Launch scope
 
-Every supported Node application starts through the `qilin` CLI and one named profile. The shipped application commands are `qilin web`, `qilin --profile headless`, `qilin --profile sdk`, `qilin --profile sdk-minimal`, and `qilin --profile acp`; `qilin web` is the deliberate convenience alias for `--profile web`, not another application entry.
+Every supported Node application starts through the `openkylin` CLI and one named profile. The shipped application commands are `openkylin web`, `openkylin --profile headless`, `openkylin --profile sdk`, `openkylin --profile sdk-minimal`, and `openkylin --profile acp`; `openkylin web` is the deliberate convenience alias for `--profile web`, not another application entry.
 
 Vendor CLIs, build-only and test-only executables, direct in-process plugin mounting, and the private browser WebWorker preview are outside the application-launch inventory. A package app bin or root demo that launches a package entry is not an accepted extension point.
 
@@ -40,19 +40,19 @@ The shipped protocol profiles reserve stdout for protocol frames, expose help wi
 
 `@qilin/sdk-client` depends on the same-version `@qilin/cli` package, resolves its installed CLI module, runs it through the current Node executable, and selects `sdk` by default. Both client layers expose `dshBin`, `profile`, ordered `patches`, `dshHome`, process cwd, environment, and timeouts; arbitrary command/argv launch remains an internal fake-runtime adapter.
 
-SDK users customize plugins through profiles. `qilin plugin --profile <name> ...` manages persistent dependencies and bundle order, the profile's `cordis.patch.yml` owns persistent row changes, and launch `patches` supply ordered ephemeral overrides. A custom profile must retain `@qilin/sdk-app` or another SDK server row. Relative CLI-module, patch, explicit home, and process-cwd paths become absolute before spawn, and initialization has a finite bound whose diagnostic names the selected profile.
+SDK users customize plugins through profiles. `openkylin plugin --profile <name> ...` manages persistent dependencies and bundle order, the profile's `cordis.patch.yml` owns persistent row changes, and launch `patches` supply ordered ephemeral overrides. A custom profile must retain `@qilin/sdk-app` or another SDK server row. Relative CLI-module, patch, explicit home, and process-cwd paths become absolute before spawn, and initialization has a finite bound whose diagnostic names the selected profile.
 
-Direct SDK use follows normal Harness-home resolution: explicit `dshHome`, inherited `QILIN_HOME`, then `~/.qilin`. `subagent-dsh-sdk` instead requires an explicit absolute home, so a nested runtime cannot discover a person's profiles, installed plugins, credentials, or sessions through the operating-system home. DSH-specific ACP child examples also pass an isolated home; the ACP backend itself remains generic for non-DSH agents.
+Direct SDK use follows normal Harness-home resolution: explicit `dshHome`, inherited `OPENKYLIN_HOME`, then `~/.openkylin`. `subagent-dsh-sdk` instead requires an explicit absolute home, so a nested runtime cannot discover a person's profiles, installed plugins, credentials, or sessions through the operating-system home. DSH-specific ACP child examples also pass an isolated home; the ACP backend itself remains generic for non-DSH agents.
 
 ### Python runtime
 
-The Python runtime wheel packages the ordinary `@qilin/cli` CLI from `node_modules/@qilin/cli/lib/bin.js` through the private `qilin-python-runtime-closure` deploy manifest. The Python client selects `qilin --profile sdk` by default, ordered patch files, and an explicit Harness home; the runnable example under `python/sdk/examples` selects `sdk-minimal`. The installed `qilin` console command exposes the same profile grammar and the separately packaged `web` application.
+The Python runtime wheel packages the ordinary `@qilin/cli` CLI from `node_modules/@qilin/cli/lib/bin.js` through the private `qilin-python-runtime-closure` deploy manifest. The Python client selects `openkylin --profile sdk` by default, ordered patch files, and an explicit Harness home; the runnable example under `python/sdk/examples` selects `sdk-minimal`. The installed `openkylin` console command exposes the same profile grammar and the separately packaged `web` application.
 
 The executable family is `deepseek-harness-sdk-runtime-<platform>-<arch>`. The SDK wire, wheel and import distribution names, sidecar names, and wire identity `deepseek-harness-sdk-runtime` remain stable. The SDK package family is `@qilin/sdk-client`, `@qilin/sdk-protocol`, and `@qilin/sdk-jsonrpc-server`; `@qilin/acp` remains the ACP protocol plugin. There is no Python-specific Node application, checked-in complete config, compatibility package, forwarding executable, fallback parser, or SDK/ACP launcher alias. The [Python profile-runtime decision](2026-08-23-python-sdk-dsh-profile-runtime.md) owns this launch, and the [Windows x64 runtime decision](2026-08-23-python-sdk-windows-x64-runtime.md) owns the fourth carrier.
 
 ### Enforcement
 
-`verify-application-entrypoints` scans application/package manifests, executable sources, and root demo scripts. The allowlist classifies the `qilin` product bin, vendor-excluded scope, the private WebWorker build tool, and test support. An unclassified shebang, a new package bin, or a demo wrapper that bypasses `apps/cli/src/bin.ts` fails hygiene and the primary/static CI aggregates.
+`verify-application-entrypoints` scans application/package manifests, executable sources, and root demo scripts. The allowlist classifies the `openkylin` product bin, vendor-excluded scope, the private WebWorker build tool, and test support. An unclassified shebang, a new package bin, or a demo wrapper that bypasses `apps/cli/src/bin.ts` fails hygiene and the primary/static CI aggregates.
 
 ## Existing decisions and supersession
 
@@ -70,7 +70,7 @@ The [ACP automation-only protocol](../simplification/2026-07-23-acp-automation-o
 
 **Accept inline plugins or a complete `cordis.yml` in the TypeScript constructor.** Rejected: the SDK would become another package installer and application composer. Named profiles and patch files already provide persistent and per-launch customization through one resolution model.
 
-**Resolve `qilin` only from `PATH`.** Rejected: ordinary Node processes do not reliably inherit a project-local `.bin` path. A same-version package dependency provides a deterministic runtime.
+**Resolve `openkylin` only from `PATH`.** Rejected: ordinary Node processes do not reliably inherit a project-local `.bin` path. A same-version package dependency provides a deterministic runtime.
 
 **Enable module HMR in `qilin-base` and make unsafe profiles disable it.** Rejected: the shared base also underlies custom profiles, so an enabled default makes every new application remember to opt out of source-module replacement. A disabled base makes module HMR an explicit profile capability while leaving `patchReload: live` config watching available.
 
@@ -83,16 +83,16 @@ The [ACP automation-only protocol](../simplification/2026-07-23-acp-automation-o
 - Source and built CLI acceptance cover `sdk`, `sdk-minimal`, and `acp` help, transport startup, stdout purity, EOF, signals, and root disposal.
 - Bundle configuration tests pin module HMR disabled in `qilin-base` and absent from shipped mode overrides; the custom live-profile e2e pins config reload through the launcher's watch-only fallback.
 - Focused unit suites cover profile launch resolution, initialization bounds, SDK retries, server readiness, and nested isolated homes with 100% coverage on the changed runtime sources.
-- Keyless ACP and SDK snapshots boot real `qilin` profiles and pin protocol output plus persisted logs; the nested SDK composition boots a second real profile runtime.
-- The real-API workflow caps file parallelism at four because one profile e2e file can own several complete `qilin` subprocess trees; workflow tests pin that resource bound.
+- Keyless ACP and SDK snapshots boot real `openkylin` profiles and pin protocol output plus persisted logs; the nested SDK composition boots a second real profile runtime.
+- The real-API workflow caps file parallelism at four because one profile e2e file can own several complete `openkylin` subprocess trees; workflow tests pin that resource bound.
 - The Python suite exercises exe and node carriers; packaged-runtime scenarios, native macOS executable construction, both wheels, and clean-wheel default/MCP smokes pin the `deepseek-harness-sdk-runtime-*` artifacts and profile launch.
 - `verify-application-entrypoints` includes invalid fixtures for package bins, executable sources, package-launching demo wrappers, and unclassified demos.
 
 ## Consequences
 
-- A user changes an SDK application's plugin composition through a named profile and ordered patches, using the same installation and resolution model as every other qilin application.
+- A user changes an SDK application's plugin composition through a named profile and ordered patches, using the same installation and resolution model as every other openkylin application.
 - A custom profile receives live config watching without server module HMR and opts into source-module replacement only through an explicit row override.
 - The full SDK and ACP profiles share the complete base application and one set of policy and tools; `sdk-minimal` owns its explicit standalone roster, and snapshots present intentional assembled differences.
 - Adding `@qilin/cli` increases the TypeScript client's install size in exchange for a deterministic same-version runtime.
 - Trusted user patches can add a plugin that writes to stdout and corrupt their own protocol stream; shipped profiles guarantee purity, not arbitrary third-party composition.
-- Python packages the ordinary `qilin` profile launcher while retaining a closed native runtime and no system-Node requirement for wheel users.
+- Python packages the ordinary `openkylin` profile launcher while retaining a closed native runtime and no system-Node requirement for wheel users.

@@ -8,13 +8,13 @@ English | [中文](2026-07-30-source-checkout-workdir-distinction.zh.md)
 
 The `harness:source` prompt section follows the [source-location decision](../../archived/feature/2026-07-21-dsh-system-prompt-source-path.md), but its original wording called the checkout “your own source code” without distinguishing that path from the session workspace. In a normal TUI configuration that does not state `{{cwd}}` in its persona, this may be the only fixed absolute path near the start of the system prompt. DeepSeek V4 could therefore answer “what's the workdir?” with the harness checkout instead of determining the session's current working directory.
 
-A blanket statement that the checkout is not the working directory would also be false. `qilin meta` intentionally makes the source checkout both values.
+A blanket statement that the checkout is not the working directory would also be false. `openkylin meta` intentionally makes the source checkout both values.
 
 ## Decision
 
 The section identifies the path as the “DeepSeek Harness implementation checkout.” It says that the checkout location and current working directory are separate values that may differ, forbids inferring the working directory from the checkout path, directs the model to use `pwd`, and limits the checkout's purpose to inspecting or extending DSH itself.
 
-The path derivation and global `harness:source` ownership remain unchanged. The section uses first-party order −900, immediately after `harness:identity`. Describing the values as conceptually separate rather than always unequal keeps the instruction accurate in both ordinary project sessions and `qilin meta`.
+The path derivation and global `harness:source` ownership remain unchanged. The section uses first-party order −900, immediately after `harness:identity`. Describing the values as conceptually separate rather than always unequal keeps the instruction accurate in both ordinary project sessions and `openkylin meta`.
 
 ## Verification
 
@@ -22,7 +22,7 @@ The `qilin-app-boot` unit test pins the exact text and its ordering. The CLI key
 
 ## Alternatives considered
 
-**Say that the checkout is never the working directory.** Rejected because `qilin meta` deliberately makes them the same path.
+**Say that the checkout is never the working directory.** Rejected because `openkylin meta` deliberately makes them the same path.
 
 **Put the current working directory in the global source section.** Rejected because the source section is launcher-global while the working directory belongs to each session; combining them would duplicate the loop's `cwd` ownership and make a stable source fact vary per agent.
 

@@ -34,7 +34,7 @@ afterEach(async () => {
   await Promise.all(homes.splice(0).map(dir => rm(dir, { recursive: true, force: true })))
 })
 
-/** A throwaway $QILIN_HOME with an empty settings document. */
+/** A throwaway $OPENKYLIN_HOME with an empty settings document. */
 async function home(): Promise<string> {
   const dir = await mkdtemp(join(tmpdir(), 'qilin-pi-catalog-'))
   homes.push(dir)

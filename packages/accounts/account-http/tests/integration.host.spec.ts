@@ -396,13 +396,13 @@ describe('WebSocket upgrade fence', () => {
 describe('auth-disabled escape valve (contract D5-a)', () => {
   it('serves the synthetic admin transparently and refuses password changes', async () => {
     const saved = {
-      disabled: process.env.QILIN_AUTH_DISABLED,
-      prod: process.env.QILIN_ENV,
+      disabled: process.env.OPENKYLIN_AUTH_DISABLED,
+      prod: process.env.OPENKYLIN_ENV,
       environment: process.env.ENVIRONMENT,
     }
-    delete process.env.QILIN_ENV
+    delete process.env.OPENKYLIN_ENV
     delete process.env.ENVIRONMENT
-    process.env.QILIN_AUTH_DISABLED = '1'
+    process.env.OPENKYLIN_AUTH_DISABLED = '1'
     try {
       const { origin, browserCookie } = await mount()
       const me = await call(origin, '/api/v1/auth/me')
@@ -422,12 +422,12 @@ describe('auth-disabled escape valve (contract D5-a)', () => {
 
       const change = await call(origin, '/api/v1/auth/change-password', post({ currentPassword: 'x', newPassword: 'long-enough-pass' }))
       expect(change.status).toBe(400)
-      expect((JSON.parse(change.body) as { error: { message: string } }).error.message).toContain('QILIN_AUTH_DISABLED=1')
+      expect((JSON.parse(change.body) as { error: { message: string } }).error.message).toContain('OPENKYLIN_AUTH_DISABLED=1')
     } finally {
-      if (saved.disabled === undefined) delete process.env.QILIN_AUTH_DISABLED
-      else process.env.QILIN_AUTH_DISABLED = saved.disabled
-      if (saved.prod === undefined) delete process.env.QILIN_ENV
-      else process.env.QILIN_ENV = saved.prod
+      if (saved.disabled === undefined) delete process.env.OPENKYLIN_AUTH_DISABLED
+      else process.env.OPENKYLIN_AUTH_DISABLED = saved.disabled
+      if (saved.prod === undefined) delete process.env.OPENKYLIN_ENV
+      else process.env.OPENKYLIN_ENV = saved.prod
       if (saved.environment === undefined) delete process.env.ENVIRONMENT
       else process.env.ENVIRONMENT = saved.environment
     }

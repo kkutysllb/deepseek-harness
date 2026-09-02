@@ -1,5 +1,5 @@
 /**
- * ic_ds_* icon set for the qilin web UI. All glyphs render fill="currentColor"
+ * ic_ds_* icon set for the openkylin web UI. All glyphs render fill="currentColor"
  * and take {size, className}. Batch A mirrors the deepsuite icon library
  * (same figma source); batch B glyphs are harness-only figma extracts.
  */

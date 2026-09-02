@@ -224,7 +224,7 @@ export class ClientSessions implements ISessions {
   ) {
     this.selection = createSnapshotStore<SessionSelection>(
       {},
-      { persist: { name: 'qilin.sessions.current' } })
+      { persist: { name: 'openkylin.sessions.current' } })
     const restored = this.selection.getSnapshot()
     this.manager = new SessionManager(
       remote,

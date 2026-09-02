@@ -11,7 +11,7 @@
   name: '@qilin/session-persistence-jsonl'
   config:
     root: !!js dshHomePath('sessions')
-    compression: !!js 'process.env.QILIN_SNAPSHOT === undefined ? ''zstd'' : ''none'''
+    compression: !!js 'process.env.OPENKYLIN_SNAPSHOT === undefined ? ''zstd'' : ''none'''
 
 - id: agent-instructions
   name: '@qilin/agent-instructions'

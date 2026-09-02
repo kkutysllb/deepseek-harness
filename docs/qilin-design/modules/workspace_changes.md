@@ -1,6 +1,6 @@
 # workspace_changes 模块（workspace_changes module）
 
-> QiLin engine · workspace_changes subsystem · 双语 / Bilingual
+> OpenKylin engine · workspace_changes subsystem · 双语 / Bilingual
 
 ---
 
@@ -8,7 +8,7 @@
 
 ### 职责
 
-`qilin.workspace_changes` 在 sandbox 中追踪"工作区的物理文件变更"，并把变更转为结构化的"workspace_changes"事件记入 Run events。
+`openkylin.workspace_changes` 在 sandbox 中追踪"工作区的物理文件变更"，并把变更转为结构化的"workspace_changes"事件记入 Run events。
 
 - **录制器**：`recorder.py` 在 sandbox 操作前后对目录做 diff（add / modified / deleted）
 - **过滤**：屏蔽 `.git/`、`__pycache__/`、`.browser-frames/` 等临时/缓存目录
@@ -52,7 +52,7 @@
 
 ### Responsibility
 
-`qilin.workspace_changes` tracks "physical file changes in the workspace" inside the sandbox, turning them into structured `workspace_changes` events appended to Run events.
+`openkylin.workspace_changes` tracks "physical file changes in the workspace" inside the sandbox, turning them into structured `workspace_changes` events appended to Run events.
 
 - **Recorder** — `recorder.py` diffs the directory before/after sandbox ops (add / modified / deleted)
 - **Filtering** — Excludes `.git/`, `__pycache__/`, `.browser-frames/`, etc.

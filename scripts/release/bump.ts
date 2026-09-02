@@ -3,7 +3,7 @@
  * readable from the repository rather than derived inside CI
  * ([rationale](../../.agents/notes/implemented/process/2026-08-10-npm-release-sequences.md)).
  *
- * The qilin family shares one version across its publishable members, private
+ * The openkylin family shares one version across its publishable members, private
  * package manifests, and the workspace root:
  * `major`, `minor`, `patch`, or an explicit `x.y.z` (including a prerelease such
  * as `0.0.1-rc.1`). The vendored family has one version line per package, but
@@ -32,10 +32,10 @@ const ALWAYS_PUBLISHED = ['package.json', 'README*', 'LICENSE*', 'LICENCE*'] as 
  */
 const BUILD_INPUTS = ['src/**', 'tsconfig*.json', 'tsdown.config.*', 'build.config.*'] as const
 
-/** Release types the qilin family accepts besides an explicit version. */
+/** Release types the openkylin family accepts besides an explicit version. */
 const RELEASE_TYPES = ['major', 'minor', 'patch'] as const
 
-/** The workspace root manifest, which carries the qilin family's version. */
+/** The workspace root manifest, which carries the openkylin family's version. */
 const ROOT_MANIFEST = 'package.json'
 
 /** One manifest the bump rewrites, and the tag its new version will carry. */
@@ -48,7 +48,7 @@ interface PlannedVersion {
   readonly tag: string | undefined
 }
 
-/** One private qilin package whose version follows the publishable family. */
+/** One private openkylin package whose version follows the publishable family. */
 interface PrivateDshVersion {
   /** Repository-relative manifest path. */
   readonly manifestPath: string
@@ -131,7 +131,7 @@ export function compareVersions(left: string, right: string): number {
 }
 
 /**
- * The next qilin version.
+ * The next openkylin version.
  * @param current - the family's current shared version.
  * @param request - `major`, `minor`, `patch`, or an explicit version.
  * @returns The target version.
@@ -139,7 +139,7 @@ export function compareVersions(left: string, right: string): number {
 function nextSharedVersion(current: string, request: string): string {
   if (!RELEASE_TYPES.includes(request as typeof RELEASE_TYPES[number])) {
     if (!/^\d+\.\d+\.\d+(?:-[0-9A-Za-z.-]+)?$/.test(request)) {
-      throw new Error(`usage: release:qilin <major|minor|patch|x.y.z>, got ${request}`)
+      throw new Error(`usage: release:openkylin <major|minor|patch|x.y.z>, got ${request}`)
     }
     return request
   }
@@ -243,7 +243,7 @@ function rootVersion(root: string): string {
 }
 
 /**
- * Discover private package manifests that share the qilin version without joining
+ * Discover private package manifests that share the openkylin version without joining
  * its publish set.
  * @param root - repository root.
  * @returns Private package manifests sorted by path.
@@ -271,9 +271,9 @@ function privateDshVersions(root: string): PrivateDshVersion[] {
 }
 
 /**
- * Plan the qilin family's rewrite: one version for every publishable member,
+ * Plan the openkylin family's rewrite: one version for every publishable member,
  * private package, and the root.
- * @param family - the qilin family.
+ * @param family - the openkylin family.
  * @param root - repository root.
  * @param members - the family's members.
  * @param request - `major`, `minor`, `patch`, or an explicit version.
@@ -358,7 +358,7 @@ function main(): void {
     },
     allowPositionals: true,
   })
-  if (values.family === undefined) throw new Error('usage: bump.ts --family <qilin|vendor> [version]')
+  if (values.family === undefined) throw new Error('usage: bump.ts --family <openkylin|vendor> [version]')
 
   const family = releaseFamily(values.family)
   const root = process.cwd()
@@ -367,11 +367,11 @@ function main(): void {
 
   let planned: PlannedVersion[]
   let sharedVersion: string | undefined
-  if (family.id === 'qilin') {
+  if (family.id === 'openkylin') {
     const request = positionals[0]
-    if (request === undefined) throw new Error('usage: release:qilin <major|minor|patch|x.y.z>')
+    if (request === undefined) throw new Error('usage: release:openkylin <major|minor|patch|x.y.z>')
     if (values.prerelease !== undefined) {
-      throw new Error('release:qilin takes the prerelease in its version argument, as in 0.0.1-rc.1')
+      throw new Error('release:openkylin takes the prerelease in its version argument, as in 0.0.1-rc.1')
     }
     const shared = planShared(family, root, members, request)
     planned = shared.planned

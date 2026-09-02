@@ -12,13 +12,13 @@ Python SDK 单元测试驱动 fake peer，而打包运行时工作流可以在�
 
 ### 安装产物边界
 
-必需的 Python 运行时工作流先构建纯 SDK wheel 包与各平台运行时 wheel 包，再进行行为测试。每个原生目标都把这两个本地文件安装进新的 Python 3.10 虚拟环境，切换到仓库外的临时目录，清除 `PYTHONPATH` 与 `QILIN_RUNTIME_MODE`，并且只调用公开 Python 模块与打包后的可执行文件。
+必需的 Python 运行时工作流先构建纯 SDK wheel 包与各平台运行时 wheel 包，再进行行为测试。每个原生目标都把这两个本地文件安装进新的 Python 3.10 虚拟环境，切换到仓库外的临时目录，清除 `PYTHONPATH` 与 `OPENKYLIN_RUNTIME_MODE`，并且只调用公开 Python 模块与打包后的可执行文件。
 
 黑盒测试会拒绝非 venv 进程、仓库内工作目录、源码或 editable import、不相等的 distribution 版本、未精确固定运行时版本的 SDK 依赖、位于已安装运行时包之外的可执行文件，以及未出现在运行时 distribution 记录中的可执行文件。该来源校验发生在首个 agent 请求之前，因此行为通过也不能掩盖实际运行了错误代码。
 
 ### Keyless 行为
 
-每个目标都会在安装后运行完整的打包运行时场景。一个本地 SSE mock 模型提供确定性输出，公开 SDK 则覆盖默认 SDK profile、有序 patch overlay、通过 `qilin plugin` 安装外部 bundle、持久 PTY 与 editor 行为、worker thread 代码与 workflow 执行、基于 ripgrep 的搜索、外部 stdio MCP 发现与执行、模型可见及持久化快照、Zstandard 持久化、直接 JSON-RPC 与关闭。Restart 快照针对同一持久化根目录启动两个完整 SDK 运行时进程，并固定其彼此隔离的模型历史、高层结果与独立持久日志。安装后运行取代 wheel 构建前的源码 SDK 运行，因此可执行文件与 wheel 包共同接受一次验证，而不是维护两套行为清单。
+每个目标都会在安装后运行完整的打包运行时场景。一个本地 SSE mock 模型提供确定性输出，公开 SDK 则覆盖默认 SDK profile、有序 patch overlay、通过 `openkylin plugin` 安装外部 bundle、持久 PTY 与 editor 行为、worker thread 代码与 workflow 执行、基于 ripgrep 的搜索、外部 stdio MCP 发现与执行、模型可见及持久化快照、Zstandard 持久化、直接 JSON-RPC 与关闭。Restart 快照针对同一持久化根目录启动两个完整 SDK 运行时进程，并固定其彼此隔离的模型历史、高层结果与独立持久日志。安装后运行取代 wheel 构建前的源码 SDK 运行，因此可执行文件与 wheel 包共同接受一次验证，而不是维护两套行为清单。
 
 Linux 另外保留 manylinux 2.28 干净安装冒烟测试与 GLIBC 检查。macOS 保留部署目标与原生 helper 检查。这些平台约束补充共同黑盒行为，不能替代它。
 
@@ -34,7 +34,7 @@ Fork 与 Dependabot 拉取请求永远不会获得仓库密钥。它们的原生
 
 ## Existing decisions and supersession
 
-本决策取代已归档的[必需 Python 运行时拉取请求验证](../../archived/testing/2026-08-12-required-python-runtime-pull-request-ci.md)中的单目标拓扑，同时保留真实可执行文件、快照、wheel 包与干净安装必须在合并前相遇的要求。[Python SDK qilin profile 运行时](../architecture/2026-08-23-python-sdk-dsh-profile-runtime.zh.md)负责启动应用与自定义接口；[单文件 Python SDK 运行时 distribution](../architecture/2026-07-10-single-file-executable-sdk-runtime-distribution.zh.md)继续负责 SEA 打包、原生 sidecar、wheel 包标签与发布产物。
+本决策取代已归档的[必需 Python 运行时拉取请求验证](../../archived/testing/2026-08-12-required-python-runtime-pull-request-ci.md)中的单目标拓扑，同时保留真实可执行文件、快照、wheel 包与干净安装必须在合并前相遇的要求。[Python SDK openkylin profile 运行时](../architecture/2026-08-23-python-sdk-dsh-profile-runtime.zh.md)负责启动应用与自定义接口；[单文件 Python SDK 运行时 distribution](../architecture/2026-07-10-single-file-executable-sdk-runtime-distribution.zh.md)继续负责 SEA 打包、原生 sidecar、wheel 包标签与发布产物。
 
 ## Alternatives considered
 

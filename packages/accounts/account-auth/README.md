@@ -34,7 +34,7 @@ Validation judges one presented token in a fixed order: format gate (the exact c
 <a id="auth-disabled-escape-valve"></a>
 ## Auth-disabled escape valve
 
-`resolveAuthDisabled` honors an explicit `QILIN_AUTH_DISABLED=1` outside an explicit production environment (`QILIN_ENV` / `ENVIRONMENT` holding `prod` or `production`) and nothing else; unconfigured means authentication is on. `assertAuthDisabledAllowed` is the boot-time fail-loud guard: a production deployment that asks to disable authentication refuses to compose instead of silently serving with auth on. `authDisabledWarning` returns the operator-facing warning text while the valve is active.
+`resolveAuthDisabled` honors an explicit `OPENKYLIN_AUTH_DISABLED=1` outside an explicit production environment (`OPENKYLIN_ENV` / `ENVIRONMENT` holding `prod` or `production`) and nothing else; unconfigured means authentication is on. `assertAuthDisabledAllowed` is the boot-time fail-loud guard: a production deployment that asks to disable authentication refuses to compose instead of silently serving with auth on. `authDisabledWarning` returns the operator-facing warning text while the valve is active.
 
 -----
 

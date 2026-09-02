@@ -295,15 +295,15 @@ describe.skipIf(!hasPwsh)('PwshLocalExecutor.run', () => {
   it('resolve() carries stdin/env/dshEnv onto the spec, and run() threads them to the command', async () => {
     const { bash } = await setup()
     const spec = bash.resolve({
-      command: '$s = ([Console]::In.ReadToEnd()).TrimEnd(); Write-Output $s; Write-Output "[$env:SEAM_VAR][$env:QILIN_SEAM_VAR]"',
+      command: '$s = ([Console]::In.ReadToEnd()).TrimEnd(); Write-Output $s; Write-Output "[$env:SEAM_VAR][$env:OPENKYLIN_SEAM_VAR]"',
       stdin: 'piped\n',
       env: { SEAM_VAR: 'env-ok' },
-      dshEnv: { QILIN_SEAM_VAR: 'qilin-ok' },
+      dshEnv: { OPENKYLIN_SEAM_VAR: 'qilin-ok' },
     })
     // resolve() keeps the optional input/environment fields verbatim.
     expect(spec.stdin).toBe('piped\n')
     expect(spec.env).toEqual({ SEAM_VAR: 'env-ok' })
-    expect(spec.dshEnv).toEqual({ QILIN_SEAM_VAR: 'qilin-ok' })
+    expect(spec.dshEnv).toEqual({ OPENKYLIN_SEAM_VAR: 'qilin-ok' })
     const result = await bash.run(spec)
     expect(lf(result.stdout.text)).toBe('piped\n[env-ok][qilin-ok]\n')
   })
@@ -334,10 +334,10 @@ describe.skipIf(!hasPwsh)('PwshLocalExecutor.start (background process handles)'
   it('threads stdin and extra env into a background process', async () => {
     const { bash } = await setup()
     const proc = bash.start(bash.resolve({
-      command: '$s = ([Console]::In.ReadToEnd()).TrimEnd(); Write-Output $s; Write-Output "[$env:BG_VAR][$env:QILIN_BG_VAR]"',
+      command: '$s = ([Console]::In.ReadToEnd()).TrimEnd(); Write-Output $s; Write-Output "[$env:BG_VAR][$env:OPENKYLIN_BG_VAR]"',
       stdin: 'bg-stdin\n',
       env: { BG_VAR: 'bg-env' },
-      dshEnv: { QILIN_BG_VAR: 'bg-dsh-env' },
+      dshEnv: { OPENKYLIN_BG_VAR: 'bg-dsh-env' },
     }))
     const partialOutput = await readUntil(proc, '[bg-env][bg-dsh-env]')
     await proc.done

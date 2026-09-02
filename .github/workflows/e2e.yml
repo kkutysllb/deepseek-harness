@@ -49,7 +49,7 @@ permissions:
 env:
   # CI runs must never report to the production telemetry endpoint baked
   # into apps/cli/cordis.yml (AppCLIEntry disables the row when set).
-  QILIN_TELEMETRY_DISABLED: '1'
+  OPENKYLIN_TELEMETRY_DISABLED: '1'
 
 jobs:
   e2e:
@@ -60,7 +60,7 @@ jobs:
     if: >-
       github.event_name != 'pull_request'
       || !(github.event.pull_request.head.repo.fork || github.event.pull_request.user.login == 'dependabot[bot]')
-    # Profile e2e files can each own several complete qilin subprocess trees, so
+    # Profile e2e files can each own several complete openkylin subprocess trees, so
     # four file workers preserve process/PTY headroom. Tests retain 120s/test
     # and retry 2; 45m still bounds retry storms against a slow API.
     timeout-minutes: 45
@@ -101,7 +101,7 @@ jobs:
           fi
           echo "DEEPSEEK_API_KEY present."
 
-      # The e2e suites boot the example bins in `lib` mode (QILIN_EXAMPLE_MODE=lib):
+      # The e2e suites boot the example bins in `lib` mode (OPENKYLIN_EXAMPLE_MODE=lib):
       # the built artifact under plain Node, resolving plugins through real package
       # exports — the shape a real consumer runs. That requires a prior build.
       - name: Build (lib for the e2e example bins)
@@ -116,6 +116,6 @@ jobs:
         env:
           DEEPSEEK_API_KEY: ${{ secrets.DEEPSEEK_API_KEY_EXTERNAL }}
           DEEPSEEK_BASE_URL: https://api.deepseek.com
-          QILIN_E2E_MAX_WORKERS: 4
-          QILIN_EXAMPLE_MODE: lib
+          OPENKYLIN_E2E_MAX_WORKERS: 4
+          OPENKYLIN_EXAMPLE_MODE: lib
         run: pnpm run test:e2e

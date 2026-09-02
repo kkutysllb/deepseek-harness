@@ -1,5 +1,5 @@
 ---
-description: "Durable workflow-run Conversation Node for the qilin web client: reconstructs top-level workflow runs as independent chat nodes with nested member disclosure."
+description: "Durable workflow-run Conversation Node for the openkylin web client: reconstructs top-level workflow runs as independent chat nodes with nested member disclosure."
 kind: "package-reference"
 ---
 
@@ -9,7 +9,7 @@ English | [中文](README.zh.md)
 
 ## Summary
 
-`qilin-client-ui-workflow-run` is the browser plugin that reconstructs durable top-level workflow runs as independent Chat nodes in the qilin web client. It consumes the four `tool-workflow/*` Session events owned by `qilin-tool-workflow`, registers one `ConversationNodeDefinition`, and renders through the keyed `conversation.chat.node` slot without changing the existing workflow tool card. The run and each phase are controlled disclosures: a mount opens running, failed, cancelled, and interrupted levels and closes fully completed levels, and users can toggle either level with the full row, Enter, or Space. A member opens a child Session only while every current fact agrees, and the node shows run, phase, member identity, and status only.
+`qilin-client-ui-workflow-run` is the browser plugin that reconstructs durable top-level workflow runs as independent Chat nodes in the openkylin web client. It consumes the four `tool-workflow/*` Session events owned by `qilin-tool-workflow`, registers one `ConversationNodeDefinition`, and renders through the keyed `conversation.chat.node` slot without changing the existing workflow tool card. The run and each phase are controlled disclosures: a mount opens running, failed, cancelled, and interrupted levels and closes fully completed levels, and users can toggle either level with the full row, Enter, or Space. A member opens a child Session only while every current fact agrees, and the node shows run, phase, member identity, and status only.
 
 ## Table of Contents
 

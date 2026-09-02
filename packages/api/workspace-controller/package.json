@@ -41,7 +41,7 @@
     "./src/*": "./src/*",
     "./package.json": "./package.json"
   },
-  "qilin": {
+  "openkylin": {
     "client": {
       "external": [
         "@qilin/api-gateway/client"

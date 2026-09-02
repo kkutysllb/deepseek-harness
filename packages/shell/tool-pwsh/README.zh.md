@@ -9,7 +9,7 @@ kind: "package-reference"
 
 ## 概述
 
-`qilin-tool-pwsh` 为 agent 提供 `pwsh` 工具，通过已挂载的 shell 执行器运行 PowerShell 命令——它是 `qilin-tool-bash` 的 Windows 对应物，逐调用镜像。每次调用都运行在全新 pwsh 进程中，因此状态不会保留；`run_in_background` 把长时间运行的命令变成后台任务。命令是 PowerShell 方言：原生 `C:\...` 路径与 `$env:NAME` 变量，不做方言翻译。每次调用都运行在受管 `QILIN_*` 环境中；在沙箱执行器下，工具会教授并执行 Windows 特有的语言模式与命名管道约定。请与 `qilin-pwsh-local` 等 PowerShell 执行器以及 `qilin-shell-env` 插件一起挂载。
+`qilin-tool-pwsh` 为 agent 提供 `pwsh` 工具，通过已挂载的 shell 执行器运行 PowerShell 命令——它是 `qilin-tool-bash` 的 Windows 对应物，逐调用镜像。每次调用都运行在全新 pwsh 进程中，因此状态不会保留；`run_in_background` 把长时间运行的命令变成后台任务。命令是 PowerShell 方言：原生 `C:\...` 路径与 `$env:NAME` 变量，不做方言翻译。每次调用都运行在受管 `OPENKYLIN_*` 环境中；在沙箱执行器下，工具会教授并执行 Windows 特有的语言模式与命名管道约定。请与 `qilin-pwsh-local` 等 PowerShell 执行器以及 `qilin-shell-env` 插件一起挂载。
 
 ## 目录
 
@@ -102,7 +102,7 @@ renderer 共享 bash 工具的结构与来自 `qilin-shell` 的 `parseExitStatus
 
 - [shell 包映射](../README.zh.md)——bash 能力家族及其角色。
 - [Bash 执行器子系统](../../../docs/subsystems/shell.zh.md)——请求／spec 词汇、结果与后台进程。
-- [shell-env](../shell-env/README.zh.md)——每次调用都会收到的受管 `QILIN_*` 环境。
+- [shell-env](../shell-env/README.zh.md)——每次调用都会收到的受管 `OPENKYLIN_*` 环境。
 - [tool-jobs](../../jobs/tool-jobs/README.zh.md)——后台运行的 `job_output`、`job_list` 与 `job_kill` 控制。
 - [pwsh 工具与执行器 Agent Note](../../../.agents/notes/implemented/feature/2026-08-01-pwsh-tool-and-executor.zh.md)——为什么工具镜像 bash 工具，以及 Windows 沙箱如何门控其描述。
 - [Windows ACL 受限令牌沙箱 Agent Note](../../../.agents/notes/implemented/feature/2026-08-08-windows-acl-restricted-token-sandbox.zh.md)——语言模式与命名管道约定。

@@ -16,11 +16,11 @@ function records(content: string): Record<string, unknown>[] {
   return content.split('\n').filter(Boolean).map(line => JSON.parse(line) as Record<string, unknown>)
 }
 
-describe('qilin run with Agent Teams enabled', () => {
+describe('openkylin run with Agent Teams enabled', () => {
   it('runs two teammates, durable peer mail, dependent tasks, waiting, and final aggregation', async () => {
     const cwd = await mkdtemp(join(tmpdir(), 'qilin-agent-team-headless-'))
     try {
-      const home = join(cwd, '.qilin')
+      const home = join(cwd, '.openkylin')
       const sessions = join(home, 'sessions')
       const profileDir = join(home, 'profiles', 'headless')
       await mkdir(profileDir, { recursive: true })
@@ -30,7 +30,7 @@ describe('qilin run with Agent Teams enabled', () => {
         dependencies: {
           '@qilin/experimental-agent-team-profile': 'workspace:^',
         },
-        qilin: {
+        openkylin: {
           profile: {
             bundles: [
               '@qilin/base',
@@ -57,9 +57,9 @@ describe('qilin run with Agent Teams enabled', () => {
         configArgs: ['--profile', 'headless', '请明确使用 Agent Teams，把调研和实现拆给两个 teammate，等待完成后汇总。'],
         tsconfigPath,
         env: {
-          QILIN_HOME: home,
-          QILIN_AGENTS_HOME: join(cwd, '.agents'),
-          QILIN_TELEMETRY_DISABLED: '1',
+          OPENKYLIN_HOME: home,
+          OPENKYLIN_AGENTS_HOME: join(cwd, '.agents'),
+          OPENKYLIN_TELEMETRY_DISABLED: '1',
           DEEPSEEK_API_KEY: '',
           NODE_OPTIONS: [
             process.env.NODE_OPTIONS,
@@ -78,7 +78,7 @@ describe('qilin run with Agent Teams enabled', () => {
       })
       expect(
         result.exitCode,
-        `qilin headless profile exited unexpectedly.\nstdout:\n${result.stdout}\nstderr:\n${result.stderr}`,
+        `openkylin headless profile exited unexpectedly.\nstdout:\n${result.stdout}\nstderr:\n${result.stderr}`,
       ).toBe(0)
       expect(result.stderr).toBe('')
       expect(result.stdout).toContain('TEAM_WORKFLOW_OK')

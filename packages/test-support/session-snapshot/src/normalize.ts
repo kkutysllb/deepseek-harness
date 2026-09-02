@@ -55,8 +55,8 @@ const LOCAL_SPILL_PATH_RE = new RegExp(
 )
 const SNAPSHOT_SPILL_PATH_RE = new RegExp(
   // The spill roots the harness has issued under both name eras (harness.ts
-  // mints `dsh-acp-snap-*`; recorded logs from the earlier name still scrub).
-  String.raw`(?:[A-Za-z]:)?[\\/](?:tmp|t)[\\/](?:(?:dsh|qilin)-acp-snap-[0-9a-f]{9}|(?:dsh|qilin)-acp-snapshot-spill)[\\/]session-[0-9a-f]{12}[\\/][0-9a-f]{12}-([A-Za-z0-9._~-]+?)`
+  // mints `openkylin-acp-snap-*`).
+  String.raw`(?:[A-Za-z]:)?[\\/](?:tmp|t)[\\/](?:openkylin-acp-snap-[0-9a-f]{9}|openkylin-acp-snapshot-spill)[\\/]session-[0-9a-f]{12}[\\/][0-9a-f]{12}-([A-Za-z0-9._~-]+?)`
   + String.raw`(?=\. Use read with offset/limit|[\s)]|$)`,
   'g',
 )

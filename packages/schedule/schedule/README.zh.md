@@ -33,10 +33,10 @@ kind: "package-reference"
 
 ### 启用 Schedule
 
-把 Schedule overlay 添加到 `qilin web` 会话；提醒工具随即出现在会话中，模型可以立即使用它们：
+把 Schedule overlay 添加到 `openkylin web` 会话；提醒工具随即出现在会话中，模型可以立即使用它们：
 
 ```sh
-qilin web --patch apps/cli/config/examples/schedule/cordis.yml
+openkylin web --patch apps/cli/config/examples/schedule/cordis.yml
 ```
 
 成功的样子如下：让模型「10 分钟后提醒我审阅 PR」，它会回复提醒的 id、目标时间与 `scheduled` 状态。如果那一刻存储无法确认，工具会报告 `persistence_uncertain` 并建议重新列出，而不是声称成功。

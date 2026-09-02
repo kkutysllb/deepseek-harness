@@ -234,7 +234,7 @@ describe('web e2e: lifecycle & chrome (workspace flow / reload / dark mode)', ()
     await page.reload({ waitUntil: 'load' })
     await page.waitForSelector('[class*="frame"]', { timeout: 30_000 })
     acknowledgeReloadConnectionLoss(tripwire, warningStart)
-    // Selection persisted (qilin.sessions.current) and history replayed: the
+    // Selection persisted (openkylin.sessions.current) and history replayed: the
     // recorded turn re-renders from a Session Controller page with zero model calls —
     // the replay cursor was fully consumed before the reload, so any stray
     // request would fail the scenario loudly at close().

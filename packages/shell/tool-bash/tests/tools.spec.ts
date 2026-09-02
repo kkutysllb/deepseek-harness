@@ -1132,8 +1132,8 @@ describe('the model-facing bash tool builds its request from named args only (no
   it('describes the managed harness environment namespace to the model', async () => {
     const { ctx } = await setupRecording()
     const description = ctx.tools.get('bash')?.description ?? ''
-    expect(description).toContain('$QILIN_*')
-    expect(description).not.toContain('QILIN_SESSION_JSONL')
+    expect(description).toContain('$OPENKYLIN_*')
+    expect(description).not.toContain('OPENKYLIN_SESSION_JSONL')
   })
 
   it('injects the session id and JSONL target path into a foreground request', async () => {
@@ -1150,10 +1150,10 @@ describe('the model-facing bash tool builds its request from named args only (no
     })
 
     expect(bash.requests[0]?.dshEnv).toEqual({
-      QILIN_HOME: recordingDshHome,
-      QILIN_SESSION_ID: 'request-fg',
-      QILIN_SESSION_JSONL: path,
-      QILIN_SHELL: '1',
+      OPENKYLIN_HOME: recordingDshHome,
+      OPENKYLIN_SESSION_ID: 'request-fg',
+      OPENKYLIN_SESSION_JSONL: path,
+      OPENKYLIN_SHELL: '1',
     })
   })
 
@@ -1170,24 +1170,24 @@ describe('the model-facing bash tool builds its request from named args only (no
         command: 'sleep 1',
         description: 'run command',
         run_in_background: true,
-        env: { QILIN_SESSION_ID: 'spoofed', QILIN_SESSION_JSONL: '/tmp/spoofed' },
+        env: { OPENKYLIN_SESSION_ID: 'spoofed', OPENKYLIN_SESSION_JSONL: '/tmp/spoofed' },
       },
       agent,
     })
 
     expect(bash.requests[0]?.env).toBeUndefined()
     expect(bash.requests[0]?.dshEnv).toEqual({
-      QILIN_HOME: recordingDshHome,
-      QILIN_SESSION_ID: 'request-bg',
-      QILIN_SESSION_JSONL: path,
-      QILIN_SHELL: '1',
+      OPENKYLIN_HOME: recordingDshHome,
+      OPENKYLIN_SESSION_ID: 'request-bg',
+      OPENKYLIN_SESSION_JSONL: path,
+      OPENKYLIN_SHELL: '1',
     })
   })
 
   it('injects built-ins and the stable session id when no JSONL locator is available', async () => {
     const { ctx, bash } = await setupRecording()
     const agent = registerFakeAgent(ctx, 'request-id-only', () => undefined)
-    const ambient = process.env.QILIN_SESSION_ID
+    const ambient = process.env.OPENKYLIN_SESSION_ID
 
     await ctx.tools.execute({
       signal: testToolSignal,
@@ -1198,11 +1198,11 @@ describe('the model-facing bash tool builds its request from named args only (no
     })
 
     expect(bash.requests[0]?.dshEnv).toEqual({
-      QILIN_HOME: recordingDshHome,
-      QILIN_SESSION_ID: 'request-id-only',
-      QILIN_SHELL: '1',
+      OPENKYLIN_HOME: recordingDshHome,
+      OPENKYLIN_SESSION_ID: 'request-id-only',
+      OPENKYLIN_SHELL: '1',
     })
-    expect(process.env.QILIN_SESSION_ID).toBe(ambient)
+    expect(process.env.OPENKYLIN_SESSION_ID).toBe(ambient)
   })
 
   it('keeps parent and child agent session environments isolated', async () => {
@@ -1222,19 +1222,19 @@ describe('the model-facing bash tool builds its request from named args only (no
 
     expect(bash.requests.map(request => request.dshEnv)).toEqual([
       {
-        QILIN_HOME: recordingDshHome,
-        QILIN_SESSION_ID: 'request-parent',
-        QILIN_SESSION_JSONL: ctx.sessionPersistence.locate(parent.session.header)?.path,
-        QILIN_SHELL: '1',
+        OPENKYLIN_HOME: recordingDshHome,
+        OPENKYLIN_SESSION_ID: 'request-parent',
+        OPENKYLIN_SESSION_JSONL: ctx.sessionPersistence.locate(parent.session.header)?.path,
+        OPENKYLIN_SHELL: '1',
       },
       {
-        QILIN_HOME: recordingDshHome,
-        QILIN_SESSION_ID: 'request-child',
-        QILIN_SESSION_JSONL: ctx.sessionPersistence.locate(child.session.header)?.path,
-        QILIN_SHELL: '1',
+        OPENKYLIN_HOME: recordingDshHome,
+        OPENKYLIN_SESSION_ID: 'request-child',
+        OPENKYLIN_SESSION_JSONL: ctx.sessionPersistence.locate(child.session.header)?.path,
+        OPENKYLIN_SHELL: '1',
       },
     ])
-    expect(bash.requests[0]?.dshEnv?.QILIN_SESSION_JSONL).not.toBe(bash.requests[1]?.dshEnv?.QILIN_SESSION_JSONL)
+    expect(bash.requests[0]?.dshEnv?.OPENKYLIN_SESSION_JSONL).not.toBe(bash.requests[1]?.dshEnv?.OPENKYLIN_SESSION_JSONL)
   })
 
   it('does not forward trusted-only fields even when the model includes them as extra arguments', async () => {

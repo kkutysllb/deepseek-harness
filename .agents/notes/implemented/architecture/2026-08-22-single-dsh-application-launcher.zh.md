@@ -1,4 +1,4 @@
-# Agent Note: 由一个 qilin 启动应用 profile
+# Agent Note: 由一个 openkylin 启动应用 profile
 
 Status: implemented
 
@@ -14,7 +14,7 @@ Python SDK 通过四个平台 wheel 包分发原生可执行文件。其打包�
 
 ### 启动范围
 
-所有受支持的 Node 应用都通过 `qilin` CLI 与一个具名 profile 启动。随附应用命令是 `qilin web`、`qilin --profile headless`、`qilin --profile sdk`、`qilin --profile sdk-minimal` 与 `qilin --profile acp`；`qilin web` 是刻意为 `--profile web` 保留的便捷别名，不是另一个应用入口。
+所有受支持的 Node 应用都通过 `openkylin` CLI 与一个具名 profile 启动。随附应用命令是 `openkylin web`、`openkylin --profile headless`、`openkylin --profile sdk`、`openkylin --profile sdk-minimal` 与 `openkylin --profile acp`；`openkylin web` 是刻意为 `--profile web` 保留的便捷别名，不是另一个应用入口。
 
 Vendor CLI、仅用于构建和测试的可执行文件、进程内直接挂载插件以及私有浏览器 WebWorker 预览都不属于应用启动清单。包应用 bin 或直接启动包入口的根 demo 都不是可接受的扩展点。
 
@@ -40,19 +40,19 @@ Profile manifest 负责 patch 重载：
 
 `@qilin/sdk-client` 依赖同版本的 `@qilin/cli` 包，解析其已安装 CLI 模块，通过当前 Node 可执行文件运行该模块，并默认选择 `sdk`。两层客户端都暴露 `dshBin`、`profile`、有序 `patches`、`dshHome`、进程 cwd、环境和超时；任意 command/argv 启动只保留为 fake-runtime 测试的内部适配器。
 
-SDK 用户通过 profile 自定义插件。`qilin plugin --profile <name> ...` 管理持久依赖与组合包顺序，profile 的 `cordis.patch.yml` 负责持久配置项变更，启动时 `patches` 提供有序临时覆盖。自定义 profile 必须保留 `@qilin/sdk-app` 或另一个 SDK 服务器配置项。相对 CLI 模块、patch、显式 home 与进程 cwd 路径会在 spawn 前变为绝对路径；初始化具有有限时限，诊断会写明所选 profile。
+SDK 用户通过 profile 自定义插件。`openkylin plugin --profile <name> ...` 管理持久依赖与组合包顺序，profile 的 `cordis.patch.yml` 负责持久配置项变更，启动时 `patches` 提供有序临时覆盖。自定义 profile 必须保留 `@qilin/sdk-app` 或另一个 SDK 服务器配置项。相对 CLI 模块、patch、显式 home 与进程 cwd 路径会在 spawn 前变为绝对路径；初始化具有有限时限，诊断会写明所选 profile。
 
-直接使用 SDK 时遵循普通 Harness home 解析：显式 `dshHome`、继承的 `QILIN_HOME`，最后是 `~/.qilin`。`subagent-dsh-sdk` 则要求显式绝对 home，因此嵌套运行时不会通过操作系统 home 发现个人 profile、已安装插件、凭据或会话。DSH 专用 ACP 子进程示例同样传入隔离 home；ACP 后端自身继续适用于非 DSH agent。
+直接使用 SDK 时遵循普通 Harness home 解析：显式 `dshHome`、继承的 `OPENKYLIN_HOME`，最后是 `~/.openkylin`。`subagent-dsh-sdk` 则要求显式绝对 home，因此嵌套运行时不会通过操作系统 home 发现个人 profile、已安装插件、凭据或会话。DSH 专用 ACP 子进程示例同样传入隔离 home；ACP 后端自身继续适用于非 DSH agent。
 
 ### Python 运行时
 
-Python 运行时 wheel 通过私有 `qilin-python-runtime-closure` 部署 manifest，打包来自 `node_modules/@qilin/cli/lib/bin.js` 的普通 `@qilin/cli` CLI。Python 客户端默认选择 `qilin --profile sdk`、有序 patch 文件与显式 Harness home；`python/sdk/examples` 下的可运行示例选择 `sdk-minimal`。安装的 `qilin` 控制台命令暴露相同 profile 语法与单独打包的 `web` 应用。
+Python 运行时 wheel 通过私有 `qilin-python-runtime-closure` 部署 manifest，打包来自 `node_modules/@qilin/cli/lib/bin.js` 的普通 `@qilin/cli` CLI。Python 客户端默认选择 `openkylin --profile sdk`、有序 patch 文件与显式 Harness home；`python/sdk/examples` 下的可运行示例选择 `sdk-minimal`。安装的 `openkylin` 控制台命令暴露相同 profile 语法与单独打包的 `web` 应用。
 
 可执行文件族是 `deepseek-harness-sdk-runtime-<platform>-<arch>`。SDK 协议格式、wheel 与 import 分发名称、伴随文件名称，以及协议 identity `deepseek-harness-sdk-runtime` 保持稳定。SDK 包族是 `@qilin/sdk-client`、`@qilin/sdk-protocol` 与 `@qilin/sdk-jsonrpc-server`；`@qilin/acp` 继续作为 ACP 协议插件。仓库不保留 Python 专用 Node 应用、检入的完整配置、兼容包、转发可执行文件、后备解析器或 SDK／ACP 启动别名。[Python profile 运行时决策](2026-08-23-python-sdk-dsh-profile-runtime.zh.md)负责该启动方式，[Windows x64 运行时决策](2026-08-23-python-sdk-windows-x64-runtime.zh.md)负责第四个载体。
 
 ### 强制校验
 
-`verify-application-entrypoints` 扫描应用／包 manifest、可执行源码和根 demo 脚本。允许清单对 `qilin` 产品 bin、排除的 vendor 范围、私有 WebWorker 构建工具和测试支持进行分类。未分类的 shebang、新包 bin 或绕过 `apps/cli/src/bin.ts` 的 demo wrapper 都会使 hygiene 与 primary／static CI 聚合失败。
+`verify-application-entrypoints` 扫描应用／包 manifest、可执行源码和根 demo 脚本。允许清单对 `openkylin` 产品 bin、排除的 vendor 范围、私有 WebWorker 构建工具和测试支持进行分类。未分类的 shebang、新包 bin 或绕过 `apps/cli/src/bin.ts` 的 demo wrapper 都会使 hygiene 与 primary／static CI 聚合失败。
 
 ## 既有决策与取代关系
 
@@ -70,7 +70,7 @@ Python 运行时 wheel 通过私有 `qilin-python-runtime-closure` 部署 manife
 
 **在 TypeScript 构造函数中接受内联插件或完整 `cordis.yml`。** 拒绝：SDK 会因此成为另一个包安装器和应用组合器。具名 profile 与 patch 文件已通过统一解析模型提供持久与逐次启动自定义。
 
-**只从 `PATH` 解析 `qilin`。** 拒绝：普通 Node 进程不一定继承项目本地 `.bin` 路径。同版本包依赖可以提供确定的运行时。
+**只从 `PATH` 解析 `openkylin`。** 拒绝：普通 Node 进程不一定继承项目本地 `.bin` 路径。同版本包依赖可以提供确定的运行时。
 
 **在 `qilin-base` 中启用模块 HMR，再由不安全的 profile 逐一禁用。** 拒绝：共享 base 同样承载自定义 profile；默认启用会要求每个新应用都记得退出源码模块替换。base 默认禁用会让模块 HMR 成为显式的 profile 能力，同时保留 `patchReload: live` 配置监视。
 
@@ -83,16 +83,16 @@ Python 运行时 wheel 通过私有 `qilin-python-runtime-closure` 部署 manife
 - 源码与构建后 CLI 验收覆盖 `sdk`、`sdk-minimal` 和 `acp` 的帮助、transport 启动、stdout 纯净性、EOF、信号与根节点 dispose。
 - 组合包配置测试钉住 `qilin-base` 默认禁用模块 HMR，随附模式覆盖层不含该策略；自定义 live profile 的 e2e 钉住启动器仅监视 fallback 提供的配置重载。
 - 聚焦单元套件覆盖 profile 启动解析、初始化时限、SDK 重试、服务器就绪和嵌套隔离 home，并对变更后的运行时源码实现 100% 覆盖率。
-- 免密钥 ACP 与 SDK 快照启动真实 `qilin` profile，并钉住协议输出与持久化日志；嵌套 SDK 组合会启动第二个真实 profile 运行时。
-- 真实 API 工作流把文件并行度限制为 4，因为一个 profile e2e 文件可能拥有多个完整 `qilin` 子进程树；工作流测试会钉住该资源上限。
+- 免密钥 ACP 与 SDK 快照启动真实 `openkylin` profile，并钉住协议输出与持久化日志；嵌套 SDK 组合会启动第二个真实 profile 运行时。
+- 真实 API 工作流把文件并行度限制为 4，因为一个 profile e2e 文件可能拥有多个完整 `openkylin` 子进程树；工作流测试会钉住该资源上限。
 - Python 套件同时测试 exe 与 node 载体；打包运行时场景、原生 macOS 可执行文件构建、两个 wheel 包以及干净 wheel 默认／MCP 冒烟测试会钉住 `deepseek-harness-sdk-runtime-*` 产物与 profile 启动。
 - `verify-application-entrypoints` 包含包 bin、可执行源码、直启包的 demo wrapper 与未分类 demo 等非法 fixture（测试前置数据）。
 
 ## 影响
 
-- 用户通过具名 profile 与有序 patch 更改 SDK 应用的插件组合，使用与其他所有 qilin 应用相同的安装与解析模型。
+- 用户通过具名 profile 与有序 patch 更改 SDK 应用的插件组合，使用与其他所有 openkylin 应用相同的安装与解析模型。
 - 自定义 profile 可以在不启用服务器模块 HMR 的情况下获得实时配置监视，只有显式覆盖配置项才会启用源码模块替换。
 - 完整 SDK 与 ACP profile 共享完整 base 应用和同一份策略与工具；`sdk-minimal` 拥有自己的显式独立清单，快照会呈现这些刻意采用的组装差异。
 - 增加 `@qilin/cli` 会扩大 TypeScript 客户端的安装体积，换来确定的同版本运行时。
 - 受信任用户 patch 可以增加写入 stdout 的插件并破坏自己的协议流；随附 profile 保证纯净，不为任意第三方组合提供保证。
-- Python 打包普通 `qilin` profile 启动器，同时保留封闭原生运行时，wheel 用户无需系统 Node。
+- Python 打包普通 `openkylin` profile 启动器，同时保留封闭原生运行时，wheel 用户无需系统 Node。

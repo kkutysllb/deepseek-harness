@@ -11,25 +11,25 @@ import {
 import { dirname, resolve } from 'node:path'
 
 /** Prefix reserved for build-time values that may be embedded in browser artifacts. */
-const CLIENT_BUILD_ENV_PREFIX = 'QILIN_CLIENT_'
+const CLIENT_BUILD_ENV_PREFIX = 'OPENKYLIN_CLIENT_'
 
 /** Non-public selector used by build orchestration to request a named client profile. */
-export const CLIENT_BUILD_PROFILE_SELECTOR = 'QILIN_BUILD_CLIENT_PROFILE'
+export const CLIENT_BUILD_PROFILE_SELECTOR = 'OPENKYLIN_BUILD_CLIENT_PROFILE'
 
 /** Public client environment required by official DSH artifacts. */
 const OFFICIAL_CLIENT_BUILD_ENVIRONMENT = {
-  QILIN_CLIENT_BUILD_PROFILE: 'official',
-  QILIN_CLIENT_TITLE: 'DeepSeek Harness',
+  OPENKYLIN_CLIENT_BUILD_PROFILE: 'official',
+  OPENKYLIN_CLIENT_TITLE: 'DeepSeek Harness',
 } as const
 
 /** Public variable carrying the source commit embedded in client artifacts. */
-const CLIENT_COMMIT_HASH_VARIABLE = 'QILIN_CLIENT_COMMIT_HASH'
+const CLIENT_COMMIT_HASH_VARIABLE = 'OPENKYLIN_CLIENT_COMMIT_HASH'
 
 /** Public variable carrying the repository package version embedded in client artifacts. */
-const CLIENT_VERSION_VARIABLE = 'QILIN_CLIENT_VERSION'
+const CLIENT_VERSION_VARIABLE = 'OPENKYLIN_CLIENT_VERSION'
 
 /** Repository-relative path of the complete client build record. */
-export const CLIENT_BUILD_RECORD_PATH = '.qilin-build/client-build-environment.json'
+export const CLIENT_BUILD_RECORD_PATH = '.openkylin-build/client-build-environment.json'
 
 const CLIENT_BUILD_RECORD_FORMAT = 1
 const CLIENT_ARTIFACT_PATTERNS = [
@@ -118,15 +118,15 @@ export function repositoryClientBuildEnvironment(
   environment: NodeJS.ProcessEnv = process.env,
 ): ClientBuildEnvironment {
   const inherited = { ...clientBuildEnvironment(environment) }
-  delete inherited.QILIN_CLIENT_COMMIT_HASH
-  delete inherited.QILIN_CLIENT_GIT_DIRTY
-  delete inherited.QILIN_CLIENT_VERSION
+  delete inherited.OPENKYLIN_CLIENT_COMMIT_HASH
+  delete inherited.OPENKYLIN_CLIENT_GIT_DIRTY
+  delete inherited.OPENKYLIN_CLIENT_VERSION
   const dirty = repositoryGitDirty(root)
   return {
     ...inherited,
-    QILIN_CLIENT_COMMIT_HASH: repositoryCommitHash(root, environment),
-    ...(dirty === true ? { QILIN_CLIENT_GIT_DIRTY: 'true' } : {}),
-    QILIN_CLIENT_VERSION: repositoryVersion(root),
+    OPENKYLIN_CLIENT_COMMIT_HASH: repositoryCommitHash(root, environment),
+    ...(dirty === true ? { OPENKYLIN_CLIENT_GIT_DIRTY: 'true' } : {}),
+    OPENKYLIN_CLIENT_VERSION: repositoryVersion(root),
   }
 }
 
@@ -139,10 +139,10 @@ export function repositoryClientBuildEnvironment(
 export function officialClientBuildEnvironment(
   root: string,
   environment: NodeJS.ProcessEnv = process.env,
-): Readonly<Record<`QILIN_CLIENT_${string}`, string>> {
+): Readonly<Record<`OPENKYLIN_CLIENT_${string}`, string>> {
   return {
-    QILIN_CLIENT_COMMIT_HASH: repositoryCommitHash(root, environment),
-    QILIN_CLIENT_VERSION: repositoryVersion(root),
+    OPENKYLIN_CLIENT_COMMIT_HASH: repositoryCommitHash(root, environment),
+    OPENKYLIN_CLIENT_VERSION: repositoryVersion(root),
     ...OFFICIAL_CLIENT_BUILD_ENVIRONMENT,
   }
 }
@@ -168,7 +168,7 @@ export interface ClientBuildRecord {
 /**
  * Collect the public client environment in deterministic key order.
  * @param environment - environment inherited by the build process.
- * @returns defined `QILIN_CLIENT_*` values only.
+ * @returns defined `OPENKYLIN_CLIENT_*` values only.
  */
 function clientBuildEnvironment(environment: NodeJS.ProcessEnv): ClientBuildEnvironment {
   return Object.fromEntries(Object.entries(environment)
@@ -197,8 +197,8 @@ export function resolveClientBuildEnvironment(
       throw new Error(`${CLIENT_VERSION_VARIABLE} is required for the official client build profile`)
     }
     return {
-      QILIN_CLIENT_COMMIT_HASH: commitHash,
-      QILIN_CLIENT_VERSION: version,
+      OPENKYLIN_CLIENT_COMMIT_HASH: commitHash,
+      OPENKYLIN_CLIENT_VERSION: version,
       ...OFFICIAL_CLIENT_BUILD_ENVIRONMENT,
     }
   }
@@ -235,7 +235,7 @@ export function clientBuildProcessEnvironment(
  */
 export function assertClientBuildEnvironment(
   environment: Readonly<Record<string, string | undefined>>,
-  expected: Readonly<Record<`QILIN_CLIENT_${string}`, string>>,
+  expected: Readonly<Record<`OPENKYLIN_CLIENT_${string}`, string>>,
 ): void {
   const actual = Object.fromEntries(Object.entries(environment)
     .filter(([name, value]) => name.startsWith(CLIENT_BUILD_ENV_PREFIX) && value !== undefined)
@@ -299,7 +299,7 @@ export function writeClientBuildRecord(
  */
 export function readClientBuildRecord(
   root: string,
-  expected?: Readonly<Record<`QILIN_CLIENT_${string}`, string>>,
+  expected?: Readonly<Record<`OPENKYLIN_CLIENT_${string}`, string>>,
 ): ClientBuildRecord {
   const path = resolve(root, CLIENT_BUILD_RECORD_PATH)
   if (!existsSync(path)) {

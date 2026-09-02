@@ -17,17 +17,17 @@ describe('Agent Teams Web profile bundle', () => {
       private?: boolean
       publishConfig?: unknown
       dependencies?: Record<string, string>
-      qilin?: { bundle?: { patch?: string } }
+      openkylin?: { bundle?: { patch?: string } }
     }
     expect(manifest.private).toBe(true)
     expect(manifest.publishConfig).toBeUndefined()
-    expect(manifest.qilin?.bundle?.patch).toBe('./cordis.patch.yml')
+    expect(manifest.openkylin?.bundle?.patch).toBe('./cordis.patch.yml')
     expect(manifest.dependencies).toEqual({
       '@qilin/experimental-client-ui-agent-team': 'workspace:^',
     })
 
     const parsed = yaml.load(
-      readFileSync(resolve(root, manifest.qilin!.bundle!.patch!), 'utf8'),
+      readFileSync(resolve(root, manifest.openkylin!.bundle!.patch!), 'utf8'),
       { schema: entryListSchema },
     ) as { insert?: { id?: string; name?: string }[] }[]
     expect(parsed.flatMap(patch => patch.insert ?? [])).toEqual([

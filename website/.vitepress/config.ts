@@ -229,9 +229,9 @@ const wordmark = readFileSync(resolve(import.meta.dirname, '../public/wordmark.s
  * stay behind a query only Firefox answers.
  */
 const siteStyle = `
-.qilin-lockup { display: inline-flex; align-items: center; gap: 8px; min-width: 0; }
-.qilin-wordmark { display: block; height: 22px; width: auto; color: var(--vp-c-text-1); }
-.qilin-tag {
+.openkylin-lockup { display: inline-flex; align-items: center; gap: 8px; min-width: 0; }
+.openkylin-wordmark { display: block; height: 22px; width: auto; color: var(--vp-c-text-1); }
+.openkylin-tag {
   display: inline-flex;
   align-items: center;
   border: 1px solid var(--vp-c-brand-soft);

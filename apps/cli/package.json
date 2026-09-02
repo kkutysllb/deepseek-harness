@@ -1,6 +1,6 @@
 {
   "name": "@qilin/cli",
-  "description": "qilin CLI: profile boot, plugin management, and the browser UI alias",
+  "description": "openkylin CLI: profile boot, plugin management, and the browser UI alias",
   "version": "0.1.2-alpha.3",
   "publishConfig": {
     "access": "public"
@@ -12,12 +12,12 @@
   },
   "type": "module",
   "bin": {
-    "qilin": "lib/bin.js"
+    "openkylin": "lib/bin.js"
   },
   "files": [
     "lib/*.js"
   ],
-  "qilin": {
+  "openkylin": {
     "configTrees": [
       {
         "mount": "config/agent-presets",

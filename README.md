@@ -2,7 +2,7 @@
 
 English | [中文](README.zh.md)
 
-DeepSeek Harness (`qilin`) is an open-source agent harness developed by [DeepSeek AI](https://deepseek.com).
+DeepSeek Harness (`openkylin`) is an open-source agent harness developed by [DeepSeek AI](https://deepseek.com).
 
 It is built on an **everything-is-a-plugin** architecture and powered by [Cordis](https://github.com/cordiverse/cordis), whose design is described in [_A Programming Paradigm for Spatiotemporal Composability_](https://arxiv.org/abs/2608.25512).
 
@@ -35,10 +35,10 @@ git clone https://github.com/kkutysllb/OpenKylin.git
 cd OpenKylin
 pnpm install
 pnpm run build
-pnpm qilin web
+pnpm openkylin web
 ```
 
-`pnpm run build` prepares the repository artifacts. `pnpm qilin web` uses those built artifacts without rebuilding.
+`pnpm run build` prepares the repository artifacts. `pnpm openkylin web` uses those built artifacts without rebuilding.
 
 ## Community and support
 

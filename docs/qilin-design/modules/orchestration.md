@@ -1,6 +1,6 @@
 # orchestration 模块（orchestration module）
 
-> QiLin engine · multi-agent orchestration subsystem · 双语 / Bilingual
+> OpenKylin engine · multi-agent orchestration subsystem · 双语 / Bilingual
 
 ---
 
@@ -8,7 +8,7 @@
 
 ### 职责
 
-`qilin.orchestration` 是 v2.0.0 多智能体编排层：在 v1 单智能体（lead agent +
+`openkylin.orchestration` 是 v2.0.0 多智能体编排层：在 v1 单智能体（lead agent +
 `task_tool` 委派）之上，提供程序化的并行执行、handoff 协议、编排图、agent 消息
 总线与协作模式。**运行形态由 `orchestration.mode` 配置选择**：`single`（默认，
 v1.0.0 行为完全不变）或 `multi`（OrchestratorGraph 编排）。
@@ -95,7 +95,7 @@ token_budget:
 
 ### Responsibility
 
-`qilin.orchestration` is the v2.0.0 multi-agent orchestration layer: on top of the
+`openkylin.orchestration` is the v2.0.0 multi-agent orchestration layer: on top of the
 v1 single-agent runtime (lead agent + `task_tool` delegation) it adds programmatic
 parallel execution, a handoff protocol, an orchestration graph, an agent message
 bus, and collaboration patterns. **The runtime shape is chosen by

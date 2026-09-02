@@ -2,7 +2,7 @@
 
 /** Simplified Chinese dictionary and key source of truth. */
 export const zh = {
-  overlayTitle: '登录 QiLin',
+  overlayTitle: '登录 OpenKylin',
   overlayInitializing: '初始化管理员',
   email: '邮箱',
   password: '密码',
@@ -45,7 +45,7 @@ export type AccountsLocaleKey = keyof typeof zh
 
 /** English dictionary checked against the Chinese key set. */
 export const en = {
-  overlayTitle: 'Sign in to QiLin',
+  overlayTitle: 'Sign in to OpenKylin',
   overlayInitializing: 'Initialize administrator',
   email: 'Email',
   password: 'Password',

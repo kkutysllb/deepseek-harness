@@ -235,11 +235,11 @@ describe('child env layering (through the subprocess seam)', () => {
     }
   })
 
-  it('forwards explicit QILIN_* config entries to the child', async () => {
-    // A deployment sets child-harness facts like QILIN_PERMISSION_MODE in
+  it('forwards explicit OPENKYLIN_* config entries to the child', async () => {
+    // A deployment sets child-harness facts like OPENKYLIN_PERMISSION_MODE in
     // config.env; the seam's scrub drops only the AMBIENT namesakes, so the
     // explicit entry merges after it and the child must see the value.
-    const ctx = await setup({ MOCK_ECHO_ENV: 'QILIN_ACP_TEST_FACT', QILIN_ACP_TEST_FACT: 'managed' })
+    const ctx = await setup({ MOCK_ECHO_ENV: 'OPENKYLIN_ACP_TEST_FACT', OPENKYLIN_ACP_TEST_FACT: 'managed' })
     const parent = { id: 'parent', session: { header: { cwd: process.cwd() } } } as unknown as Agent
     const run = await ctx.subagents.start('acp', {
       label: 'p', prompt: [{ type: 'text' as const, text: 'p' }], parent, signal: new AbortController().signal,

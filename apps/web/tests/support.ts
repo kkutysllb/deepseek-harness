@@ -67,7 +67,7 @@ export function requireDist(): void {
   }
 }
 
-/** OS-assigned free port, released before use (the spawned `qilin web` needs a concrete --port). */
+/** OS-assigned free port, released before use (the spawned `openkylin web` needs a concrete --port). */
 export function probeFreePort(): Promise<number> {
   return new Promise((resolvePort, reject) => {
     const probe = createServer()

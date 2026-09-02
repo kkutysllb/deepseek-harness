@@ -53,7 +53,7 @@ describe('MessageFeedbackActions theme styles', () => {
     // never been written. Every theme-variable prefix the sheets actually use,
     // not just `--dsw-`: a `--dsh-` name reads as a plausible sibling and would
     // otherwise slip past into an invalid declaration.
-    const named = [...css.matchAll(/var\((--(?:dsw|qilin|ds)-[a-z0-9-]+)/g)].map(match => match[1])
+    const named = [...css.matchAll(/var\((--(?:dsw|openkylin|ds)-[a-z0-9-]+)/g)].map(match => match[1])
     // Vacuity guard: the sheet has to actually name tokens, or the filter below
     // is satisfied by an empty list and this test proves nothing.
     expect(named.length).toBeGreaterThan(5)

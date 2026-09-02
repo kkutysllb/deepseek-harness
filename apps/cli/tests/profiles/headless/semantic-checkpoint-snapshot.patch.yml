@@ -17,8 +17,8 @@
     - id: replay
       name: '@qilin/llm-replay'
       config:
-        file: !!js process.env.QILIN_SNAPSHOT_FILE
-        overrideFile: !!js process.env.QILIN_SNAPSHOT_OVERRIDE
+        file: !!js process.env.OPENKYLIN_SNAPSHOT_FILE
+        overrideFile: !!js process.env.OPENKYLIN_SNAPSHOT_OVERRIDE
 
     # Publish the persisted agent before the driver selects the single root.
     - id: resumed-agent

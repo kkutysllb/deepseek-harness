@@ -7,7 +7,7 @@
  * verification: the harness packages declare the vendored framework as a peer,
  * those packages live in another release sequence, and this job must not depend
  * on the registry already carrying versions that match — one pull request may
- * bump both families before either publishes — so a qilin verification passes the
+ * bump both families before either publishes — so a openkylin verification passes the
  * vendored family's pack output too, while publishing only its own
  * ([rationale](../../.agents/notes/implemented/process/2026-08-10-npm-release-sequences.md)).
  *
@@ -37,9 +37,9 @@ function consumerEnvironment(consumerRoot: string): NodeJS.ProcessEnv {
   delete environment.NPM_CONFIG_USER_AGENT
   delete environment.NODE_OPTIONS
   delete environment.NODE_PATH
-  environment.QILIN_HOME = resolve(consumerRoot, '.qilin')
-  environment.QILIN_AGENTS_HOME = resolve(consumerRoot, '.agents')
-  environment.QILIN_TELEMETRY_DISABLED = '1'
+  environment.OPENKYLIN_HOME = resolve(consumerRoot, '.openkylin')
+  environment.OPENKYLIN_AGENTS_HOME = resolve(consumerRoot, '.agents')
+  environment.OPENKYLIN_TELEMETRY_DISABLED = '1'
   return environment
 }
 
@@ -73,7 +73,7 @@ function main(): void {
     allowPositionals: false,
   })
   if (values.family === undefined || values.from === undefined || values.from.length === 0) {
-    throw new Error('usage: verify-packed-install.ts --family <qilin|vendor> --from <packed directory> [--from ...]')
+    throw new Error('usage: verify-packed-install.ts --family <openkylin|vendor> --from <packed directory> [--from ...]')
   }
 
   const family = releaseFamily(values.family)

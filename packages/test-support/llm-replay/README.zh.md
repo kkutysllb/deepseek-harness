@@ -48,16 +48,16 @@ kind: "package-reference"
           - id: deepseek-v4-flash
             contextWindow: 128000
           - id: deepseek-v4-pro
-  # file/overrideFile/childFiles default to $QILIN_SNAPSHOT_FILE /
-  # $QILIN_SNAPSHOT_OVERRIDE / $QILIN_SNAPSHOT_CHILD_FILES, set by the snapshot
+  # file/overrideFile/childFiles default to $OPENKYLIN_SNAPSHOT_FILE /
+  # $OPENKYLIN_SNAPSHOT_OVERRIDE / $OPENKYLIN_SNAPSHOT_CHILD_FILES, set by the snapshot
   # harness per scenario.
 ```
 
 | 字段 | 默认值 | 含义 |
 |---|---|---|
-| `file` | `$QILIN_SNAPSHOT_FILE` | 主（父）`session.jsonl` fixture 的路径；必需（配置或 env） |
-| `overrideFile` | `$QILIN_SNAPSHOT_OVERRIDE` | 主会话的可选 `ReplayOverrideDoc` 伴随文件 |
-| `childFiles` | `$QILIN_SNAPSHOT_CHILD_FILES` | 嵌套场景中已记录的 subagent 子会话日志 |
+| `file` | `$OPENKYLIN_SNAPSHOT_FILE` | 主（父）`session.jsonl` fixture 的路径；必需（配置或 env） |
+| `overrideFile` | `$OPENKYLIN_SNAPSHOT_OVERRIDE` | 主会话的可选 `ReplayOverrideDoc` 伴随文件 |
+| `childFiles` | `$OPENKYLIN_SNAPSHOT_CHILD_FILES` | 嵌套场景中已记录的 subagent 子会话日志 |
 | `providers` | 无 | 可选的仅回放提供方与模型目录；模型可声明 `contextWindow`、文本／图片模态，以及图片模型使用的正整数 `imageRequestTokens`；非法值会在加载时失败，路由绝不执行提供方 I/O |
 | `paceMs` | 无（突发） | 可选的每分片延迟（毫秒），用于真正的增量投递 |
 

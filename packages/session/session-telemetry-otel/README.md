@@ -83,7 +83,7 @@ This section explains the backend's composition; the observable behavior is full
 
 ### Design concept
 
-The backend is a thin adapter over the OTel JS SDK: it owns capture mode, resource identity, and an outer shutdown deadline, and passes everything else through verbatim. Two instrumentation scopes separate record channels — ledger records on `@qilin/session-telemetry-otel`, operational records on `@qilin/session-telemetry-otel/ops` — so receivers can alert on ops without summing them. Resource identity carries `service.name`/`service.version` from `qilin-llm`'s `APP_IDENTITY` plus the package's anonymous `user.id` (from `$QILIN_HOME/.anonymous-user-id`), once per export batch rather than per record.
+The backend is a thin adapter over the OTel JS SDK: it owns capture mode, resource identity, and an outer shutdown deadline, and passes everything else through verbatim. Two instrumentation scopes separate record channels — ledger records on `@qilin/session-telemetry-otel`, operational records on `@qilin/session-telemetry-otel/ops` — so receivers can alert on ops without summing them. Resource identity carries `service.name`/`service.version` from `qilin-llm`'s `APP_IDENTITY` plus the package's anonymous `user.id` (from `$OPENKYLIN_HOME/.anonymous-user-id`), once per export batch rather than per record.
 
 ### Source map
 

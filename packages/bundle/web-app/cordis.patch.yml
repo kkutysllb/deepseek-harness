@@ -9,7 +9,7 @@
 # ordinary Cordis service. Rows configured from flags inject that service, so
 # Loader resolves their expressions only after it exists. The web runtime then
 # provides bind-dependent `webRuntime` values to the trust fence.
-# `qilin --profile web --help` provides neither service, so no server binds.
+# `openkylin --profile web --help` provides neither service, so no server binds.
 
 # ── surface-specific values the base deliberately omits ─────────────────────
 
@@ -30,15 +30,15 @@
 
 - id: tools
   config:
-    # TEMPORARY workaround: QILIN_TOOLS_MODE (native|ptc|both) opts a whole qilin
+    # TEMPORARY workaround: OPENKYLIN_TOOLS_MODE (native|ptc|both) opts a whole openkylin
     # process into PTC mode while per-session tool-presentation selection is being
     # designed; unset keeps the schema default (native). Remove the env seam
     # once the web UI owns the choice per session.
-    mode: !!js process.env.QILIN_TOOLS_MODE
+    mode: !!js process.env.OPENKYLIN_TOOLS_MODE
 
 # ── web-only host rows, the transport layer, and the browser roster ─────────
 
-# `qilin.client` rows are the browser roster the modules node half scans into
+# `openkylin.client` rows are the browser roster the modules node half scans into
 # window.__DSH_BOOT__; the modules row is simultaneously a host row.
 - insert:
     # Host-owned opt-in sampled when a new Web session receives its preset
@@ -148,7 +148,7 @@
     - id: client-hmr
       name: '@qilin/client-hmr'
 
-    # ── browser plugin roster (qilin.client rows; node halves are layer-2 hosts) ──
+    # ── browser plugin roster (openkylin.client rows; node halves are layer-2 hosts) ──
 
     # Dual-face: the node half scans this tree, composes window.__DSH_BOOT__,
     # and serves /plugins/<id>/client.js; the browser half is the module table
@@ -317,7 +317,7 @@
 # the composition.
 
 # `shell-env` STAYS in the host plane: `apps/cli/src/web.ts` injects it to
-# publish `QILIN_WEB_URL`/`QILIN_WEB_MODE`, and a host row that injects a service is
+# publish `OPENKYLIN_WEB_URL`/`OPENKYLIN_WEB_MODE`, and a host row that injects a service is
 # the criterion for host-plane ownership — injection resolves before any session
 # exists, so there is no agent to key by. Behind a preset realm those variables
 # would never reach the model's shell at all.
@@ -438,7 +438,7 @@
 
 # The preset roster. The shipped presets are bundled inside
 # `qilin-agent-presets` itself and prepended as a read-only `system` root
-# (`includeShippedRoot`); `$QILIN_HOME/.agent-presets` is where a person — or an
+# (`includeShippedRoot`); `$OPENKYLIN_HOME/.agent-presets` is where a person — or an
 # agent — authors their own, appended by the same package (`includeUserRoot`),
 # and carries the same trust as shell access because a preset IS a
 # composition. This row only names the default and any deployment-added

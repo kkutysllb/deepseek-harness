@@ -18,4 +18,4 @@
       name: '@qilin/sdk-jsonrpc-server'
       inject: [sdkAppStartup, loader]
       config:
-        maxTokensAsSuccess: !!js "process.env.QILIN_MAX_TOKENS_AS_SUCCESS === undefined ? true : JSON.parse(process.env.QILIN_MAX_TOKENS_AS_SUCCESS)"
+        maxTokensAsSuccess: !!js "process.env.OPENKYLIN_MAX_TOKENS_AS_SUCCESS === undefined ? true : JSON.parse(process.env.OPENKYLIN_MAX_TOKENS_AS_SUCCESS)"

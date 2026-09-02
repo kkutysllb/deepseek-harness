@@ -10,7 +10,7 @@
 import type { SandboxEnforcement, SandboxExecutionPolicy, SandboxMode } from '@qilin/sandbox'
 import type { CollectedOutput, QilinEnvironment } from '@qilin/subprocess'
 
-export { QILIN_ENV_PREFIX } from '@qilin/subprocess'
+export { OPENKYLIN_ENV_PREFIX } from '@qilin/subprocess'
 export type { CollectedOutput, QilinEnvironment, QilinEnvironmentKey } from '@qilin/subprocess'
 
 /**
@@ -67,8 +67,8 @@ export interface ShellExecRequest {
    */
   env?: Record<string, string> | undefined
   /**
-   * Harness-owned `QILIN_*` variables for this execution (typed to managed
-   * keys). Executors discard ambient `QILIN_*` entries before merging this
+   * Harness-owned `OPENKYLIN_*` variables for this execution (typed to managed
+   * keys). Executors discard ambient `OPENKYLIN_*` entries before merging this
    * snapshot last, so an unavailable current fact cannot inherit a stale
    * value from the harness process and a caller {@link env} entry cannot
    * displace a managed one.
@@ -103,7 +103,7 @@ export interface ShellExecSpec {
    * ordinary extra environment.
    */
   env?: Record<string, string> | undefined
-  /** Managed `QILIN_*` snapshot (typed to managed keys); merges after {@link env}. */
+  /** Managed `OPENKYLIN_*` snapshot (typed to managed keys); merges after {@link env}. */
   dshEnv?: QilinEnvironment | undefined
   /** Resolved sandbox policy; ignored by executors that do not confine. */
   sandboxPolicy: SandboxExecutionPolicy | undefined

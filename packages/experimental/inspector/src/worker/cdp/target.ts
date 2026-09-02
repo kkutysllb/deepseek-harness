@@ -24,9 +24,9 @@ export function handleScaffold(
   const frame = {
     id: 'qilin-inspector-host-frame',
     loaderId: 'qilin-inspector-loader',
-    url: 'qilin://host',
+    url: 'openkylin://host',
     domainAndRegistry: '',
-    securityOrigin: 'qilin://host',
+    securityOrigin: 'openkylin://host',
     mimeType: 'text/html',
     secureContextType: 'Secure',
     crossOriginIsolatedContextType: 'NotIsolated',

@@ -33,9 +33,9 @@ describe('experimental Inspector Host plugin', () => {
 
     const rows: IndexInjection[] = []
     context.emit('webserver/index-inject', rows)
-    const bootstrap = rows.find(row => row.kind === 'global' && row.name === '__QILIN_INSPECTOR__')
-    expect(bootstrap).toMatchObject({ kind: 'global', name: '__QILIN_INSPECTOR__' })
-    expect(log).toHaveBeenCalledWith(expect.stringMatching(/^qilin inspector: devtools:\/\//u))
+    const bootstrap = rows.find(row => row.kind === 'global' && row.name === '__OPENKYLIN_INSPECTOR__')
+    expect(bootstrap).toMatchObject({ kind: 'global', name: '__OPENKYLIN_INSPECTOR__' })
+    expect(log).toHaveBeenCalledWith(expect.stringMatching(/^openkylin inspector: devtools:\/\//u))
     expect(context.inspector).toBeDefined()
     await vi.waitFor(async () => {
       const tree = await context!.inspector.cordis.getTree()

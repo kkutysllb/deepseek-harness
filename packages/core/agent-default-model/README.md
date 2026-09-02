@@ -9,7 +9,7 @@ English | [中文](README.zh.md)
 
 ## Summary
 
-`qilin-agent-default-model` supplies the deployment's default model selection — provider, model, and optional reasoning effort — that agent entry points apply when a fresh session has no selection of its own. Direct entry points such as `qilin --profile headless` and Host-backed entry points read `ctx.agentDefaultModel` instead of owning parallel defaults, so one composition entry controls which model new agents start on. A mounted settings provider layers the user's choice over the composition entry, and a saved change is visible on the next read. It is one process-wide default: per-session model selection remains the entry point's responsibility. Choose it when you want a single place to set the model new agents use.
+`qilin-agent-default-model` supplies the deployment's default model selection — provider, model, and optional reasoning effort — that agent entry points apply when a fresh session has no selection of its own. Direct entry points such as `openkylin --profile headless` and Host-backed entry points read `ctx.agentDefaultModel` instead of owning parallel defaults, so one composition entry controls which model new agents start on. A mounted settings provider layers the user's choice over the composition entry, and a saved change is visible on the next read. It is one process-wide default: per-session model selection remains the entry point's responsibility. Choose it when you want a single place to set the model new agents use.
 
 ## Table of Contents
 

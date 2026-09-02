@@ -65,12 +65,12 @@ class RuntimeBuildHook(BuildHookInterface):
                 "openkylin-runtime-bin is wheel-only; build and publish platform wheels only."
             )
 
-        platform_tag = os.environ.get("QILIN_RUNTIME_PLATFORM_TAG") or _host_platform_tag()
+        platform_tag = os.environ.get("OPENKYLIN_RUNTIME_PLATFORM_TAG") or _host_platform_tag()
         matches = [value for value in _PLATFORMS.values() if value[0] == platform_tag]
         if len(matches) != 1:
             supported = ", ".join(value[0] for value in _PLATFORMS.values())
             raise RuntimeError(
-                f"unsupported QILIN_RUNTIME_PLATFORM_TAG {platform_tag!r}; expected one of {supported}"
+                f"unsupported OPENKYLIN_RUNTIME_PLATFORM_TAG {platform_tag!r}; expected one of {supported}"
             )
         expected_executable = matches[0][1]
         runtime_dir = Path(self.root) / "src" / "openkylin_runtime" / "runtime"

@@ -37,7 +37,7 @@ function validLayout(): NpmPackageLock {
 }
 
 describe('npm install layout verifier', () => {
-  it('creates two incompatible versions of every qilin package', () => {
+  it('creates two incompatible versions of every openkylin package', () => {
     const index: RegistryIndex = new Map([
       ['@qilin/cli', new Map([['0.1.1-rc.2', {
         name: '@qilin/cli',
@@ -70,7 +70,7 @@ describe('npm install layout verifier', () => {
     expect(dual.get('@deepseek-ai/cordis')).toBe(index.get('@deepseek-ai/cordis'))
   })
 
-  it('accepts isolated qilin releases with one shared Cordis installation', () => {
+  it('accepts isolated openkylin releases with one shared Cordis installation', () => {
     expect(assertDualDshInstallLayout(validLayout())).toEqual({
       dshPackagesPerVersion: 3,
       checkedDshEdges: 4,

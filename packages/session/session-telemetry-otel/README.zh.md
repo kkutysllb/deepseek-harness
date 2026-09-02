@@ -83,7 +83,7 @@ kind: "package-reference"
 
 ### 设计理念
 
-后端是对 OTel JS SDK 的薄适配层：它拥有捕获模式、资源身份与一个外层关闭截止时间，其余全部原样透传。两个插桩作用域区分记录通道——ledger 记录挂在 `@qilin/session-telemetry-otel` 下，运维记录挂在 `@qilin/session-telemetry-otel/ops` 下——使接收端可以在不累加它们的情况下对运维记录告警。资源身份携带 `service.name`/`service.version`（来自 `qilin-llm` 的 `APP_IDENTITY`）以及本包的匿名 `user.id`（来自 `$QILIN_HOME/.anonymous-user-id`），按导出批次携带一次，而非逐条记录。
+后端是对 OTel JS SDK 的薄适配层：它拥有捕获模式、资源身份与一个外层关闭截止时间，其余全部原样透传。两个插桩作用域区分记录通道——ledger 记录挂在 `@qilin/session-telemetry-otel` 下，运维记录挂在 `@qilin/session-telemetry-otel/ops` 下——使接收端可以在不累加它们的情况下对运维记录告警。资源身份携带 `service.name`/`service.version`（来自 `qilin-llm` 的 `APP_IDENTITY`）以及本包的匿名 `user.id`（来自 `$OPENKYLIN_HOME/.anonymous-user-id`），按导出批次携带一次，而非逐条记录。
 
 ### 源码地图
 

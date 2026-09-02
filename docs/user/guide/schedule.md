@@ -2,10 +2,10 @@
 
 English | [中文](schedule.zh.md)
 
-This overlay opts one `qilin web` process into Schedule reminders without changing the shipped default Web composition:
+This overlay opts one `openkylin web` process into Schedule reminders without changing the shipped default Web composition:
 
 ```sh
-qilin web --patch apps/cli/config/examples/schedule/cordis.yml
+openkylin web --patch apps/cli/config/examples/schedule/cordis.yml
 ```
 
 The current overlay supports reminders created with a positive whole-number `after_seconds`, an absolute `at` target, or a fixed-rate `every_seconds` interval of at least 300 seconds. The model manages them through `schedule_create`, `schedule_list`, and `schedule_delete`; every result identifies delivery as `session-local`.

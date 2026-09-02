@@ -44,7 +44,7 @@ function waitForLine(
   })
 }
 
-describe('Python SDK qilin profile keyless smoke', () => {
+describe('Python SDK openkylin profile keyless smoke', () => {
   it.each([
     { label: 'reports max-token turns with the default mapping config', envValue: undefined },
     { label: 'reports max-token turns with mapping enabled through env', envValue: 'true' },
@@ -79,12 +79,12 @@ describe('Python SDK qilin profile keyless smoke', () => {
     ], {
       cwd: repoRoot,
       env: {
-        QILIN_HOME: join(root, '.qilin'),
-        QILIN_PERMISSION_MODE: 'danger-full-access',
-        QILIN_TELEMETRY_DISABLED: '1',
+        OPENKYLIN_HOME: join(root, '.openkylin'),
+        OPENKYLIN_PERMISSION_MODE: 'danger-full-access',
+        OPENKYLIN_TELEMETRY_DISABLED: '1',
         DEEPSEEK_API_KEY: 'keyless-smoke-no-call',
         DEEPSEEK_BASE_URL: `http://127.0.0.1:${address.port}`,
-        ...(envValue === undefined ? {} : { QILIN_MAX_TOKENS_AS_SUCCESS: envValue }),
+        ...(envValue === undefined ? {} : { OPENKYLIN_MAX_TOKENS_AS_SUCCESS: envValue }),
       },
       timeout: 35_000,
       killSignal: 'SIGKILL',
@@ -160,7 +160,7 @@ describe('Python SDK qilin profile keyless smoke', () => {
       expect(shutdown).toMatchObject({ jsonrpc: '2.0', id: 3, result: {} })
       const exit = await child
       expect(exit.exitCode, `signal=${String(exit.signal)}; stderr=${stderr}`).toBe(0)
-      const sessionsRoot = join(root, '.qilin', 'sessions')
+      const sessionsRoot = join(root, '.openkylin', 'sessions')
       const files = await readdir(sessionsRoot, { recursive: true })
       const log = files.find(file => file.endsWith('.jsonl.zstd'))
       expect(log).toBeDefined()
@@ -200,8 +200,8 @@ describe('Python SDK qilin profile keyless smoke', () => {
     ], {
       cwd: repoRoot,
       env: {
-        QILIN_HOME: join(root, '.qilin'),
-        QILIN_SYSTEM_PROMPT: 'Minimal allowlist prompt.',
+        OPENKYLIN_HOME: join(root, '.openkylin'),
+        OPENKYLIN_SYSTEM_PROMPT: 'Minimal allowlist prompt.',
         DEEPSEEK_API_KEY: 'keyless-smoke-no-call',
         DEEPSEEK_BASE_URL: `http://127.0.0.1:${address.port}`,
       },
@@ -241,9 +241,9 @@ describe('Python SDK qilin profile keyless smoke', () => {
       }, () => stderr)
 
       const profile = JSON.parse(
-        await readFile(join(root, '.qilin', 'profiles', 'sdk-minimal', 'package.json'), 'utf8'),
-      ) as { qilin?: { profile?: { bundles?: string[]; patchReload?: string } } }
-      expect(profile.qilin?.profile).toEqual({
+        await readFile(join(root, '.openkylin', 'profiles', 'sdk-minimal', 'package.json'), 'utf8'),
+      ) as { openkylin?: { profile?: { bundles?: string[]; patchReload?: string } } }
+      expect(profile.openkylin?.profile).toEqual({
         bundles: ['@qilin/sdk-minimal'],
         patchReload: 'startup',
       })
@@ -272,9 +272,9 @@ describe('Python SDK qilin profile keyless smoke', () => {
       ], {
         cwd: repoRoot,
         env: {
-          QILIN_HOME: join(root, '.qilin'),
+          OPENKYLIN_HOME: join(root, '.openkylin'),
           DEEPSEEK_API_KEY: 'keyless-smoke-no-call',
-          QILIN_MAX_TOKENS_AS_SUCCESS: 'sometimes',
+          OPENKYLIN_MAX_TOKENS_AS_SUCCESS: 'sometimes',
         },
         stdin: 'ignore',
         timeout: 25_000,

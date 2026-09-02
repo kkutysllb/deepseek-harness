@@ -364,9 +364,9 @@ describe('task admission and package contracts', () => {
     const manifest = JSON.parse(readFileSync(resolve(root, 'package.json'), 'utf8')) as {
       dependencies?: Record<string, string>
       files?: string[]
-      qilin?: { bundle?: { patch?: string } }
+      openkylin?: { bundle?: { patch?: string } }
     }
-    expect(manifest.qilin?.bundle?.patch).toBe('./cordis.patch.yml')
+    expect(manifest.openkylin?.bundle?.patch).toBe('./cordis.patch.yml')
     expect(manifest.files).toContain('cordis.patch.yml')
     expect(manifest.dependencies).toHaveProperty(
       '@qilin/sdk-protocol',
@@ -405,7 +405,7 @@ describe('task admission and package contracts', () => {
       )
     }
 
-    const parsed = yaml.load(readFileSync(resolve(root, manifest.qilin!.bundle!.patch!), 'utf8'))
+    const parsed = yaml.load(readFileSync(resolve(root, manifest.openkylin!.bundle!.patch!), 'utf8'))
     const rows = Array.isArray(parsed)
       ? (parsed as Array<{ insert?: Array<{ id?: string; name?: string }> }>).flatMap(entry => entry.insert ?? [])
       : []
@@ -468,7 +468,7 @@ describe('task admission and package contracts', () => {
     const spawnSpecs: SubprocessSpawnSpec[] = []
     vi.spyOn(ctx.subprocess, 'spawn').mockImplementation((spec) => {
       spawnSpecs.push(spec)
-      return spec.env?.QILIN_CODEX_INSTANCE === 'safe'
+      return spec.env?.OPENKYLIN_CODEX_INSTANCE === 'safe'
         ? safeChild.handle
         : bypassChild.handle
     })
@@ -483,14 +483,14 @@ describe('task admission and package contracts', () => {
     const safeFiber = await ctx.plugin(codex, {
       providerName: 'codex-safe',
       model: 'codex-safe-model',
-      env: { QILIN_CODEX_INSTANCE: 'safe' },
+      env: { OPENKYLIN_CODEX_INSTANCE: 'safe' },
       permissionMode: 'never',
       disposeGraceMs: 11,
     })
     const bypassFiber = await ctx.plugin(codex, {
       providerName: 'codex-bypass',
       model: 'codex-bypass-model',
-      env: { QILIN_CODEX_INSTANCE: 'bypass' },
+      env: { OPENKYLIN_CODEX_INSTANCE: 'bypass' },
       permissionMode: 'dangerously-bypass-approvals-and-sandbox',
       disposeGraceMs: 29,
     })
@@ -544,7 +544,7 @@ describe('task admission and package contracts', () => {
       stopReason: 'aborted',
     })
     expect(spawnSpecs.map(spec => ({
-      instance: spec.env?.QILIN_CODEX_INSTANCE,
+      instance: spec.env?.OPENKYLIN_CODEX_INSTANCE,
       graceMs: spec.graceMs,
     }))).toEqual([
       { instance: 'safe', graceMs: 11 },

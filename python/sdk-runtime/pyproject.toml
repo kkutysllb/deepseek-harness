@@ -5,7 +5,7 @@ build-backend = "hatchling.build"
 [project]
 name = "openkylin-runtime-bin"
 version = "0.0.0.dev0"
-description = "Bundled qilin CLI runtime for the DeepSeek Harness Python SDK"
+description = "Bundled openkylin CLI runtime for the DeepSeek Harness Python SDK"
 readme = "README.md"
 requires-python = ">=3.10"
 license = "MIT"
@@ -20,7 +20,7 @@ Source = "https://github.com/kkutysllb/OpenKylin"
 [project.scripts]
 openkylin = "openkylin_runtime:main"
 
-# Include the injected qilin executable and sidecars; exclude the dev-only node closure.
+# Include the injected openkylin executable and sidecars; exclude the dev-only node closure.
 [tool.hatch.build]
 artifacts = ["src/openkylin_runtime/runtime/openkylin-sdk-runtime-*"]
 exclude = ["src/openkylin_runtime/runtime/node"]

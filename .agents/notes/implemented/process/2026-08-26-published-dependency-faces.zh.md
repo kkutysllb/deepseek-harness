@@ -14,9 +14,9 @@ Client 构建输入由发布 profile 选择，而 Host value import 由导入它
 
 ### 包选择
 
-[`verify-package-dependencies`](../../../../scripts/verify-package-dependencies.ts) 统一负责依赖区段策略。它始终覆盖 `packages/client/` 下的包，以及声明 `qilin.client` 的每个非实验包。在该目录内，`qilin.client` 标记需要扫描 Host 入口的 Client/Host 包；没有该声明的包是仅供 Client 编译的静态输入。在目录外，`qilin.client` 选择相同的 Client/Host 扫描。仅有 `"./client"` export 只是 API，不参与 npm 依赖策略选包。
+[`verify-package-dependencies`](../../../../scripts/verify-package-dependencies.ts) 统一负责依赖区段策略。它始终覆盖 `packages/client/` 下的包，以及声明 `openkylin.client` 的每个非实验包。在该目录内，`openkylin.client` 标记需要扫描 Host 入口的 Client/Host 包；没有该声明的包是仅供 Client 编译的静态输入。在目录外，`openkylin.client` 选择相同的 Client/Host 扫描。仅有 `"./client"` export 只是 API，不参与 npm 依赖策略选包。
 
-[`package-dependency-policy.ts`](../../../../scripts/package-dependency-policy.ts) 提供显式 Client 门面 include 与 exclude 列表。include 用于没有 `qilin.client` 的例外包，exclude 用于移除 `packages/client/` 之外自动发现的双面包。验证器拒绝未知、失效、冗余、重复、相互重叠和无法生效的配置项。include 列表为空；exclude 列表包含 `@qilin/api-session-controller` 和 `@qilin/api-workspace-controller`。把 Session Controller 加回会多迁移九条 Host 边，而五次候选复测的 resolver 中位数仅改善 0.15 秒。
+[`package-dependency-policy.ts`](../../../../scripts/package-dependency-policy.ts) 提供显式 Client 门面 include 与 exclude 列表。include 用于没有 `openkylin.client` 的例外包，exclude 用于移除 `packages/client/` 之外自动发现的双面包。验证器拒绝未知、失效、冗余、重复、相互重叠和无法生效的配置项。include 列表为空；exclude 列表包含 `@qilin/api-session-controller` 和 `@qilin/api-workspace-controller`。把 Session Controller 加回会多迁移九条 Host 边，而五次候选复测的 resolver 中位数仅改善 0.15 秒。
 
 Host-only 包通过另一份显式列表加入同一策略。该列表包含 `@qilin/llm` 和 `@qilin/session`；源码 import 不会自动扩大列表。
 
@@ -28,9 +28,9 @@ Host 入口闭包中的运行期 value import 所到达的 workspace 包，只�
 
 constructor 身份或模块状态必须共享的导出列入 `peerRequiredHostExports`；一旦使用这类导出，整条包依赖边就保留在范围一致的 `peerDependencies` 与 `devDependencies` 中。每个导出表的 key 都是精确 module specifier，每个 value 都是经审查的导出集合。验证器从 Host 入口沿运行期本地 import 扫描，记录具名与默认 import 和 re-export，并拒绝既没有包级分类、也没有导出级分类的导出；除非完整的精确入口已按包分类，否则 namespace、dynamic 和 side-effect import 仍无法限定范围。
 
-Client bundle 使用的 workspace import、纯类型 import、模块扩充、`qilin.client.inject`、invariant companion 和仅有元数据的现存 peer 只属于 `devDependencies`。Host 运行时导入的普通第三方包属于 `dependencies`；其他第三方关系保持原区段。Workspace 引用使用 `workspace:^`。
+Client bundle 使用的 workspace import、纯类型 import、模块扩充、`openkylin.client.inject`、invariant companion 和仅有元数据的现存 peer 只属于 `devDependencies`。Host 运行时导入的普通第三方包属于 `dependencies`；其他第三方关系保持原区段。Workspace 引用使用 `workspace:^`。
 
-部分开发期关系只存在于 `qilin.client.inject` 或 TypeScript project reference 中。策略的 `configurationOnlyDevDependencies` 表只列出这些已评审的依赖边，并将它们保留在 `devDependencies` 中。
+部分开发期关系只存在于 `openkylin.client.inject` 或 TypeScript project reference 中。策略的 `configurationOnlyDevDependencies` 表只列出这些已评审的依赖边，并将它们保留在 `devDependencies` 中。
 
 验证器读取源码 manifest 和源码文件，因此可以在没有已构建 `lib/` 的干净工作树上运行。每个被选中的 Host face 都必须存在 `src/index.ts`。未分类的 Host 运行期导出属于策略违规，会阻止 `--fix` 的全部写入；维护者必须审查该导出，并选择分类该导出、修改源码关系或修改选包范围。源码安全检查通过后，`--fix` 只执行分类所确定的区段与范围变更，并删除失效的 peer 元数据。
 
@@ -72,7 +72,7 @@ pnpm run benchmark:npm-resolution:next -- --runs=1 --finalist-runs=5 --finalists
 
 ### 性能验证
 
-[`verify-npm-install-layout`](../../../../scripts/verify-npm-install-layout.ts) 是 `Release (qilin)` workflow 在每个 pull request 和 master push 上运行的确定性包路径与版本检查；它不限制 resolver 耗时。[`benchmark-npm-resolution`](../../../../scripts/benchmark-npm-resolution.ts) 与 [`benchmark-next-package-dependency`](../../../../scripts/benchmark-next-package-dependency.ts) 保持为手动工具，因为 resolver 耗时会随机器负载和 metadata 完成顺序变化。它们通过全新 consumer 和仅 metadata 的运行，把 npm 依赖树计算与 registry 延迟、包归档下载分离，因此相对结果可以定位 peer 中继，但不构成发布时性能承诺。
+[`verify-npm-install-layout`](../../../../scripts/verify-npm-install-layout.ts) 是 `Release (openkylin)` workflow 在每个 pull request 和 master push 上运行的确定性包路径与版本检查；它不限制 resolver 耗时。[`benchmark-npm-resolution`](../../../../scripts/benchmark-npm-resolution.ts) 与 [`benchmark-next-package-dependency`](../../../../scripts/benchmark-next-package-dependency.ts) 保持为手动工具，因为 resolver 耗时会随机器负载和 metadata 完成顺序变化。它们通过全新 consumer 和仅 metadata 的运行，把 npm 依赖树计算与 registry 延迟、包归档下载分离，因此相对结果可以定位 peer 中继，但不构成发布时性能承诺。
 
 生成后的策略目前在 13 个包中留下 27 条位于 `dependencies` 的受管 Host 运行时边。两条边仍位于 `peerDependencies`：`qilin-api-remotes → qilin-scope` 使用 `carrierKeyOf`，`qilin-session → qilin-scope` 使用 `scopeOf` 与 `scopeTarget`。
 
@@ -80,7 +80,7 @@ pnpm run benchmark:npm-resolution:next -- --runs=1 --finalist-runs=5 --finalists
 
 **把内部关系继续保留为 peer。** npm 必须沿汇合的祖先路径放置并验证每个必需 peer；即使内部版本全部兼容，也会重新产生已报告的安装耗时问题。
 
-**用 `"./client"` export 作为 Client 门面名册。** 包可能发布 Client 类型或浏览器 API，却不贡献动态装载 row。选中这类包会把迁移扩大到 Goal、Session Title 和 Todo 等无关 Host 包。`qilin.client` 标识动态 row，而 `packages/client/` 目录独立覆盖静态 Client 输入。
+**用 `"./client"` export 作为 Client 门面名册。** 包可能发布 Client 类型或浏览器 API，却不贡献动态装载 row。选中这类包会把迁移扩大到 Goal、Session Title 和 Todo 等无关 Host 包。`openkylin.client` 标识动态 row，而 `packages/client/` 目录独立覆盖静态 Client 输入。
 
 **拍平全部 Host 包。** 这会移除更多 peer 工作，却把迁移扩大到单包 benchmark 收益可忽略的包。显式 Host 列表会保留其余 peer 约束，直到测量结果证明应增加新成员。
 

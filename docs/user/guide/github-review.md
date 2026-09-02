@@ -2,40 +2,40 @@
 
 English | [中文](github-review.zh.md)
 
-This opt-in overlay adds a signed GitHub endpoint to `qilin web`. When a pull request in the configured repository changes from draft to ready for review, the rule creates a titled root Session under the repository's Web Workspace and starts a read-only review prompt.
+This opt-in overlay adds a signed GitHub endpoint to `openkylin web`. When a pull request in the configured repository changes from draft to ready for review, the rule creates a titled root Session under the repository's Web Workspace and starts a read-only review prompt.
 
 ## Prerequisites
 
 - A local checkout that DSH may register as a Web Workspace.
-- A high-entropy GitHub webhook secret available through the `QILIN_GITHUB_WEBHOOK_SECRET` credential reference.
+- A high-entropy GitHub webhook secret available through the `OPENKYLIN_GITHUB_WEBHOOK_SECRET` credential reference.
 - A TLS reverse proxy or tunnel that can forward one public URL to the loopback listener.
 - GitHub webhook subscription to the Pull requests event with content type `application/json`.
 
-The overlay defaults the Workspace to the launch directory and the listener to `127.0.0.1:3081`. Override them with `QILIN_GITHUB_REVIEW_WORKSPACE` and `QILIN_GITHUB_WEBHOOK_PORT`.
+The overlay defaults the Workspace to the launch directory and the listener to `127.0.0.1:3081`. Override them with `OPENKYLIN_GITHUB_REVIEW_WORKSPACE` and `OPENKYLIN_GITHUB_WEBHOOK_PORT`.
 
 ## Start DSH
 
 Generate a secret and retain the same value across restarts:
 
 ```sh
-export QILIN_GITHUB_WEBHOOK_SECRET="$(openssl rand -hex 32)"
-printf '%s\n' "$QILIN_GITHUB_WEBHOOK_SECRET"
+export OPENKYLIN_GITHUB_WEBHOOK_SECRET="$(openssl rand -hex 32)"
+printf '%s\n' "$OPENKYLIN_GITHUB_WEBHOOK_SECRET"
 ```
 
 From a development checkout:
 
 ```sh
-export QILIN_GITHUB_REVIEW_WORKSPACE=/path/to/deepseek-harness
-pnpm qilin web --patch apps/cli/config/examples/github-review/cordis.yml
+export OPENKYLIN_GITHUB_REVIEW_WORKSPACE=/path/to/deepseek-harness
+pnpm openkylin web --patch apps/cli/config/examples/github-review/cordis.yml
 ```
 
 An installed DSH uses the same overlay through an absolute path:
 
 ```sh
-qilin web --patch /absolute/path/to/github-review/cordis.yml
+openkylin web --patch /absolute/path/to/github-review/cordis.yml
 ```
 
-For a permanent profile, place `github-ready-review-rule.mjs` beside `$QILIN_HOME/profiles/web/cordis.patch.yml`, append the rows from `cordis.yml` to that patch, and start with `qilin web`. The shipped CLI already contains both webhook packages; the overlay alone activates them.
+For a permanent profile, place `github-ready-review-rule.mjs` beside `$OPENKYLIN_HOME/profiles/web/cordis.patch.yml`, append the rows from `cordis.yml` to that patch, and start with `openkylin web`. The shipped CLI already contains both webhook packages; the overlay alone activates them.
 
 ## Expose the dedicated endpoint
 
@@ -58,7 +58,7 @@ Configure GitHub with:
 ```text
 Payload URL:  https://hooks.example.com/github
 Content type: application/json
-Secret:       QILIN_GITHUB_WEBHOOK_SECRET value
+Secret:       OPENKYLIN_GITHUB_WEBHOOK_SECRET value
 Events:       Pull requests
 Active:       yes
 ```

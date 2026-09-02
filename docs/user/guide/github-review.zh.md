@@ -2,40 +2,40 @@
 
 [English](github-review.md) | 中文
 
-此可选 overlay 会为 `qilin web` 增加一个签名 GitHub 端点。当已配置仓库中的 pull request 从 draft 变为 ready for review 时，规则会在该仓库的 Web Workspace 下创建带标题的根 Session，并启动只读评审提示词。
+此可选 overlay 会为 `openkylin web` 增加一个签名 GitHub 端点。当已配置仓库中的 pull request 从 draft 变为 ready for review 时，规则会在该仓库的 Web Workspace 下创建带标题的根 Session，并启动只读评审提示词。
 
 ## 前置条件
 
 - 一个可由 DSH 注册为 Web Workspace 的本地 checkout。
-- 一个可通过 `QILIN_GITHUB_WEBHOOK_SECRET` 凭据引用访问的高熵 GitHub webhook 密钥。
+- 一个可通过 `OPENKYLIN_GITHUB_WEBHOOK_SECRET` 凭据引用访问的高熵 GitHub webhook 密钥。
 - 一个可以把单个公共 URL 转发到 loopback 监听器的 TLS 反向代理或 tunnel。
 - GitHub webhook 订阅 Pull requests 事件，且 content type 为 `application/json`。
 
-overlay 默认使用启动目录作为 Workspace，并监听 `127.0.0.1:3081`。可通过 `QILIN_GITHUB_REVIEW_WORKSPACE` 与 `QILIN_GITHUB_WEBHOOK_PORT` 覆盖它们。
+overlay 默认使用启动目录作为 Workspace，并监听 `127.0.0.1:3081`。可通过 `OPENKYLIN_GITHUB_REVIEW_WORKSPACE` 与 `OPENKYLIN_GITHUB_WEBHOOK_PORT` 覆盖它们。
 
 ## 启动 DSH
 
 生成密钥，并在重启后继续使用同一值：
 
 ```sh
-export QILIN_GITHUB_WEBHOOK_SECRET="$(openssl rand -hex 32)"
-printf '%s\n' "$QILIN_GITHUB_WEBHOOK_SECRET"
+export OPENKYLIN_GITHUB_WEBHOOK_SECRET="$(openssl rand -hex 32)"
+printf '%s\n' "$OPENKYLIN_GITHUB_WEBHOOK_SECRET"
 ```
 
 在开发 checkout 中运行：
 
 ```sh
-export QILIN_GITHUB_REVIEW_WORKSPACE=/path/to/deepseek-harness
-pnpm qilin web --patch apps/cli/config/examples/github-review/cordis.yml
+export OPENKYLIN_GITHUB_REVIEW_WORKSPACE=/path/to/deepseek-harness
+pnpm openkylin web --patch apps/cli/config/examples/github-review/cordis.yml
 ```
 
 安装版 DSH 通过绝对路径使用同一 overlay：
 
 ```sh
-qilin web --patch /absolute/path/to/github-review/cordis.yml
+openkylin web --patch /absolute/path/to/github-review/cordis.yml
 ```
 
-对于永久 profile，把 `github-ready-review-rule.mjs` 放在 `$QILIN_HOME/profiles/web/cordis.patch.yml` 旁边，把 `cordis.yml` 中的行追加到该 patch，然后运行 `qilin web`。随附 CLI 已经包含两个 webhook 包；只需 overlay 即可激活它们。
+对于永久 profile，把 `github-ready-review-rule.mjs` 放在 `$OPENKYLIN_HOME/profiles/web/cordis.patch.yml` 旁边，把 `cordis.yml` 中的行追加到该 patch，然后运行 `openkylin web`。随附 CLI 已经包含两个 webhook 包；只需 overlay 即可激活它们。
 
 ## 暴露专用端点
 
@@ -58,7 +58,7 @@ GitHub 配置如下：
 ```text
 Payload URL:  https://hooks.example.com/github
 Content type: application/json
-Secret:       QILIN_GITHUB_WEBHOOK_SECRET value
+Secret:       OPENKYLIN_GITHUB_WEBHOOK_SECRET value
 Events:       Pull requests
 Active:       yes
 ```

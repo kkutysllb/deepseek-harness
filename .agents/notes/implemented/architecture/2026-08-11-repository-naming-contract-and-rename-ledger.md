@@ -176,7 +176,7 @@ Keep `@qilin/tools` and `ctx.tools`. Keep `@qilin/api-gateway`, its `gateway/` f
 | `session/user-id/`, `@qilin/user-id` | `identity/anonymous-user-id/`, `@qilin/anonymous-user-id` | The value is a random correlation id shared by telemetry, feedback, and DeepSeek requests. It is neither a Session concern nor an authenticated user identity. |
 | `USER_ID_FILE_NAME`, `.userid`, feedback label `User` | `ANONYMOUS_USER_ID_FILE_NAME`, `.anonymous-user-id`, feedback label `Anonymous user` | The file and UI must not imply account identity. Keep the existing `AnonymousUserId` functions and the standard OTel attribute `user.id`. |
 | `util/environment/`, `@qilin/environment` | `util/launch-environment/`, `@qilin/launch-environment` | The package captures one immutable layered snapshot at launch. It is not a general environment API. |
-| Public `Environment*`, `createEnvironmentSnapshot`, `environmentOf`, `QILIN_ENVIRONMENT_KEY` | `LaunchEnvironment*`, `createLaunchEnvironmentSnapshot`, `launchEnvironmentOf`, `QILIN_LAUNCH_ENVIRONMENT_KEY` | The names state the snapshot's lifetime and purpose. |
+| Public `Environment*`, `createEnvironmentSnapshot`, `environmentOf`, `OPENKYLIN_ENVIRONMENT_KEY` | `LaunchEnvironment*`, `createLaunchEnvironmentSnapshot`, `launchEnvironmentOf`, `OPENKYLIN_LAUNCH_ENVIRONMENT_KEY` | The names state the snapshot's lifetime and purpose. |
 | `ctx.launcherEnvironment` | `ctx.launchEnvironment` | The value describes the application launch, not only a launcher component. Keep source labels `process`, `project-env`, and `user-env`. |
 
 ### Schedule, workflow, goals, and compaction
@@ -278,7 +278,7 @@ Keep MCP, Todo, and the Plan Mode package, key, events, and tool names. This dec
 | `packages/examples/jsonrpc-demo/`, `packages/sdk/python-runtime/` | removed | The Python runtime wheel's closure manifest owns packaging without a separate application package. |
 | `examples/jsonrpc-agent/` | `python/sdk/examples/` | The example demonstrates Python use of the `sdk` profile and ordered patches. |
 | `@qilin/acp-demo` | `@qilin/acp-app` | The package is the ACP profile's application bundle, not a standalone demo bin. |
-| Deploy-root manifests `qilin-jsonrpc-agent-pkg`, `qilin-sdk-python-runtime-closure` | `qilin-python-runtime-closure` | The zero-code manifest defines the Python runtime wheel's complete `qilin` dependency closure without naming a separate SDK application. |
+| Deploy-root manifests `qilin-jsonrpc-agent-pkg`, `qilin-sdk-python-runtime-closure` | `qilin-python-runtime-closure` | The zero-code manifest defines the Python runtime wheel's complete `openkylin` dependency closure without naming a separate SDK application. |
 | `@qilin/frontend` | `@qilin/web-frontend` | The application is the web frontend. Keep its physical `apps/web/` folder. |
 
 Keep atomic-write, brand, native-command, timeout utility, directory-picker, `qilin-base`, `qilin-web-app`, `qilin-sdk-app`, `qilin-acp-app`, app boot, CLI names, and the `headless` package, bundle, and example identity. `headless` is the intended product essence and may later support more than one-shot execution.

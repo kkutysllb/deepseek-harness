@@ -1,6 +1,6 @@
 # channels 模块（channels module）
 
-> QiLin engine · IM channel adapter subsystem · 双语 / Bilingual
+> OpenKylin engine · IM channel adapter subsystem · 双语 / Bilingual
 
 ---
 
@@ -8,7 +8,7 @@
 
 ### 职责
 
-`app.channels` 是 QiLin 的 **IM 渠道接入层**：让最终用户通过常用 IM 直接与 Agent
+`app.channels` 是 OpenKylin 的 **IM 渠道接入层**：让最终用户通过常用 IM 直接与 Agent
 对话（`@bot 提问` → 异步运行 → 回推结果），覆盖 8 大渠道：
 
 | 渠道 | 实现 | 接入方式 |
@@ -22,7 +22,7 @@
 | 微信 / WeChat | `wechat.py` | 微信协议接入 |
 | GitHub | `github.py` | GitHub App 安装触发（与 gateway webhook 协同） |
 
-渠道层只做"连接 + 协议转换"，对话逻辑全部委托 `qilin` 内核：
+渠道层只做"连接 + 协议转换"，对话逻辑全部委托 `openkylin` 内核：
 消息 → `ChannelManager` 去重与身份绑定 → `service` 发起异步运行 →
 `run_policy` 决定运行形态 → 结果回推渠道。
 
@@ -32,7 +32,7 @@
   （用户消息）与出站（agent 回复）方向
 - **去重**（`dedupe_store.py`）：入站消息按 (渠道, 用户, 消息) 指纹去重，
   防止平台重试 / webhook 重复投递导致重复运行
-- **连接身份**（`connection_identity.py`）：渠道侧用户 ↔ QiLin 用户 / agent 的身份
+- **连接身份**（`connection_identity.py`）：渠道侧用户 ↔ OpenKylin 用户 / agent 的身份
   绑定与解析，配合 `channel_connections` 配置段的 `require_bound_identity`
 - **运行策略**（`run_policy.py` + `feishu_run_policy.py`）：全局 `CHANNEL_RUN_POLICY`
   映射，定义消息如何映射到运行（单次运行 / 会话延续 / 权限校验）
@@ -97,7 +97,7 @@ channel_connections:
 
 ```bash
 # 安装渠道 SDK（channels extras）
-pip install "qilin[channels]"
+pip install "openkylin[channels]"
 
 # 渠道服务随 gateway 进程一起启动（lifespan 拉起）
 uvicorn app.gateway.app:app --port 8001
@@ -105,8 +105,8 @@ uvicorn app.gateway.app:app --port 8001
 
 ### 关联模块
 
-- **上游**：`qilin.runtime`（异步运行）、`qilin.persistence.channel`（连接存储）、
-  `qilin.config`（`channel_connections` 配置段）
+- **上游**：`openkylin.runtime`（异步运行）、`openkylin.persistence.channel`（连接存储）、
+  `openkylin.config`（`channel_connections` 配置段）
 - **下游**：`app.gateway`（`channels` / `channel_connections` REST 端点）、
   `app.scheduler`（渠道定时任务）
 - **测试**：`tests/` 下渠道去重、身份绑定与运行策略测试
@@ -117,7 +117,7 @@ uvicorn app.gateway.app:app --port 8001
 
 ### Responsibility
 
-`app.channels` is QiLin's **IM channel adapter layer**: end users chat with the
+`app.channels` is OpenKylin's **IM channel adapter layer**: end users chat with the
 agent directly from their favorite IM (`@bot ask` → async run → result pushed
 back), covering 8 channels:
 
@@ -133,7 +133,7 @@ back), covering 8 channels:
 | GitHub | `github.py` | GitHub App install triggers (coordinated with gateway webhooks) |
 
 The channel layer only handles "connection + protocol conversion"; all dialog
-logic is delegated to the `qilin` kernel: message → `ChannelManager` dedupe and
+logic is delegated to the `openkylin` kernel: message → `ChannelManager` dedupe and
 identity binding → `service` starts an async run → `run_policy` shapes the run →
 result pushed back to the channel.
 
@@ -144,7 +144,7 @@ result pushed back to the channel.
 - **Dedupe** (`dedupe_store.py`) — inbound messages are fingerprinted by
   (channel, user, message) to prevent duplicate runs from platform retries /
   webhook redelivery
-- **Connection identity** (`connection_identity.py`) — channel user ↔ QiLin
+- **Connection identity** (`connection_identity.py`) — channel user ↔ OpenKylin
   user/agent binding and resolution, paired with `require_bound_identity` in the
   `channel_connections` config section
 - **Run policy** (`run_policy.py` + `feishu_run_policy.py`) — the global
@@ -216,7 +216,7 @@ channel_connections:
 
 ```bash
 # Install channel SDKs (channels extras)
-pip install "qilin[channels]"
+pip install "openkylin[channels]"
 
 # Channels start together with the gateway process (lifespan)
 uvicorn app.gateway.app:app --port 8001
@@ -224,8 +224,8 @@ uvicorn app.gateway.app:app --port 8001
 
 ### Related Modules
 
-- **Upstream**: `qilin.runtime` (async runs), `qilin.persistence.channel`
-  (connection storage), `qilin.config` (`channel_connections` config section)
+- **Upstream**: `openkylin.runtime` (async runs), `openkylin.persistence.channel`
+  (connection storage), `openkylin.config` (`channel_connections` config section)
 - **Downstream**: `app.gateway` (`channels` / `channel_connections` REST endpoints),
   `app.scheduler` (channel scheduled tasks)
 - **Tests**: channel dedupe, identity binding, and run-policy tests under `tests/`

@@ -93,7 +93,7 @@ type TaskSurfaceSubmissionId = Branded<'TaskSurfaceSubmissionId'>
 type TaskSurfaceDismissalId = Branded<'TaskSurfaceDismissalId'>
 
 interface TaskSurfacePresentationMeta {
-  kind: 'qilin/task-surface'
+  kind: 'openkylin/task-surface'
   version: 1
   surfaceId: TaskSurfaceId
   model: TaskSurfaceModelV1

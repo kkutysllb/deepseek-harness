@@ -1,6 +1,6 @@
 # persistence 模块（persistence module）
 
-> QiLin engine · persistence subsystem · 双语 / Bilingual
+> OpenKylin engine · persistence subsystem · 双语 / Bilingual
 
 ---
 
@@ -8,7 +8,7 @@
 
 ### 职责
 
-`qilin.persistence` 是 QiLin 的"持久化层"，所有 Run / Thread / Agent / Skill / 用户上传 / 反馈 / 渠道连接 / webhook / token 用量 / scheduled task 都被建模为带 SQL DDL 的领域对象。
+`openkylin.persistence` 是 OpenKylin 的"持久化层"，所有 Run / Thread / Agent / Skill / 用户上传 / 反馈 / 渠道连接 / webhook / token 用量 / scheduled task 都被建模为带 SQL DDL 的领域对象。
 
 - **引擎抽象**：`engine.py` 暴露 `create_engine()` 工厂，封装 SQLite（开发 / 单机）vs PostgreSQL（生产）
 - **基础**：`base.py` 提供 SQLAlchemy `DeclarativeBase`、`JSON` 兼容字段
@@ -72,7 +72,7 @@ migrations upgrade → bootstrap_persistence() → 初始化 schema-version cach
 
 ### Responsibility
 
-`qilin.persistence` is QiLin's "persistence layer". Every Run / Thread / Agent / Skill / user upload / feedback / channel connection / webhook / token usage / scheduled task is a domain object with SQL DDL.
+`openkylin.persistence` is OpenKylin's "persistence layer". Every Run / Thread / Agent / Skill / user upload / feedback / channel connection / webhook / token usage / scheduled task is a domain object with SQL DDL.
 
 - **Engine factory** — `engine.py` exposes `create_engine()` wrapping SQLite (dev / single-node) vs PostgreSQL (prod)
 - **Declarative base** — `base.py` provides `DeclarativeBase` + `JSON` field

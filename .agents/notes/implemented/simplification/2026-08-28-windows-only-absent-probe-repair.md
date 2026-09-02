@@ -16,7 +16,7 @@ The repair is reached only under `process.platform === 'win32'`, matching the pl
 
 ## Testing
 
-Counting `node:fs/promises` calls through the suite's existing module mock, against a store with five project directories — the layout of a real `~/.qilin/sessions`:
+Counting `node:fs/promises` calls through the suite's existing module mock, against a store with five project directories — the layout of a real `~/.openkylin/sessions`:
 
 | Operation | Before | After |
 |---|---|---|

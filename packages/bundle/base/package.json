@@ -1,6 +1,6 @@
 {
   "name": "@qilin/base",
-  "description": "The shared qilin core as a profile bundle: the first patch layer of base-backed profiles, inserting core rows over the empty profile root",
+  "description": "The shared openkylin core as a profile bundle: the first patch layer of base-backed profiles, inserting core rows over the empty profile root",
   "version": "0.1.2-alpha.3",
   "publishConfig": {
     "access": "public"
@@ -33,7 +33,7 @@
     "lib/types/**/*.d.ts"
   ],
   "license": "MIT",
-  "qilin": {
+  "openkylin": {
     "bundle": {
       "patch": "./cordis.patch.yml"
     }

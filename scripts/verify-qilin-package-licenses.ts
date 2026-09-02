@@ -7,11 +7,11 @@ import { globSync, readFileSync } from 'node:fs'
 import { resolve, sep } from 'node:path'
 
 const ROOT = resolve(import.meta.dirname, '..')
-const QILIN_PACKAGE_NAME = /^@qilin\//
+const OPENKYLIN_PACKAGE_NAME = /^@qilin\//
 
-/** Result of checking every QiLin package reachable through the root workspace list. */
+/** Result of checking every OpenKylin package reachable through the root workspace list. */
 export interface QilinPackageLicenseReport {
-  /** Number of QiLin package manifests checked. */
+  /** Number of OpenKylin package manifests checked. */
   packageCount: number
   /** Repository-relative diagnostics for non-MIT declarations. */
   failures: string[]
@@ -61,7 +61,7 @@ export function inspectQilinPackageLicenses(root: string): QilinPackageLicenseRe
   for (const file of workspaceManifestPaths(root)) {
     const manifest = readManifest(root, file)
     const name = manifest.name
-    if (typeof name !== 'string' || !QILIN_PACKAGE_NAME.test(name)) continue
+    if (typeof name !== 'string' || !OPENKYLIN_PACKAGE_NAME.test(name)) continue
 
     packageCount++
     if (manifest.license !== 'MIT') {
@@ -78,12 +78,12 @@ export function inspectQilinPackageLicenses(root: string): QilinPackageLicenseRe
 if (process.argv[1] && import.meta.filename === resolve(process.argv[1])) {
   const report = inspectQilinPackageLicenses(ROOT)
   if (report.failures.length > 0) {
-    process.stderr.write('verify-qilin-package-licenses: non-MIT QiLin package declarations found:\n')
+    process.stderr.write('verify-qilin-package-licenses: non-MIT OpenKylin package declarations found:\n')
     for (const failure of report.failures) process.stderr.write(`  ${failure}\n`)
     process.exitCode = 1
   } else {
     process.stdout.write(
-      `verify-qilin-package-licenses: ${String(report.packageCount)} QiLin package(s) checked; all declare MIT.\n`,
+      `verify-qilin-package-licenses: ${String(report.packageCount)} OpenKylin package(s) checked; all declare MIT.\n`,
     )
   }
 }

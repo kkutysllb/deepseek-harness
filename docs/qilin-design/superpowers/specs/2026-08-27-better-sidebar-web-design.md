@@ -1,4 +1,4 @@
-# QiLin Web Demo 右侧工作台（对齐 DSH-better-sidebar）· 设计文档
+# OpenKylin Web Demo 右侧工作台（对齐 DSH-better-sidebar）· 设计文档
 
 > 日期：2026-08-27 · 状态：草案 v1，待用户逐节审阅
 
@@ -9,7 +9,7 @@
 整套契约假设了 `@deepseek-ai/cordis` 运行时 + 14 个 DSH 宿主服务（webServer / sessions / workspaces /
 subagents / agents / jobs …）与 `node-pty` 真实 PTY。
 
-QiLin web-demo 是 Next.js 16 + 本地 gateway 的纯 Web 工作台，**没有 Cordis 宿主、没有 node-pty**，
+OpenKylin web-demo 是 Next.js 16 + 本地 gateway 的纯 Web 工作台，**没有 Cordis 宿主、没有 node-pty**，
 无法直接装包或照搬源码。v1 的目标是：在 web-demo 内**重新构建一个等效形态的右侧工作台**，
 对齐 better-sidebar 的 **UI 行为模式与扩展协议**，而非复刻其宿主服务契约。
 
@@ -31,7 +31,7 @@ QiLin web-demo 是 Next.js 16 + 本地 gateway 的纯 Web 工作台，**没有 C
 ### 与既有计划的关系
 
 - `plans/2026-08-27-dsh-alignment-refactor.md` P1（workspaces 注册表 + threads.cwd 不可变）：**正交**。
-  本设计走「线程 user-data workspace」路径（`.qilin/threads/{tid}/user-data/workspace/`），
+  本设计走「线程 user-data workspace」路径（`.openkylin/threads/{tid}/user-data/workspace/`），
   不依赖注册表——注册表后续可成为更高层的工作区容器。
 - 既有 `workspace-layout-context.tsx` 的右侧面板（`rightPanelOpen` / `rightPanelWidth` / `PanelSectionId`）
   与本设计**不冲突**，本设计是新增「右侧工作台」作为独立面板，受 `workspace-layout-context` 的宽度/开关管理。
@@ -47,7 +47,7 @@ QiLin web-demo 是 Next.js 16 + 本地 gateway 的纯 Web 工作台，**没有 C
 | Tab 隔离粒度 | **per-thread**（每个会话一份 tab 布局）；切换 thread 自动恢复 |
 | 数据持久化 | per-thread tab 状态走 gateway 持久化（`/api/threads/{tid}/sidebar-tabs`） |
 | 协议层 | 自定义 `SidebarPanelRegistry` + `FileViewerRegistry`（不依赖 Cordis） |
-| 文件浏览根 | thread 的 `user_workspace_dir`（`.qilin/threads/{tid}/user-data/workspace/`） |
+| 文件浏览根 | thread 的 `user_workspace_dir`（`.openkylin/threads/{tid}/user-data/workspace/`） |
 | 文件访问授权 | 后端 `require_permission("threads", "read|write")` + 路径白名单校验 |
 | 编辑器可写范围 | 仅限已存在的相对路径文本文件（< 1 MB，二进制拒绝） |
 | Tab 拖拽分栏 | v1 仅"垂直/水平分栏"切换，不做自由悬浮（v2+） |
@@ -83,7 +83,7 @@ QiLin web-demo 是 Next.js 16 + 本地 gateway 的纯 Web 工作台，**没有 C
                        Next API Route → /api/* (proxy)
                                   │
                                   ▼
-                       QiLin Gateway (Python) :28081
+                       OpenKylin Gateway (Python) :28081
                                   │
                   ┌───────────────┼───────────────┐
                   ▼               ▼               ▼
@@ -253,7 +253,7 @@ export const sidebarPanelRegistry = new SidebarPanelRegistry();
 **调用示例**（在 web-demo 初始化或生态包内）：
 ```typescript
 sidebarPanelRegistry.register({
-  id: "qilin:files",
+  id: "openkylin:files",
   title: () => "Files",
   icon: <Folder />,
   order: 10,
@@ -288,11 +288,11 @@ export interface FileViewerProps {
 
 | ID | exts | 技术 | 是否可写 |
 |---|---|---|---|
-| `qilin:markdown` | `.md .markdown` | `streamdown`（已在 deps）+ `rehype-raw` + `rehype-katex` + `@streamdown/mermaid` | ❌ |
-| `qilin:html` | `.html .htm` | `<iframe sandbox="allow-same-origin">` + DOMPurify 渲染 | ❌ |
-| `qilin:pdf` | `.pdf` | `pdfjs-dist`（新增依赖） | ❌ |
-| `qilin:image` | `.png .jpg .jpeg .gif .webp .svg .bmp` | 原生 `<img>` / `<object>` | ❌ |
-| `qilin:editor` | `.txt .json .yaml .yml .toml .py .js .ts ...`（§3.1 白名单） | `@uiw/react-codemirror` + 语言包 | ✅ |
+| `openkylin:markdown` | `.md .markdown` | `streamdown`（已在 deps）+ `rehype-raw` + `rehype-katex` + `@streamdown/mermaid` | ❌ |
+| `openkylin:html` | `.html .htm` | `<iframe sandbox="allow-same-origin">` + DOMPurify 渲染 | ❌ |
+| `openkylin:pdf` | `.pdf` | `pdfjs-dist`（新增依赖） | ❌ |
+| `openkylin:image` | `.png .jpg .jpeg .gif .webp .svg .bmp` | 原生 `<img>` / `<object>` | ❌ |
+| `openkylin:editor` | `.txt .json .yaml .yml .toml .py .js .ts ...`（§3.1 白名单） | `@uiw/react-codemirror` + 语言包 | ✅ |
 
 ### 4.3 组件清单
 

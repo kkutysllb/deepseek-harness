@@ -1,5 +1,5 @@
 ---
-description: "The boot package group: how qilin app bins start — environment loading, profile and patch layers, clear startup failures, and app-owned command lines."
+description: "The boot package group: how openkylin app bins start — environment loading, profile and patch layers, clear startup failures, and app-owned command lines."
 kind: "package-group"
 ---
 
@@ -9,7 +9,7 @@ English | [中文](README.zh.md)
 
 ## Summary
 
-The boot group provides what every qilin app bin needs to start: `app-boot` turns a `cordis.yml` plus your environment and patch layers into a running app with clear failure messages, and `cmdline` lets the app own its command-line flags and `--help`. With these packages you can run `qilin` or write a new application or test fixture that boots the same way. Both are libraries imported by `apps/cli` and test-only Loader fixtures, never plugins a composition loads. This page maps the group; each package README owns its per-package contract.
+The boot group provides what every openkylin app bin needs to start: `app-boot` turns a `cordis.yml` plus your environment and patch layers into a running app with clear failure messages, and `cmdline` lets the app own its command-line flags and `--help`. With these packages you can run `openkylin` or write a new application or test fixture that boots the same way. Both are libraries imported by `apps/cli` and test-only Loader fixtures, never plugins a composition loads. This page maps the group; each package README owns its per-package contract.
 
 ## Table of Contents
 
@@ -22,14 +22,14 @@ The boot group provides what every qilin app bin needs to start: `app-boot` turn
 
 | Package | Role | ctx key |
 |---|---|---|
-| [`app-boot`](app-boot/README.md) | Boots a qilin app from a `cordis.yml`: loads `.env`, applies profile and patch layers, and reports startup failures clearly | (library for the bins) |
+| [`app-boot`](app-boot/README.md) | Boots a openkylin app from a `cordis.yml`: loads `.env`, applies profile and patch layers, and reports startup failures clearly | (library for the bins) |
 | [`cmdline`](cmdline/README.md) | Lets the app own its flags, `--help`, and exit code; passes everything after the launcher's flags through verbatim | `cmdlineArgs`, `appExit` |
 
 <a id="related-documentation"></a>
 ## Related documentation
 
-- [qilin app](../../apps/cli/README.md) — the `qilin` bin that consumes these helpers for its boot sequence.
-- [Profile bundles](../bundle/README.md) — installable patch layers that `qilin --profile` compositions mount.
+- [openkylin app](../../apps/cli/README.md) — the `openkylin` bin that consumes these helpers for its boot sequence.
+- [Profile bundles](../bundle/README.md) — installable patch layers that `openkylin --profile` compositions mount.
 - [qilin-home-paths](../util/home-paths/README.md) — the harness-home resolver both packages build on.
 - [App-owned command-line decision](../../.agents/notes/implemented/architecture/2026-08-06-app-owned-command-line.md) — why an app owns its flag family instead of the launcher.
 

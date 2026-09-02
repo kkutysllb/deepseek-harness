@@ -1,6 +1,6 @@
 # subagents 模块（subagents module）
 
-> QiLin engine · sub-agents subsystem · 双语 / Bilingual
+> OpenKylin engine · sub-agents subsystem · 双语 / Bilingual
 
 ---
 
@@ -8,7 +8,7 @@
 
 ### 职责
 
-`qilin.subagents` 把"启动一个 LangGraph 子图"封装成与 Lead Agent 完全同构的一等公民。子代理拥有独立 checkpoint、独立 callbacks、独立 token 计量、独立中间件链，并支持任意层级嵌套。
+`openkylin.subagents` 把"启动一个 LangGraph 子图"封装成与 Lead Agent 完全同构的一等公民。子代理拥有独立 checkpoint、独立 callbacks、独立 token 计量、独立中间件链，并支持任意层级嵌套。
 
 - **执行器**：`SubagentExecutor` 负责调度、取消、Token 统计、子代理 step 事件回报
 - **注册中心**：`registry.py` 维护子代理名 → 配置的映射
@@ -46,22 +46,22 @@
 通过内置工具触发：
 
 ```python
-from qilin.tools.builtins.task_tool import task_tool
+from openkylin.tools.builtins.task_tool import task_tool
 # task_tool 内部调用 SubagentExecutor
 ```
 
 或通过 ACP 协议调用外部子代理：
 
 ```python
-from qilin.tools.builtins.invoke_acp_agent_tool import build_invoke_acp_agent_tool
+from openkylin.tools.builtins.invoke_acp_agent_tool import build_invoke_acp_agent_tool
 ```
 
 ### 扩展入口
 
 ```python
 # 注册自定义子代理
-from qilin.subagents.registry import registry
-from qilin.subagents.config import SubagentConfig
+from openkylin.subagents.registry import registry
+from openkylin.subagents.config import SubagentConfig
 
 registry.register("my_agent", SubagentConfig(
     model="openai-gpt4",
@@ -76,7 +76,7 @@ registry.register("my_agent", SubagentConfig(
 
 ### Responsibility
 
-`qilin.subagents` elevates "spawning a LangGraph subgraph" to a first-class citizen isomorphic with Lead Agent. Each sub-agent has independent checkpoint, callbacks, token accounting, middleware chain, and supports arbitrary depth nesting.
+`openkylin.subagents` elevates "spawning a LangGraph subgraph" to a first-class citizen isomorphic with Lead Agent. Each sub-agent has independent checkpoint, callbacks, token accounting, middleware chain, and supports arbitrary depth nesting.
 
 - **Executor** — `SubagentExecutor` handles scheduling, cancellation, token accounting, step-event reporting
 - **Registry** — `registry.py` maintains name → config mapping
@@ -111,21 +111,21 @@ registry.register("my_agent", SubagentConfig(
 Via built-in tool:
 
 ```python
-from qilin.tools.builtins.task_tool import task_tool
+from openkylin.tools.builtins.task_tool import task_tool
 # task_tool internally invokes SubagentExecutor
 ```
 
 Or via ACP for external sub-agents:
 
 ```python
-from qilin.tools.builtins.invoke_acp_agent_tool import build_invoke_acp_agent_tool
+from openkylin.tools.builtins.invoke_acp_agent_tool import build_invoke_acp_agent_tool
 ```
 
 ### Extension Points
 
 ```python
-from qilin.subagents.registry import registry
-from qilin.subagents.config import SubagentConfig
+from openkylin.subagents.registry import registry
+from openkylin.subagents.config import SubagentConfig
 
 registry.register("my_agent", SubagentConfig(
     model="openai-gpt4",

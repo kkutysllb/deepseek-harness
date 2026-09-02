@@ -23,7 +23,7 @@ function harness(): { ctx: Context; register: ReturnType<typeof vi.fn>; remove: 
 const valid = {
   source: 'primary',
   path: '/github',
-  secretEnv: 'QILIN_GITHUB_WEBHOOK_SECRET',
+  secretEnv: 'OPENKYLIN_GITHUB_WEBHOOK_SECRET',
   maxBodyBytes: 1024,
 } satisfies Config
 

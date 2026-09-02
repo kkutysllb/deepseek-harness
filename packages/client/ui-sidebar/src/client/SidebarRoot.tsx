@@ -36,12 +36,12 @@ const SCROLLBAR_LINGER_MS = 2000
 
 /** Format complete-build metadata for the local brand badge. */
 function localBuildVersion(): string | undefined {
-  const version = process.env.QILIN_CLIENT_VERSION
+  const version = process.env.OPENKYLIN_CLIENT_VERSION
   if (version === undefined) return undefined
-  const commit = process.env.QILIN_CLIENT_COMMIT_HASH
+  const commit = process.env.OPENKYLIN_CLIENT_COMMIT_HASH
   return version
     + (commit === undefined ? '' : `-${commit}`)
-    + (process.env.QILIN_CLIENT_GIT_DIRTY === 'true' ? '-dirty' : '')
+    + (process.env.OPENKYLIN_CLIENT_GIT_DIRTY === 'true' ? '-dirty' : '')
 }
 
 /**

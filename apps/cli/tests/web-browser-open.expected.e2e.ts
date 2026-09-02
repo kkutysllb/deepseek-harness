@@ -1,4 +1,4 @@
-/** Assembled keyless snapshot for the default `qilin web` browser handoff. */
+/** Assembled keyless snapshot for the default `openkylin web` browser handoff. */
 
 import { existsSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
@@ -11,12 +11,12 @@ const repoRoot = fileURLToPath(new URL('../../../', import.meta.url))
 const builtBin = join(repoRoot, 'apps/cli/lib/bin.js')
 const frontendIndex = join(repoRoot, 'apps/web/dist/index.html')
 const openerHook = new URL('./fixtures/web-browser-open/register.mjs', import.meta.url).href
-const openingMessage = 'qilin web: opening the default browser; pass --no-open to disable'
+const openingMessage = 'openkylin web: opening the default browser; pass --no-open to disable'
 const tempRoots: string[] = []
 const builtArtifactsExist = existsSync(builtBin) && existsSync(frontendIndex)
 
-if (process.env.QILIN_EXAMPLE_MODE === 'lib' && !builtArtifactsExist) {
-  throw new Error('qilin web browser-open snapshot requires built CLI and Web artifacts in lib mode')
+if (process.env.OPENKYLIN_EXAMPLE_MODE === 'lib' && !builtArtifactsExist) {
+  throw new Error('openkylin web browser-open snapshot requires built CLI and Web artifacts in lib mode')
 }
 
 afterEach(() => {
@@ -37,7 +37,7 @@ function normalizeLocalUrl(url: string): string {
     .replace(/token=[^&]+/u, 'token={{token}}')
 }
 
-describe.skipIf(!builtArtifactsExist)('qilin web browser-open assembled snapshot', () => {
+describe.skipIf(!builtArtifactsExist)('openkylin web browser-open assembled snapshot', () => {
   it('hands the reachable page to the default browser after the shipped tree settles', async () => {
     const root = mkdtempSync(join(tmpdir(), 'qilin-web-browser-open-snapshot-'))
     tempRoots.push(root)
@@ -51,9 +51,9 @@ describe.skipIf(!builtArtifactsExist)('qilin web browser-open assembled snapshot
       env: {
         ...process.env,
         DEEPSEEK_API_KEY: 'keyless-browser-open-no-call',
-        QILIN_AGENTS_HOME: join(root, '.agents'),
-        QILIN_HOME: join(root, '.qilin'),
-        QILIN_TELEMETRY_DISABLED: '1',
+        OPENKYLIN_AGENTS_HOME: join(root, '.agents'),
+        OPENKYLIN_HOME: join(root, '.openkylin'),
+        OPENKYLIN_TELEMETRY_DISABLED: '1',
         NODE_NO_WARNINGS: '1',
         SSH_CONNECTION: '',
         SSH_TTY: '',
@@ -64,12 +64,12 @@ describe.skipIf(!builtArtifactsExist)('qilin web browser-open assembled snapshot
       reject: false,
     })
     const readyUrl = /dsh web: (http:\/\/[^\s]+)/u.exec(result.stdout)?.[1]
-    const openLine = result.stdout.split('\n').find(line => line.startsWith('qilin browser-open: '))
+    const openLine = result.stdout.split('\n').find(line => line.startsWith('openkylin browser-open: '))
     const opening = result.stdout.includes(openingMessage)
     if (readyUrl === undefined || openLine === undefined || !opening) {
-      throw new Error(`qilin web browser-open evidence missing\nstdout:\n${result.stdout}\nstderr:\n${result.stderr}`)
+      throw new Error(`openkylin web browser-open evidence missing\nstdout:\n${result.stdout}\nstderr:\n${result.stderr}`)
     }
-    const opened = JSON.parse(openLine.slice('qilin browser-open: '.length)) as BrowserOpenRecord
+    const opened = JSON.parse(openLine.slice('openkylin browser-open: '.length)) as BrowserOpenRecord
 
     expect({
       exitCode: result.exitCode,
@@ -110,10 +110,10 @@ describe.skipIf(!builtArtifactsExist)('qilin web browser-open assembled snapshot
         ...process.env,
         BROWSER_OPEN_TEST_FAILURE: 'fixture desktop unavailable',
         DEEPSEEK_API_KEY: 'keyless-browser-open-no-call',
-        QILIN_AGENTS_HOME: join(root, '.agents'),
-        QILIN_BROWSER_OPEN_TEST_EXIT_ON_FAILURE: '1',
-        QILIN_HOME: join(root, '.qilin'),
-        QILIN_TELEMETRY_DISABLED: '1',
+        OPENKYLIN_AGENTS_HOME: join(root, '.agents'),
+        OPENKYLIN_BROWSER_OPEN_TEST_EXIT_ON_FAILURE: '1',
+        OPENKYLIN_HOME: join(root, '.openkylin'),
+        OPENKYLIN_TELEMETRY_DISABLED: '1',
         NODE_NO_WARNINGS: '1',
         SSH_CONNECTION: '',
         SSH_TTY: '',
@@ -130,12 +130,12 @@ describe.skipIf(!builtArtifactsExist)('qilin web browser-open assembled snapshot
     expect({
       diagnostic,
       exitCode: result.exitCode,
-      opened: result.stdout.includes('qilin browser-open: '),
+      opened: result.stdout.includes('openkylin browser-open: '),
       opening: result.stdout.includes(openingMessage),
       readyUrl: readyUrl === undefined ? undefined : normalizeLocalUrl(readyUrl),
     }).toMatchInlineSnapshot(`
       {
-        "diagnostic": "web-app: could not open the default browser because fixture desktop unavailable; use the qilin web URL printed at startup",
+        "diagnostic": "web-app: could not open the default browser because fixture desktop unavailable; use the openkylin web URL printed at startup",
         "exitCode": 0,
         "opened": false,
         "opening": true,
@@ -157,10 +157,10 @@ describe.skipIf(!builtArtifactsExist)('qilin web browser-open assembled snapshot
       env: {
         ...process.env,
         DEEPSEEK_API_KEY: 'keyless-browser-open-no-call',
-        QILIN_AGENTS_HOME: join(root, '.agents'),
-        QILIN_BROWSER_OPEN_TEST_EXIT_ON_READY: '1',
-        QILIN_HOME: join(root, '.qilin'),
-        QILIN_TELEMETRY_DISABLED: '1',
+        OPENKYLIN_AGENTS_HOME: join(root, '.agents'),
+        OPENKYLIN_BROWSER_OPEN_TEST_EXIT_ON_READY: '1',
+        OPENKYLIN_HOME: join(root, '.openkylin'),
+        OPENKYLIN_TELEMETRY_DISABLED: '1',
         NODE_NO_WARNINGS: '1',
         SSH_CONNECTION: '10.0.0.2 55000 10.0.0.9 22',
         SSH_TTY: '',
@@ -177,7 +177,7 @@ describe.skipIf(!builtArtifactsExist)('qilin web browser-open assembled snapshot
       exitCode: result.exitCode,
       opening: result.stdout.includes(openingMessage),
       readyUrl: readyUrl === undefined ? undefined : normalizeLocalUrl(readyUrl),
-      opened: result.stdout.includes('qilin browser-open: '),
+      opened: result.stdout.includes('openkylin browser-open: '),
       stderr: result.stderr,
     }).toMatchInlineSnapshot(`
       {
@@ -204,9 +204,9 @@ describe.skipIf(!builtArtifactsExist)('qilin web browser-open assembled snapshot
       env: {
         ...process.env,
         DEEPSEEK_API_KEY: 'keyless-browser-open-no-call',
-        QILIN_AGENTS_HOME: join(root, '.agents'),
-        QILIN_HOME: join(root, '.qilin'),
-        QILIN_TELEMETRY_DISABLED: '1',
+        OPENKYLIN_AGENTS_HOME: join(root, '.agents'),
+        OPENKYLIN_HOME: join(root, '.openkylin'),
+        OPENKYLIN_TELEMETRY_DISABLED: '1',
         NODE_NO_WARNINGS: '1',
         SSH_CONNECTION: '',
         SSH_TTY: '',
@@ -218,18 +218,18 @@ describe.skipIf(!builtArtifactsExist)('qilin web browser-open assembled snapshot
     })
 
     const diagnostic = result.stderr.split(/\r?\n/u)
-      .find(line => line.startsWith('Error: qilin: '))
-      ?.replace(/^Error: qilin: .*[/\\]\.env/u, 'qilin: {{root}}/.env')
+      .find(line => line.startsWith('Error: openkylin: '))
+      ?.replace(/^Error: openkylin: .*[/\\]\.env/u, 'openkylin: {{root}}/.env')
 
     expect({
       diagnostic,
       exitCode: result.exitCode,
       opening: result.stdout.includes(openingMessage),
-      opened: result.stdout.includes('qilin browser-open: '),
-      ready: result.stdout.includes('qilin web: '),
+      opened: result.stdout.includes('openkylin browser-open: '),
+      ready: result.stdout.includes('openkylin web: '),
     }).toMatchInlineSnapshot(`
       {
-        "diagnostic": "qilin: {{root}}/.env sets "BROWSER", which only the launching environment may set (it decides how this process starts, where its code and instructions load from, or how it reaches the network); export BROWSER instead of putting it in a .env file",
+        "diagnostic": "openkylin: {{root}}/.env sets "BROWSER", which only the launching environment may set (it decides how this process starts, where its code and instructions load from, or how it reaches the network); export BROWSER instead of putting it in a .env file",
         "exitCode": 1,
         "opened": false,
         "opening": false,

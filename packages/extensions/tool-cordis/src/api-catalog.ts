@@ -550,8 +550,8 @@ export const SERVICE_API: readonly ServiceApiEntry[] = [
   },
   {
     key: 'clientModules',
-    summary: 'The web plugin table service: incremental `qilin.client` scan + wire composition + bundle route + index injection rows.',
-    description: 'The web plugin table service: incremental `qilin.client` scan + wire composition + bundle route + index injection rows. Construction runs the activation scan synchronously — a malformed declaration or missing bundle among the already-loaded entries aggregates into one loud throw (FAILED fiber; the boot activation audit reports it).',
+    summary: 'The web plugin table service: incremental `openkylin.client` scan + wire composition + bundle route + index injection rows.',
+    description: 'The web plugin table service: incremental `openkylin.client` scan + wire composition + bundle route + index injection rows. Construction runs the activation scan synchronously — a malformed declaration or missing bundle among the already-loaded entries aggregates into one loud throw (FAILED fiber; the boot activation audit reports it).',
     methods: [
       {
         signature: 'graph(): WebBootGraph',
@@ -2047,8 +2047,8 @@ export const SERVICE_API: readonly ServiceApiEntry[] = [
   },
   {
     key: 'shellEnv',
-    summary: 'Registry (`ctx.shellEnv`) for trusted, per-execution `QILIN_*` variables.',
-    description: 'Registry (`ctx.shellEnv`) for trusted, per-execution `QILIN_*` variables. The namespace is rebuilt for every model shell call: ambient `QILIN_*` values are discarded by the executor, then the registry\'s current snapshot is injected. Built-in shell facts remain owned by the registry itself while plugins can register additional, enumerable facts with effect-scoped disposal.',
+    summary: 'Registry (`ctx.shellEnv`) for trusted, per-execution `OPENKYLIN_*` variables.',
+    description: 'Registry (`ctx.shellEnv`) for trusted, per-execution `OPENKYLIN_*` variables. The namespace is rebuilt for every model shell call: ambient `OPENKYLIN_*` values are discarded by the executor, then the registry\'s current snapshot is injected. Built-in shell facts remain owned by the registry itself while plugins can register additional, enumerable facts with effect-scoped disposal.',
     methods: [
       {
         signature: 'register(contributor: BashEnvContributor): () => void',
@@ -2058,7 +2058,7 @@ export const SERVICE_API: readonly ServiceApiEntry[] = [
       },
       {
         signature: 'collect(execution: ToolExecution): QilinEnvironment',
-        description: 'Build the trusted `QILIN_*` snapshot for one shell tool execution.',
+        description: 'Build the trusted `OPENKYLIN_*` snapshot for one shell tool execution.',
         parameters: [{ name: 'execution', description: 'the current tool execution.' }],
         returns: 'an immutable environment overlay containing built-ins and current contributions.',
       },
@@ -4633,7 +4633,7 @@ export const TYPE_API: readonly TypeApiEntry[] = [
   },
   {
     name: 'QilinEnvironmentKey',
-    declaration: 'export type QilinEnvironmentKey = `${typeof QILIN_ENV_PREFIX}${string}`;',
+    declaration: 'export type QilinEnvironmentKey = `${typeof OPENKYLIN_ENV_PREFIX}${string}`;',
   },
   {
     name: 'ReadFileLine',

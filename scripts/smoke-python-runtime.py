@@ -38,9 +38,9 @@ FS_SEARCH_TEXT = "filesystem search smoke ok"
 FS_SEARCH_MARKER = "PACKAGED_FS_SEARCH_OK"
 MCP_PROMPT = "Exercise the packaged MCP client with one external stdio server."
 MCP_TEXT = "MCP client smoke ok"
-PROFILE_PLUGIN_PROMPT = "Verify the Python-installed qilin profile plugin."
+PROFILE_PLUGIN_PROMPT = "Verify the Python-installed openkylin profile plugin."
 PROFILE_PLUGIN_TEXT = "profile plugin smoke ok"
-PROFILE_PLUGIN_MARKER = "PYTHON_INSTALLED_QILIN_PROFILE_PLUGIN"
+PROFILE_PLUGIN_MARKER = "PYTHON_INSTALLED_OPENKYLIN_PROFILE_PLUGIN"
 IS_WINDOWS = sys.platform == "win32"
 MINIMAL_SHELL_TOOL = "pwsh" if IS_WINDOWS else "bash"
 MINIMAL_SHELL_COMMAND = (
@@ -208,7 +208,7 @@ def write_profile_patch(
     sessions: Path,
     patches: list[dict[str, object]],
 ) -> Path:
-    """Write one JSON-form qilin profile patch with deterministic persistence."""
+    """Write one JSON-form openkylin profile patch with deterministic persistence."""
     path = root / name
     path.write_text(json.dumps([
         {
@@ -779,8 +779,8 @@ def assert_installed_wheel_environment() -> Path:
         raise AssertionError("installed-wheel smoke must run inside a virtual environment")
     if os.environ.get("PYTHONPATH"):
         raise AssertionError("installed-wheel smoke requires PYTHONPATH to be unset")
-    if os.environ.get("QILIN_RUNTIME_MODE"):
-        raise AssertionError("installed-wheel smoke requires QILIN_RUNTIME_MODE to be unset")
+    if os.environ.get("OPENKYLIN_RUNTIME_MODE"):
+        raise AssertionError("installed-wheel smoke requires OPENKYLIN_RUNTIME_MODE to be unset")
 
     repo_root = Path(__file__).resolve().parent.parent
     cwd = Path.cwd().resolve()
@@ -857,8 +857,8 @@ def smoke_sdk_live() -> None:
             cwd=str(root),
             dsh_home=str(dsh_home),
             env={
-                "QILIN_PERMISSION_MODE": "danger-full-access",
-                "QILIN_TELEMETRY_DISABLED": "1",
+                "OPENKYLIN_PERMISSION_MODE": "danger-full-access",
+                "OPENKYLIN_TELEMETRY_DISABLED": "1",
             },
             api_key=api_key,
             base_url=base_url,
@@ -930,8 +930,8 @@ def smoke_sdk_default(base_url: str) -> None:
             cwd=str(root),
             dsh_home=str(dsh_home),
             env={
-                "QILIN_PERMISSION_MODE": "danger-full-access",
-                "QILIN_TELEMETRY_DISABLED": "1",
+                "OPENKYLIN_PERMISSION_MODE": "danger-full-access",
+                "OPENKYLIN_TELEMETRY_DISABLED": "1",
             },
             api_key="sk-keyless-smoke",
             base_url=base_url,
@@ -962,8 +962,8 @@ def smoke_sdk_custom(base_url: str, executable: Path) -> None:
             dsh_home=str(dsh_home),
             patches=(str(patch),),
             env={
-                "QILIN_PERMISSION_MODE": "danger-full-access",
-                "QILIN_TELEMETRY_DISABLED": "1",
+                "OPENKYLIN_PERMISSION_MODE": "danger-full-access",
+                "OPENKYLIN_TELEMETRY_DISABLED": "1",
             },
             api_key="sk-keyless-smoke",
             base_url=base_url,
@@ -1037,8 +1037,8 @@ def smoke_sdk_fs_search(base_url: str, executable: Path) -> None:
             dsh_home=str(dsh_home),
             patches=(str(patch),),
             env={
-                "QILIN_PERMISSION_MODE": "danger-full-access",
-                "QILIN_TELEMETRY_DISABLED": "1",
+                "OPENKYLIN_PERMISSION_MODE": "danger-full-access",
+                "OPENKYLIN_TELEMETRY_DISABLED": "1",
             },
             api_key="sk-keyless-smoke",
             base_url=base_url,
@@ -1070,8 +1070,8 @@ def smoke_sdk_mcp(base_url: str, executable: Path | None) -> None:
             dsh_home=str(dsh_home),
             patches=(str(patch),),
             env={
-                "QILIN_PERMISSION_MODE": "danger-full-access",
-                "QILIN_TELEMETRY_DISABLED": "1",
+                "OPENKYLIN_PERMISSION_MODE": "danger-full-access",
+                "OPENKYLIN_TELEMETRY_DISABLED": "1",
             },
             api_key="sk-keyless-smoke",
             base_url=base_url,
@@ -1090,7 +1090,7 @@ def smoke_sdk_mcp(base_url: str, executable: Path | None) -> None:
 
 
 def smoke_sdk_profile_plugin(base_url: str) -> None:
-    """Install an external bundle through Python's qilin command and load it in the SDK."""
+    """Install an external bundle through Python's openkylin command and load it in the SDK."""
     from openkylin_sdk import DeepSeekHarness
 
     with tempfile.TemporaryDirectory(prefix="qilin-sdk-profile-plugin-") as temporary:
@@ -1105,7 +1105,7 @@ def smoke_sdk_profile_plugin(base_url: str) -> None:
             "type": "module",
             "exports": "./index.js",
             "peerDependencies": {"@deepseek-ai/cordis": "*"},
-            "qilin": {"bundle": {"patch": "./cordis.patch.yml"}},
+            "openkylin": {"bundle": {"patch": "./cordis.patch.yml"}},
         }, indent=2))
         (plugin / "index.js").write_text(
             "import { Context } from '@deepseek-ai/cordis'\n"
@@ -1124,10 +1124,10 @@ def smoke_sdk_profile_plugin(base_url: str) -> None:
             "insert": [{"id": "python-sdk-blackbox-plugin", "name": "qilin-python-blackbox-plugin"}],
         }], indent=2))
 
-        qilin = Path(sysconfig.get_path("scripts")) / ("qilin.exe" if IS_WINDOWS else "qilin")
-        environment = {**os.environ, "QILIN_HOME": str(dsh_home)}
+        openkylin = Path(sysconfig.get_path("scripts")) / ("openkylin.exe" if IS_WINDOWS else "openkylin")
+        environment = {**os.environ, "OPENKYLIN_HOME": str(dsh_home)}
         installed = subprocess.run(
-            [str(qilin), "plugin", "--profile", "sdk", "add", f"file:{plugin}"],
+            [str(openkylin), "plugin", "--profile", "sdk", "add", f"file:{plugin}"],
             cwd=root,
             env=environment,
             text=True,
@@ -1136,14 +1136,14 @@ def smoke_sdk_profile_plugin(base_url: str) -> None:
         )
         if installed.returncode != 0:
             raise AssertionError(
-                f"Python-installed qilin could not add the external profile plugin: "
+                f"Python-installed openkylin could not add the external profile plugin: "
                 f"stdout={installed.stdout!r} stderr={installed.stderr!r}"
             )
         manifest = json.loads((dsh_home / "profiles" / "sdk" / "package.json").read_text())
         if "qilin-python-blackbox-plugin" not in manifest.get("dependencies", {}):
-            raise AssertionError(f"qilin plugin did not record the external dependency: {manifest}")
-        if "qilin-python-blackbox-plugin" not in manifest["qilin"]["profile"]["bundles"]:
-            raise AssertionError(f"qilin plugin did not activate the external bundle: {manifest}")
+            raise AssertionError(f"openkylin plugin did not record the external dependency: {manifest}")
+        if "qilin-python-blackbox-plugin" not in manifest["openkylin"]["profile"]["bundles"]:
+            raise AssertionError(f"openkylin plugin did not activate the external bundle: {manifest}")
 
         harness = DeepSeekHarness(
             provider="deepseek-official",
@@ -1151,8 +1151,8 @@ def smoke_sdk_profile_plugin(base_url: str) -> None:
             cwd=str(root),
             dsh_home=str(dsh_home),
             env={
-                "QILIN_PERMISSION_MODE": "danger-full-access",
-                "QILIN_TELEMETRY_DISABLED": "1",
+                "OPENKYLIN_PERMISSION_MODE": "danger-full-access",
+                "OPENKYLIN_TELEMETRY_DISABLED": "1",
             },
             api_key="sk-keyless-smoke",
             base_url=base_url,
@@ -1187,8 +1187,8 @@ def smoke_sdk_snapshot(base_url: str, executable: Path, update_snapshots: bool) 
             dsh_home=str(dsh_home),
             patches=(str(patch),),
             env={
-                "QILIN_PERMISSION_MODE": "danger-full-access",
-                "QILIN_TELEMETRY_DISABLED": "1",
+                "OPENKYLIN_PERMISSION_MODE": "danger-full-access",
+                "OPENKYLIN_TELEMETRY_DISABLED": "1",
             },
             api_key="sk-keyless-smoke",
             base_url=base_url,
@@ -1239,8 +1239,8 @@ def smoke_sdk_restart_snapshot(base_url: str, executable: Path, update_snapshots
                 dsh_home=str(dsh_home),
                 patches=(str(patch),),
                 env={
-                    "QILIN_PERMISSION_MODE": "danger-full-access",
-                    "QILIN_TELEMETRY_DISABLED": "1",
+                    "OPENKYLIN_PERMISSION_MODE": "danger-full-access",
+                    "OPENKYLIN_TELEMETRY_DISABLED": "1",
                 },
                 api_key="sk-keyless-smoke",
                 base_url=base_url,
@@ -1286,9 +1286,9 @@ def smoke_direct(base_url: str, executable: Path) -> None:
         patch = write_profile_patch(root, "direct.patch.yml", sessions, [])
         environment = {
             **os.environ,
-            "QILIN_HOME": str(dsh_home),
-            "QILIN_PERMISSION_MODE": "danger-full-access",
-            "QILIN_TELEMETRY_DISABLED": "1",
+            "OPENKYLIN_HOME": str(dsh_home),
+            "OPENKYLIN_PERMISSION_MODE": "danger-full-access",
+            "OPENKYLIN_TELEMETRY_DISABLED": "1",
             "DEEPSEEK_API_KEY": "sk-keyless-smoke",
             "DEEPSEEK_BASE_URL": base_url,
         }

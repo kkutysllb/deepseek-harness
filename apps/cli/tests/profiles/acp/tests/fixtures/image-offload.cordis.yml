@@ -4,8 +4,8 @@
 - id: llm-deepseek
   name: '@qilin/llm-deepseek'
   config:
-    apiKeyEnv: QILIN_SNAPSHOT_API_KEY
-    baseURL: !!js process.env.QILIN_SNAPSHOT_BASE_URL
+    apiKeyEnv: OPENKYLIN_SNAPSHOT_API_KEY
+    baseURL: !!js process.env.OPENKYLIN_SNAPSHOT_BASE_URL
     thinking: disabled
     maxRequestFilesBytes: 92
     imageOffloadByteQuantum: 1
@@ -24,7 +24,7 @@
 - id: session-persistence-jsonl
   name: '@qilin/session-persistence-jsonl'
   config:
-    root: !!js process.env.QILIN_SNAPSHOT_SESSIONS_ROOT ?? './.sessions'
+    root: !!js process.env.OPENKYLIN_SNAPSHOT_SESSIONS_ROOT ?? './.sessions'
     compression: none
 
 - id: agent-instructions

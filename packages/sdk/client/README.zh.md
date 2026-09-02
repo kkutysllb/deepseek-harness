@@ -99,7 +99,7 @@ console.log(result.finalResponse)
 - [JSON-RPC 服务插件](../server/README.zh.md) — 服务本客户端的运行时插件。
 - [Python SDK](../../../python/README.zh.md) — 共享同一运行时对端与协议的设计孪生。
 - [SDK subagent 后端](../../subagent/subagent-dsh-sdk/README.zh.md) — harness 内部消费本客户端的例子。
-- [SDK 应用组合包](../../bundle/sdk-app/README.zh.md) — 本客户端启动的 `qilin --profile sdk` 运行时应用。
+- [SDK 应用组合包](../../bundle/sdk-app/README.zh.md) — 本客户端启动的 `openkylin --profile sdk` 运行时应用。
 
 -----
 

@@ -18,14 +18,14 @@
 
 - id: shell-env
   config:
-    dshHome: './.qilin-home'
+    dshHome: './.openkylin-home'
 
 - id: agent-instructions
   disabled: true
 
 - id: skill-filesystem
   config:
-    dshHome: './.qilin-home'
+    dshHome: './.openkylin-home'
     agentsHome: './.agents-home'
 
 - id: session-persistence-jsonl

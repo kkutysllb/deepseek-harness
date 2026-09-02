@@ -1,4 +1,4 @@
-# QiLin Web Demo —— 与 KWorks Web 端全面对齐 · 设计文档
+# OpenKylin Web Demo —— 与 KWorks Web 端全面对齐 · 设计文档
 
 > 日期：2026-08-26 · 状态：已评审通过
 >
@@ -6,7 +6,7 @@
 
 ## 1. 目标与决策记录
 
-在 QiLin 仓库内构建 `web-demo/`：一个真实可运行、浏览器直连本地 QiLin gateway 的 Web 工作台，
+在 OpenKylin 仓库内构建 `web-demo/`：一个真实可运行、浏览器直连本地 OpenKylin gateway 的 Web 工作台，
 与本地项目 KWorks（`/Users/libing/kk_Projects/KWorks`）的 web 端**全面对齐**，作为麒麟引擎 v2.0
 多智能体框架的官方 Web 演示。
 
@@ -16,7 +16,7 @@
 |---|---|
 | 对齐方式 | **直接移植** KWorks `frontend/` 代码，剥离 Electron 专属层，保留全部页面与组件 |
 | 移植范围 | **全量**：登录/初始化、工作台全部页面、全套设置、落地页、nextra 文档站 |
-| 品牌 | **QiLin（麒麟）品牌**：只换文案/Logo/主题主色，不改布局与交互 |
+| 品牌 | **OpenKylin（麒麟）品牌**：只换文案/Logo/主题主色，不改布局与交互 |
 | 连接架构 | **同源自定义代理**（方案 A）：`server.js` + `http-proxy-middleware`，SSE 不缓冲、支持 WebSocket |
 | 硬约束 | **不影响本机已安装的 KWorks 应用**：端口、数据目录、进程管理全部隔离 |
 
@@ -24,20 +24,20 @@
 
 ```
 浏览器 ──► web-demo (Next.js 自定义服务) :28080
-              │  同源 /api/* ── http-proxy-middleware ──► QiLin gateway :28081
+              │  同源 /api/* ── http-proxy-middleware ──► OpenKylin gateway :28081
               │  （SSE 不缓冲，支持 WebSocket 升级）
               └─ 其余请求由 Next 处理（页面 / nextra 文档 / 静态资源）
 ```
 
-- **代码位置**：`QiLin/web-demo/`，由 KWorks `frontend/` 整体移植；与 QiLin Python 主包解耦。
+- **代码位置**：`OpenKylin/web-demo/`，由 KWorks `frontend/` 整体移植；与 OpenKylin Python 主包解耦。
 - **端口规划**（均可 env 覆盖；避开 KWorks 的 19987/18569 与旧方案的 8081/3000）：
 
   | 进程 | 默认端口 | 环境变量 |
   |---|---|---|
   | web-demo（Next 自定义服务） | 28080 | `WEB_DEMO_PORT` |
-  | QiLin gateway | 28081 | `GATEWAY_PORT` |
+  | OpenKylin gateway | 28081 | `GATEWAY_PORT` |
 
-- **数据隔离**：gateway 使用 `QILIN_HOME=<QiLin仓库>/.qilin/`（QiLin 引擎默认行为），
+- **数据隔离**：gateway 使用 `OPENKYLIN_HOME=<OpenKylin仓库>/.openkylin/`（OpenKylin 引擎默认行为），
   与 KWorks 应用的 `~/.kworks/` 完全隔离；脚本不接管、不杀掉任何已有进程。
 - **前端运行模式**：纯 web 模式。KWorks 前端原生内置 `isDesktop()` 分支
   （检测不到 `window.kworksDesktop` 即走 web 分支），共 48 处分支**一行不改**；
@@ -61,17 +61,17 @@
 | 右侧上下文面板 | `components/workspace/right-context-panel` | 子代理时间线、技能、文件变更审计 |
 | Agents / 自动化 / MCP / Token 用量 | `app/workspace/{agents,crons,mcp,token-usage}` | 完整保留 |
 | 全屏设置 | `components/workspace/settings/*` | 常规/模型/记忆/MCP/工具沙箱/数据持久化/附件/Web 工具等全菜单 |
-| 落地页 | `components/landing/*` | hero + 4 个 section，文案换成 QiLin |
+| 落地页 | `components/landing/*` | hero + 4 个 section，文案换成 OpenKylin |
 | Nextra 文档站 | `content/{zh,en}` | web 模式自带，保留 |
 | i18n | 中/英双语 | 保留；`defaultLocale` 由 KWorks 的 `en` 改为 `zh`（demo 面向中文用户，明确变更点） |
 
-### 3.2 品牌处理（KWorks → QiLin）
+### 3.2 品牌处理（KWorks → OpenKylin）
 
 - 范围：52 个含 "KWorks/kworks" 文案的文件 + `public/favicon.svg` + `package.json` name + 落地页文案。
 - 原则：**只换文案、Logo、主题主色变量，不改任何布局与交互**。
-- 主色：沿用 QiLin 绿色系，`--primary` 等 CSS 变量统一调整；具体色值实现时对照
+- 主色：沿用 OpenKylin 绿色系，`--primary` 等 CSS 变量统一调整；具体色值实现时对照
   `docs/assets/qilin-hero.png` 品牌色微调。
-- 文案基线："麒麟 QiLin —— 生产级多智能体引擎的 Web 工作台"；落地页各 section 按引擎能力
+- 文案基线："麒麟 OpenKylin —— 生产级多智能体引擎的 Web 工作台"；落地页各 section 按引擎能力
   （多智能体编排 / 沙箱 / 技能生态 / 渠道接入）重写。
 
 ### 3.3 显式裁剪项
@@ -104,13 +104,13 @@
 - **M1 脚手架可运行**：拷贝代码、pnpm install、`server.js` 代理、`/api/health` 打通、首页可访问。
 - **M2 核心闭环**：登录 → 聊天 → SSE 流式 → 交付物预览全流程跑通（对齐 28081 gateway）。
 - **M3 全量页面**：设置全菜单 + agents/crons/mcp/token-usage + 落地页 + 文档站逐一验证修复。
-- **M4 品牌与收尾**：KWorks→QiLin 全量换标、脚本定稿、README、验收清单归档。
+- **M4 品牌与收尾**：KWorks→OpenKylin 全量换标、脚本定稿、README、验收清单归档。
 
 ### 4.4 主要风险与对策
 
 | 风险 | 对策 |
 |---|---|
-| QiLin 主仓 API 与 KWorks 前端假设漂移（KWorks 锁定 qilin 子模块版本） | M2 阶段以实际联调为准，接口差异在 web-demo 内做适配层，不改 QiLin 后端 |
+| OpenKylin 主仓 API 与 KWorks 前端假设漂移（KWorks 锁定 openkylin 子模块版本） | M2 阶段以实际联调为准，接口差异在 web-demo 内做适配层，不改 OpenKylin 后端 |
 | nextra + i18n + 自定义 server 三者兼容 | M1 先验证文档站路由；不兼容则在 web-demo 关闭 nextra（一行配置） |
 | SSE/WS 经代理异常 | M1 冒烟测试即覆盖；兜底可切 `NEXT_PUBLIC_LANGGRAPH_BASE_URL` 直连模式 |
 | 依赖安装体积大（three.js / pptx viewer 等） | 原样保留，不裁剪，保证预览能力完整 |
@@ -118,6 +118,6 @@
 ## 5. 参考
 
 - KWorks 仓库：`/Users/libing/kk_Projects/KWorks`（frontend / desktop / CHANGELOG）
-- QiLin gateway 路由清单：`app/gateway/routers/`（27 个 router，含 threads/runs/skills/mcp/agents 等）
+- OpenKylin gateway 路由清单：`app/gateway/routers/`（27 个 router，含 threads/runs/skills/mcp/agents 等）
 - KWorks 前端 web 模式证据：`frontend/src/core/config/index.ts`（`isDesktop()` 分支）、
   `frontend/next.config.js`（web dev rewrites + SSE 缓冲注释）

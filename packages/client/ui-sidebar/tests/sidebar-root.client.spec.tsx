@@ -99,9 +99,9 @@ describe('SidebarRoot shell', () => {
   })
 
   it('renders generic brand fallbacks when no package fills the slots', () => {
-    vi.stubEnv('QILIN_CLIENT_COMMIT_HASH', '0123456')
-    vi.stubEnv('QILIN_CLIENT_GIT_DIRTY', 'true')
-    vi.stubEnv('QILIN_CLIENT_VERSION', '1.2.3-rc.4')
+    vi.stubEnv('OPENKYLIN_CLIENT_COMMIT_HASH', '0123456')
+    vi.stubEnv('OPENKYLIN_CLIENT_GIT_DIRTY', 'true')
+    vi.stubEnv('OPENKYLIN_CLIENT_VERSION', '1.2.3-rc.4')
     const { container } = render(<SidebarRoot
       collapsed={false} width={300}
       useSessions={neverHook} useSessionPendingInteraction={useSessionPendingInteraction} useWorkspaces={neverHook}
@@ -116,8 +116,8 @@ describe('SidebarRoot shell', () => {
   })
 
   it.each([
-    [{ QILIN_CLIENT_VERSION: '1.2.3' }, '1.2.3'],
-    [{ QILIN_CLIENT_COMMIT_HASH: 'abcdef0', QILIN_CLIENT_VERSION: '1.2.3' }, '1.2.3-abcdef0'],
+    [{ OPENKYLIN_CLIENT_VERSION: '1.2.3' }, '1.2.3'],
+    [{ OPENKYLIN_CLIENT_COMMIT_HASH: 'abcdef0', OPENKYLIN_CLIENT_VERSION: '1.2.3' }, '1.2.3-abcdef0'],
   ])('omits unavailable build-version suffixes from %j', (environment, expected) => {
     for (const [name, value] of Object.entries(environment)) vi.stubEnv(name, value)
     render(<SidebarRoot

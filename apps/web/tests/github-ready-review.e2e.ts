@@ -85,11 +85,11 @@ describe.skipIf(MODE === 'record')('web e2e: GitHub ready-for-review', () => {
   const adapter = new ReviewAdapter()
 
   beforeAll(async () => {
-    previousPort = process.env.QILIN_GITHUB_WEBHOOK_PORT
-    previousSecret = process.env.QILIN_GITHUB_WEBHOOK_SECRET
+    previousPort = process.env.OPENKYLIN_GITHUB_WEBHOOK_PORT
+    previousSecret = process.env.OPENKYLIN_GITHUB_WEBHOOK_SECRET
     const port = await freePort()
-    process.env.QILIN_GITHUB_WEBHOOK_PORT = String(port)
-    process.env.QILIN_GITHUB_WEBHOOK_SECRET = SECRET
+    process.env.OPENKYLIN_GITHUB_WEBHOOK_PORT = String(port)
+    process.env.OPENKYLIN_GITHUB_WEBHOOK_SECRET = SECRET
     webhookOrigin = `http://127.0.0.1:${String(port)}`
     scaffold = await launchWebScaffold({ extraOverlayPath: OVERLAY })
     scaffold.ctx.effect(
@@ -100,7 +100,7 @@ describe.skipIf(MODE === 'record')('web e2e: GitHub ready-for-review', () => {
 
     browser = await chromium.launch()
     page = await browser.newPage({ viewport: { width: 1680, height: 1000 }, locale: 'en-US' })
-    await page.addInitScript(() => { localStorage.setItem('qilin.locale', 'en') })
+    await page.addInitScript(() => { localStorage.setItem('openkylin.locale', 'en') })
     tripwire = watchConsole(page)
     await page.goto(scaffold.authenticatedUrl, { waitUntil: 'load' })
     await page.waitForSelector('[class*="frame"]', { timeout: 30_000 })
@@ -109,10 +109,10 @@ describe.skipIf(MODE === 'record')('web e2e: GitHub ready-for-review', () => {
   afterAll(async () => {
     await browser?.close()
     await scaffold?.close()
-    if (previousPort === undefined) Reflect.deleteProperty(process.env, 'QILIN_GITHUB_WEBHOOK_PORT')
-    else process.env.QILIN_GITHUB_WEBHOOK_PORT = previousPort
-    if (previousSecret === undefined) Reflect.deleteProperty(process.env, 'QILIN_GITHUB_WEBHOOK_SECRET')
-    else process.env.QILIN_GITHUB_WEBHOOK_SECRET = previousSecret
+    if (previousPort === undefined) Reflect.deleteProperty(process.env, 'OPENKYLIN_GITHUB_WEBHOOK_PORT')
+    else process.env.OPENKYLIN_GITHUB_WEBHOOK_PORT = previousPort
+    if (previousSecret === undefined) Reflect.deleteProperty(process.env, 'OPENKYLIN_GITHUB_WEBHOOK_SECRET')
+    else process.env.OPENKYLIN_GITHUB_WEBHOOK_SECRET = previousSecret
   })
 
   it('isolates ingress and creates a browsable Workspace Session', async () => {

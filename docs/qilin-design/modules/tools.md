@@ -1,6 +1,6 @@
 # tools 模块（tools module）
 
-> QiLin engine · tools subsystem · 双语 / Bilingual
+> OpenKylin engine · tools subsystem · 双语 / Bilingual
 
 ---
 
@@ -8,7 +8,7 @@
 
 ### 职责
 
-`qilin.tools` 负责把"声明在配置里"的工具真正绑定到 LangGraph Runtime，并提供扩展点供子代理、技能、MCP、ACP 接入。所有工具通过统一的 `Runtime` 类型参数，与运行上下文（用户、线程、trace_id）解耦。
+`openkylin.tools` 负责把"声明在配置里"的工具真正绑定到 LangGraph Runtime，并提供扩展点供子代理、技能、MCP、ACP 接入。所有工具通过统一的 `Runtime` 类型参数，与运行上下文（用户、线程、trace_id）解耦。
 
 - **工具装配**：`tools.py` 中的 `get_available_tools()` 根据 `AppConfig.tools` / `tool_groups` 装配运行时工具集
 - **MCP 工具注入**：`tools.py` 启动时通过 `initialize_mcp_tools()` 把外部 MCP Server 的工具纳入运行时
@@ -43,7 +43,7 @@
 2. **统一 Runtime**：`Runtime` 是 LangChain Tool 调用时的统一字典，包含用户、线程、trace、agent 等上下文，避免工具与运行时耦合。
 3. **延迟发现**：`tool_search` 工具实现"按需探索工具"，缓解长 prompt 里工具列表污染 token 的问题。
 4. **MCP 一等公民**：所有 MCP 工具都被 `tag_mcp_tool()` 打标签，便于单独的路由 / 去重 / 限流。
-5. **ACP 桥接**：`invoke_acp_agent_tool` 把 ACP 协议的外部代理封装为 QiLin 工具，使 QiLin 自身成为一个 ACP Client。
+5. **ACP 桥接**：`invoke_acp_agent_tool` 把 ACP 协议的外部代理封装为 OpenKylin 工具，使 OpenKylin 自身成为一个 ACP Client。
 
 ### 触发链路
 
@@ -66,7 +66,7 @@ LLM 决定 → tools/tools.py: get_available_tools() → 配置 + MCP + ACP
 
 ### Responsibility
 
-`qilin.tools` binds "tools declared in config" to the LangGraph Runtime and exposes extension points for sub-agents, skills, MCP, and ACP. All tools use a unified `Runtime` typed parameter so they stay decoupled from run context (user, thread, trace_id).
+`openkylin.tools` binds "tools declared in config" to the LangGraph Runtime and exposes extension points for sub-agents, skills, MCP, and ACP. All tools use a unified `Runtime` typed parameter so they stay decoupled from run context (user, thread, trace_id).
 
 - **Tool assembly** — `get_available_tools()` assembles tools from `AppConfig.tools` / `tool_groups`
 - **MCP injection** — `initialize_mcp_tools()` brings external MCP server tools into the runtime
@@ -101,7 +101,7 @@ LLM 决定 → tools/tools.py: get_available_tools() → 配置 + MCP + ACP
 2. **Unified Runtime** — `Runtime` is a single TypedDict passed to every LangChain tool, holding user / thread / trace / agent context.
 3. **Lazy discovery** — `tool_search` lets the LLM discover tools on demand, avoiding long prompt bloat.
 4. **MCP as first-class** — All MCP tools are tagged via `tag_mcp_tool()` for routing / dedup / rate-limit.
-5. **ACP bridging** — `invoke_acp_agent_tool` wraps ACP external agents as QiLin tools, making QiLin itself an ACP client.
+5. **ACP bridging** — `invoke_acp_agent_tool` wraps ACP external agents as OpenKylin tools, making OpenKylin itself an ACP client.
 
 ### Trigger Chain
 

@@ -14,12 +14,12 @@ import {
 
 type Win = {
   location?: { hostname: string; search: string; origin?: string }
-  __QILIN_TRANSPORT__?: ClientTransportHooks
+  __OPENKYLIN_TRANSPORT__?: ClientTransportHooks
 }
 
 afterEach(() => {
   delete (globalThis as Win).location
-  delete (globalThis as Win).__QILIN_TRANSPORT__
+  delete (globalThis as Win).__OPENKYLIN_TRANSPORT__
   vi.unstubAllGlobals()
   vi.useRealTimers()
 })
@@ -465,7 +465,7 @@ describe('connection client apply', () => {
         yield { endpoint, payload }
       })(),
     )
-    ;(globalThis as Win).__QILIN_TRANSPORT__ = {
+    ;(globalThis as Win).__OPENKYLIN_TRANSPORT__ = {
       fetch: vi.fn<ClientTransportHooks['fetch']>(),
       openStream,
       ownsHost: true,

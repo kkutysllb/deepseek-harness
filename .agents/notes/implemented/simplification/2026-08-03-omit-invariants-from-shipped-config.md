@@ -1,4 +1,4 @@
-# Agent Note: Omit runtime invariants from shipped qilin config
+# Agent Note: Omit runtime invariants from shipped openkylin config
 
 Status: implemented
 
@@ -10,7 +10,7 @@ English | [中文](2026-08-03-omit-invariants-from-shipped-config.zh.md)
 
 ## Decision
 
-The shipped `qilin` configuration trees under `apps/cli/config/` mount neither `@qilin/invariants` nor any package-owned `./invariant` companion. The CLI package therefore carries no direct dependency on the invariant service.
+The shipped `openkylin` configuration trees under `apps/cli/config/` mount neither `@qilin/invariants` nor any package-owned `./invariant` companion. The CLI package therefore carries no direct dependency on the invariant service.
 
 Invariant support remains available for focused tests, example bundles, generated SDK compositions, and custom deployments that opt into diagnostics explicitly. Session validation, snapshotting, freezing, and cited source-event validation remain always on and do not depend on the optional service, as defined by the [source-owned immutability decision](../architecture/2026-06-11-dev-invariants-over-deep-readonly.md).
 
@@ -24,7 +24,7 @@ The built CLI config-dump test checks both shipped surfaces and rejects either t
 
 ## Consequences
 
-- Ordinary `qilin` TUI and Web runs install no invariant listeners or trace state and cannot fail through `InvariantError`.
+- Ordinary `openkylin` TUI and Web runs install no invariant listeners or trace state and cannot fail through `InvariantError`.
 - Development and custom compositions retain explicit access to the invariant service and companions.
 - The shipped config absence is verified from the built CLI's composed output for both surfaces.
 - Always-on session integrity remains unchanged.

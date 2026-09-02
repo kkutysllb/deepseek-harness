@@ -1,6 +1,6 @@
 # sandbox 模块（sandbox module）
 
-> QiLin engine · sandbox subsystem · 双语 / Bilingual
+> OpenKylin engine · sandbox subsystem · 双语 / Bilingual
 
 ---
 
@@ -8,7 +8,7 @@
 
 ### 职责
 
-`qilin.sandbox` 是 QiLin 的"工具执行隔离层"，所有不平凡的副作用（写文件、跑 shell、装包、GPU 计算、跨主机任务）都必须封装在某个 `Sandbox` 实例中执行。
+`openkylin.sandbox` 是 OpenKylin 的"工具执行隔离层"，所有不平凡的副作用（写文件、跑 shell、装包、GPU 计算、跨主机任务）都必须封装在某个 `Sandbox` 实例中执行。
 
 - **抽象接口**：`SandboxProvider` + `Sandbox` 双层接口；provider 提供工厂与池化、sandbox 提供具体操作
 - **本地实现**：`local/LocalSandbox` —— 进程内 fork + namespace 隔离（仅开发）
@@ -57,7 +57,7 @@
 
 ### Responsibility
 
-`qilin.sandbox` is QiLin's "tool execution isolation layer". All non-trivial side effects (file writes, shell runs, package installs, GPU compute, cross-host tasks) MUST happen inside a `Sandbox` instance.
+`openkylin.sandbox` is OpenKylin's "tool execution isolation layer". All non-trivial side effects (file writes, shell runs, package installs, GPU compute, cross-host tasks) MUST happen inside a `Sandbox` instance.
 
 - **Abstraction** — `SandboxProvider` + `Sandbox` two-layer interface
 - **Local implementation** — `local/LocalSandbox` — in-process fork + namespace (dev only)

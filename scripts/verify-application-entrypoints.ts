@@ -1,5 +1,5 @@
 /**
- * Enforce qilin profiles as the only supported Node application launcher.
+ * Enforce openkylin profiles as the only supported Node application launcher.
  * Vendor CLIs, build tools, and test tools are explicit classifications
  * rather than implicit holes.
  */
@@ -25,13 +25,13 @@ interface DemoPolicy {
 
 /** Public product launcher plus the private build-only WebWorker packer. */
 const MANIFEST_BIN_ALLOWLIST = new Map<string, ManifestBin>([
-  ['apps/cli/package.json', { qilin: 'lib/bin.js' }],
+  ['apps/cli/package.json', { openkylin: 'lib/bin.js' }],
   ['packages/experimental/webworker-packer/package.json', { 'qilin-pack-vfs-image': './bin.js' }],
 ])
 
 /** Every executable in a Node application workspace has one explicit role. */
 const EXECUTABLE_SOURCE_ALLOWLIST = new Map<string, string>([
-  ['apps/cli/src/bin.ts', 'supported qilin application launcher'],
+  ['apps/cli/src/bin.ts', 'supported openkylin application launcher'],
   ['packages/context/time-context/tests/fixtures/driver.ts', 'test-only subprocess driver'],
   ['packages/experimental/webworker-packer/bin.js', 'private build-only wrapper'],
   ['packages/experimental/webworker-packer/src/bin.ts', 'private build-only implementation'],
@@ -46,7 +46,7 @@ const EXECUTABLE_SOURCE_ALLOWLIST = new Map<string, string>([
   ['packages/test-support/llm-mock-server/src/bin.ts', 'test-only model server'],
 ])
 
-/** Root demos are application wrappers and therefore must visibly select qilin. */
+/** Root demos are application wrappers and therefore must visibly select openkylin. */
 const ROOT_DEMO_POLICIES = new Map<string, DemoPolicy>([
   ['demo:ptc', { kind: 'qilin-wrapper', wrapper: 'scripts/demo-ptc.mjs' }],
   ['demo:inspector', { kind: 'qilin-direct' }],
@@ -97,7 +97,7 @@ function manifestBinViolations(root: string): string[] {
     if (manifest.bin === undefined) continue
     const expected = MANIFEST_BIN_ALLOWLIST.get(path)
     if (expected === undefined) {
-      failures.push(`${path}: package bin bypasses the qilin launcher; applications use apps/cli profiles`)
+      failures.push(`${path}: package bin bypasses the openkylin launcher; applications use apps/cli profiles`)
       continue
     }
     if (normalizedBin(manifest.bin) !== normalizedBin(expected)) {
@@ -138,7 +138,7 @@ function rootDemoViolations(root: string): string[] {
     const command = typeof commandValue === 'string' ? commandValue : ''
     const policy = ROOT_DEMO_POLICIES.get(name)
     if (policy === undefined) {
-      failures.push(`package.json scripts.${name}: demo launcher has no explicit qilin or in-process classification`)
+      failures.push(`package.json scripts.${name}: demo launcher has no explicit openkylin or in-process classification`)
       continue
     }
     if (policy.kind === 'qilin-direct') {
@@ -188,6 +188,6 @@ if (process.argv[1] !== undefined && import.meta.url === pathToFileURL(resolve(p
     for (const failure of failures) console.error(`  ${failure}`)
     process.exitCode = 1
   } else {
-    console.log('verify-application-entrypoints: qilin is the only supported Node application launcher.')
+    console.log('verify-application-entrypoints: openkylin is the only supported Node application launcher.')
   }
 }

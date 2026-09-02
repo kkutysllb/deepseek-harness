@@ -14,7 +14,7 @@ import { Config, apply, inject, name } from '../src/plugin.ts'
 import { bindRbacPrincipal } from '../src/carrier.ts'
 import { authDisabledRbacPrincipal, type RbacPrincipal } from '../src/principal.ts'
 
-const ENV_VAR = 'QILIN_AUTH_DISABLED'
+const ENV_VAR = 'OPENKYLIN_AUTH_DISABLED'
 const savedEnv = process.env[ENV_VAR]
 
 afterEach(() => {
@@ -63,15 +63,15 @@ describe('account-rbac plugin composition', () => {
 
   it('composes without dbPath by falling back to the home-derived store location', () => {
     const home = mkdtempSync(join(tmpdir(), 'account-rbac-home-'))
-    const saved = process.env['QILIN_HOME']
-    process.env['QILIN_HOME'] = home
+    const saved = process.env['OPENKYLIN_HOME']
+    process.env['OPENKYLIN_HOME'] = home
     try {
       const ctx = new Context()
       apply(ctx, { enabled: true })
       expect(typeof rbacAuthOf(ctx).checkRequest).toBe('function')
     } finally {
-      if (saved === undefined) Reflect.deleteProperty(process.env, 'QILIN_HOME')
-      else process.env['QILIN_HOME'] = saved
+      if (saved === undefined) Reflect.deleteProperty(process.env, 'OPENKYLIN_HOME')
+      else process.env['OPENKYLIN_HOME'] = saved
       rmSync(home, { recursive: true, force: true })
     }
   })

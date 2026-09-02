@@ -8,7 +8,7 @@ bash 执行 seam 分为 Service Definition（[qilin-shell](../../packages/shell/
 
 ## 受管 shell 环境命名空间
 
-`QILIN_*` 变量是归 Harness 所有的子进程事实。面向模型的 bash 工具通过 `ctx.shellEnv` 收集它们，再经由 `ShellExecRequest.dshEnv` 传递；子进程服务在合并当前快照之前会移除继承而来的 `QILIN_*` 名称。`QilinEnvironmentKey`／`QilinEnvironment` 词汇归[子进程 seam](subprocess.zh.md)所有，由 `qilin-shell` 重导出。
+`OPENKYLIN_*` 变量是归 Harness 所有的子进程事实。面向模型的 bash 工具通过 `ctx.shellEnv` 收集它们，再经由 `ShellExecRequest.dshEnv` 传递；子进程服务在合并当前快照之前会移除继承而来的 `OPENKYLIN_*` 名称。`QilinEnvironmentKey`／`QilinEnvironment` 词汇归[子进程 seam](subprocess.zh.md)所有，由 `qilin-shell` 重导出。
 
 ## 请求与规格：`resolve()` 拆分
 
@@ -53,8 +53,8 @@ interface ShellExecRequest {
    */
   env?: Record<string, string> | undefined
   /**
-   * Harness-owned `QILIN_*` variables for this execution (typed to managed
-   * keys). Executors discard ambient `QILIN_*` entries before merging this
+   * Harness-owned `OPENKYLIN_*` variables for this execution (typed to managed
+   * keys). Executors discard ambient `OPENKYLIN_*` entries before merging this
    * snapshot last, so an unavailable current fact cannot inherit a stale
    * value from the harness process and a caller {@link env} entry cannot
    * displace a managed one.
@@ -91,7 +91,7 @@ interface ShellExecSpec {
    * ordinary extra environment.
    */
   env?: Record<string, string> | undefined
-  /** Managed `QILIN_*` snapshot (typed to managed keys); merges after {@link env}. */
+  /** Managed `OPENKYLIN_*` snapshot (typed to managed keys); merges after {@link env}. */
   dshEnv?: QilinEnvironment | undefined
   /** Resolved sandbox policy; ignored by executors that do not confine. */
   sandboxPolicy: SandboxExecutionPolicy | undefined
@@ -272,7 +272,7 @@ Source: [`packages/shell/shell/src/index.ts`](../../packages/shell/shell/src/ind
 
 ### `ctx.shellEnv` — `ShellEnvRegistry`
 
-Registry (`ctx.shellEnv`) for trusted, per-execution `QILIN_*` variables. The namespace is rebuilt for every model shell call: ambient `QILIN_*` values are discarded by the executor, then the registry's current snapshot is injected. Built-in shell facts remain owned by the registry itself while plugins can register additional, enumerable facts with effect-scoped disposal.
+Registry (`ctx.shellEnv`) for trusted, per-execution `OPENKYLIN_*` variables. The namespace is rebuilt for every model shell call: ambient `OPENKYLIN_*` values are discarded by the executor, then the registry's current snapshot is injected. Built-in shell facts remain owned by the registry itself while plugins can register additional, enumerable facts with effect-scoped disposal.
 
 ```ts cordis-catalog
 /**
@@ -284,7 +284,7 @@ Registry (`ctx.shellEnv`) for trusted, per-execution `QILIN_*` variables. The na
 register(contributor: BashEnvContributor): () => void
 
 /**
- * Build the trusted `QILIN_*` snapshot for one shell tool execution.
+ * Build the trusted `OPENKYLIN_*` snapshot for one shell tool execution.
  * @param execution - the current tool execution.
  * @returns an immutable environment overlay containing built-ins and current contributions.
  */

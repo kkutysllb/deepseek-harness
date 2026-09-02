@@ -3,7 +3,7 @@ import { beforeEach, describe, expect, it } from 'vitest'
 import type { SessionId } from '@qilin/session/types'
 import { createConversationStore, readConversationViewPreference } from '../src/client/stores.ts'
 
-const KEY = 'qilin.conversation'
+const KEY = 'openkylin.conversation'
 
 beforeEach(() => {
   localStorage.clear()

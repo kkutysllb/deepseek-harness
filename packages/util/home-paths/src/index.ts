@@ -9,13 +9,13 @@ import { homedir } from 'node:os'
 import { basename, dirname, join, resolve } from 'node:path'
 
 /** Directory name for the default DeepSeek Harness home under the OS home. */
-export const QILIN_HOME_DIR_NAME = '.qilin'
+export const OPENKYLIN_HOME_DIR_NAME = '.openkylin'
 
 /** Stable user-facing display form for the default DeepSeek Harness home. */
-export const DEFAULT_QILIN_HOME_DISPLAY = `~/${QILIN_HOME_DIR_NAME}`
+export const DEFAULT_OPENKYLIN_HOME_DISPLAY = `~/${OPENKYLIN_HOME_DIR_NAME}`
 
 /** Environment variable that overrides the default DeepSeek Harness home. */
-export const QILIN_HOME_ENV = 'QILIN_HOME'
+export const OPENKYLIN_HOME_ENV = 'OPENKYLIN_HOME'
 
 /**
  * Give a native filesystem watcher one canonical spelling of a path, even
@@ -59,7 +59,7 @@ export async function canonicalizeWatchPath(path: string): Promise<string> {
  * @returns the absolute default harness home path.
  */
 export function defaultDshHome(): string {
-  return join(homedir(), QILIN_HOME_DIR_NAME)
+  return join(homedir(), OPENKYLIN_HOME_DIR_NAME)
 }
 
 /**
@@ -76,16 +76,16 @@ export function expandHomePath(path: string): string {
 /**
  * Resolve the single-root DeepSeek Harness home.
  *
- * Precedence, highest first: an explicit configured path, `$QILIN_HOME`, then
- * `~/.qilin`. The harness keeps all user data under one root. An empty or
- * whitespace-only `$QILIN_HOME` is treated as unset, so a blank override never
+ * Precedence, highest first: an explicit configured path, `$OPENKYLIN_HOME`, then
+ * `~/.openkylin`. The harness keeps all user data under one root. An empty or
+ * whitespace-only `$OPENKYLIN_HOME` is treated as unset, so a blank override never
  * resolves the home to the current working directory.
  * @param configured - explicit harness-home override, which has highest precedence.
- * @param env - environment mapping used to read `QILIN_HOME`.
+ * @param env - environment mapping used to read `OPENKYLIN_HOME`.
  * @returns the normalized absolute harness home path.
  */
 export function resolveDshHome(configured?: string, env: Record<string, string | undefined> = process.env): string {
-  const fromEnv = env[QILIN_HOME_ENV]
+  const fromEnv = env[OPENKYLIN_HOME_ENV]
   const selected = configured ?? (fromEnv !== undefined && fromEnv.trim().length > 0 ? fromEnv : defaultDshHome())
   return resolve(expandHomePath(selected))
 }
@@ -103,10 +103,10 @@ export function dshHomePath(...segments: string[]): string {
  * Describe a resolved harness home symbolically for user-facing display.
  *
  * It never returns an absolute machine path: the default home is labelled
- * `~/.qilin`, and any configured home is labelled `$QILIN_HOME`.
+ * `~/.openkylin`, and any configured home is labelled `$OPENKYLIN_HOME`.
  * @param resolvedHome - the absolute path returned by {@link resolveDshHome}.
- * @returns `~/.qilin` for the default home, otherwise `$QILIN_HOME`.
+ * @returns `~/.openkylin` for the default home, otherwise `$OPENKYLIN_HOME`.
  */
 export function dshHomeDisplay(resolvedHome: string): string {
-  return resolvedHome === resolve(defaultDshHome()) ? DEFAULT_QILIN_HOME_DISPLAY : `$${QILIN_HOME_ENV}`
+  return resolvedHome === resolve(defaultDshHome()) ? DEFAULT_OPENKYLIN_HOME_DISPLAY : `$${OPENKYLIN_HOME_ENV}`
 }

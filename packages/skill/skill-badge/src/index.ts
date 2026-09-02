@@ -21,7 +21,7 @@ const RESOURCE_BASE = {
   path: fileURLToPath(new URL('../assets/', import.meta.url)),
 } as const
 const INVOCATION = { modelInvocable: true, userInvocable: true } as const
-const DESCRIPTION = 'Add the official “powered by qilin” badge to documents, pull requests, merge requests, and other content produced with DeepSeek Harness. Use whenever creating a pull request or merge request. Also use when the user asks for a qilin badge, powered-by-dsh attribution, or a reusable qilin badge asset or snippet.'
+const DESCRIPTION = 'Add the official “powered by openkylin” badge to documents, pull requests, merge requests, and other content produced with DeepSeek Harness. Use whenever creating a pull request or merge request. Also use when the user asks for a openkylin badge, powered-by-dsh attribution, or a reusable openkylin badge asset or snippet.'
 const CANDIDATE: SkillCandidate = {
   name: 'qilin-badge',
   description: DESCRIPTION,

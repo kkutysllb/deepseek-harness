@@ -1,4 +1,4 @@
-# QiLin Web-Demo 品牌 VI 独立化设计规格（landing + auth）
+# OpenKylin Web-Demo 品牌 VI 独立化设计规格（landing + auth）
 
 - 日期：2026-08-27
 - 状态：已获用户确认（方向：黑金·麒麟品牌风；国风浓度：克制内敛；实现方式：方案甲）
@@ -67,15 +67,15 @@ Tailwind 映射方式（定死）：`qilin-brand.css` 内先在 `:root` 定义�
 ### Header
 
 - 保留 `kworks-landing-header` class 与桌面拖拽区约束（`[-webkit-app-region:drag]`、macOS `pl-[80px]`、Windows 无红灯的 `.kworks-win-titlebar` 兼容逻辑全部原样）。
-- 左侧：「QiLin」衬线字（暖白色）+ 右上标小号 `QilinSeal`。
+- 左侧：「OpenKylin」衬线字（暖白色）+ 右上标小号 `QilinSeal`。
 - 新增右侧 mono 小字链「进入控制台 →」（`text-[var(--ql-ink-mid)]`，hover 转 gold-300）。
   实现备注：为避免链接贴视口右缘，头部追加水平内边距 `px-6 md:px-10`（macOS 段
   `pl-[calc(80px+1rem)]`，Windows/浏览器随平台 class 收窄）——属计划外的最小 UX 补全，经评审确认保留。
 
 ### Hero
 
-- 左列从上到下：mono 金色 eyebrow 一行（`QILIN · AUTONOMOUS AGENT ENGINE`，宽字距）→
-  白色大标题（保留 `WordRotate` 轮换交互；「就用 QiLin」改为鎏金文字渐变 gold-300→gold-500）→
+- 左列从上到下：mono 金色 eyebrow 一行（`OPENKYLIN · AUTONOMOUS AGENT ENGINE`，宽字距）→
+  白色大标题（保留 `WordRotate` 轮换交互；「就用 OpenKylin」改为鎏金文字渐变 gold-300→gold-500）→
   副文案不变 → 主 CTA 改**金色实底黑字**（gold-500 底、hover 提亮至 gold-300，移除渐变+blur 光晕+scale 特效）→
   三个 tag 改 mono 方括号标注风格（如 `[ 多沙箱隔离 ]`，hairline 边框）。
 - 右列六卡改「引擎模块清单」风：每卡左上角金色等宽编号 `01`–`06`，
@@ -101,7 +101,7 @@ login (`src/app/(auth)/login/page.tsx`) 与 setup (`src/app/(auth)/setup/page.ts
   顶部一条 2px 鎏金渐变饰条（替代 ShineBorder 流光）点睛。
 - **表单控件规范**：label 小号 mono 宽字距；
   input 透明底 hairline 边框、focus 金色 ring；主按钮金色实底黑字；错误文案用亮朱砂红变体。
-- **login 页结构差异保留**：logo 区改为 QilinSeal + "QiLin" 衬线字组合，
+- **login 页结构差异保留**：logo 区改为 QilinSeal + "OpenKylin" 衬线字组合，
   标题按 isLogin 切换「登录控制台 / 创建账户」，底部「返回首页」链接保留。
 - **setup 页三模式（loading / init_admin / change_password）状态机与其余 300 行业务逻辑完全不动**，仅替换 JSX 视觉壳与控件 className。
 

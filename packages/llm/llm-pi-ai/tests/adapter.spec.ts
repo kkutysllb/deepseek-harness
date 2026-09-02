@@ -31,8 +31,8 @@ const IMAGE_REF: ImageAttachmentRef = {
   width: 1,
   height: 1,
 }
-const HOST_IMAGE_PATH = '/host/.qilin/attachments/objects/aa/object'
-const MODEL_IMAGE_PATH = '/model/.qilin/attachments/objects/aa/object'
+const HOST_IMAGE_PATH = '/host/.openkylin/attachments/objects/aa/object'
+const MODEL_IMAGE_PATH = '/model/.openkylin/attachments/objects/aa/object'
 
 class MappedFileSystem extends Service {
   constructor(ctx: Context) {

@@ -9,7 +9,7 @@ English | [中文](README.zh.md)
 
 ## Summary
 
-`qilin-home-paths` resolves the single DeepSeek Harness home that all user data lives under, and joins child paths onto it, so every product package agrees on where its files go. Precedence is explicit: a configured path wins, then `$QILIN_HOME`, then `~/.qilin`, and an empty or whitespace-only `$QILIN_HOME` counts as unset. The package also expands `~`, `~/...`, and `~\...` prefixes against the operating-system home, and canonicalizes a watch target so a native filesystem watcher gets one stable path spelling even when the final components do not exist yet. It is a zero-dependency library that product packages import directly; a `cordis.yml` cannot load it.
+`qilin-home-paths` resolves the single DeepSeek Harness home that all user data lives under, and joins child paths onto it, so every product package agrees on where its files go. Precedence is explicit: a configured path wins, then `$OPENKYLIN_HOME`, then `~/.openkylin`, and an empty or whitespace-only `$OPENKYLIN_HOME` counts as unset. The package also expands `~`, `~/...`, and `~\...` prefixes against the operating-system home, and canonicalizes a watch target so a native filesystem watcher gets one stable path spelling even when the final components do not exist yet. It is a zero-dependency library that product packages import directly; a `cordis.yml` cannot load it.
 
 ## Table of Contents
 
@@ -31,15 +31,15 @@ Use these helpers wherever a package must agree with the rest of the harness abo
 ```ts
 import { resolveDshHome, dshHomePath } from '@qilin/home-paths'
 
-const home = resolveDshHome()                // configured path, else $QILIN_HOME, else ~/.qilin
+const home = resolveDshHome()                // configured path, else $OPENKYLIN_HOME, else ~/.openkylin
 const settings = dshHomePath('settings')     // join one child onto the resolved home
 ```
 
-An explicit configured path has the highest precedence, then `$QILIN_HOME`, then the default `~/.qilin`. An empty or whitespace-only `$QILIN_HOME` is treated as unset, so a blank override never resolves the home to the current working directory.
+An explicit configured path has the highest precedence, then `$OPENKYLIN_HOME`, then the default `~/.openkylin`. An empty or whitespace-only `$OPENKYLIN_HOME` is treated as unset, so a blank override never resolves the home to the current working directory.
 
 ### Displaying a home
 
-For user-facing paths, render the root symbolically rather than as a machine path: the default home displays as `~/.qilin` and any configured home displays as `$QILIN_HOME`. The display form never leaks an absolute machine path.
+For user-facing paths, render the root symbolically rather than as a machine path: the default home displays as `~/.openkylin` and any configured home displays as `$OPENKYLIN_HOME`. The display form never leaks an absolute machine path.
 
 ### Expanding user paths
 
@@ -68,7 +68,7 @@ The package is built on one principle: all harness user data lives under one roo
 
 ### Resolution rules
 
-`resolveDshHome` reads the explicit override, then `$QILIN_HOME`, then falls back to the operating-system home joined with `.qilin`. The chosen value is tilde-expanded and normalized to an absolute path; `dshHomePath` joins child segments with Node's platform path rules. `dshHomeDisplay` compares the resolved path against the default root and returns the symbolic label, so a configured home never leaks its absolute path.
+`resolveDshHome` reads the explicit override, then `$OPENKYLIN_HOME`, then falls back to the operating-system home joined with `.openkylin`. The chosen value is tilde-expanded and normalized to an absolute path; `dshHomePath` joins child segments with Node's platform path rules. `dshHomeDisplay` compares the resolved path against the default root and returns the symbolic label, so a configured home never leaks its absolute path.
 
 ### Canonicalization mechanics
 
@@ -84,7 +84,7 @@ The package is built on one principle: all harness user data lives under one roo
 Read these pages when you need the launcher or the consumers that depend on a single home root.
 
 - [Boot package](../../boot/app-boot/README.md) — the launcher that resolves the home before any plugin mounts.
-- [Shell environment](../../shell/shell-env/README.md) — how `QILIN_HOME` reaches model shell calls.
+- [Shell environment](../../shell/shell-env/README.md) — how `OPENKYLIN_HOME` reaches model shell calls.
 - [Anonymous user id](../../identity/anonymous-user-id/README.md) — a stored identity file under the resolved home.
 
 -----

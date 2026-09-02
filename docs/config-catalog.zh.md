@@ -60,7 +60,7 @@ export interface Config {
 ```ts config-catalog
 /** User-facing workspace instruction loader configuration. */
 export interface Config {
-  /** Harness home containing the fixed user-global `AGENTS.md`; defaults to `$QILIN_HOME` or `~/.qilin`. */
+  /** Harness home containing the fixed user-global `AGENTS.md`; defaults to `$OPENKYLIN_HOME` or `~/.openkylin`. */
   dshHome?: string
   /** Directory entries that identify the project root while walking upward from the session cwd. */
   projectRootMarkers?: string[]
@@ -240,7 +240,7 @@ export interface Config {
 ```ts config-catalog
 /** Local attachment backend configuration. */
 export interface Config {
-  /** Explicit harness home; omitted follows `QILIN_HOME`, then `~/.qilin`. */
+  /** Explicit harness home; omitted follows `OPENKYLIN_HOME`, then `~/.openkylin`. */
   dshHome?: string
   /** Maximum encoded bytes accepted for one submitted image. Default: 20 MiB. */
   maxImageBytes?: number
@@ -486,7 +486,7 @@ export interface Config {
 export interface Config {
   /** Credentials document path; defaults to `.credentials.yaml` under the harness home. */
   path?: string
-  /** Harness home used when `path` is omitted; defaults to `$QILIN_HOME` or `~/.qilin`. */
+  /** Harness home used when `path` is omitted; defaults to `$OPENKYLIN_HOME` or `~/.openkylin`. */
   dshHome?: string
   /** Watch the document and hot-publish external edits; defaults to true. */
   watch?: boolean
@@ -1222,14 +1222,14 @@ export type PiAiThinkingFormat = NonNullable<OpenAICompletionsCompat['thinkingFo
 需要：`llm`
 
 ```ts config-catalog
-/** Plugin config: the {@link ReplayConfig} inputs, each defaulting to its `QILIN_SNAPSHOT_*` env var in `apply`. */
+/** Plugin config: the {@link ReplayConfig} inputs, each defaulting to its `OPENKYLIN_SNAPSHOT_*` env var in `apply`. */
 export interface Config {
-  /** Override the fixture path; defaults to `$QILIN_SNAPSHOT_FILE`. */
+  /** Override the fixture path; defaults to `$OPENKYLIN_SNAPSHOT_FILE`. */
   file?: string
-  /** Override the sidecar path; defaults to `$QILIN_SNAPSHOT_OVERRIDE`. */
+  /** Override the sidecar path; defaults to `$OPENKYLIN_SNAPSHOT_OVERRIDE`. */
   overrideFile?: string
   /**
-   * Override the child-log paths; defaults to `$QILIN_SNAPSHOT_CHILD_FILES` (a
+   * Override the child-log paths; defaults to `$OPENKYLIN_SNAPSHOT_CHILD_FILES` (a
    * path-separator-delimited list). Each is a recorded subagent session log for
    * a nested-agent scenario; absent/empty for a single-session scenario.
    */
@@ -1990,7 +1990,7 @@ export type Config = SessionTitleLlmConfig
 export interface Config {
   /** Settings document path; defaults to `settings.yaml` under the harness home. */
   path?: string
-  /** Harness home used when `path` is omitted; defaults to `$QILIN_HOME` or `~/.qilin`. */
+  /** Harness home used when `path` is omitted; defaults to `$OPENKYLIN_HOME` or `~/.openkylin`. */
   dshHome?: string
   /** Watch the document and hot-publish external edits; defaults to true. */
   watch?: boolean
@@ -2008,7 +2008,7 @@ export interface Config {
 ```ts config-catalog
 /** Plugin config (all optional — the built-in facts resolve without defaults). */
 export interface Config {
-  /** DeepSeek Harness home directory exposed as `QILIN_HOME`; defaults to `$QILIN_HOME` or `~/.qilin`. */
+  /** DeepSeek Harness home directory exposed as `OPENKYLIN_HOME`; defaults to `$OPENKYLIN_HOME` or `~/.openkylin`. */
   dshHome?: string
 }
 ```
@@ -2042,9 +2042,9 @@ export interface Config {
   providerName?: string
   /** Whether project and user roots are included around custom roots. */
   includeDefaultRoots?: boolean
-  /** DeepSeek Harness config root. Defaults to `$QILIN_HOME` or `~/.qilin`. */
+  /** DeepSeek Harness config root. Defaults to `$OPENKYLIN_HOME` or `~/.openkylin`. */
   dshHome?: string
-  /** Shared agent config root. Defaults to `$QILIN_AGENTS_HOME` or `~/.agents`. */
+  /** Shared agent config root. Defaults to `$OPENKYLIN_AGENTS_HOME` or `~/.agents`. */
   agentsHome?: string
   /** Additional skill roots scanned after project roots and before user roots. */
   customSkillDirs?: string[]
@@ -2060,7 +2060,7 @@ export interface Config {
   watchMaxProjects?: number
   /** Whether watched symbolic links follow their target files. */
   watchFollowSymlinks?: boolean
-  /** Bundled skill root; defaults to `$QILIN_BUNDLED_SKILL_DIR` when default roots are included, otherwise mounts none. */
+  /** Bundled skill root; defaults to `$OPENKYLIN_BUNDLED_SKILL_DIR` when default roots are included, otherwise mounts none. */
   bundledSkillDir?: string
 }
 ```
@@ -2332,7 +2332,7 @@ export type CodexPermissionMode =
 export interface Config {
   /** Provider name on `ctx.subagents` (default `qilin-sdk`). */
   providerName: string
-  /** Explicit qilin CLI module, resolved and checked at plugin load; omission uses the SDK dependency. */
+  /** Explicit openkylin CLI module, resolved and checked at plugin load; omission uses the SDK dependency. */
   dshBin?: string
   /** Named child profile (default `sdk`). */
   profile: string
@@ -3123,7 +3123,7 @@ export interface Config {
   printUrl: boolean
   /**
    * Register the model-visible surface context (the `app:web-surface` prompt
-   * section and the `QILIN_WEB_URL` bash variable). A one-shot non-interactive
+   * section and the `OPENKYLIN_WEB_URL` bash variable). A one-shot non-interactive
    * layer can turn it off when its user is not in the GUI, so the
    * orientation text would be false.
    */

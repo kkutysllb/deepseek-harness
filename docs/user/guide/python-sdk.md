@@ -2,7 +2,7 @@
 
 English | [中文](python-sdk.zh.md)
 
-This tutorial installs the published Python SDK, runs the shipped standalone minimal profile, and shows how to customize the same `qilin` profile from your own program.
+This tutorial installs the published Python SDK, runs the shipped standalone minimal profile, and shows how to customize the same `openkylin` profile from your own program.
 
 ## Prerequisites
 
@@ -34,7 +34,7 @@ py -3.10 -m venv .venv
 python -m pip install openkylin-sdk
 ```
 
-The installation includes a matching native runtime wheel and the `qilin` command. Normal SDK execution needs no system Node.js. Repository contributors who build the artifacts should use the [Python contributor workflow](../../../python/development.md).
+The installation includes a matching native runtime wheel and the `openkylin` command. Normal SDK execution needs no system Node.js. Repository contributors who build the artifacts should use the [Python contributor workflow](../../../python/development.md).
 
 ## Run the checked-in example
 
@@ -76,7 +76,7 @@ python python/sdk/examples/minimal.py `
   "Inspect the repository and fix the failing tests."
 ```
 
-The script prints the final assistant response. The selected home receives the generated `sdk-minimal` profile, installed plugins, and uncompressed JSONL session logs under `sessions/`. The example and SDK never silently read `~/.qilin`.
+The script prints the final assistant response. The selected home receives the generated `sdk-minimal` profile, installed plugins, and uncompressed JSONL session logs under `sessions/`. The example and SDK never silently read `~/.openkylin`.
 
 ## Use the SDK in your program
 
@@ -103,29 +103,29 @@ with DeepSeekHarness(
 print(result.final_response)
 ```
 
-The SDK starts the bundled `qilin --profile sdk-minimal` process lazily and reuses it until context-manager exit. The profile, its persistent patch, the home patch, and any ordered `patches` tuple form the application configuration. There is no separate Python runtime bin or complete-config option.
+The SDK starts the bundled `openkylin --profile sdk-minimal` process lazily and reuses it until context-manager exit. The profile, its persistent patch, the home patch, and any ordered `patches` tuple form the application configuration. There is no separate Python runtime bin or complete-config option.
 
 ## Install or define plugins
 
-Use `qilin plugin` for dependencies and bundle layers that should persist in this home:
+Use `openkylin plugin` for dependencies and bundle layers that should persist in this home:
 
 ### Linux and macOS
 
 ```sh
-export QILIN_HOME=/absolute/path/to/example-dsh-home
-qilin --profile sdk-minimal --dump-default-config >/dev/null
-qilin plugin --profile sdk-minimal add file:/absolute/path/to/my-plugin-bundle
+export OPENKYLIN_HOME=/absolute/path/to/example-dsh-home
+openkylin --profile sdk-minimal --dump-default-config >/dev/null
+openkylin plugin --profile sdk-minimal add file:/absolute/path/to/my-plugin-bundle
 ```
 
 ### Windows PowerShell
 
 ```powershell
-$env:QILIN_HOME = "C:\work\example-dsh-home"
-qilin --profile sdk-minimal --dump-default-config | Out-Null
-qilin plugin --profile sdk-minimal add file:C:/work/my-plugin-bundle
+$env:OPENKYLIN_HOME = "C:\work\example-dsh-home"
+openkylin --profile sdk-minimal --dump-default-config | Out-Null
+openkylin plugin --profile sdk-minimal add file:C:/work/my-plugin-bundle
 ```
 
-The first command initializes the shipped standalone profile. The second forwards package management to `pnpm`, then records any installed package that exports a `qilin.bundle` layer. Install `pnpm` only for this management command; launching the installed SDK does not need it. Edit `$QILIN_HOME/profiles/sdk-minimal/cordis.patch.yml` for persistent row changes, or pass patch files from Python for per-launch changes.
+The first command initializes the shipped standalone profile. The second forwards package management to `pnpm`, then records any installed package that exports a `openkylin.bundle` layer. Install `pnpm` only for this management command; launching the installed SDK does not need it. Edit `$OPENKYLIN_HOME/profiles/sdk-minimal/cordis.patch.yml` for persistent row changes, or pass patch files from Python for per-launch changes.
 
 Another `profile` is valid when it includes `@qilin/sdk-app` or another JSON-RPC server row. Missing server rows, unresolved plugins, and invalid patches fail during startup instead of falling back to another composition.
 
@@ -133,8 +133,8 @@ Another `profile` is valid when it includes `@qilin/sdk-app` or another JSON-RPC
 
 | Property | Value |
 |---|---|
-| System prompt | `QILIN_SYSTEM_PROMPT`, falling back to `You are a helpful software engineer assistant.` |
-| Model in `minimal.py` | `--model`, then `QILIN_MODEL`, then `deepseek-v4-flash` |
+| System prompt | `OPENKYLIN_SYSTEM_PROMPT`, falling back to `You are a helpful software engineer assistant.` |
+| Model in `minimal.py` | `--model`, then `OPENKYLIN_MODEL`, then `deepseek-v4-flash` |
 | Model-facing tools | Persistent `bash` on Linux/macOS or `pwsh` on Windows, plus `str_replace_editor` |
 | Shell timeout | 300 seconds |
 | Editor output limit | 16,000 characters |
@@ -143,8 +143,8 @@ Another `profile` is valid when it includes `@qilin/sdk-app` or another JSON-RPC
 
 The profile's sole bundle inserts the complete tree over an empty root and does not include `qilin-base`; later base-profile tools therefore cannot appear implicitly. It contains the SDK protocol, one environment-configured DeepSeek adapter, local execution, and persistence, while settings, managed credentials, telemetry, Web tools, subagents, local instruction discovery, and compaction are absent. It pins `danger-full-access`, so the platform-selected persistent shell and editor can modify any path visible to the runtime; use a disposable checkout or container.
 
-The installed wheel still packages the full `web` profile and frontend assets. Run `qilin web` against an explicit `QILIN_HOME` when a Python SDK deployment also needs the browser application; `web` is a separate CLI application and cannot serve a Python SDK client.
+The installed wheel still packages the full `web` profile and frontend assets. Run `openkylin web` against an explicit `OPENKYLIN_HOME` when a Python SDK deployment also needs the browser application; `web` is a separate CLI application and cannot serve a Python SDK client.
 
 Use a fresh home when profiles, plugins, credentials, settings, and sessions must be isolated. Use a fresh session id for independent work; reuse a harness, home, and id only to continue the same durable conversation and session-owned resources.
 
-The [bundle reference](../../../packages/bundle/sdk-minimal/README.md) owns the exact tree, and the [example reference](../../../python/sdk/examples/README.md) owns the runnable program. The [Python SDK reference](../../../python/sdk/README.md) covers lifecycle, results, notifications, and low-level behavior; the [qilin CLI reference](../../../apps/cli/reference/README.md) covers profile layering.
+The [bundle reference](../../../packages/bundle/sdk-minimal/README.md) owns the exact tree, and the [example reference](../../../python/sdk/examples/README.md) owns the runnable program. The [Python SDK reference](../../../python/sdk/README.md) covers lifecycle, results, notifications, and low-level behavior; the [openkylin CLI reference](../../../apps/cli/reference/README.md) covers profile layering.

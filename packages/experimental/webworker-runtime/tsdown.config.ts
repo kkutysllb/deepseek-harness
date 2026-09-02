@@ -92,7 +92,7 @@ export default defineConfig([{
   outputOptions: { inlineDynamicImports: true },
 }, {
   // Page half: an ordinary browser ES module the deployment's page imports. It
-  // is not a `qilin.client` graph row — it installs the module loader the graph is
+  // is not a `openkylin.client` graph row — it installs the module loader the graph is
   // loaded through, so it cannot be loaded by it. Workspace peers stay external
   // so the page keeps one instance of each.
   entry: ['src/client/index.ts'],

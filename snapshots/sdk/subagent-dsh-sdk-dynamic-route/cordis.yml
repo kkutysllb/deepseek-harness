@@ -22,18 +22,18 @@
 - insert:
     - id: mock-llm
       name: '../../../packages/subagent/subagent-dsh-sdk/tests/fixtures/loader/mock-delegating-llm.ts'
-      disabled: !!js process.env.QILIN_SNAPSHOT !== 'record'
+      disabled: !!js process.env.OPENKYLIN_SNAPSHOT !== 'record'
 
     - id: subagent-dsh-sdk
       name: '@qilin/subagent-dsh-sdk'
       config:
         profile: sdk
-        patches: !!js JSON.parse(process.env.QILIN_TEST_CHILD_PATCHES ?? '[]')
-        dshHome: !!js process.env.QILIN_TEST_CHILD_HOME
+        patches: !!js JSON.parse(process.env.OPENKYLIN_TEST_CHILD_PATCHES ?? '[]')
+        dshHome: !!js process.env.OPENKYLIN_TEST_CHILD_HOME
         provider: mock
         model: mock-routed
         env:
-          QILIN_TELEMETRY_DISABLED: '1'
+          OPENKYLIN_TELEMETRY_DISABLED: '1'
 
     - id: subagent-model-selection-settings
       name: '@qilin/tool-subagent/model-selection-settings'
@@ -56,6 +56,6 @@
     - id: sdk-jsonrpc-server-dynamic-live
       name: '@qilin/sdk-jsonrpc-server'
       inject: [sdkAppStartup, loader]
-      disabled: !!js process.env.QILIN_SNAPSHOT !== 'record'
+      disabled: !!js process.env.OPENKYLIN_SNAPSHOT !== 'record'
       config:
         maxTokensAsSuccess: true

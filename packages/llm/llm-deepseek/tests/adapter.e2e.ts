@@ -96,7 +96,7 @@ class E2eAttachmentStore extends AttachmentStore {
 
 beforeEach(async () => {
   identityHome = await mkdtemp(join(tmpdir(), 'qilin-e2e-user-id-'))
-  vi.stubEnv('QILIN_HOME', identityHome)
+  vi.stubEnv('OPENKYLIN_HOME', identityHome)
 })
 
 async function harness(_model: string, config: Partial<Config> = {}) {

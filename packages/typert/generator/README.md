@@ -79,7 +79,7 @@ The generator is built on one separation: extraction and emission are decoupled 
 
 ### Analysis and faces
 
-Host and client are independent TypeScript programs. Direct project references establish compiler-face membership, while `qilin.client` package subpaths establish runtime-face contribution; `package.json#exports` marks every cross-package public boundary, and imports or re-exports are the only cross-face edges. `check` mode fails on syntax or semantic diagnostics, missing public annotations, private cross-package references, and reachable declaration merges the model cannot retain losslessly; `write` mode inserts checker-derived annotations and returns a clean check-mode model. Types owned by NPM dependencies remain `external` references instead of being expanded.
+Host and client are independent TypeScript programs. Direct project references establish compiler-face membership, while `openkylin.client` package subpaths establish runtime-face contribution; `package.json#exports` marks every cross-package public boundary, and imports or re-exports are the only cross-face edges. `check` mode fails on syntax or semantic diagnostics, missing public annotations, private cross-package references, and reachable declaration merges the model cannot retain losslessly; `write` mode inserts checker-derived annotations and returns a clean check-mode model. Types owned by NPM dependencies remain `external` references instead of being expanded.
 
 ### Emission and publication contract
 

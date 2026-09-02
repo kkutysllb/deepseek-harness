@@ -5,7 +5,7 @@
  * `includeShippedRoot: false` is how a deployment supplying purely its own
  * presets — or an embedder using the roster as bare machinery — opts out.
  *
- * `$QILIN_HOME` is repointed per test for the same reason as the user-root
+ * `$OPENKYLIN_HOME` is repointed per test for the same reason as the user-root
  * suite: the derived writable root is resolved in the constructor.
  */
 
@@ -27,13 +27,13 @@ const SYSTEM_ROOT = join(FIXTURES, 'system')
 let previousHome: string | undefined
 
 beforeEach(async () => {
-  previousHome = process.env.QILIN_HOME
-  process.env.QILIN_HOME = await mkdtemp(join(tmpdir(), 'qilin-shipped-root-'))
+  previousHome = process.env.OPENKYLIN_HOME
+  process.env.OPENKYLIN_HOME = await mkdtemp(join(tmpdir(), 'qilin-shipped-root-'))
 })
 
 afterEach(() => {
-  if (previousHome === undefined) delete process.env.QILIN_HOME
-  else process.env.QILIN_HOME = previousHome
+  if (previousHome === undefined) delete process.env.OPENKYLIN_HOME
+  else process.env.OPENKYLIN_HOME = previousHome
 })
 
 /** Boot a roster with the shipped root left to the plugin's default. */

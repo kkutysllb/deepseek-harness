@@ -33,7 +33,7 @@
     "lib/types/**/*.d.ts"
   ],
   "license": "MIT",
-  "qilin": {
+  "openkylin": {
     "bundle": {
       "patch": "./cordis.patch.yml"
     }

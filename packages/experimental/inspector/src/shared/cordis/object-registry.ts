@@ -8,7 +8,7 @@ import {
 } from './ids.ts'
 import type { InspectorObjectReference } from './object-reference.ts'
 
-const REGISTRIES_SYMBOL = 'qilin.inspector.realm-object-registries'
+const REGISTRIES_SYMBOL = 'openkylin.inspector.realm-object-registries'
 const MAX_FIBER_WRAPPER_DEPTH = 8
 
 /** Self-contained function sent through CDP to identify its `this` object in the inspected realm. */

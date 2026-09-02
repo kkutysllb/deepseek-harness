@@ -24,4 +24,4 @@
 
 ## 后果
 
-pull request 的预览位于 `https://pr-<number>.qilin-build-preview.pages.dev`，访问要求 Cloudflare Access 登录；自动化用 service token 通行。部署平台不持有源码与 sourcemap，这也意味着在 sourcemap 处理被专门设计之前，预览无法把 bundle 映射回源码。镜像的字节通路——压缩存储、无传输再编码送达——在每次部署时被断言，平台行为变化会让运行失败而不是让 worker 启动失败。packer bin 在任何干净 checkout 上一次完整构建后即可用，constraints 表把 `bin.js` 钉进发布文件清单。
+pull request 的预览位于 `https://pr-<number>.openkylin-build-preview.pages.dev`，访问要求 Cloudflare Access 登录；自动化用 service token 通行。部署平台不持有源码与 sourcemap，这也意味着在 sourcemap 处理被专门设计之前，预览无法把 bundle 映射回源码。镜像的字节通路——压缩存储、无传输再编码送达——在每次部署时被断言，平台行为变化会让运行失败而不是让 worker 启动失败。packer bin 在任何干净 checkout 上一次完整构建后即可用，constraints 表把 `bin.js` 钉进发布文件清单。

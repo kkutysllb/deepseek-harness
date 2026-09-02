@@ -80,7 +80,7 @@
     - id: fs-local
       name: '@qilin/fs-local'
       config:
-        cwd: !!js process.env.QILIN_CWD ?? process.cwd()
+        cwd: !!js process.env.OPENKYLIN_CWD ?? process.cwd()
 
     - id: str-replace-editor
       name: '@qilin/tool-str-replace-editor'

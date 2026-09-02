@@ -1,4 +1,4 @@
-# QiLin Web Demo 验收清单
+# OpenKylin Web Demo 验收清单
 
 > 分支 `feat/web-demo-kworks-aligned` · 生成日期 2026-08-26 · 依据实测证据（Playwright 浏览器验证 + smoke 脚本 + curl）
 >
@@ -13,7 +13,7 @@
 | 1.2 | 同源代理 `:28080/health` | ✅ | 200，经 server.js → gateway |
 | 1.3 | SSE 代理不缓冲 | ✅ | smoke 实测首字节 19-135ms（阈值 500ms） |
 | 1.4 | 端口隔离（不碰 KWorks 19987/18569） | ✅ | 全部脚本只检测不杀进程；端口 28080/28081 |
-| 1.5 | 数据隔离（`.qilin/` vs `~/.kworks/`） | ✅ | QILIN_HOME 默认仓库内 `.qilin/` |
+| 1.5 | 数据隔离（`.openkylin/` vs `~/.kworks/`） | ✅ | OPENKYLIN_HOME 默认仓库内 `.openkylin/` |
 | 1.6 | `pnpm smoke` 全绿 | ✅ | PASS（登录分支复跑通过） |
 
 ## 2. 认证与初始化
@@ -44,7 +44,7 @@
 
 | # | 项目 | 结果 | 证据 |
 |---|---|---|---|
-| 4.1 | 落地页 `/` | ✅ | hero + 4 特性卡 + footer（品牌 QiLin） |
+| 4.1 | 落地页 `/` | ✅ | hero + 4 特性卡 + footer（品牌 OpenKylin） |
 | 4.2 | 新会话页 `/workspace/chats/new` | ✅ | 欢迎语 + 输入框 + 推理深度/模型选择 |
 | 4.3 | 自动化 `/workspace/crons` | ✅ | 空态 + 添加任务 |
 | 4.4 | MCP 管理 `/workspace/mcp` | ✅ | 空态 + 添加 + 常用服务器推荐 |
@@ -61,10 +61,10 @@
 
 | # | 项目 | 结果 | 证据 |
 |---|---|---|---|
-| 5.1 | 展示文案 KWorks→QiLin | ✅ | 89 文件替换，src 残留 0 |
+| 5.1 | 展示文案 KWorks→OpenKylin | ✅ | 89 文件替换，src 残留 0 |
 | 5.2 | favicon 绿色渐变+「麒」 | ✅ | public/favicon.svg 全量替换 |
-| 5.3 | 主色 QiLin 绿（亮/暗） | ✅ | --primary/--ring oklch 值 |
-| 5.4 | 页面标题 | ✅ | `<title>QiLin</title>` |
+| 5.3 | 主色 OpenKylin 绿（亮/暗） | ✅ | --primary/--ring oklch 值 |
+| 5.4 | 页面标题 | ✅ | `<title>OpenKylin</title>` |
 | 5.5 | 分享链接用当前 origin | ✅ | 移除 kworks.com 硬编码（086a40b） |
 | 5.6 | 内部标识符保留 | ✅ | kworksDesktop bridge / storage key / sandbox provider id（刻意保留，见 README 差异表） |
 
@@ -118,6 +118,6 @@
 ## 9. 未验收 / 已知限制（与上游一致或环境约束）
 
 - 交付物预览抽查了 HTML；XLSX/DOCX/PPTX/PDF 预览路径未逐一实测（上游组件未改动）
-- browser_* 工具组未启用（QiLin 主仓未装 playwright extra，README 已记录启用方法）
+- browser_* 工具组未启用（OpenKylin 主仓未装 playwright extra，README 已记录启用方法）
 - 澄清卡 / 危险工具审批门 UI 未触发实测（需要特定工具调用场景）
 - KWorks 桌面应用并行运行验证：端口/数据隔离为设计保证 + 脚本约束，未做双开实测

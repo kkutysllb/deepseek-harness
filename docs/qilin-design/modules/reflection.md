@@ -1,6 +1,6 @@
 # reflection 模块（reflection module）
 
-> QiLin engine · reflection subsystem · 双语 / Bilingual
+> OpenKylin engine · reflection subsystem · 双语 / Bilingual
 
 ---
 
@@ -8,7 +8,7 @@
 
 ### 职责
 
-`qilin.reflection` 是一个极小但关键的模块：它在配置加载与服务运行时提供"变量解析器"。所有 `${VAR_NAME}` 形式的占位符都会在适当时机被解析为真实字符串（通常来自 `os.getenv`）。
+`openkylin.reflection` 是一个极小但关键的模块：它在配置加载与服务运行时提供"变量解析器"。所有 `${VAR_NAME}` 形式的占位符都会在适当时机被解析为真实字符串（通常来自 `os.getenv`）。
 
 - **入口**：`resolvers.py` 暴露 `resolve_variable()` 与 `resolve_variables()`
 - **典型用法**：
@@ -40,7 +40,7 @@
 
 ### Responsibility
 
-`qilin.reflection` is a tiny but critical module: it provides the "variable resolver" for both config loading and runtime. All `${VAR_NAME}` placeholders are resolved (typically via `os.getenv`) at the appropriate moment.
+`openkylin.reflection` is a tiny but critical module: it provides the "variable resolver" for both config loading and runtime. All `${VAR_NAME}` placeholders are resolved (typically via `os.getenv`) at the appropriate moment.
 
 - **Entry** — `resolvers.py` exposes `resolve_variable()` and `resolve_variables()`
 - **Typical uses**:

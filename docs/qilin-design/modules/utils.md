@@ -1,6 +1,6 @@
 # utils 模块（utils module）
 
-> QiLin engine · utils subsystem · 双语 / Bilingual
+> OpenKylin engine · utils subsystem · 双语 / Bilingual
 
 ---
 
@@ -8,7 +8,7 @@
 
 ### 职责
 
-`qilin.utils` 是与业务无关的纯函数库。它为其他模块提供：
+`openkylin.utils` 是与业务无关的纯函数库。它为其他模块提供：
 
 - 异步 / 并发工具
 - 文件 I/O（受限路径下的复制 / 移动）
@@ -50,7 +50,7 @@
 
 ### Responsibility
 
-`qilin.utils` is a business-agnostic pure-function library. It provides:
+`openkylin.utils` is a business-agnostic pure-function library. It provides:
 
 - Async / concurrency helpers
 - File I/O (path-restricted copy/move)

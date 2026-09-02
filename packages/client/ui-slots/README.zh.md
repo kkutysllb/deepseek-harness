@@ -1,5 +1,5 @@
 ---
-description: "qilin Web 客户端的 slot 注册表纯核心：SlotMap 声明合并、单一 register 组合 API、四 share props 类型、store 席位与渲染器安装约定。"
+description: "openkylin Web 客户端的 slot 注册表纯核心：SlotMap 声明合并、单一 register 组合 API、四 share props 类型、store 席位与渲染器安装约定。"
 kind: "package-library"
 ---
 

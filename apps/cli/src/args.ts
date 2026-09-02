@@ -1,5 +1,5 @@
 /**
- * Commander adapter for the `qilin` command line.
+ * Commander adapter for the `openkylin` command line.
  *
  * The launcher parses only what it owns — which profile to boot, which extra
  * patch overlays to apply, and the config dumps — and hands **everything after
@@ -7,8 +7,8 @@
  * their own flag families and print their own `--help` (see
  * `@qilin/cmdline`). Launcher flags therefore come first: the first
  * token this parser does not recognize starts the inner arguments, so
- * `qilin --profile tui --resume abc` boots the tui profile with `--resume abc`,
- * and `qilin --profile web -h` prints the web app's help, not this one's.
+ * `openkylin --profile tui --resume abc` boots the tui profile with `--resume abc`,
+ * and `openkylin --profile web -h` prints the web app's help, not this one's.
  *
  * `web` is a hardcoded alias for `--profile web`; `plugin` manages a profile's
  * plugin dependencies by forwarding to pnpm.
@@ -44,7 +44,7 @@ interface PluginInvocation {
   args: string[]
 }
 
-/** The resolved `qilin` invocation. Help, version, and errors exit inside {@link parseDshArgs}. */
+/** The resolved `openkylin` invocation. Help, version, and errors exit inside {@link parseDshArgs}. */
 export type QilinInvocation = ProfileInvocation | DumpConfigInvocation | PluginInvocation
 
 /** Launcher flags shared by the default command and the `web` alias. */
@@ -63,12 +63,12 @@ const collect = (value: string, previous: string[] = []): string[] => [...previo
 /** The launcher's own help text; each app prints its own. */
 const HELP_EXAMPLES = `
 Examples:
-  qilin --profile web                        boot the web profile (same as: qilin web)
-  qilin --profile headless "run the tests"   answer one task, print the result, and exit
-  qilin --profile tui --patch ./extra.yml    boot a custom profile with one extra overlay
-  qilin --profile tui --resume <session>     arguments after the launcher flags reach the app
-  qilin --profile web --help                 the web app's own flags and help
-  qilin plugin --profile tui add <package>   install a plugin into the tui profile
+  openkylin --profile web                        boot the web profile (same as: openkylin web)
+  openkylin --profile headless "run the tests"   answer one task, print the result, and exit
+  openkylin --profile tui --patch ./extra.yml    boot a custom profile with one extra overlay
+  openkylin --profile tui --resume <session>     arguments after the launcher flags reach the app
+  openkylin --profile web --help                 the web app's own flags and help
+  openkylin plugin --profile tui add <package>   install a plugin into the tui profile
 `
 
 /**
@@ -115,26 +115,26 @@ export function parseDshArgs(argv: readonly string[], version: string): QilinInv
   // inferred type would be circular through its own chain.
   const program: Command = new Command()
   program
-    .name('qilin')
+    .name('openkylin')
     .version(version, '-V, --version', 'output the version number')
-    .description('qilin: boot a QiLin profile — an ordered stack of plugin-bundle patch layers under your own overrides.')
+    .description('openkylin: boot a OpenKylin profile — an ordered stack of plugin-bundle patch layers under your own overrides.')
     .addHelpText('after', HELP_EXAMPLES)
     .exitOverride()
     // The launcher's flags come first and end at the first token it does not
     // know; everything from there on belongs to the booted app, including
-    // its -h. `qilin -h` with no profile still prints this help, below.
+    // its -h. `openkylin -h` with no profile still prints this help, below.
     .helpOption(false)
     .allowUnknownOption()
     .passThroughOptions()
     .enablePositionalOptions()
-    .argument('[args...]', 'arguments for the booted profile\'s app (see: qilin --profile <name> --help)')
-    .option('--profile <name>', 'the profile under $QILIN_HOME/profiles to boot')
+    .argument('[args...]', 'arguments for the booted profile\'s app (see: openkylin --profile <name> --help)')
+    .option('--profile <name>', 'the profile under $OPENKYLIN_HOME/profiles to boot')
     .option('--patch <path>', 'extra patch-list overlay applied after the profile layer (repeatable)', collect)
     .option('--dump-config', 'print the composed profile tree and exit')
     .option('--dump-default-config', 'print the profile tree without its user layer or --patch overlays and exit')
     .action((args: string[], options: BootOptions & { profile?: string }) => {
       // With the app owning -h, the launcher's own help is what a bare
-      // `qilin -h` (no profile to hand it to) must print.
+      // `openkylin -h` (no profile to hand it to) must print.
       if (options.profile === undefined) {
         if (args.some(argument => argument === '-h' || argument === '--help')) program.help()
         program.error('error: --profile <name> is required')
@@ -159,7 +159,7 @@ export function parseDshArgs(argv: readonly string[], version: string): QilinInv
     .allowUnknownOption()
     .passThroughOptions()
     .enablePositionalOptions()
-    .argument('[args...]', 'arguments for the web app (see: qilin web --help)')
+    .argument('[args...]', 'arguments for the web app (see: openkylin web --help)')
     .option('--patch <path>', 'extra patch-list overlay applied after the profile layer (repeatable)', collect)
     .option('--dump-config', 'print the composed web-profile tree (with the user layer and any --patch) and exit')
     .option('--dump-default-config', 'print the web profile\'s bundle layers (no user layer) and exit')
@@ -186,6 +186,6 @@ export function parseDshArgs(argv: readonly string[], version: string): QilinInv
     return process.exit(error instanceof CommanderError ? error.exitCode : 1)
   }
   /* v8 ignore next -- an action resolves or Commander throws */
-  if (resolved === undefined) throw new Error('qilin: no invocation resolved')
+  if (resolved === undefined) throw new Error('openkylin: no invocation resolved')
   return resolved
 }

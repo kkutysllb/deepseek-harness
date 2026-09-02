@@ -62,7 +62,7 @@ while time.monotonic() < deadline:
             output.extend(chunk)
 
     snapshot = bytes(output)
-    if not termination_sent and b"qilin web: http://127.0.0.1:" in snapshot:
+    if not termination_sent and b"openkylin web: http://127.0.0.1:" in snapshot:
         ready_seen = True
         os.kill(pid, signal.SIGTERM)
         termination_sent = True
@@ -77,11 +77,11 @@ if status is None:
     _, status = os.waitpid(pid, 0)
 sys.stdout.buffer.write(output)
 if not ready_seen:
-    sys.stderr.write("installed qilin web did not reach its ready URL\n")
+    sys.stderr.write("installed openkylin web did not reach its ready URL\n")
     sys.exit(124)
 actual_exit = os.waitstatus_to_exitcode(status)
 if actual_exit != 0:
-    sys.stderr.write(f"installed qilin web exited {actual_exit}, expected 0\n")
+    sys.stderr.write(f"installed openkylin web exited {actual_exit}, expected 0\n")
     sys.exit(125)
 `
 
@@ -425,7 +425,7 @@ class ReleaseBundle {
   }
 }
 
-/** Installs one complete bundle outside the workspace and probes the shipped qilin entry. */
+/** Installs one complete bundle outside the workspace and probes the shipped openkylin entry. */
 class InstalledBundleSmoke {
   constructor(
     private readonly bundle: ReleaseBundle,
@@ -458,7 +458,7 @@ class InstalledBundleSmoke {
       ], consumerRoot, npmClientEnvironment())
 
       const bin = resolve(consumerRoot, 'node_modules/@qilin/cli/lib/bin.js')
-      assertPathWithin(consumerRoot, bin, 'installed qilin bin')
+      assertPathWithin(consumerRoot, bin, 'installed openkylin bin')
       const environment = installedArtifactEnvironment(consumerRoot)
       const version = this.runner.capture(
         process.execPath,
@@ -468,12 +468,12 @@ class InstalledBundleSmoke {
       )
       if (version !== this.bundle.manifest.version) {
         throw new Error(
-          `installed qilin --version returned ${JSON.stringify(version)}; `
+          `installed openkylin --version returned ${JSON.stringify(version)}; `
           + `expected ${this.bundle.manifest.version}`,
         )
       }
       this.probeWeb(bin, consumerRoot, environment)
-      console.log('publish-npm-baseline: installed qilin entry and Web startup probes passed')
+      console.log('publish-npm-baseline: installed openkylin entry and Web startup probes passed')
     } finally {
       rmSync(consumerRoot, { recursive: true, force: true })
     }
@@ -481,7 +481,7 @@ class InstalledBundleSmoke {
 
   private probeWeb(bin: string, consumerRoot: string, environment: NodeJS.ProcessEnv): void {
     if (process.platform === 'win32') {
-      throw new Error('installed qilin Web probe requires a POSIX host with python3')
+      throw new Error('installed openkylin Web probe requires a POSIX host with python3')
     }
     const result = this.runner.result(
       'python3',
@@ -915,9 +915,9 @@ function installedArtifactEnvironment(consumerRoot: string): NodeJS.ProcessEnv {
   const environment = npmClientEnvironment()
   delete environment.NODE_OPTIONS
   delete environment.NODE_PATH
-  environment.QILIN_HOME = resolve(consumerRoot, '.qilin')
-  environment.QILIN_AGENTS_HOME = resolve(consumerRoot, '.agents')
-  environment.QILIN_TELEMETRY_DISABLED = '1'
+  environment.OPENKYLIN_HOME = resolve(consumerRoot, '.openkylin')
+  environment.OPENKYLIN_AGENTS_HOME = resolve(consumerRoot, '.agents')
+  environment.OPENKYLIN_TELEMETRY_DISABLED = '1'
   environment.DEEPSEEK_API_KEY = 'keyless-installed-web-no-call'
   environment.LANG = 'en_US.UTF-8'
   environment.LC_ALL = 'en_US.UTF-8'

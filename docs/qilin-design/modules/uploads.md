@@ -1,6 +1,6 @@
 # uploads 模块（uploads module）
 
-> QiLin engine · uploads subsystem · 双语 / Bilingual
+> OpenKylin engine · uploads subsystem · 双语 / Bilingual
 
 ---
 
@@ -8,7 +8,7 @@
 
 ### 职责
 
-`qilin.uploads` 集中管理"用户上传的文件"。它解决一个朴素但琐碎的问题：在多 workspace / 多会话 / 多 sandbox 隔离的环境中，文件到底是什么"路径"？
+`openkylin.uploads` 集中管理"用户上传的文件"。它解决一个朴素但琐碎的问题：在多 workspace / 多会话 / 多 sandbox 隔离的环境中，文件到底是什么"路径"？
 
 - **虚拟路径**：用户上传的文件以 `/uploads/...` 的虚拟路径暴露给 LLM，屏蔽物理存储位置
 - **生命周期**：上传 → 暂存 → 配额检查 → 关联 thread → 清理
@@ -41,7 +41,7 @@
 
 ### Responsibility
 
-`qilin.uploads` centralizes "user-uploaded files". Solves a simple problem with non-trivial surface area: what "path" is a file in a multi-workspace / multi-session / multi-sandbox environment?
+`openkylin.uploads` centralizes "user-uploaded files". Solves a simple problem with non-trivial surface area: what "path" is a file in a multi-workspace / multi-session / multi-sandbox environment?
 
 - **Virtual paths** — Uploaded files are exposed to LLM as `/uploads/...`, hiding physical storage
 - **Lifecycle** — Upload → staging → quota check → thread association → cleanup

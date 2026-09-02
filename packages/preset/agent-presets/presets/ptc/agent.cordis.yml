@@ -42,7 +42,7 @@
 # ── shell ───────────────────────────────────────────────────────────────────
 
 # `shell-env` stays in the HOST composition: `apps/cli/src/web.ts` injects it to
-# publish `QILIN_WEB_URL`/`QILIN_WEB_MODE`, and a host row that injects a service is
+# publish `OPENKYLIN_WEB_URL`/`OPENKYLIN_WEB_MODE`, and a host row that injects a service is
 # the criterion for host-plane ownership — injection resolves before any session
 # exists, so there is no agent to key by. Behind a preset realm those variables
 # never reached the model's shell at all. Both shell tools consume the host
@@ -203,7 +203,7 @@
         toolName: subagent_fork
         backgroundMode: continuable
 
-    # Production qilin does not install these optional providers. Install the
+    # Production openkylin does not install these optional providers. Install the
     # matching Bundle in this Profile and restart the Host, then copy this
     # preset and remove `disabled` from the matching tool row. Host availability
     # alone grants no tool.

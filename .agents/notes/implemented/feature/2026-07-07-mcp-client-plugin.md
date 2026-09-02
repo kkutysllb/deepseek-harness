@@ -149,7 +149,7 @@ A unified `execute` handler for all tools from one MCP server:
 
 ### Subprocess environment (stdio transport)
 
-Build the child environment from the subprocess seam's shared `scrubbedParentEnv()` base, which removes ambient names matching `/KEY|PASSWORD|SECRET|TOKEN/i` and ambient `QILIN_*` names, then merge `config.env` on top. Explicit env overrides survive the scrub.
+Build the child environment from the subprocess seam's shared `scrubbedParentEnv()` base, which removes ambient names matching `/KEY|PASSWORD|SECRET|TOKEN/i` and ambient `OPENKYLIN_*` names, then merge `config.env` on top. Explicit env overrides survive the scrub.
 
 ### Disconnection / crash
 

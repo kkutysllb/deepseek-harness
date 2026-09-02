@@ -34,7 +34,7 @@ describe('real Loader composition', () => {
       '  config:',
       '    source: loader',
       '    path: /github',
-      '    secretEnv: QILIN_GITHUB_WEBHOOK_SECRET',
+      '    secretEnv: OPENKYLIN_GITHUB_WEBHOOK_SECRET',
       '    maxBodyBytes: 1024',
       '',
     ].join('\n'))

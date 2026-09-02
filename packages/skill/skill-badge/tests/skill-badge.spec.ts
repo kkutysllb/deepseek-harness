@@ -15,7 +15,7 @@ describe('qilin-skill-badge', () => {
 
     expect(await ctx.skills.list()).toEqual([{
       name: 'qilin-badge',
-      description: 'Add the official “powered by qilin” badge to documents, pull requests, merge requests, and other content produced with DeepSeek Harness. Use whenever creating a pull request or merge request. Also use when the user asks for a qilin badge, powered-by-dsh attribution, or a reusable qilin badge asset or snippet.',
+      description: 'Add the official “powered by openkylin” badge to documents, pull requests, merge requests, and other content produced with DeepSeek Harness. Use whenever creating a pull request or merge request. Also use when the user asks for a openkylin badge, powered-by-dsh attribution, or a reusable openkylin badge asset or snippet.',
       invocation: { modelInvocable: true, userInvocable: true },
       provider: 'qilin-badge',
       source: 'bundled',

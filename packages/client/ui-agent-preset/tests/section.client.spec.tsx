@@ -230,10 +230,10 @@ describe('the preset list', () => {
   })
 
   it('shows a revealed directory on its row', () => {
-    renderSection({ revealedPaths: { mine: '/home/user/.qilin/.agent-presets/mine' } })
+    renderSection({ revealedPaths: { mine: '/home/user/.openkylin/.agent-presets/mine' } })
 
     const mine = rowFor('mine')
-    expect(within(mine).getByText('/home/user/.qilin/.agent-presets/mine')).toBeTruthy()
+    expect(within(mine).getByText('/home/user/.openkylin/.agent-presets/mine')).toBeTruthy()
     expect(within(mine).getByText(en.revealedPathLabel)).toBeTruthy()
     // The reveal belongs to its row alone.
     expect(within(rowFor('standard')).queryByText(en.revealedPathLabel)).toBeNull()

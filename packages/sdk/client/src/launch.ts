@@ -1,5 +1,5 @@
 /**
- * Resolve the public SDK launch configuration to one qilin subprocess.
+ * Resolve the public SDK launch configuration to one openkylin subprocess.
  * @module @qilin/sdk-client/launch
  */
 
@@ -26,7 +26,7 @@ export interface RuntimeProcessOptions {
   disposeGraceMs?: number
 }
 
-/** Node argv plus internal profile patches required by one resolved qilin entry. */
+/** Node argv plus internal profile patches required by one resolved openkylin entry. */
 export interface QilinNodeLaunch {
   /** Arguments before the profile selector. */
   nodeArgs: string[]
@@ -47,26 +47,26 @@ function manifest(url: string): PackageManifest {
 }
 
 /**
- * Resolve and version-check a qilin executable from package manifests.
- * @param dshManifestUrl - resolved URL of the qilin package manifest.
+ * Resolve and version-check a openkylin executable from package manifests.
+ * @param dshManifestUrl - resolved URL of the openkylin package manifest.
  * @param clientManifestUrl - resolved URL of the SDK client manifest.
- * @returns the absolute qilin executable path.
+ * @returns the absolute openkylin executable path.
  */
 export function resolveDshBinFromManifests(dshManifestUrl: string, clientManifestUrl: string): string {
   const dshManifest = manifest(dshManifestUrl)
   const clientManifest = manifest(clientManifestUrl)
   if (typeof dshManifest.version !== 'string' || dshManifest.version !== clientManifest.version) {
-    throw new Error(`qilin SDK client ${String(clientManifest.version)} requires the same qilin version, got ${String(dshManifest.version)}`)
+    throw new Error(`openkylin SDK client ${String(clientManifest.version)} requires the same openkylin version, got ${String(dshManifest.version)}`)
   }
   const bin = typeof dshManifest.bin === 'object' && dshManifest.bin !== null
-    ? (dshManifest.bin as Record<string, unknown>).qilin
+    ? (dshManifest.bin as Record<string, unknown>).openkylin
     : dshManifest.bin
-  if (typeof bin !== 'string' || bin === '') throw new Error('@qilin/cli declares no qilin executable')
+  if (typeof bin !== 'string' || bin === '') throw new Error('@qilin/cli declares no openkylin executable')
   return resolve(dirname(fileURLToPath(dshManifestUrl)), bin)
 }
 
 /**
- * Resolve and version-check the built qilin executable installed with this SDK.
+ * Resolve and version-check the built openkylin executable installed with this SDK.
  * @returns the absolute built executable path, whether or not it exists in a source checkout.
  */
 export function installedDshBin(): string {
@@ -77,8 +77,8 @@ export function installedDshBin(): string {
 }
 
 /**
- * Resolve the Node launch for one same-version qilin package.
- * @param dshManifestUrl - resolved URL of the qilin package manifest.
+ * Resolve the Node launch for one same-version openkylin package.
+ * @param dshManifestUrl - resolved URL of the openkylin package manifest.
  * @param clientManifestUrl - resolved URL of the SDK client manifest.
  * @param sourceLoaderUrl - optional absolute tsx loader URL for deterministic tests.
  * @returns built output, or the source entry plus its compatibility patch and tsx environment.
@@ -109,7 +109,7 @@ export function resolveDshNodeLaunchFromManifests(
 }
 
 /**
- * Resolve the installed qilin package to a built or source Node launch.
+ * Resolve the installed openkylin package to a built or source Node launch.
  * @returns the launch descriptor for the current checkout or installed package.
  */
 function installedDshNodeLaunch(): QilinNodeLaunch {
@@ -120,7 +120,7 @@ function installedDshNodeLaunch(): QilinNodeLaunch {
 }
 
 /**
- * Resolve caller-relative filesystem inputs and construct canonical qilin argv.
+ * Resolve caller-relative filesystem inputs and construct canonical openkylin argv.
  * @param options - public SDK launch options.
  * @param callerCwd - parent-process directory used for lexical resolution.
  * @returns one generic subprocess spec for the JSON-RPC transport.
@@ -145,9 +145,9 @@ export function resolveDshLaunch(
     environment: () => ({
       ...(options.env ?? process.env),
       ...dshLaunch.environment,
-      ...dshHome === undefined ? {} : { QILIN_HOME: dshHome },
+      ...dshHome === undefined ? {} : { OPENKYLIN_HOME: dshHome },
     }),
-    description: `qilin profile ${JSON.stringify(profile)}`,
+    description: `openkylin profile ${JSON.stringify(profile)}`,
     initializeTimeoutMs: options.initializeTimeoutMs ?? DEFAULT_INITIALIZE_TIMEOUT_MS,
     ...options.requestTimeoutMs === undefined ? {} : { requestTimeoutMs: options.requestTimeoutMs },
     ...options.shutdownTimeoutMs === undefined ? {} : { shutdownTimeoutMs: options.shutdownTimeoutMs },

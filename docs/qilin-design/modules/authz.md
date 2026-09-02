@@ -1,6 +1,6 @@
 # authz 模块（authz module）
 
-> QiLin engine · authz subsystem · 双语 / Bilingual
+> OpenKylin engine · authz subsystem · 双语 / Bilingual
 
 ---
 
@@ -8,7 +8,7 @@
 
 ### 职责
 
-`qilin.authz` 实现 RBAC（Role-Based Access Control）级别的资源授权过滤器。它的目标不是"鉴权用户"，而是"鉴权一次具体的工具调用 / 一次资源访问"。在 LangGraph 之外注入，比 OAuth/JWT 更细粒度。
+`openkylin.authz` 实现 RBAC（Role-Based Access Control）级别的资源授权过滤器。它的目标不是"鉴权用户"，而是"鉴权一次具体的工具调用 / 一次资源访问"。在 LangGraph 之外注入，比 OAuth/JWT 更细粒度。
 
 - **Principal 抽象**：`principal.py` 把当前用户的所有属性（`role`、`team`、`label`、`custom`）归一化为 `Principal` 对象
 - **Resource 抽象**：把任何对象（tool / skill / agent / file / channel / webhook）抽象为 `Resource` 实例
@@ -66,7 +66,7 @@ authorization:
 
 ### Responsibility
 
-`qilin.authz` implements RBAC-style authorization filtering. The goal is not "authenticate the user" but "authorize this single tool call / resource access". The check runs outside LangGraph, finer-grained than OAuth/JWT.
+`openkylin.authz` implements RBAC-style authorization filtering. The goal is not "authenticate the user" but "authorize this single tool call / resource access". The check runs outside LangGraph, finer-grained than OAuth/JWT.
 
 - **Principal** — `principal.py` normalizes all attributes (`role`, `team`, `label`, `custom`) into a `Principal`
 - **Resource** — Abstraction over any object (tool / skill / agent / file / channel / webhook)

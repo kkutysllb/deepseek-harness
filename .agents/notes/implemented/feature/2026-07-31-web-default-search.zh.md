@@ -6,7 +6,7 @@ Status: implemented
 
 ## 问题
 
-该 harness 已具备完整的 Web 能力体系：提供方注册表、DeepSeek、Exa 和 Perplexity 搜索提供方、本地抓取、稳定的面向模型工具，以及结构化结果呈现，但已交付的 `qilin web` 组合没有挂载其中任何一项。除非部署提供自定义覆盖层，否则模型无法发现最新信息。仅挂载现有 DeepSeek 提供方仍无法打通 WebUI 链路：Models 页面通过 `ctx.credentials` 存储 `DEEPSEEK_API_KEY`，而搜索提供方只会在插件加载时固定读取进程环境，因此在运行中的 UI 输入或轮换的密钥无法用于搜索。
+该 harness 已具备完整的 Web 能力体系：提供方注册表、DeepSeek、Exa 和 Perplexity 搜索提供方、本地抓取、稳定的面向模型工具，以及结构化结果呈现，但已交付的 `openkylin web` 组合没有挂载其中任何一项。除非部署提供自定义覆盖层，否则模型无法发现最新信息。仅挂载现有 DeepSeek 提供方仍无法打通 WebUI 链路：Models 页面通过 `ctx.credentials` 存储 `DEEPSEEK_API_KEY`，而搜索提供方只会在插件加载时固定读取进程环境，因此在运行中的 UI 输入或轮换的密钥无法用于搜索。
 
 ## 决策
 
@@ -22,7 +22,7 @@ DeepSeek 搜索使用与官方会话适配器相同的 `DEEPSEEK_API_KEY` 凭据
 
 **仅挂载 `qilin-tool-web`。** 不予采纳：稳定的 schema 如果没有已注册提供方，每次默认调用都会失败。启用状态与后端可用性刻意分离，但已交付的默认配置必须提供其预期实现。
 
-**从 `cordis.yml` 读取 `$QILIN_HOME/.env`，或将其提升到 `process.env`。** 不予采纳：凭据提供方拥有该文件，环境变量值是只读覆盖；提升后存储的密钥将无法轮换，还会绕过经审计的密钥边界。
+**从 `cordis.yml` 读取 `$OPENKYLIN_HOME/.env`，或将其提升到 `process.env`。** 不予采纳：凭据提供方拥有该文件，环境变量值是只读覆盖；提升后存储的密钥将无法轮换，还会绕过经审计的密钥边界。
 
 **在提供方加载时固定读取 `process.env.DEEPSEEK_API_KEY`。** 不予采纳：Web Models 页面通过 `ctx.credentials` 写入密钥；产品文档规定的首次运行路径必须保证下一次操作无需重启即可生效。
 

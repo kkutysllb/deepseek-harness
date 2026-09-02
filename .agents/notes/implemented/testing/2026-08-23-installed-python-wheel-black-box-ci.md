@@ -12,13 +12,13 @@ The Python SDK unit suite drives fake peers, while the packaged-runtime workflow
 
 ### Installed artifact boundary
 
-The required Python runtime workflow builds the pure SDK wheel and each platform runtime wheel before behavior tests. Every native target installs those two local files into a new Python 3.10 virtual environment, changes to a temporary directory outside the repository, unsets `PYTHONPATH` and `QILIN_RUNTIME_MODE`, and invokes only the public Python modules plus the packaged executable.
+The required Python runtime workflow builds the pure SDK wheel and each platform runtime wheel before behavior tests. Every native target installs those two local files into a new Python 3.10 virtual environment, changes to a temporary directory outside the repository, unsets `PYTHONPATH` and `OPENKYLIN_RUNTIME_MODE`, and invokes only the public Python modules plus the packaged executable.
 
 The black-box harness rejects a non-venv process, repository-relative working directory, source or editable import, unequal distribution versions, an SDK dependency that does not exactly pin the runtime version, an executable outside the installed runtime package, or an executable absent from the runtime distribution record. This provenance check runs before the first agent request, so a behavior pass cannot conceal that the wrong code ran.
 
 ### Keyless behavior
 
-Every target runs the complete packaged-runtime scenario set after installation. A local SSE model keeps outputs deterministic while the public SDK exercises the default SDK profile, ordered patch overlays, external bundle installation through `qilin plugin`, persistent PTY and editor behavior, worker-thread code and workflow execution, ripgrep-backed search, external stdio MCP discovery and execution, model-visible and durable snapshots, Zstandard persistence, direct JSON-RPC, and shutdown. A restart snapshot launches two complete SDK runtime processes against one persistence root and pins their isolated model histories, high-level results, and separate durable logs. The installed run replaces the source-SDK pre-wheel run; the executable and wheel are tested together once rather than maintaining two behavior inventories.
+Every target runs the complete packaged-runtime scenario set after installation. A local SSE model keeps outputs deterministic while the public SDK exercises the default SDK profile, ordered patch overlays, external bundle installation through `openkylin plugin`, persistent PTY and editor behavior, worker-thread code and workflow execution, ripgrep-backed search, external stdio MCP discovery and execution, model-visible and durable snapshots, Zstandard persistence, direct JSON-RPC, and shutdown. A restart snapshot launches two complete SDK runtime processes against one persistence root and pins their isolated model histories, high-level results, and separate durable logs. The installed run replaces the source-SDK pre-wheel run; the executable and wheel are tested together once rather than maintaining two behavior inventories.
 
 Linux additionally retains its manylinux 2.28 clean-install smoke and GLIBC checks. macOS retains deployment-target and native helper checks. These platform constraints supplement the common black-box behavior rather than substituting for it.
 
@@ -34,7 +34,7 @@ The pull-request `python-runtime` job calls the reusable builder for Linux x64, 
 
 ## Existing decisions and supersession
 
-This decision supersedes the single-target topology in the archived [required Python runtime pull-request validation](../../archived/testing/2026-08-12-required-python-runtime-pull-request-ci.md) while retaining its requirement that the real executable, snapshots, wheels, and clean installation meet before merge. The [Python SDK qilin profile runtime](../architecture/2026-08-23-python-sdk-dsh-profile-runtime.md) owns the launched application and customization surface; the [single-file Python SDK runtime distribution](../architecture/2026-07-10-single-file-executable-sdk-runtime-distribution.md) remains authoritative for SEA packaging, native sidecars, wheel tags, and release artifacts.
+This decision supersedes the single-target topology in the archived [required Python runtime pull-request validation](../../archived/testing/2026-08-12-required-python-runtime-pull-request-ci.md) while retaining its requirement that the real executable, snapshots, wheels, and clean installation meet before merge. The [Python SDK openkylin profile runtime](../architecture/2026-08-23-python-sdk-dsh-profile-runtime.md) owns the launched application and customization surface; the [single-file Python SDK runtime distribution](../architecture/2026-07-10-single-file-executable-sdk-runtime-distribution.md) remains authoritative for SEA packaging, native sidecars, wheel tags, and release artifacts.
 
 ## Alternatives considered
 

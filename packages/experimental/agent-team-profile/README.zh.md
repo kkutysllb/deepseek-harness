@@ -30,11 +30,11 @@ kind: "package-bundle"
 在本仓库 checkout 中，将本包添加到已初始化的 profile，然后运行一个要求 Lead 委派工作的任务：
 
 ```sh
-pnpm qilin plugin --profile headless add ./packages/experimental/agent-team-profile
-pnpm qilin --profile headless "Use Agent Teams to split this task between two teammates, wait, and summarize."
+pnpm openkylin plugin --profile headless add ./packages/experimental/agent-team-profile
+pnpm openkylin --profile headless "Use Agent Teams to split this task between two teammates, wait, and summarize."
 ```
 
-profile 必须已经包含 `@qilin/base`，本层会使用其中的 Subagent service 与 provider 配置行。执行 `qilin plugin --profile <name> remove @qilin/experimental-agent-team-profile` 移除本包时，bundle 也会从 profile 的有序层列表中移除。
+profile 必须已经包含 `@qilin/base`，本层会使用其中的 Subagent service 与 provider 配置行。执行 `openkylin plugin --profile <name> remove @qilin/experimental-agent-team-profile` 移除本包时，bundle 也会从 profile 的有序层列表中移除。
 
 ### 获得的功能
 

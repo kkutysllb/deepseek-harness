@@ -15,9 +15,9 @@ const driver = join(fixtureDir, 'driver.ts')
 const configPath = join(fixtureDir, 'claude-code.patch.yml')
 const packageDir = fileURLToPath(new URL('..', import.meta.url))
 const manifest = JSON.parse(readFileSync(join(packageDir, 'package.json'), 'utf8')) as {
-  qilin?: { bundle?: { patch?: string } }
+  openkylin?: { bundle?: { patch?: string } }
 }
-const bundlePatch = manifest.qilin?.bundle?.patch
+const bundlePatch = manifest.openkylin?.bundle?.patch
 if (bundlePatch === undefined) throw new Error('Claude Code package must declare a Bundle patch')
 const bundlePatchPath = join(packageDir, bundlePatch)
 const repoTsconfig = fileURLToPath(new URL('../../../../tsconfig.json', import.meta.url))

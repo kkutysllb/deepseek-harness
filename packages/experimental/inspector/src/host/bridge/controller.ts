@@ -266,12 +266,12 @@ export async function startInspector(options: InspectorOptions = {}): Promise<In
     try {
       source.close()
     } catch (closeError) {
-      console.error('qilin inspector: Host source cleanup after Worker failure failed', closeError)
+      console.error('openkylin inspector: Host source cleanup after Worker failure failed', closeError)
     }
     void fetchObserver?.stop().catch((stopError: unknown) => {
-      console.error('qilin inspector: fetch cleanup after Worker failure failed', stopError)
+      console.error('openkylin inspector: fetch cleanup after Worker failure failed', stopError)
     })
-    console.error('qilin inspector: Worker stopped unexpectedly', error)
+    console.error('openkylin inspector: Worker stopped unexpectedly', error)
   })
 
   let closing: Promise<void> | undefined

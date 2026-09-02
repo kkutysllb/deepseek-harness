@@ -25,7 +25,7 @@ const webDist = join(repoRoot, 'apps/web/dist/index.html')
 // base patch carries the default, and the web restatement must not re-enable it.
 const baseConfigPath = join(repoRoot, 'packages/bundle/base/cordis.patch.yml')
 const webConfigPath = join(repoRoot, 'packages/bundle/web-app/cordis.patch.yml')
-const requireBuiltArtifacts = process.env.QILIN_REQUIRE_BUILT_CLI_SMOKE === '1'
+const requireBuiltArtifacts = process.env.OPENKYLIN_REQUIRE_BUILT_CLI_SMOKE === '1'
 
 interface ConfigRow {
   id?: string
@@ -49,7 +49,7 @@ function runBuiltWeb(cwd: string): Promise<{ stdout: string; stderr: string; cod
     const env: NodeJS.ProcessEnv = {
       ...process.env,
       DEEPSEEK_API_KEY: 'qilin-cli-smoke-dummy-key',
-      QILIN_HOME: join(cwd, '.qilin'),
+      OPENKYLIN_HOME: join(cwd, '.openkylin'),
     }
     delete env.DEEPSEEK_BASE_URL
     delete env.NODE_OPTIONS

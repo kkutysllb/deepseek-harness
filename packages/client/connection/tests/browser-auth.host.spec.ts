@@ -163,7 +163,7 @@ describe('BrowserAuth', () => {
       })
       expect(denied.state.body).toBe(candidate.method === 'HEAD'
         ? undefined
-        : 'qilin web authentication required; reopen the URL printed by qilin web.\n')
+        : 'openkylin web authentication required; reopen the URL printed by openkylin web.\n')
     }
   })
 

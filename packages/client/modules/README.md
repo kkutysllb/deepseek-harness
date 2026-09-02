@@ -9,7 +9,7 @@ English | [中文](README.zh.md)
 
 ## Summary
 
-`qilin-client-modules` turns a plugin package's `qilin.client` declaration into a loadable browser bundle: the host half scans enabled Loader entries, composes the boot graph, and serves each bundle over `/plugins`, and the browser half loads those bundles lazily on demand. Plugin bundles execute lazily — running a bundle only registers a factory, and module side effects run at materialization — so nothing runs until a plugin is first used. Everything here is browser-kernel machinery; the model never sees it.
+`qilin-client-modules` turns a plugin package's `openkylin.client` declaration into a loadable browser bundle: the host half scans enabled Loader entries, composes the boot graph, and serves each bundle over `/plugins`, and the browser half loads those bundles lazily on demand. Plugin bundles execute lazily — running a bundle only registers a factory, and module side effects run at materialization — so nothing runs until a plugin is first used. Everything here is browser-kernel machinery; the model never sees it.
 
 ## Table of Contents
 
@@ -25,11 +25,11 @@ English | [中文](README.zh.md)
 <a id="use-this-package"></a>
 ## Use this package
 
-Use it when you compose or build a browser client plugin: the package turns a package's `qilin.client` declaration into a loadable browser bundle with no per-plugin wiring. It activates with the web composition; the shell boots it before any plugin runs.
+Use it when you compose or build a browser client plugin: the package turns a package's `openkylin.client` declaration into a loadable browser bundle with no per-plugin wiring. It activates with the web composition; the shell boots it before any plugin runs.
 
 ### Declaring a client plugin
 
-A browser plugin package declares `qilin.client` in its `package.json` with `platform: 'web'`, exports a `./client` bundle, and lists any non-baseline module requests under `qilin.client.external`. The host half turns each declaration into a served bundle under `/plugins`, ordered so dynamic providers load before their consumers.
+A browser plugin package declares `openkylin.client` in its `package.json` with `platform: 'web'`, exports a `./client` bundle, and lists any non-baseline module requests under `openkylin.client.external`. The host half turns each declaration into a served bundle under `/plugins`, ordered so dynamic providers load before their consumers.
 
 ### What the browser loads
 
@@ -37,7 +37,7 @@ The application combo scripts register plugin factories once during boot; module
 
 ### Sharing modules
 
-The shell seeds a frozen module table (`PLATFORM_MODULES`: React, Cordis, and static UI libraries); every dynamic bundle resolves its externals against exactly that baseline. `qilin.client.external` adds only exact non-baseline requests, each answered by the dynamic package row it names or an exact static-table key. Type-only imports are erased and create no request. Composition rejects malformed requests, missing suppliers, self-requests, and synchronous request cycles.
+The shell seeds a frozen module table (`PLATFORM_MODULES`: React, Cordis, and static UI libraries); every dynamic bundle resolves its externals against exactly that baseline. `openkylin.client.external` adds only exact non-baseline requests, each answered by the dynamic package row it names or an exact static-table key. Type-only imports are erased and create no request. Composition rejects malformed requests, missing suppliers, self-requests, and synchronous request cycles.
 
 ### Build requirements
 
@@ -92,7 +92,7 @@ Read these when the module contract is not enough: the subsystem reference, the 
 - [Client modules subsystem](../../../docs/subsystems/client-modules.md) — the web plugin table, `WebBootGraph` wire, and the bundle route.
 - [Web boot kernel](../web/README.md) — the shell that creates the module system and boots the plugin tree.
 - [Client HMR driver](../hmr/README.md) — the reload chain that drives `invalidate`/`prefetch` on rebuilt bundles.
-- [Client authoring rules](../AGENTS.md#shared-modules-and-the-module-graph) — the shared-module baseline and `qilin.client.external` semantics.
+- [Client authoring rules](../AGENTS.md#shared-modules-and-the-module-graph) — the shared-module baseline and `openkylin.client.external` semantics.
 - [Client group map](../README.md) — the browser half this package belongs to.
 
 -----

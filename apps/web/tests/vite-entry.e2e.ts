@@ -31,11 +31,11 @@ describe('Web development entry', () => {
     const result = await execa('pnpm', ['run', 'dev'], { cwd: WEB_ROOT, reject: false })
     expect(result.exitCode).not.toBe(0)
     expect(result.stderr).toContain('apps/web is not a standalone application')
-    expect(result.stderr).toContain('qilin web')
+    expect(result.stderr).toContain('openkylin web')
   })
 
   it('rejects the standalone Vite server with the full-host correction', async () => {
-    const probeRoot = mkdtempSync(join(tmpdir(), 'qilin-vite-listen-probe-'))
+    const probeRoot = mkdtempSync(join(tmpdir(), 'openkylin-vite-listen-probe-'))
     const marker = join(probeRoot, 'listen-called')
     const port = await freePort()
     try {
@@ -46,14 +46,14 @@ describe('Web development entry', () => {
         timeout: 10_000,
         env: {
           ...process.env,
-          QILIN_LISTEN_PROBE_MARKER: marker,
+          OPENKYLIN_LISTEN_PROBE_MARKER: marker,
           NODE_OPTIONS: `${process.env.NODE_OPTIONS ?? ''} --import ${pathToFileURL(probeModule).href}`.trim(),
         },
       })
       expect(result.timedOut).toBe(false)
       expect(result.exitCode).not.toBe(0)
       expect(result.stderr).toContain('apps/web is not a standalone application')
-      expect(result.stderr).toContain('qilin web')
+      expect(result.stderr).toContain('openkylin web')
       expect(result.stderr).toContain('window.__DSH_BOOT__')
       expect(existsSync(marker), 'Vite called Server.listen before rejecting standalone serve mode').toBe(false)
     } finally {

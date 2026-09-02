@@ -169,7 +169,7 @@ export interface RunOptions {
   /**
    * Recorded SUBAGENT child-session fixture paths (replay). A nested-agent
    * scenario ships one per child (`session.1.jsonl`, …); the harness forwards
-   * them to `qilin-llm-replay` via `$QILIN_SNAPSHOT_CHILD_FILES` so each child
+   * them to `qilin-llm-replay` via `$OPENKYLIN_SNAPSHOT_CHILD_FILES` so each child
    * session replays from its own recorded script. Empty for single-session
    * scenarios. Ignored in record mode (children are harvested, not replayed).
    */
@@ -253,19 +253,19 @@ export async function runScenario(input: InputScript, opts: RunOptions): Promise
     }
     await opts.prepareWorkspace?.(cwd)
     const initialWorkspace = await captureWorkspaceSnapshot(cwd, {
-      ignoredRootEntries: ['.agents', '.qilin', '.qilin-profile-patches', '.qilin-snapshot-stream-ready'],
+      ignoredRootEntries: ['.agents', '.openkylin', '.openkylin-profile-patches', '.openkylin-snapshot-stream-ready'],
     })
     const env: NodeJS.ProcessEnv = {
       ...opts.env,
-      QILIN_SNAPSHOT: opts.mode,
-      QILIN_SNAPSHOT_FILE: opts.fixtureFile,
-      QILIN_SNAPSHOT_SESSIONS_ROOT: sessionsRoot,
-      QILIN_SNAPSHOT_SPILL_ROOT: spillRoot,
-      QILIN_HOME: join(cwd, '.qilin'),
-      QILIN_AGENTS_HOME: join(cwd, '.agents'),
-      ...opts.overrideFile !== undefined ? { QILIN_SNAPSHOT_OVERRIDE: opts.overrideFile } : {},
+      OPENKYLIN_SNAPSHOT: opts.mode,
+      OPENKYLIN_SNAPSHOT_FILE: opts.fixtureFile,
+      OPENKYLIN_SNAPSHOT_SESSIONS_ROOT: sessionsRoot,
+      OPENKYLIN_SNAPSHOT_SPILL_ROOT: spillRoot,
+      OPENKYLIN_HOME: join(cwd, '.openkylin'),
+      OPENKYLIN_AGENTS_HOME: join(cwd, '.agents'),
+      ...opts.overrideFile !== undefined ? { OPENKYLIN_SNAPSHOT_OVERRIDE: opts.overrideFile } : {},
       ...opts.childFiles !== undefined && opts.childFiles.length > 0
-        ? { QILIN_SNAPSHOT_CHILD_FILES: opts.childFiles.join(delimiter) }
+        ? { OPENKYLIN_SNAPSHOT_CHILD_FILES: opts.childFiles.join(delimiter) }
         : {},
     }
 
@@ -335,7 +335,7 @@ export async function runScenario(input: InputScript, opts: RunOptions): Promise
     // generated dirs still exist, ordered primary-first.
     sessionLogs = await harvestSessionLogs(sessionsRoot)
     const finalWorkspace = await captureWorkspaceSnapshot(cwd, {
-      ignoredRootEntries: ['.agents', '.qilin', '.qilin-profile-patches', '.qilin-snapshot-stream-ready'],
+      ignoredRootEntries: ['.agents', '.openkylin', '.openkylin-profile-patches', '.openkylin-snapshot-stream-ready'],
     })
     return {
       rawStdout: launched.rawStdout(),

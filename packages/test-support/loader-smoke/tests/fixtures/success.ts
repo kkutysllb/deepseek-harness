@@ -8,8 +8,8 @@ process.stdin.on('end', () => {
     configPath: process.argv[2],
     args: process.argv.slice(2),
     cwd: process.cwd(),
-    dshHome: process.env.QILIN_HOME,
-    agentsHome: process.env.QILIN_AGENTS_HOME,
+    dshHome: process.env.OPENKYLIN_HOME,
+    agentsHome: process.env.OPENKYLIN_AGENTS_HOME,
     marker: process.env.LOADER_SMOKE_MARKER,
     input,
   }))

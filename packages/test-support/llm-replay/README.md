@@ -48,16 +48,16 @@ With `providers` configured, the plugin registers a replay-only adapter whose ca
           - id: deepseek-v4-flash
             contextWindow: 128000
           - id: deepseek-v4-pro
-  # file/overrideFile/childFiles default to $QILIN_SNAPSHOT_FILE /
-  # $QILIN_SNAPSHOT_OVERRIDE / $QILIN_SNAPSHOT_CHILD_FILES, set by the snapshot
+  # file/overrideFile/childFiles default to $OPENKYLIN_SNAPSHOT_FILE /
+  # $OPENKYLIN_SNAPSHOT_OVERRIDE / $OPENKYLIN_SNAPSHOT_CHILD_FILES, set by the snapshot
   # harness per scenario.
 ```
 
 | Field | Default | Meaning |
 |---|---|---|
-| `file` | `$QILIN_SNAPSHOT_FILE` | Path to the primary (parent) `session.jsonl` fixture; required (config or env) |
-| `overrideFile` | `$QILIN_SNAPSHOT_OVERRIDE` | Optional `ReplayOverrideDoc` sidecar for the primary session |
-| `childFiles` | `$QILIN_SNAPSHOT_CHILD_FILES` | Recorded subagent child-session logs for a nested scenario |
+| `file` | `$OPENKYLIN_SNAPSHOT_FILE` | Path to the primary (parent) `session.jsonl` fixture; required (config or env) |
+| `overrideFile` | `$OPENKYLIN_SNAPSHOT_OVERRIDE` | Optional `ReplayOverrideDoc` sidecar for the primary session |
+| `childFiles` | `$OPENKYLIN_SNAPSHOT_CHILD_FILES` | Recorded subagent child-session logs for a nested scenario |
 | `providers` | — | Optional replay-only provider and model catalog; a model may declare `contextWindow`, text/image modalities, and positive `imageRequestTokens` when image-capable; invalid values fail at load and routes never perform provider I/O |
 | `paceMs` | — (burst) | Optional per-chunk delay in ms for genuinely incremental delivery |
 

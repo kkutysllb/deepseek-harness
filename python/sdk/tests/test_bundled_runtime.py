@@ -1,4 +1,4 @@
-"""Keyless boot tests for the production exe and development qilin carrier.
+"""Keyless boot tests for the production exe and development openkylin carrier.
 
 Each carrier skips independently when absent. The dummy API key only satisfies
 adapter loading; initialize and shutdown do not call a model.
@@ -37,8 +37,8 @@ def _client(tmp_path: Path, mode: str, monkeypatch: pytest.MonkeyPatch, *patches
                 # The lazily mounted adapter requires a key even without a model call.
                 "DEEPSEEK_API_KEY": "sk-dummy-for-boot",
                 "DEEPSEEK_BASE_URL": "http://127.0.0.1:9",
-                "QILIN_PERMISSION_MODE": "danger-full-access",
-                "QILIN_TELEMETRY_DISABLED": "1",
+                "OPENKYLIN_PERMISSION_MODE": "danger-full-access",
+                "OPENKYLIN_TELEMETRY_DISABLED": "1",
             },
             request_timeout_seconds=120,
         )
@@ -55,7 +55,7 @@ def test_bundled_runtime_boots_the_sdk_profile(
     assert init.serverInfo is not None
     assert init.serverInfo.name == "openkylin-sdk-runtime"
     profile = json.loads((tmp_path / "home" / "profiles" / "sdk" / "package.json").read_text())
-    assert profile["qilin"]["profile"]["bundles"] == [
+    assert profile["openkylin"]["profile"]["bundles"] == [
         "@qilin/base",
         "@qilin/sdk-app",
     ]
@@ -76,7 +76,7 @@ def test_python_sdk_applies_an_ordered_profile_patch(
         cwd=str(tmp_path),
         dsh_home=str(tmp_path / "home"),
         patches=(str(patch),),
-        env={"QILIN_PERMISSION_MODE": "danger-full-access"},
+        env={"OPENKYLIN_PERMISSION_MODE": "danger-full-access"},
         api_key="sk-dummy-for-boot",
         base_url="http://127.0.0.1:9",
         request_timeout_seconds=120,

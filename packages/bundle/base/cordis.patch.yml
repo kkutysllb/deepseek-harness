@@ -84,14 +84,14 @@
     - id: llm-retry
       name: '@qilin/llm-retry'
 
-    # User-settings document (`$QILIN_HOME/settings.yaml`, hot-reloaded): a
+    # User-settings document (`$OPENKYLIN_HOME/settings.yaml`, hot-reloaded): a
     # `llm-deepseek:` or `llm-pi-ai:` section there overrides the adapter entries
     # below without a restart, and is what the web Models page writes.
     - id: settings
       name: '@qilin/settings-file'
 
     # Credential sources: inherited environment over the managed
-    # `$QILIN_HOME/.credentials.yaml`, with project and user `.env` fallbacks.
+    # `$OPENKYLIN_HOME/.credentials.yaml`, with project and user `.env` fallbacks.
     # Adapters resolve references per request; the Models page writes only the
     # managed document, which is never materialized into the process environment.
     - id: credentials
@@ -168,15 +168,15 @@
     # Session telemetry defaults to feedback-gated sharing: FEEDBACK_ONLY
     # uploads only when the user records /feedback, releasing the session
     # records since the last handoff through that event (a resumed session
-    # shares only its current lifecycle). QILIN_TELEMETRY_MODE overrides to
+    # shares only its current lifecycle). OPENKYLIN_TELEMETRY_MODE overrides to
     # FULL or DISABLED; uploading mirrors session-log records onto OTLP/HTTP
     # logs with no session-telemetry/record redaction rule, so exports are
     # the raw captured copy. The deployment stance, env seams, and follow-ups
     # are pinned in the feedback-gated-default Agent Note.
-    # QILIN_TELEMETRY_OTLP_URL overrides the production endpoint. A non-empty
-    # QILIN_TELEMETRY_DISABLED — any value, including '0'/'false' — opts the
+    # OPENKYLIN_TELEMETRY_OTLP_URL overrides the production endpoint. A non-empty
+    # OPENKYLIN_TELEMETRY_DISABLED — any value, including '0'/'false' — opts the
     # process out (the launchers patch the row disabled; config cannot disable
-    # a row). Exports carry the harness home's anonymous user id ($QILIN_HOME/.anonymous-user-id,
+    # a row). Exports carry the harness home's anonymous user id ($OPENKYLIN_HOME/.anonymous-user-id,
     # random UUID; delete the file to reset the identity) as the Resource's
     # user.id. The exporter/processor values normally bound the shutdown drain
     # to ~1s against an unreachable collector: exporter.timeoutMillis is both
@@ -190,10 +190,10 @@
     - id: session-telemetry-otel
       name: '@qilin/session-telemetry-otel'
       config:
-        mode: !!js process.env.QILIN_TELEMETRY_MODE || 'FEEDBACK_ONLY'
+        mode: !!js process.env.OPENKYLIN_TELEMETRY_MODE || 'FEEDBACK_ONLY'
         shutdownTimeoutMillis: 3000
         exporter:
-          url: !!js process.env.QILIN_TELEMETRY_OTLP_URL ?? 'https://harness-telemetry.deepseeksvc.com/v1/logs'
+          url: !!js process.env.OPENKYLIN_TELEMETRY_OTLP_URL ?? 'https://harness-telemetry.deepseeksvc.com/v1/logs'
           compression: gzip
           timeoutMillis: 1000
         processor:
@@ -214,7 +214,7 @@
     - id: sandbox-policy
       name: '@qilin/sandbox-policy'
       config:
-        mode: !!js process.env.QILIN_PERMISSION_MODE ?? 'workspace-write'
+        mode: !!js process.env.OPENKYLIN_PERMISSION_MODE ?? 'workspace-write'
         workspaceRoot: !!js process.cwd()
 
     - id: bash-sandbox
@@ -230,7 +230,7 @@
     - id: approval
       name: '@qilin/user-approval'
       config:
-        policy: !!js "(process.env.QILIN_PERMISSION_MODE ?? 'workspace-write') === 'danger-full-access' ? 'never' : 'ask'"
+        policy: !!js "(process.env.OPENKYLIN_PERMISSION_MODE ?? 'workspace-write') === 'danger-full-access' ? 'never' : 'ask'"
 
     - id: permission
       name: '@qilin/permission-presets'

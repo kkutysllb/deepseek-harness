@@ -64,7 +64,7 @@ if actual_exit != 130:
 async function runHeadlessPtySmoke(): Promise<string> {
   const cwd = await mkdtemp(join(tmpdir(), 'qilin-headless-shutdown-'))
   try {
-    const home = join(cwd, '.qilin')
+    const home = join(cwd, '.openkylin')
     // Pre-initialize the headless profile with the never-dispose row in its
     // user patch layer (the same file a long-lived profile boot hot-reloads).
     const profileDir = join(home, 'profiles', 'headless')
@@ -73,7 +73,7 @@ async function runHeadlessPtySmoke(): Promise<string> {
       name: 'qilin-profile-headless',
       private: true,
       dependencies: {},
-      qilin: { profile: { bundles: ['@qilin/base', '@qilin/headless'] } },
+      openkylin: { profile: { bundles: ['@qilin/base', '@qilin/headless'] } },
     }, undefined, 2))
     await writeFile(join(profileDir, 'cordis.patch.yml'), [
       '- insert:',
@@ -86,11 +86,11 @@ async function runHeadlessPtySmoke(): Promise<string> {
       configArgs: ['--profile', 'headless', 'never complete'],
       tsconfigPath,
       env: {
-        QILIN_HOME: home,
-        QILIN_AGENTS_HOME: join(cwd, '.agents'),
+        OPENKYLIN_HOME: home,
+        OPENKYLIN_AGENTS_HOME: join(cwd, '.agents'),
         DEEPSEEK_API_KEY: 'keyless-shutdown-no-call',
-        QILIN_TELEMETRY_DISABLED: '1',
-        QILIN_TEST_SHUTDOWN_ARM_FILE: join(cwd, 'shutdown-armed'),
+        OPENKYLIN_TELEMETRY_DISABLED: '1',
+        OPENKYLIN_TEST_SHUTDOWN_ARM_FILE: join(cwd, 'shutdown-armed'),
       },
     })
     const timeoutMs = 15_000
@@ -110,10 +110,10 @@ async function runHeadlessPtySmoke(): Promise<string> {
       stripFinalNewline: false,
     })
     if (result.timedOut) {
-      throw new Error(`qilin headless PTY driver did not exit. stdout:\n${result.stdout}\nstderr:\n${result.stderr}`)
+      throw new Error(`openkylin headless PTY driver did not exit. stdout:\n${result.stdout}\nstderr:\n${result.stderr}`)
     }
     if (result.failed) {
-      throw new Error(`qilin headless PTY driver exited ${String(result.exitCode)}. stdout:\n${result.stdout}\nstderr:\n${result.stderr}`)
+      throw new Error(`openkylin headless PTY driver exited ${String(result.exitCode)}. stdout:\n${result.stdout}\nstderr:\n${result.stderr}`)
     }
     return result.stdout
   } finally {
@@ -124,7 +124,7 @@ async function runHeadlessPtySmoke(): Promise<string> {
 describe.skipIf(process.platform === 'win32')('headless process shutdown (real Loader tree in a PTY)', () => {
   it('lets a second Ctrl+C force exit while the first signal is draining', async () => {
     const output = await runHeadlessPtySmoke()
-    expect(output).not.toContain('qilin: observing at ')
+    expect(output).not.toContain('openkylin: observing at ')
     expect(output).toContain('qilin-test: never-dispose ready')
     expect(output).toContain('qilin-test: never-dispose started')
   }, LOADER_SMOKE_TEST_TIMEOUT_MS)

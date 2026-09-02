@@ -1,6 +1,6 @@
 # Template: package-bundle
 
-Use this template for a package whose manifest declares `qilin.bundle.patch` — an installable profile layer: `packages/bundle/*`, `qilin-subagent-codex`, `qilin-subagent-claude-code`. The `bundle/base` README pair is the worked example.
+Use this template for a package whose manifest declares `openkylin.bundle.patch` — an installable profile layer: `packages/bundle/*`, `qilin-subagent-codex`, `qilin-subagent-claude-code`. The `bundle/base` README pair is the worked example.
 
 A bundle README leads with the profile-install path and the layer semantics; the implementation fold explains the patch document. It never presents the package as a library to import or as a single plugin to mount.
 
@@ -8,7 +8,7 @@ A bundle README leads with the profile-install path and the layer semantics; the
 
 ```yaml
 ---
-description: "What the bundle layer adds to a qilin --profile surface, for users composing or customizing a profile."
+description: "What the bundle layer adds to a openkylin --profile surface, for users composing or customizing a profile."
 kind: "package-bundle"
 ---
 ```
@@ -43,8 +43,8 @@ Three to five sentences: what a profile gains from this layer, which profiles al
 The verified install path — run it against the current checkout before writing:
 
 ```text
-qilin plugin --profile <name> add @qilin/<name>
-qilin plugin --profile <name> remove @qilin/<name>
+openkylin plugin --profile <name> add @qilin/<name>
+openkylin plugin --profile <name> remove @qilin/<name>
 ```
 
 State where in-box bundles resolve from, what the reconcile step activates, and what fails when the patch declaration is missing.
@@ -98,6 +98,6 @@ None.
 
 ## Rules
 
-- **Only `qilin.bundle.patch` packages use this template.** Verify the declaration in `package.json` before classifying; the `qilin plugin` reconcile activates a layer for exactly these packages.
-- **Test the install path.** Run `qilin plugin --profile <name> add <this-package>` in a scratch profile and reproduce the documented warning, layer activation, and failure modes before writing them.
+- **Only `openkylin.bundle.patch` packages use this template.** Verify the declaration in `package.json` before classifying; the `openkylin plugin` reconcile activates a layer for exactly these packages.
+- **Test the install path.** Run `openkylin plugin --profile <name> add <this-package>` in a scratch profile and reproduce the documented warning, layer activation, and failure modes before writing them.
 - Re-run `pnpm run verify-translation-pairing --write packages/<group>/<pkg>/README.md` after editing the pair.

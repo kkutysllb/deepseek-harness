@@ -10,9 +10,9 @@ python -m pip install openkylin-sdk
 
 ## Start a runtime
 
-The Python SDK has no separate application entrypoint. It launches the bundled `qilin` CLI with `--profile sdk`; the selected profile owns the JSON-RPC server, agent composition, credentials, persistence, tools, and shutdown behavior.
+The Python SDK has no separate application entrypoint. It launches the bundled `openkylin` CLI with `--profile sdk`; the selected profile owns the JSON-RPC server, agent composition, credentials, persistence, tools, and shutdown behavior.
 
-Every launch requires an explicit Harness home. Pass `dsh_home` or provide a non-empty `QILIN_HOME` in the child environment. The SDK deliberately never discovers `~/.qilin`.
+Every launch requires an explicit Harness home. Pass `dsh_home` or provide a non-empty `OPENKYLIN_HOME` in the child environment. The SDK deliberately never discovers `~/.openkylin`.
 
 ```py
 from openkylin_sdk import DeepSeekHarness
@@ -34,15 +34,15 @@ print(result.final_response)
 
 ## Customize plugins
 
-Persistent customization belongs to a `qilin` profile. Initialize the shipped SDK profile and install an external bundle with the runtime wheel's `qilin` command:
+Persistent customization belongs to a `openkylin` profile. Initialize the shipped SDK profile and install an external bundle with the runtime wheel's `openkylin` command:
 
 ```sh
-export QILIN_HOME=/absolute/path/to/isolated-dsh-home
-qilin --profile sdk --dump-default-config >/dev/null
-qilin plugin --profile sdk add file:/absolute/path/to/my-plugin-bundle
+export OPENKYLIN_HOME=/absolute/path/to/isolated-dsh-home
+openkylin --profile sdk --dump-default-config >/dev/null
+openkylin plugin --profile sdk add file:/absolute/path/to/my-plugin-bundle
 ```
 
-The `file:` form installs the local bundle into the profile package tree, where its peer imports reach the bundled installation fallback. The profile manifest records installed dependencies and ordered bundle layers; its `$QILIN_HOME/profiles/sdk/cordis.patch.yml` is the persistent user patch. `qilin plugin` needs `pnpm` only when managing external packages. Running the SDK does not require system Node.js.
+The `file:` form installs the local bundle into the profile package tree, where its peer imports reach the bundled installation fallback. The profile manifest records installed dependencies and ordered bundle layers; its `$OPENKYLIN_HOME/profiles/sdk/cordis.patch.yml` is the persistent user patch. `openkylin plugin` needs `pnpm` only when managing external packages. Running the SDK does not require system Node.js.
 
 For an invocation-specific change, pass one or more patch files. They become absolute and are forwarded in order after the profile and home patch layers:
 
@@ -55,7 +55,7 @@ with DeepSeekHarness(
     result = harness.run("Make the requested code change.")
 ```
 
-`profile` may select another existing profile, but that composition must retain `@qilin/sdk-app` or another `@qilin/sdk-jsonrpc-server` row. Misconfiguration fails during CLI boot or SDK initialization; there is no complete-config fallback. `dsh_bin` may select another `qilin` executable while preserving the same profile grammar. Arbitrary argv replacement remains an internal fake-runtime test adapter, not public API.
+`profile` may select another existing profile, but that composition must retain `@qilin/sdk-app` or another `@qilin/sdk-jsonrpc-server` row. Misconfiguration fails during CLI boot or SDK initialization; there is no complete-config fallback. `dsh_bin` may select another `openkylin` executable while preserving the same profile grammar. Arbitrary argv replacement remains an internal fake-runtime test adapter, not public API.
 
 `provider` selects a provider route registered by the chosen Cordis composition; `model` is the model id resolved by that adapter. `reasoning_effort` is an optional non-empty adapter-owned identifier for that exact route; omission preserves the model's own default. `max_tokens` is an optional positive per-request output-token cap for the root agent and its in-process descendants; omission leaves the provider default in control. Initialization rejects a missing adapter, unavailable model, or unsupported effort before a prompt runs. Compaction summaries keep the separate limit configured by their compaction plugin. The bundled default composition registers `deepseek-official`. A custom composition can mount `llm-pi-ai`, configure provider-specific credentials/endpoints there, and select any provider/model present in pi-ai's installed catalog.
 

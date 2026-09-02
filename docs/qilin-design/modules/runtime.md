@@ -1,6 +1,6 @@
 # runtime 模块（runtime module）
 
-> QiLin engine · runtime subsystem · 双语 / Bilingual
+> OpenKylin engine · runtime subsystem · 双语 / Bilingual
 
 ---
 
@@ -8,7 +8,7 @@
 
 ### 职责
 
-`qilin.runtime` 是 QiLin 的"控制平面"，负责管理 LangGraph 的运行生命周期：Run、Checkpoint、Store、Stream Bridge、Secret Context、Context Compaction 等。
+`openkylin.runtime` 是 OpenKylin 的"控制平面"，负责管理 LangGraph 的运行生命周期：Run、Checkpoint、Store、Stream Bridge、Secret Context、Context Compaction 等。
 
 - **Run 管理**：`runs/` 中 `RunManager` / `RunRecord` / `RunStatus` 维护每一次 Agent 调用的状态、取消、并发限制
 - **Checkpoint**：`checkpointer/` 抽象 LangGraph 的 state-persistence checkpointer（SQLite / Postgres）；`checkpoint_state.py` 提供 `CheckpointStateAccessor`
@@ -68,7 +68,7 @@ new → pending → (admission?) → streaming → (interrupt?) → completed | 
 
 ### Responsibility
 
-`qilin.runtime` is QiLin's "control plane" — managing LangGraph run lifecycle, checkpoint, store, stream bridges, secret handling, and context compaction.
+`openkylin.runtime` is OpenKylin's "control plane" — managing LangGraph run lifecycle, checkpoint, store, stream bridges, secret handling, and context compaction.
 
 - **Run management** — `runs/` keeps state, cancellation, and concurrency caps via `RunManager` / `RunRecord` / `RunStatus`
 - **Checkpoint** — `checkpointer/` abstracts state-persistence checkpointer (SQLite / Postgres)

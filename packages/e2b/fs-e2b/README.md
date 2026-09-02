@@ -83,7 +83,7 @@ Relative paths resolve as POSIX paths against the caller `cwd` or `ctx.e2b.cwd`;
 
 ### Write path
 
-Writes create a random sibling staging directory, set it to mode `0700` before uploading content, and preserve an existing file's POSIX mode; replacements publish through E2B's same-filesystem atomic rename, and a guarded `createIfAbsent` publishes with `ln -T` so the commit is atomically no-replace even when a directory appears at the destination. The `qilin-version` extended attribute plus the committed entry's metadata form the returned version; literal edits LF-normalize for matching and restore the dominant CRLF style, and mutations serialize per canonical target. Staging-cleanup failures after commit never turn a successful write into a failure.
+Writes create a random sibling staging directory, set it to mode `0700` before uploading content, and preserve an existing file's POSIX mode; replacements publish through E2B's same-filesystem atomic rename, and a guarded `createIfAbsent` publishes with `ln -T` so the commit is atomically no-replace even when a directory appears at the destination. The `openkylin-version` extended attribute plus the committed entry's metadata form the returned version; literal edits LF-normalize for matching and restore the dominant CRLF style, and mutations serialize per canonical target. Staging-cleanup failures after commit never turn a successful write into a failure.
 
 ### Failure and cancellation
 

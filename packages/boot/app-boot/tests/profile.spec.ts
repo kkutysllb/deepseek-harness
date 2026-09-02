@@ -47,7 +47,7 @@ function stageInstallation(
       type: 'module',
       main: './index.js',
       dependencies: spec.deps ?? {},
-      ...spec.patch === undefined ? {} : { qilin: { bundle: { patch: './cordis.patch.yml' } } },
+      ...spec.patch === undefined ? {} : { openkylin: { bundle: { patch: './cordis.patch.yml' } } },
     }))
     writeFileSync(join(dir, 'index.js'), `export const packageName = ${JSON.stringify(name)}\n`)
     if (spec.patch !== undefined) writeFileSync(join(dir, 'cordis.patch.yml'), spec.patch)
@@ -95,15 +95,15 @@ describe('initProfile', () => {
     const dir = resolveProfileDir('tui', home)
     initProfile(dir, ['@qilin/base'])
     const manifest = readProfileManifest('t', dir)
-    expect(manifest.qilin?.profile?.bundles).toEqual(['@qilin/base'])
-    expect(manifest.qilin?.profile?.patchReload).toBe('live')
+    expect(manifest.openkylin?.profile?.bundles).toEqual(['@qilin/base'])
+    expect(manifest.openkylin?.profile?.patchReload).toBe('live')
     expect(readFileSync(join(dir, PROFILE_PATCH_FILENAME), 'utf8')).toContain('[]')
     expect(readFileSync(join(dir, 'pnpm-workspace.yaml'), 'utf8')).toContain('nodeLinker: hoisted')
     // Re-init keeps user edits.
     writeFileSync(join(dir, PROFILE_PATCH_FILENAME), '- id: x\n  config: {}\n')
     initProfile(dir, ['other'], 'startup')
-    expect(readProfileManifest('t', dir).qilin?.profile?.bundles).toEqual(['@qilin/base'])
-    expect(readProfileManifest('t', dir).qilin?.profile?.patchReload).toBe('live')
+    expect(readProfileManifest('t', dir).openkylin?.profile?.bundles).toEqual(['@qilin/base'])
+    expect(readProfileManifest('t', dir).openkylin?.profile?.patchReload).toBe('live')
     expect(readFileSync(join(dir, PROFILE_PATCH_FILENAME), 'utf8')).toContain('- id: x')
   })
 })
@@ -111,8 +111,8 @@ describe('initProfile', () => {
 describe('manifest round-trip', () => {
   it('writes and reads back, and fails loud on a broken manifest', () => {
     const dir = tmp()
-    writeProfileManifest(dir, { name: 'p', qilin: { profile: { bundles: ['a'] } } })
-    expect(readProfileManifest('t', dir).qilin?.profile?.bundles).toEqual(['a'])
+    writeProfileManifest(dir, { name: 'p', openkylin: { profile: { bundles: ['a'] } } })
+    expect(readProfileManifest('t', dir).openkylin?.profile?.bundles).toEqual(['a'])
     writeFileSync(join(dir, 'package.json'), '[]')
     expect(() => readProfileManifest('t', dir)).toThrow('must hold a JSON object')
     expect(() => readProfileManifest('t', join(dir, 'nope'))).toThrow('failed to read profile manifest')
@@ -145,7 +145,7 @@ describe('resolveBundleDir', () => {
       name: 'sealed-bundle',
       version: '0.0.0',
       exports: { '.': './index.js' },
-      qilin: { bundle: { patch: './cordis.patch.yml' } },
+      openkylin: { bundle: { patch: './cordis.patch.yml' } },
     }))
     writeFileSync(join(dir, 'index.js'), '')
     writeFileSync(join(dir, 'cordis.patch.yml'), '[]\n')
@@ -154,7 +154,7 @@ describe('resolveBundleDir', () => {
 })
 
 describe('loadProfile', () => {
-  it('resolves each qilin.profile.bundles entry to its patch layer in order, plus the user layer', () => {
+  it('resolves each openkylin.profile.bundles entry to its patch layer in order, plus the user layer', () => {
     const anchor = stageInstallation({
       'bundle-a': { patch: '- insert:\n    - id: a\n      name: pkg-a\n' },
       'bundle-b': { patch: '- id: a\n  config:\n    v: 2\n' },
@@ -172,7 +172,7 @@ describe('loadProfile', () => {
       profile.patches,
     ])
     expect(entries).toEqual([{ id: 'a', name: 'pkg-a', config: { v: 3 } }])
-    // A hand-made profile without the user layer file or qilin section: empty layers, no throw.
+    // A hand-made profile without the user layer file or openkylin section: empty layers, no throw.
     rmSync(join(dir, PROFILE_PATCH_FILENAME))
     expect(loadProfile('t', 'demo', anchor, home).patches).toEqual([])
     writeProfileManifest(dir, { name: 'bare' })
@@ -209,9 +209,9 @@ describe('loadProfile', () => {
     } catch {
       // Resolution failure is the plain-Node outcome for this empty anchor.
     }
-    expect(readProfileManifest('t', resolveProfileDir('web', home)).qilin?.profile?.bundles)
+    expect(readProfileManifest('t', resolveProfileDir('web', home)).openkylin?.profile?.bundles)
       .toEqual([...PROFILE_TEMPLATES.web?.bundles ?? []])
-    expect(readProfileManifest('t', resolveProfileDir('web', home)).qilin?.profile?.patchReload)
+    expect(readProfileManifest('t', resolveProfileDir('web', home)).openkylin?.profile?.patchReload)
       .toBe('live')
   })
 
@@ -228,10 +228,10 @@ describe('loadProfile', () => {
       '@qilin/base', '@qilin/web-app', '@qilin/headless',
     ])
     const retiredManifest = readProfileManifest('t', stock)
-    delete retiredManifest.qilin!.profile!.patchReload
+    delete retiredManifest.openkylin!.profile!.patchReload
     writeProfileManifest(stock, retiredManifest)
     loadProfile('t', 'headless', anchor, home)
-    expect(readProfileManifest('t', stock).qilin?.profile).toEqual({
+    expect(readProfileManifest('t', stock).openkylin?.profile).toEqual({
       bundles: ['@qilin/base', '@qilin/headless'],
       patchReload: 'startup',
     })
@@ -242,7 +242,7 @@ describe('loadProfile', () => {
       '@qilin/base', '@qilin/web-app', '@qilin/headless', 'custom-bundle',
     ])
     loadProfile('t', 'headless', anchor, customHome)
-    expect(readProfileManifest('t', custom).qilin?.profile?.bundles).toEqual([
+    expect(readProfileManifest('t', custom).openkylin?.profile?.bundles).toEqual([
       '@qilin/base', '@qilin/web-app', '@qilin/headless', 'custom-bundle',
     ])
   })
@@ -256,10 +256,10 @@ describe('loadProfile', () => {
     const stock = resolveProfileDir('web', stockHome)
     initProfile(stock, PROFILE_TEMPLATES.web?.bundles ?? [])
     const stockManifest = readProfileManifest('t', stock)
-    delete stockManifest.qilin!.profile!.patchReload
+    delete stockManifest.openkylin!.profile!.patchReload
     writeProfileManifest(stock, stockManifest)
     expect(loadProfile('t', 'web', anchor, stockHome).patchReload).toBe('live')
-    expect(readProfileManifest('t', stock).qilin?.profile?.patchReload).toBe('live')
+    expect(readProfileManifest('t', stock).openkylin?.profile?.patchReload).toBe('live')
 
     const explicitHome = tmp()
     const explicit = resolveProfileDir('web', explicitHome)
@@ -273,18 +273,18 @@ describe('loadProfile', () => {
     const dir = resolveProfileDir('demo', home)
     initProfile(dir, [])
     const manifest = readProfileManifest('t', dir)
-    const rawProfile = manifest.qilin!.profile as { patchReload?: string }
+    const rawProfile = manifest.openkylin!.profile as { patchReload?: string }
     rawProfile.patchReload = 'sometimes'
     writeProfileManifest(dir, manifest)
     expect(() => loadProfile('t', 'demo', anchor, home)).toThrow('patchReload must be "live" or "startup"')
   })
 
-  it('fails loud when a listed bundle declares no qilin.bundle', () => {
+  it('fails loud when a listed bundle declares no openkylin.bundle', () => {
     const anchor = stageInstallation({ 'not-a-bundle': {} })
     const home = tmp()
     const dir = resolveProfileDir('demo', home)
     initProfile(dir, ['not-a-bundle'])
-    expect(() => loadProfile('t', 'demo', anchor, home)).toThrow('declares no qilin.bundle')
+    expect(() => loadProfile('t', 'demo', anchor, home)).toThrow('declares no openkylin.bundle')
   })
 })
 
@@ -353,8 +353,8 @@ describe('healProfilesModuleFallback', () => {
     await healProfilesModuleFallback({ installAnchor: installationAnchor, profile: profileA, home })
     await healProfilesModuleFallback({ installAnchor: installationAnchor, profile: profileB, home })
     const sharedFallback = join(home, 'profiles', 'node_modules')
-    const ownedA = join(profileA.dir, '.qilin-module-fallback', 'node_modules', '@scope', 'bundle-only')
-    const ownedB = join(profileB.dir, '.qilin-module-fallback', 'node_modules', '@scope', 'bundle-only')
+    const ownedA = join(profileA.dir, '.openkylin-module-fallback', 'node_modules', '@scope', 'bundle-only')
+    const ownedB = join(profileB.dir, '.openkylin-module-fallback', 'node_modules', '@scope', 'bundle-only')
 
     expect(realpathSync.native(readlinkSync(join(sharedFallback, 'shared'))))
       .toBe(realpathSync.native(join(installationAnchor, '..', 'node_modules', 'shared')))
@@ -427,7 +427,7 @@ describe('healProfilesModuleFallback', () => {
 
     await healProfilesModuleFallback({ installAnchor: installationAnchor, profile, home })
 
-    expect(readlinkSync(join(dir, '.qilin-module-fallback', 'node_modules', 'bundle-only')))
+    expect(readlinkSync(join(dir, '.openkylin-module-fallback', 'node_modules', 'bundle-only')))
       .toBe(realpathSync.native(realDependency))
   })
 
@@ -472,7 +472,7 @@ describe('healProfilesModuleFallback', () => {
 
     await healProfilesModuleFallback({ installAnchor: installationAnchor, profile, home })
 
-    const ownedModules = join(dir, '.qilin-module-fallback', 'node_modules')
+    const ownedModules = join(dir, '.openkylin-module-fallback', 'node_modules')
     expect(readlinkSync(join(ownedModules, 'nested-only'))).toBe(realpathSync.native(nestedOnly))
     expect(readlinkSync(join(ownedModules, 'explicit-only'))).toBe(realpathSync.native(explicitOnly))
   })
@@ -513,7 +513,7 @@ describe('healProfilesModuleFallback', () => {
     await healProfilesModuleFallback({ installAnchor: installationAnchor, profile, home })
     await healProfilesModuleFallback({ installAnchor: installationAnchor, profile, home })
 
-    const owned = join(dir, '.qilin-module-fallback', 'node_modules', 'bundle-only')
+    const owned = join(dir, '.openkylin-module-fallback', 'node_modules', 'bundle-only')
     expect(readlinkSync(owned)).toBe(realpathSync.native(nested))
     expect(JSON.parse(readFileSync(join(profileModules, 'bundle-only', 'package.json'), 'utf8')))
       .toMatchObject({ name: 'bundle-only' })
@@ -525,7 +525,7 @@ describe('healProfilesModuleFallback', () => {
     const home = tmp()
     const profile = stageProfile(home, 'managed', bundleAnchor)
     await healProfilesModuleFallback({ installAnchor: installationAnchor, profile, home })
-    const ownedModules = join(profile.dir, '.qilin-module-fallback', 'node_modules')
+    const ownedModules = join(profile.dir, '.openkylin-module-fallback', 'node_modules')
     const profileModules = join(profile.dir, 'node_modules')
     const foreignTarget = tmp()
     unlinkSync(join(profileModules, 'managed-dir'))
@@ -559,7 +559,7 @@ describe('healProfilesModuleFallback', () => {
     const profile = stageProfile(home, 'canonical', bundleAnchor)
     await healProfilesModuleFallback({ installAnchor: installationAnchor, profile, home })
     const profileLink = join(profile.dir, 'node_modules', 'fallback')
-    const ownedModules = join(profile.dir, '.qilin-module-fallback', 'node_modules')
+    const ownedModules = join(profile.dir, '.openkylin-module-fallback', 'node_modules')
     unlinkSync(profileLink)
     symlinkSync(join(realpathSync(ownedModules), 'fallback'), profileLink, 'junction')
 
@@ -678,13 +678,13 @@ describe('healProfilesModuleFallback', () => {
       const proxyManifest = JSON.parse(readFileSync(join(proxy, 'package.json'), 'utf8')) as {
         version: unknown
         exports: unknown
-        qilin: { moduleFallback: { targets: Record<string, unknown> } }
+        openkylin: { moduleFallback: { targets: Record<string, unknown> } }
       }
       expect(proxyManifest).toMatchObject({
         version: '0.0.0',
         exports: { '.': './entry-0.js', './feature': './entry-1.js' },
       })
-      expect(proxyManifest.qilin.moduleFallback.targets['.']).toEqual(expect.stringContaining('/bundle-a/index.js'))
+      expect(proxyManifest.openkylin.moduleFallback.targets['.']).toEqual(expect.stringContaining('/bundle-a/index.js'))
       await expect(import(join(proxy, 'entry-0.js'))).resolves.toMatchObject({ packageName: 'bundle-a' })
       await expect(import(join(proxy, 'entry-1.js'))).resolves.toMatchObject({ feature: 'proxied' })
       await healProfilesModuleFallback({ installAnchor: anchor, home })
@@ -770,8 +770,8 @@ describe('healProfilesModuleFallback', () => {
       const proxyManifest = JSON.parse(readFileSync(
         join(home, 'profiles', 'node_modules', 'linked-esm', 'package.json'),
         'utf8',
-      )) as { qilin: { moduleFallback: { targets: Record<string, string> } } }
-      expect(proxyManifest.qilin.moduleFallback.targets['.']).toContain('/app/node_modules/linked-esm/index.js')
+      )) as { openkylin: { moduleFallback: { targets: Record<string, string> } } }
+      expect(proxyManifest.openkylin.moduleFallback.targets['.']).toContain('/app/node_modules/linked-esm/index.js')
     } finally {
       delete (process as NodeJS.Process & { pkg?: unknown }).pkg
     }
@@ -816,7 +816,7 @@ describe('healProfilesModuleFallback', () => {
       const anchor = stageInstallation({ 'bundle-a': { patch: '[]\n' } })
       const manifest = JSON.parse(readFileSync(anchor, 'utf8')) as Record<string, unknown>
       delete manifest.main
-      manifest[marker] = marker === 'bin' ? { qilin: './lib/bin.js' } : './index.d.ts'
+      manifest[marker] = marker === 'bin' ? { openkylin: './lib/bin.js' } : './index.d.ts'
       if (marker === 'types') manifest.main = ''
       writeFileSync(anchor, JSON.stringify(manifest))
       rmSync(join(anchor, '..', 'index.js'))

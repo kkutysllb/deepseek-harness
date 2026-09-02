@@ -27,9 +27,9 @@ env_dump = os.environ["ENV_DUMP"]
 json.dump({
     "DEEPSEEK_API_KEY": os.environ.get("DEEPSEEK_API_KEY"),
     "DEEPSEEK_BASE_URL": os.environ.get("DEEPSEEK_BASE_URL"),
-    "QILIN_CWD": os.environ.get("QILIN_CWD"),
-    "QILIN_SESSION_ROOT": os.environ.get("QILIN_SESSION_ROOT"),
-    "QILIN_CORDIS_CONFIG": os.environ.get("QILIN_CORDIS_CONFIG"),
+    "OPENKYLIN_CWD": os.environ.get("OPENKYLIN_CWD"),
+    "OPENKYLIN_SESSION_ROOT": os.environ.get("OPENKYLIN_SESSION_ROOT"),
+    "OPENKYLIN_CORDIS_CONFIG": os.environ.get("OPENKYLIN_CORDIS_CONFIG"),
 }, open(env_dump, "w"))
 
 for line in sys.stdin:
@@ -113,9 +113,9 @@ for line in sys.stdin:
     dumped_env = json.loads(env_dump.read_text())
     assert dumped_env["DEEPSEEK_API_KEY"] == "env-key"
     assert dumped_env["DEEPSEEK_BASE_URL"] == "http://127.0.0.1:4321"
-    assert dumped_env["QILIN_CWD"] is None
-    assert dumped_env["QILIN_SESSION_ROOT"] is None
-    assert dumped_env["QILIN_CORDIS_CONFIG"] is None
+    assert dumped_env["OPENKYLIN_CWD"] is None
+    assert dumped_env["OPENKYLIN_SESSION_ROOT"] is None
+    assert dumped_env["OPENKYLIN_CORDIS_CONFIG"] is None
     assert json.loads(init_dump.read_text()) == {
         "cwd": str(tmp_path),
         "provider": "deepseek-official",
@@ -213,7 +213,7 @@ import sys
 for line in sys.stdin:
     msg = json.loads(line)
     if msg.get("method") == "initialize":
-        json.dump({"process": os.getcwd(), "environment": os.environ.get("QILIN_CWD"), "wire": msg["params"]["cwd"]}, open(os.environ["CAPTURE"], "w"))
+        json.dump({"process": os.getcwd(), "environment": os.environ.get("OPENKYLIN_CWD"), "wire": msg["params"]["cwd"]}, open(os.environ["CAPTURE"], "w"))
         print(json.dumps({"jsonrpc": "2.0", "id": msg["id"], "result": {"serverInfo": {"name": "fake-runtime"}}}), flush=True)
     elif msg.get("method") == "shutdown":
         print(json.dumps({"jsonrpc": "2.0", "id": msg["id"], "result": {}}), flush=True)
@@ -972,8 +972,8 @@ with open(os.environ["SEEN"], "w") as seen:
 def _install_fake_bundled_dsh(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
-    """Install a fake runtime package that records qilin argv and serves lifecycle calls."""
-    runtime = tmp_path / "qilin.py"
+    """Install a fake runtime package that records openkylin argv and serves lifecycle calls."""
+    runtime = tmp_path / "openkylin.py"
     runtime.write_text(
         """
 import json
@@ -982,8 +982,8 @@ import sys
 
 json.dump({
     "argv": sys.argv[1:],
-    "QILIN_HOME": os.environ.get("QILIN_HOME"),
-    "QILIN_CORDIS_CONFIG": os.environ.get("QILIN_CORDIS_CONFIG"),
+    "OPENKYLIN_HOME": os.environ.get("OPENKYLIN_HOME"),
+    "OPENKYLIN_CORDIS_CONFIG": os.environ.get("OPENKYLIN_CORDIS_CONFIG"),
 }, open(os.environ["ENV_DUMP"], "w"))
 for line in sys.stdin:
     msg = json.loads(line)
@@ -1017,22 +1017,22 @@ def test_client_default_launch_uses_bundled_dsh_sdk_profile_and_explicit_home(
     patch.write_text("[]\n")
     _install_fake_bundled_dsh(tmp_path, monkeypatch)
     monkeypatch.chdir(tmp_path)
-    monkeypatch.setenv("QILIN_HOME", str(tmp_path / "ambient-home"))
-    monkeypatch.delenv("QILIN_CORDIS_CONFIG", raising=False)
+    monkeypatch.setenv("OPENKYLIN_HOME", str(tmp_path / "ambient-home"))
+    monkeypatch.delenv("OPENKYLIN_CORDIS_CONFIG", raising=False)
 
     with HarnessClient(HarnessConfig(
         profile="sdk",
         patches=("sdk.patch.yml",),
         dsh_home=str(home),
-        env={"ENV_DUMP": str(env_dump), "QILIN_HOME": str(tmp_path / "env-home")},
+        env={"ENV_DUMP": str(env_dump), "OPENKYLIN_HOME": str(tmp_path / "env-home")},
     )) as client:
         init = client.initialize(provider="deepseek-official", cwd="/workspace", model="deepseek-v4-pro")
 
     assert init.serverInfo.name == "bundled-runtime"
     assert json.loads(env_dump.read_text()) == {
         "argv": ["--profile", "sdk", "--patch", str(patch)],
-        "QILIN_HOME": str(home),
-        "QILIN_CORDIS_CONFIG": None,
+        "OPENKYLIN_HOME": str(home),
+        "OPENKYLIN_CORDIS_CONFIG": None,
     }
 
 
@@ -1044,14 +1044,14 @@ def test_client_accepts_explicit_environment_dsh_home(
     _install_fake_bundled_dsh(tmp_path, monkeypatch)
 
     with HarnessClient(
-        HarnessConfig(profile="custom", env={"ENV_DUMP": str(env_dump), "QILIN_HOME": str(home)})
+        HarnessConfig(profile="custom", env={"ENV_DUMP": str(env_dump), "OPENKYLIN_HOME": str(home)})
     ) as client:
         client.initialize(provider="deepseek-official", cwd="/workspace", model="deepseek-v4-pro")
 
     assert json.loads(env_dump.read_text()) == {
         "argv": ["--profile", "custom"],
-        "QILIN_HOME": str(home),
-        "QILIN_CORDIS_CONFIG": None,
+        "OPENKYLIN_HOME": str(home),
+        "OPENKYLIN_CORDIS_CONFIG": None,
     }
 
 
@@ -1059,9 +1059,9 @@ def test_client_rejects_an_implicit_default_dsh_home(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
     _install_fake_bundled_dsh(tmp_path, monkeypatch)
-    monkeypatch.delenv("QILIN_HOME", raising=False)
+    monkeypatch.delenv("OPENKYLIN_HOME", raising=False)
 
-    with pytest.raises(ValueError, match="explicit dsh_home or non-empty QILIN_HOME"):
+    with pytest.raises(ValueError, match="explicit dsh_home or non-empty OPENKYLIN_HOME"):
         HarnessClient(HarnessConfig(env={})).start()
 
 

@@ -128,7 +128,7 @@ export interface BootManifest {
 }
 
 /**
- * Validate an optional string-array field read from a `qilin.client` declaration
+ * Validate an optional string-array field read from a `openkylin.client` declaration
  * or from the boot wire.
  * @param subject - diagnostic prefix naming the package or the wire row.
  * @param field - field name as it appears in the diagnostic.

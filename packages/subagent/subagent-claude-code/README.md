@@ -32,9 +32,9 @@ Mount this provider when a delegation should run as a real Claude Code session i
 Install the package into the target Profile, then restart that Profile. The installation brings the pinned Agent SDK and one compatible platform CLI payload into the Profile; the declared patch layer registers only the dormant provider and starts no Claude process.
 
 ```sh
-qilin plugin --profile <name> add @qilin/subagent-claude-code
-qilin plugin --profile <name> remove @qilin/subagent-claude-code
-qilin --profile <name>
+openkylin plugin --profile <name> add @qilin/subagent-claude-code
+openkylin plugin --profile <name> remove @qilin/subagent-claude-code
+openkylin --profile <name>
 ```
 
 Removing the package withdraws the provider and its private runtime closure on the next Profile start. Installation controls Host availability, not model permission: the model can only reach the provider through a delegation tool row you compose.

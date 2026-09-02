@@ -9,7 +9,7 @@ English | [中文](README.zh.md)
 
 ## Summary
 
-Every harness home gets one anonymous id that telemetry, feedback, and DeepSeek requests attach to their records, so receiving systems can tell that records came from the same installation without learning who the user is. The id is a random UUID stored in `$QILIN_HOME/.anonymous-user-id` (`~/.qilin` by default); it appears automatically the first time one of those features runs, stays stable across restarts, and is created fresh if you delete the file. Separate harness homes never share an id, and no machine or account detail goes into it. Use it whenever you want to correlate records from one installation without an account; it cannot join records across different homes.
+Every harness home gets one anonymous id that telemetry, feedback, and DeepSeek requests attach to their records, so receiving systems can tell that records came from the same installation without learning who the user is. The id is a random UUID stored in `$OPENKYLIN_HOME/.anonymous-user-id` (`~/.openkylin` by default); it appears automatically the first time one of those features runs, stays stable across restarts, and is created fresh if you delete the file. Separate harness homes never share an id, and no machine or account detail goes into it. Use it whenever you want to correlate records from one installation without an account; it cannot join records across different homes.
 
 ## Table of Contents
 
@@ -37,7 +37,7 @@ Three things your installation sends out carry the same id, so records line up a
 
 ### Observing and resetting the id
 
-The id lives in `$QILIN_HOME/.anonymous-user-id` (`~/.qilin` by default) as a plain UUID text file. Delete that file to get a fresh id at the next launch; the running process keeps its current id until it exits. Separate harness homes keep separate ids, and no machine or account detail ever goes into the value.
+The id lives in `$OPENKYLIN_HOME/.anonymous-user-id` (`~/.openkylin` by default) as a plain UUID text file. Delete that file to get a fresh id at the next launch; the running process keeps its current id until it exits. Separate harness homes keep separate ids, and no machine or account detail ever goes into the value.
 
 ### Using it in your own package
 
@@ -95,7 +95,7 @@ The file is a bare UUID line named by `ANONYMOUS_USER_ID_FILE_NAME`, validated a
 Read these pages when the package-level contract is not enough. They move from the identity group map to the home-path resolution this package builds on and the features that use the id.
 
 - [identity group map](../README.md) — the sibling packages and group scope.
-- [qilin-home-paths](../../util/home-paths/README.md) — owns `$QILIN_HOME` and `~/.qilin` resolution.
+- [qilin-home-paths](../../util/home-paths/README.md) — owns `$OPENKYLIN_HOME` and `~/.openkylin` resolution.
 - [qilin-session-telemetry-otel](../../session/session-telemetry-otel/README.md) — reports the id as the OTel Resource `user.id`.
 - [qilin-command-feedback](../../feedback/command-feedback/README.md) — embeds the id in the feedback acknowledgement.
 - [qilin-llm-deepseek](../../llm/llm-deepseek/README.md) — sends `x-deepseek-harness-user-id` on provider requests.
@@ -121,7 +121,7 @@ These limits describe when the id is a poor fit or needs special attention. They
 
 - **No recovery after deletion** — losing the file mints a new anonymous identity by design; recovery would require stable derivation material that weakens anonymity.
 - **Best-effort concurrency** — a reader landing in the narrow interval between a concurrent process's exclusive create and completed write can use a different in-memory UUID for that run; later launches converge on the persisted value.
-- **No cross-home identity** — different `$QILIN_HOME` values cannot be correlated.
+- **No cross-home identity** — different `$OPENKYLIN_HOME` values cannot be correlated.
 - **Configured DeepSeek gateways receive the id** — `qilin-llm-deepseek` sends the stable header to its resolved `baseURL`, including deployment overrides, independently of telemetry sharing mode.
 - **Deleting the file does not reset the current process** — memoization keeps the run's id until the next launch.
 

@@ -1,4 +1,4 @@
-/** Published qilin web + pnpm dev:web → browser HMR, with no page reload. */
+/** Published openkylin web + pnpm dev:web → browser HMR, with no page reload. */
 
 import { existsSync, globSync } from 'node:fs'
 import { mkdtemp, readFile, rm, writeFile } from 'node:fs/promises'
@@ -72,7 +72,7 @@ it('hot-reloads a real client-plugin source edit without refreshing the page', a
   const world = await mkdtemp(join(tmpdir(), 'qilin-web-hmr-world-'))
   const sourcePath = join(REPO_ROOT, 'packages/client/ui-conversation/src/client/locales.ts')
   const binPath = join(REPO_ROOT, 'apps/cli/lib/bin.js')
-  if (!existsSync(binPath)) throw new Error('HMR browser test needs the built qilin bin; run pnpm run build first')
+  if (!existsSync(binPath)) throw new Error('HMR browser test needs the built openkylin bin; run pnpm run build first')
   const clientBuildEnvironment = readClientBuildRecord(REPO_ROOT).environment
   const clientBundlePaths = globSync('packages/*/*/lib/client.js{,.map}', { cwd: REPO_ROOT })
     .map(path => join(REPO_ROOT, path))
@@ -103,10 +103,10 @@ it('hot-reloads a real client-plugin source edit without refreshing the page', a
       world,
       {
         DEEPSEEK_API_KEY: 'keyless-hmr-no-call',
-        QILIN_HOME: join(world, '.qilin'),
+        OPENKYLIN_HOME: join(world, '.openkylin'),
       },
     ))
-    const baseUrl = await waitForOutput(host, /dsh web: (http:\/\/[^\s]+)/, 'built qilin web')
+    const baseUrl = await waitForOutput(host, /dsh web: (http:\/\/[^\s]+)/, 'built openkylin web')
     browser = await chromium.launch()
     const page = await browser.newPage()
     const pageErrors: string[] = []

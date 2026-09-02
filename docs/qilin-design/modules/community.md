@@ -1,6 +1,6 @@
 # community 模块（community module）
 
-> QiLin engine · community subsystem · 双语 / Bilingual
+> OpenKylin engine · community subsystem · 双语 / Bilingual
 
 ---
 
@@ -8,7 +8,7 @@
 
 ### 职责
 
-`qilin.community` 汇集了 QiLin 内置的第三方生态集成 —— 搜索、爬虫、浏览器自动化、沙箱等。任何一个具体的第三方服务都是"可选 import"，避免不必要的依赖被强制安装。
+`openkylin.community` 汇集了 OpenKylin 内置的第三方生态集成 —— 搜索、爬虫、浏览器自动化、沙箱等。任何一个具体的第三方服务都是"可选 import"，避免不必要的依赖被强制安装。
 
 ### 内置集成
 
@@ -59,7 +59,7 @@
 
 ### Responsibility
 
-`qilin.community` bundles QiLin's third-party ecosystem integrations — search, crawl, browser automation, sandbox providers. Each third-party service is "optional import" so unused providers don't pull unnecessary deps.
+`openkylin.community` bundles OpenKylin's third-party ecosystem integrations — search, crawl, browser automation, sandbox providers. Each third-party service is "optional import" so unused providers don't pull unnecessary deps.
 
 ### Bundled Integrations
 

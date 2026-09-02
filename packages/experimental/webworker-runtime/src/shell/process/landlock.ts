@@ -1,6 +1,6 @@
 /** Landlock launcher parsing and per-process VFS enforcement for the worker shell. */
 import { resolve } from '../../module-system/posix-path.ts'
-import { QILIN_TMP } from '../../storage/paths.ts'
+import { OPENKYLIN_TMP } from '../../storage/paths.ts'
 import { filesystemError } from '../fs-access.ts'
 import type { ShellDirent, ShellFileSystem, ShellStats } from '../types.ts'
 import type { VirtualExecutable, VirtualExecutableExit } from './virtual-executables.ts'
@@ -53,8 +53,8 @@ export function parseLandlockArguments(args: readonly string[]): LandlockInvocat
 function vfsPath(path: string, cwd: string): string {
   const resolved = resolve(cwd, path)
   const absolute = resolved.length > 1 ? resolved.replace(/\/+$/u, '') : resolved
-  if (absolute === '/tmp') return QILIN_TMP
-  if (absolute.startsWith('/tmp/')) return `${QILIN_TMP}${absolute.slice('/tmp'.length)}`
+  if (absolute === '/tmp') return OPENKYLIN_TMP
+  if (absolute.startsWith('/tmp/')) return `${OPENKYLIN_TMP}${absolute.slice('/tmp'.length)}`
   return absolute
 }
 

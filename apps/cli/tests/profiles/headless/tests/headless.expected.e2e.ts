@@ -44,7 +44,7 @@ const headlessOverlayPath = fileURLToPath(new URL('./fixtures/headless-profile.p
 const headlessSessionExpected = join(goldensDir, 'headless-profile', 'session.expected.jsonl')
 const headlessReasoningExpected = join(goldensDir, 'headless-profile', 'reasoning.stderr.expected.txt')
 const headlessFailureExpected = join(goldensDir, 'headless-profile', 'stderr.expected.txt')
-const refreshing = process.env.QILIN_SNAPSHOT === 'refresh'
+const refreshing = process.env.OPENKYLIN_SNAPSHOT === 'refresh'
 
 interface JsonObject {
   [key: string]: unknown
@@ -206,12 +206,12 @@ describe('headless stream-json snapshots', () => {
       binArgs: ['--profile', 'headless', '--patch', headlessOverlayPath, task],
       tsconfigPath,
       env: {
-        QILIN_PERMISSION_MODE: 'danger-full-access',
-        QILIN_TELEMETRY_DISABLED: '1',
+        OPENKYLIN_PERMISSION_MODE: 'danger-full-access',
+        OPENKYLIN_TELEMETRY_DISABLED: '1',
         NODE_OPTIONS: [process.env.NODE_OPTIONS, '--disable-warning=ExperimentalWarning'].filter(Boolean).join(' '),
       },
       inspect: async (cwd) => {
-        const logs = await persistedLogs(cwd, join(cwd, '.qilin', 'sessions'))
+        const logs = await persistedLogs(cwd, join(cwd, '.openkylin', 'sessions'))
         expect(logs).toHaveLength(1)
         const actual = logs[0]
         if (actual === undefined) throw new Error('the headless profile did not persist its session')
@@ -239,8 +239,8 @@ describe('headless stream-json snapshots', () => {
       tsconfigPath,
       expectedExitCode: 1,
       env: {
-        QILIN_CLI_MOCK_FAILURE: '1',
-        QILIN_TELEMETRY_DISABLED: '1',
+        OPENKYLIN_CLI_MOCK_FAILURE: '1',
+        OPENKYLIN_TELEMETRY_DISABLED: '1',
         NODE_OPTIONS: [process.env.NODE_OPTIONS, '--disable-warning=ExperimentalWarning'].filter(Boolean).join(' '),
       },
     })
@@ -278,7 +278,7 @@ describe('headless stream-json snapshots', () => {
       binArgs: [retryConfigPath, prompt],
       tsconfigPath,
       env: {
-        QILIN_SNAPSHOT: 'replay',
+        OPENKYLIN_SNAPSHOT: 'replay',
         NODE_OPTIONS: [process.env.NODE_OPTIONS, '--disable-warning=ExperimentalWarning'].filter(Boolean).join(' '),
       },
       prepare: (cwd) => { runCwd = cwd },
@@ -318,7 +318,7 @@ describe('headless stream-json snapshots', () => {
       binArgs: [credentialsConfigPath, 'say pong'],
       tsconfigPath,
       env: {
-        // First-run posture: no key in the environment, none under ./.qilin.
+        // First-run posture: no key in the environment, none under ./.openkylin.
         DEEPSEEK_API_KEY: '',
         DEEPSEEK_BASE_URL: '',
         NODE_OPTIONS: [process.env.NODE_OPTIONS, '--disable-warning=ExperimentalWarning'].filter(Boolean).join(' '),
@@ -440,7 +440,7 @@ describe('headless stream-json snapshots', () => {
           // Configuration carries only the reference; the key rides the
           // launching environment, which is the whole credential plane here.
           DEEPSEEK_API_KEY: 'snapshot-key',
-          QILIN_SNAPSHOT_BASE_URL: server.url,
+          OPENKYLIN_SNAPSHOT_BASE_URL: server.url,
           NODE_OPTIONS: [process.env.NODE_OPTIONS, '--disable-warning=ExperimentalWarning'].filter(Boolean).join(' '),
         },
       })
@@ -493,7 +493,7 @@ describe('headless stream-json snapshots', () => {
         tsconfigPath,
         env: {
           DEEPSEEK_API_KEY: 'snapshot-key',
-          QILIN_SNAPSHOT_BASE_URL: server.url,
+          OPENKYLIN_SNAPSHOT_BASE_URL: server.url,
           NODE_OPTIONS: [process.env.NODE_OPTIONS, '--disable-warning=ExperimentalWarning'].filter(Boolean).join(' '),
         },
       })
@@ -545,7 +545,7 @@ describe('headless stream-json snapshots', () => {
       tsconfigPath,
       processTimeoutMs: 60_000,
       env: {
-        QILIN_SNAPSHOT: 'team',
+        OPENKYLIN_SNAPSHOT: 'team',
         NODE_OPTIONS: [process.env.NODE_OPTIONS, '--disable-warning=ExperimentalWarning'].filter(Boolean).join(' '),
       },
       inspect: async (cwd) => {
@@ -622,9 +622,9 @@ describe('headless stream-json snapshots', () => {
       binArgs: [goalConfigPath, prompt],
       tsconfigPath,
       env: {
-        QILIN_SNAPSHOT: 'replay',
-        QILIN_SNAPSHOT_FILE: join(goalScenarioDir, 'session.jsonl'),
-        QILIN_SNAPSHOT_OVERRIDE: join(goalScenarioDir, 'replay.override.json'),
+        OPENKYLIN_SNAPSHOT: 'replay',
+        OPENKYLIN_SNAPSHOT_FILE: join(goalScenarioDir, 'session.jsonl'),
+        OPENKYLIN_SNAPSHOT_OVERRIDE: join(goalScenarioDir, 'replay.override.json'),
         NODE_OPTIONS: [process.env.NODE_OPTIONS, '--disable-warning=ExperimentalWarning'].filter(Boolean).join(' '),
       },
       prepare: (cwd) => { runCwd = cwd },
@@ -685,9 +685,9 @@ describe('headless stream-json snapshots', () => {
       env: {
         // The override fully supplies the parent script; the child fixture
         // remains separate so replay binds it to the fresh child Session.
-        QILIN_SNAPSHOT_FILE: parentReplay,
-        QILIN_SNAPSHOT_OVERRIDE: parentOverride,
-        QILIN_SNAPSHOT_CHILD_FILES: childReplay,
+        OPENKYLIN_SNAPSHOT_FILE: parentReplay,
+        OPENKYLIN_SNAPSHOT_OVERRIDE: parentOverride,
+        OPENKYLIN_SNAPSHOT_CHILD_FILES: childReplay,
         NODE_OPTIONS: [process.env.NODE_OPTIONS, '--disable-warning=ExperimentalWarning'].filter(Boolean).join(' '),
       },
       prepare: (cwd) => { runCwd = cwd },

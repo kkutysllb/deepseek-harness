@@ -10,8 +10,8 @@
       config:
         source: github-real-e2e
         repository: deepseek-harness/deepseek-harness
-        workspacePath: !!js process.env.QILIN_GITHUB_E2E_WORKSPACE
-        marker: !!js process.env.QILIN_GITHUB_E2E_MARKER
+        workspacePath: !!js process.env.OPENKYLIN_GITHUB_E2E_WORKSPACE
+        marker: !!js process.env.OPENKYLIN_GITHUB_E2E_MARKER
         agentPreset: minimal
         permissionPreset: read-only
 
@@ -25,12 +25,12 @@
           name: '@qilin/host-webserver'
           config:
             host: '127.0.0.1'
-            port: !!js Number(process.env.QILIN_GITHUB_WEBHOOK_PORT)
+            port: !!js Number(process.env.OPENKYLIN_GITHUB_WEBHOOK_PORT)
 
         - id: github-webhook-real-e2e-adapter
           name: '@qilin/webhook-github'
           config:
             source: github-real-e2e
             path: /github
-            secretEnv: QILIN_GITHUB_WEBHOOK_SECRET
+            secretEnv: OPENKYLIN_GITHUB_WEBHOOK_SECRET
             maxBodyBytes: 1048576

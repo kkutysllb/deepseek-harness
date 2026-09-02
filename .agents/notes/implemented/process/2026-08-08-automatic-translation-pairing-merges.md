@@ -52,4 +52,4 @@ Script tests exercise clean composition through the installed launcher, missing-
 
 Installed worktrees automatically remove pairing-record-only conflicts while preserving human judgment for owner conflicts and translation quality. GitHub's hosted mergeability calculation does not run the worktree-local executable, so a contributor or agent must still merge the base and push the resulting commit before the remote conflict badge clears.
 
-The installer reserves `merge.qilin-translation-pairing.*` in worktree configuration and refuses a conflicting custom value. Automatic composition depends on the installed Node dependencies, like the repository's contributor hooks; runtime loss produces a visible unresolved text result rather than selecting stale metadata.
+The installer reserves `merge.openkylin-translation-pairing.*` in worktree configuration and refuses a conflicting custom value. Automatic composition depends on the installed Node dependencies, like the repository's contributor hooks; runtime loss produces a visible unresolved text result rather than selecting stale metadata.

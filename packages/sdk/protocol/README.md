@@ -90,7 +90,7 @@ Read these pages when the wire contract is not enough. They move from the servin
 - [JSON-RPC serving plugin](../server/README.md) — the runtime plugin that serves this protocol over stdio.
 - [TypeScript SDK client](../client/README.md) — the client that drives this protocol.
 - [Python SDK](../../../python/README.md) — the Python counterpart that mirrors these shapes.
-- [SDK application bundle](../../bundle/sdk-app/README.md) — the `qilin --profile sdk` application that boots the server.
+- [SDK application bundle](../../bundle/sdk-app/README.md) — the `openkylin --profile sdk` application that boots the server.
 - [TypeScript SDK and SDK subagent backend decision](../../../.agents/notes/implemented/feature/2026-07-27-typescript-sdk-and-sdk-subagent-backend.md) — the client contract this protocol serves.
 
 -----

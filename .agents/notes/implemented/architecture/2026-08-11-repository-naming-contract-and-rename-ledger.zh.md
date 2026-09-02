@@ -176,7 +176,7 @@ PascalCase 标识符中的首字母缩略词使用首字母大写格式：`Ui`�
 | `session/user-id/`, `@qilin/user-id` | `identity/anonymous-user-id/`, `@qilin/anonymous-user-id` | 该值是遥测、反馈和 DeepSeek 请求共用的随机关联 id。它既不属于 Session 领域，也不是经过身份验证的用户身份。 |
 | `USER_ID_FILE_NAME`、`.userid`，反馈标签 `User` | `ANONYMOUS_USER_ID_FILE_NAME`、`.anonymous-user-id`，反馈标签 `Anonymous user` | 文件和 UI 不得暗示账户身份。保留现有 `AnonymousUserId` 函数和标准 OTel 属性 `user.id`。 |
 | `util/environment/`, `@qilin/environment` | `util/launch-environment/`, `@qilin/launch-environment` | 该包在启动时捕获一份不可变的分层快照。它不是通用环境 API。 |
-| 公开的 `Environment*`、`createEnvironmentSnapshot`、`environmentOf`、`QILIN_ENVIRONMENT_KEY` | `LaunchEnvironment*`、`createLaunchEnvironmentSnapshot`、`launchEnvironmentOf`、`QILIN_LAUNCH_ENVIRONMENT_KEY` | 这些名称说明快照的生命周期和用途。 |
+| 公开的 `Environment*`、`createEnvironmentSnapshot`、`environmentOf`、`OPENKYLIN_ENVIRONMENT_KEY` | `LaunchEnvironment*`、`createLaunchEnvironmentSnapshot`、`launchEnvironmentOf`、`OPENKYLIN_LAUNCH_ENVIRONMENT_KEY` | 这些名称说明快照的生命周期和用途。 |
 | `ctx.launcherEnvironment` | `ctx.launchEnvironment` | 该值描述应用启动，而不只描述启动器组件。保留来源标签 `process`、`project-env` 和 `user-env`。 |
 
 ### 日程、工作流、目标与压缩
@@ -278,7 +278,7 @@ PascalCase 标识符中的首字母缩略词使用首字母大写格式：`Ui`�
 | `packages/examples/jsonrpc-demo/`、`packages/sdk/python-runtime/` | 已删除 | Python 运行时 wheel 的闭包 manifest 负责打包，无需独立应用包。 |
 | `examples/jsonrpc-agent/` | `python/sdk/examples/` | 该示例演示 Python 使用 `sdk` profile 与有序 patch。 |
 | `@qilin/acp-demo` | `@qilin/acp-app` | 该包是 ACP profile 的应用组合包，不是独立 demo bin。 |
-| 部署根 manifest `qilin-jsonrpc-agent-pkg`、`qilin-sdk-python-runtime-closure` | `qilin-python-runtime-closure` | 该零代码 manifest 定义 Python 运行时 wheel 的完整 `qilin` 依赖闭包，不再命名独立 SDK 应用。 |
+| 部署根 manifest `qilin-jsonrpc-agent-pkg`、`qilin-sdk-python-runtime-closure` | `qilin-python-runtime-closure` | 该零代码 manifest 定义 Python 运行时 wheel 的完整 `openkylin` 依赖闭包，不再命名独立 SDK 应用。 |
 | `@qilin/frontend` | `@qilin/web-frontend` | 该应用是 Web 前端。保留其物理目录 `apps/web/`。 |
 
 保留 atomic-write、brand、native-command、timeout 实用工具、目录选择器、`qilin-base`、`qilin-web-app`、`qilin-sdk-app`、`qilin-acp-app`、应用启动、CLI（命令行界面）名称，以及 `headless` 包、组合包和示例身份。`headless` 是预期的产品本质，未来也可以支持不止一次性执行。

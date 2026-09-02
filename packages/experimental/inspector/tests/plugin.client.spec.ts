@@ -72,13 +72,13 @@ describe('experimental Inspector Client plugin', () => {
     globalThis.WebSocket = nativeWebSocket
     globalThis.fetch = nativeFetch
     sessionStorage.clear()
-    delete globalThis.__QILIN_INSPECTOR__
+    delete globalThis.__OPENKYLIN_INSPECTOR__
     Reflect.deleteProperty(globalThis, '__DSH_BOOT__')
   })
 
   it('provides ctx.inspector and sends observations after the Worker accepts the source', async () => {
     globalThis.WebSocket = FakeWebSocket as unknown as typeof WebSocket
-    globalThis.__QILIN_INSPECTOR__ = bootstrap
+    globalThis.__OPENKYLIN_INSPECTOR__ = bootstrap
     const ctx = new Context()
     const fiber = ctx.plugin({ apply })
     await fiber.await()
@@ -159,7 +159,7 @@ describe('experimental Inspector Client plugin', () => {
 
   it('keeps the realm source id and rotates the transport generation on reconnect', async () => {
     globalThis.WebSocket = FakeWebSocket as unknown as typeof WebSocket
-    globalThis.__QILIN_INSPECTOR__ = bootstrap
+    globalThis.__OPENKYLIN_INSPECTOR__ = bootstrap
     const ctx = new Context()
     const fiber = ctx.plugin({ apply })
     await fiber.await()
@@ -184,7 +184,7 @@ describe('experimental Inspector Client plugin', () => {
 
   it('keeps the logical source id when the Client plugin is recreated after a page refresh', async () => {
     globalThis.WebSocket = FakeWebSocket as unknown as typeof WebSocket
-    globalThis.__QILIN_INSPECTOR__ = bootstrap
+    globalThis.__OPENKYLIN_INSPECTOR__ = bootstrap
     const firstContext = new Context()
     const firstFiber = firstContext.plugin({ apply })
     await firstFiber.await()
@@ -239,7 +239,7 @@ describe('experimental Inspector Client plugin', () => {
 
       first.close()
       await vi.waitFor(() => { expect(held.size).toBe(1) })
-      sessionStorage.setItem('qilin.experimental-inspector.client-source-id.v0', first.sourceId)
+      sessionStorage.setItem('openkylin.experimental-inspector.client-source-id.v0', first.sourceId)
       refreshed = await ClientRealmSource.claim('refreshed')
       expect(refreshed.sourceId).toBe(first.sourceId)
     } finally {
@@ -253,7 +253,7 @@ describe('experimental Inspector Client plugin', () => {
 
   it('falls back to a page-lifetime source id when session storage is unavailable', async () => {
     globalThis.WebSocket = FakeWebSocket as unknown as typeof WebSocket
-    globalThis.__QILIN_INSPECTOR__ = bootstrap
+    globalThis.__OPENKYLIN_INSPECTOR__ = bootstrap
     vi.spyOn(Storage.prototype, 'getItem').mockImplementation(() => {
       throw new DOMException('storage disabled', 'SecurityError')
     })
@@ -270,7 +270,7 @@ describe('experimental Inspector Client plugin', () => {
 
   it('cancels an outstanding Client Runtime operation without sending a late response', async () => {
     globalThis.WebSocket = FakeWebSocket as unknown as typeof WebSocket
-    globalThis.__QILIN_INSPECTOR__ = bootstrap
+    globalThis.__OPENKYLIN_INSPECTOR__ = bootstrap
     const ctx = new Context()
     const fiber = ctx.plugin({ apply })
     await fiber.await()
@@ -325,7 +325,7 @@ describe('experimental Inspector Client plugin', () => {
 
   it('does not report queue loss again after a replacement absorbs it', async () => {
     globalThis.WebSocket = FakeWebSocket as unknown as typeof WebSocket
-    globalThis.__QILIN_INSPECTOR__ = { ...bootstrap, maxQueuedRecords: 1 }
+    globalThis.__OPENKYLIN_INSPECTOR__ = { ...bootstrap, maxQueuedRecords: 1 }
     const ctx = new Context()
     const fiber = ctx.plugin({ apply })
     await fiber.await()
@@ -361,7 +361,7 @@ describe('experimental Inspector Client plugin', () => {
 
   it('discovers and serves its built Client bundle through the source protocol', async () => {
     globalThis.WebSocket = FakeWebSocket as unknown as typeof WebSocket
-    globalThis.__QILIN_INSPECTOR__ = bootstrap
+    globalThis.__OPENKYLIN_INSPECTOR__ = bootstrap
     Reflect.set(globalThis, '__DSH_BOOT__', {
       rev: 'graph',
       entries: [{
@@ -446,7 +446,7 @@ describe('experimental Inspector Client plugin', () => {
 
   it('closes the Client source when a later plugin registration fails', async () => {
     globalThis.WebSocket = FakeWebSocket as unknown as typeof WebSocket
-    globalThis.__QILIN_INSPECTOR__ = bootstrap
+    globalThis.__OPENKYLIN_INSPECTOR__ = bootstrap
     const ctx = new Context()
     ctx.provide('inspector', {
       publish: () => undefined,

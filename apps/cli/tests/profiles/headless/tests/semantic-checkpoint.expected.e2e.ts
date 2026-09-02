@@ -17,7 +17,7 @@ const configPath = fileURLToPath(new URL('../semantic-checkpoint-snapshot.patch.
 const binScript = fileURLToPath(new URL('../../../../../../packages/test-support/loader-smoke/tests/fixtures/headless-driver.ts', import.meta.url))
 const tsconfigPath = fileURLToPath(new URL('../../../../../../tsconfig.json', import.meta.url))
 const sessionId = SessionId('semantic-checkpoint-unknown-outcome')
-const refreshing = process.env.QILIN_SNAPSHOT === 'refresh'
+const refreshing = process.env.OPENKYLIN_SNAPSHOT === 'refresh'
 const task = 'Continue safely from the interrupted operation.'
 
 async function seedInterruptedSession(root: string, cwd: string): Promise<string> {
@@ -92,8 +92,8 @@ describe('semantic checkpoint recovery snapshot', () => {
       binArgs: [configPath, task],
       tsconfigPath,
       env: {
-        QILIN_SNAPSHOT_FILE: replayFixture,
-        QILIN_SNAPSHOT_OVERRIDE: replayOverride,
+        OPENKYLIN_SNAPSHOT_FILE: replayFixture,
+        OPENKYLIN_SNAPSHOT_OVERRIDE: replayOverride,
       },
       prepare: async (runCwd) => {
         cwd = runCwd

@@ -33,10 +33,10 @@ import {
   type SkillSource,
 } from '@qilin/skill'
 
-const PROJECT_QILIN_RANK = 100
+const PROJECT_OPENKYLIN_RANK = 100
 const PROJECT_AGENTS_RANK = 200
 const CUSTOM_RANK = 300
-const USER_QILIN_RANK = 400
+const USER_OPENKYLIN_RANK = 400
 const USER_AGENTS_RANK = 500
 const DEFAULT_WATCH_STABILITY_THRESHOLD_MS = 200
 const DEFAULT_WATCH_POLL_INTERVAL_MS = 100
@@ -51,9 +51,9 @@ export interface Config {
   providerName?: string
   /** Whether project and user roots are included around custom roots. */
   includeDefaultRoots?: boolean
-  /** DeepSeek Harness config root. Defaults to `$QILIN_HOME` or `~/.qilin`. */
+  /** DeepSeek Harness config root. Defaults to `$OPENKYLIN_HOME` or `~/.openkylin`. */
   dshHome?: string
-  /** Shared agent config root. Defaults to `$QILIN_AGENTS_HOME` or `~/.agents`. */
+  /** Shared agent config root. Defaults to `$OPENKYLIN_AGENTS_HOME` or `~/.agents`. */
   agentsHome?: string
   /** Additional skill roots scanned after project roots and before user roots. */
   customSkillDirs?: string[]
@@ -69,7 +69,7 @@ export interface Config {
   watchMaxProjects?: number
   /** Whether watched symbolic links follow their target files. */
   watchFollowSymlinks?: boolean
-  /** Bundled skill root; defaults to `$QILIN_BUNDLED_SKILL_DIR` when default roots are included, otherwise mounts none. */
+  /** Bundled skill root; defaults to `$OPENKYLIN_BUNDLED_SKILL_DIR` when default roots are included, otherwise mounts none. */
   bundledSkillDir?: string
 }
 
@@ -161,7 +161,7 @@ export class FileSystemSkillProvider implements SkillProvider {
     this.name = config.providerName ?? 'filesystem'
     this.includeDefaultRoots = config.includeDefaultRoots ?? true
     this.dshHome = resolveDshHome(config.dshHome)
-    this.agentsHome = resolve(config.agentsHome ?? process.env.QILIN_AGENTS_HOME ?? join(homedir(), '.agents'))
+    this.agentsHome = resolve(config.agentsHome ?? process.env.OPENKYLIN_AGENTS_HOME ?? join(homedir(), '.agents'))
     this.customSkillDirs = (config.customSkillDirs ?? []).map(root => resolve(root))
     this.watchManager = new SkillWatchManager(ctx, control.invalidate, resolveWatchConfig(config))
     control.signal.addEventListener('abort', () => { void this.dispose() }, { once: true })
@@ -169,7 +169,7 @@ export class FileSystemSkillProvider implements SkillProvider {
     // must see only its explicit roots, or every such provider would
     // re-discover the app's bundled skills under its own provider name.
     const bundledSkillDir = config.bundledSkillDir
-      ?? (this.includeDefaultRoots ? process.env.QILIN_BUNDLED_SKILL_DIR : undefined)
+      ?? (this.includeDefaultRoots ? process.env.OPENKYLIN_BUNDLED_SKILL_DIR : undefined)
     this.bundledSkillDir = bundledSkillDir === undefined ? undefined : resolve(bundledSkillDir)
   }
 
@@ -243,14 +243,14 @@ export class FileSystemSkillProvider implements SkillProvider {
     if (this.includeDefaultRoots && cwd !== undefined) {
       const projectRoot = await findProjectRoot(resolve(cwd), optionalFileSystem(this.ctx))
       roots.push(
-        { path: join(projectRoot, '.qilin/skills'), source: 'project-dsh', rank: PROJECT_QILIN_RANK, projectRoot },
+        { path: join(projectRoot, '.openkylin/skills'), source: 'project-dsh', rank: PROJECT_OPENKYLIN_RANK, projectRoot },
         { path: join(projectRoot, '.agents/skills'), source: 'project-agents', rank: PROJECT_AGENTS_RANK, projectRoot },
       )
     }
     roots.push(...this.customSkillDirs.map(path => ({ path, source: 'custom' as const, rank: CUSTOM_RANK })))
     if (this.includeDefaultRoots) {
       roots.push(
-        { path: join(this.dshHome, 'skills'), source: 'user-dsh', rank: USER_QILIN_RANK, skipSystem: true },
+        { path: join(this.dshHome, 'skills'), source: 'user-dsh', rank: USER_OPENKYLIN_RANK, skipSystem: true },
         { path: join(this.agentsHome, 'skills'), source: 'user-agents', rank: USER_AGENTS_RANK },
       )
     }

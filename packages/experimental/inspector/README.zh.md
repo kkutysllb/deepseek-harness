@@ -9,7 +9,7 @@ kind: "package-reference"
 
 ## 概述
 
-使用这个实验性 Inspector，可以在 Chrome DevTools 中检查一个运行中的 qilin Host 及其浏览器 Client。它提供 Host 与 Client Console context、Host Sources 与调试、Host fetch 采集和共享 Cordis 树，并让 Worker 独占全部 CDP 状态。
+使用这个实验性 Inspector，可以在 Chrome DevTools 中检查一个运行中的 openkylin Host 及其浏览器 Client。它提供 Host 与 Client Console context、Host Sources 与调试、Host fetch 采集和共享 Cordis 树，并让 Worker 独占全部 CDP 状态。
 
 本包为私有包，不进入正式发布。Worker 不访问实时 Cordis 对象；共享 Host/Client collector 会在传输前把它们投影成已验证 snapshot。Cordis 还负责插件组合、注册 `ctx.inspector`、注入 bootstrap 和资源释放。
 
@@ -30,7 +30,7 @@ kind: "package-reference"
 <a id="runtime-layout"></a>
 ## 运行时布局
 
-Host 插件启动 Worker 并连接专用 `MessagePort`。Client 插件读取注入的 `globalThis.__QILIN_INSPECTOR__` bootstrap，直接向 Worker 打开一条独立、带鉴权的 WebSocket。Chrome DevTools 连接 Worker 的 CDP WebSocket。每条 DevTools 连接在 Worker 中独占一个连接 Host 主线程的 `node:inspector.Session`，因此 Host JavaScript 暂停时，Host Console 求值、Sources、断点和 resume 仍然可用。
+Host 插件启动 Worker 并连接专用 `MessagePort`。Client 插件读取注入的 `globalThis.__OPENKYLIN_INSPECTOR__` bootstrap，直接向 Worker 打开一条独立、带鉴权的 WebSocket。Chrome DevTools 连接 Worker 的 CDP WebSocket。每条 DevTools 连接在 Worker 中独占一个连接 Host 主线程的 `node:inspector.Session`，因此 Host JavaScript 暂停时，Host Console 求值、Sources、断点和 resume 仍然可用。
 
 源码树遵循这些执行环境：`client/` 与 `host/` 提供镜像的 adapter entry path，`worker/` 只包含 Worker thread orchestration 与 Chrome protocol 状态，`shared/` 包含与环境无关的 Cordis 和 network model、规范化 realm backend interface 及内部 bridge protocol。Worker 侧 Client 与 Host adapter 镜像放在 `worker/realms/` 下；其中的 Client adapter 仍然在 Worker 中执行。
 

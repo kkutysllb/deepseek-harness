@@ -39,5 +39,5 @@
       { "type": "finish", "reason": { "kind": "stop" } }
     ]
   },
-  { "kind": "hang", "readyFile": ".qilin-snapshot-goal-cancel-ready" }
+  { "kind": "hang", "readyFile": ".openkylin-snapshot-goal-cancel-ready" }
 ]

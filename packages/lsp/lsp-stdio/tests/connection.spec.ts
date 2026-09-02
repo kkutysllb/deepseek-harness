@@ -51,11 +51,11 @@ describe('LspConnection', () => {
     expect(conn.pid).toBeGreaterThan(0)
   })
 
-  it('forwards explicit QILIN_* env entries to the child', async () => {
-    // A configured QILIN_* fact must reach the child: the seam scrubs only the
+  it('forwards explicit OPENKYLIN_* env entries to the child', async () => {
+    // A configured OPENKYLIN_* fact must reach the child: the seam scrubs only the
     // ambient namespace, and the explicit entry merges after that scrub. The
     // fixture echoes the named variable back as hover text.
-    const conn = connect({ LSP_FAKE_ECHO_ENV: 'QILIN_LSP_TEST_FACT', QILIN_LSP_TEST_FACT: 'managed' })
+    const conn = connect({ LSP_FAKE_ECHO_ENV: 'OPENKYLIN_LSP_TEST_FACT', OPENKYLIN_LSP_TEST_FACT: 'managed' })
     await conn.request('initialize', { capabilities: {} })
     expect(await conn.request('textDocument/hover', {})).toEqual({ contents: 'managed' })
   })

@@ -1,5 +1,6 @@
 import { useEffect, useId, useRef, useState, type ReactNode } from 'react'
-import { AuthError, type IAuthClient } from '@qilin/client-connection/client'
+import { isAuthError } from './auth-error.ts'
+import type { AuthError, IAuthClient } from '@qilin/client-connection/client'
 import type { PropsLocale } from '@qilin/client-ui-slots'
 import css from './AccountOverlay.module.css'
 
@@ -153,7 +154,7 @@ function submitErrorMessage(
   initializing: boolean,
   t: (key: 'overlayError' | 'initializeError' | 'errorWeakPassword') => string,
 ): string {
-  const code = error instanceof AuthError ? error.code : 'unknown_error'
+  const code = isAuthError(error) ? error.code : 'unknown_error'
   if (code === 'weak_password') return t('errorWeakPassword')
   if (initializing) return t('initializeError')
   return t('overlayError')

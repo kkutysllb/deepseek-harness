@@ -38,17 +38,17 @@ describe('workspace snapshots', () => {
 
   it('keeps generic marker files but omits declared runtime roots and the expected-empty marker', async () => {
     const directory = await root()
-    await mkdir(join(directory, '.qilin'))
-    await writeFile(join(directory, '.qilin', 'runtime.json'), '{}')
+    await mkdir(join(directory, '.openkylin'))
+    await writeFile(join(directory, '.openkylin', 'runtime.json'), '{}')
     await writeFile(join(directory, EMPTY_WORKSPACE_MARKER), '')
     await writeFile(join(directory, 'visible.txt'), 'visible')
 
-    expect(await captureWorkspaceSnapshot(directory, { ignoredRootEntries: ['.qilin'] })).toEqual([
+    expect(await captureWorkspaceSnapshot(directory, { ignoredRootEntries: ['.openkylin'] })).toEqual([
       { path: '.empty', kind: 'text', content: '' },
       { path: 'visible.txt', kind: 'text', content: 'visible' },
     ])
     expect(await captureExpectedWorkspaceSnapshot(directory)).toEqual([
-      { path: '.qilin/runtime.json', kind: 'text', content: '{}' },
+      { path: '.openkylin/runtime.json', kind: 'text', content: '{}' },
       { path: 'visible.txt', kind: 'text', content: 'visible' },
     ])
   })

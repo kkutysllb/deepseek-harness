@@ -20,36 +20,36 @@ it('samples one local environment at startup without validating watcher outputs'
     await writeFile(join(root, 'apps/web/dist/index.html'), '<main></main>')
     await writeFile(join(root, 'packages/client/example/lib/client.js'), 'module.exports = {}\n')
     writeClientBuildRecord(root, {
-      QILIN_CLIENT_BUILD_PROFILE: 'official',
-      QILIN_CLIENT_COMMIT_HASH: 'fffffff',
-      QILIN_CLIENT_TITLE: 'DeepSeek Harness',
-      QILIN_CLIENT_VERSION: '1.2.2',
+      OPENKYLIN_CLIENT_BUILD_PROFILE: 'official',
+      OPENKYLIN_CLIENT_COMMIT_HASH: 'fffffff',
+      OPENKYLIN_CLIENT_TITLE: 'DeepSeek Harness',
+      OPENKYLIN_CLIENT_VERSION: '1.2.2',
     })
     await writeFile(join(root, 'packages/client/example/lib/client.js'), 'module.exports = { changed: true }\n')
 
     expect(devWebBuildEnvironment(root, {
       PATH: '/bin',
-      QILIN_BUILD_CLIENT_PROFILE: 'official',
-      QILIN_CLIENT_COMMIT_HASH: 'abc1234',
-      QILIN_CLIENT_EXTRA: 'launch-value',
+      OPENKYLIN_BUILD_CLIENT_PROFILE: 'official',
+      OPENKYLIN_CLIENT_COMMIT_HASH: 'abc1234',
+      OPENKYLIN_CLIENT_EXTRA: 'launch-value',
     })).toEqual({
       PATH: '/bin',
-      QILIN_CLIENT_COMMIT_HASH: 'abc1234',
-      QILIN_CLIENT_EXTRA: 'launch-value',
-      QILIN_CLIENT_VERSION: '1.2.3',
+      OPENKYLIN_CLIENT_COMMIT_HASH: 'abc1234',
+      OPENKYLIN_CLIENT_EXTRA: 'launch-value',
+      OPENKYLIN_CLIENT_VERSION: '1.2.3',
     })
   } finally {
     await rm(root, { recursive: true, force: true })
   }
 })
 
-it('discovers qilin.client packages with sibling roles', async () => {
+it('discovers openkylin.client packages with sibling roles', async () => {
   const root = await mkdtemp(join(tmpdir(), 'qilin-dev-web-discovery-'))
   try {
     const current = join(root, 'packages', 'client', 'current')
     await mkdir(current, { recursive: true })
     await writeFile(join(current, 'package.json'), JSON.stringify({
-      qilin: {
+      openkylin: {
         bundle: { patch: './cordis.patch.yml' },
         client: { platform: 'web' },
         profile: { bundles: [] },
@@ -75,7 +75,7 @@ it('discovers client-preset packages the shell links, excluding loader-delivered
     // Linked by the compile shell: client preset, no loader-delivered half.
     await write('packages/client/linked', {}, clientPreset)
     // Loader-delivered: discoverPluginDirs owns it, so it must not appear twice.
-    await write('packages/client/delivered', { qilin: { client: { platform: 'web' } } }, clientPreset)
+    await write('packages/client/delivered', { openkylin: { client: { platform: 'web' } } }, clientPreset)
     // Test infrastructure builds through the preset but never enters the shell graph.
     await write('packages/test-support/harness', {}, clientPreset)
     // Host package with its own config: not a client-face build at all.

@@ -1,20 +1,20 @@
 import { describe, expect, it, vi } from 'vitest'
 import { Context } from '@deepseek-ai/cordis'
 import {
-  createLaunchEnvironmentSnapshot, QILIN_LAUNCH_ENVIRONMENT_KEY, launchEnvironmentOf,
+  createLaunchEnvironmentSnapshot, OPENKYLIN_LAUNCH_ENVIRONMENT_KEY, launchEnvironmentOf,
 } from '../src/index.ts'
 
 const layered = createLaunchEnvironmentSnapshot([
   { source: 'process', values: { SHARED: 'from-process', ONLY_PROCESS: 'p' } },
   { source: 'project-env', path: '/work/.env', values: { SHARED: 'from-project', ONLY_PROJECT: 'j' } },
-  { source: 'user-env', path: '/home/.qilin/.env', values: { SHARED: 'from-user', ONLY_USER: 'u' } },
+  { source: 'user-env', path: '/home/.openkylin/.env', values: { SHARED: 'from-user', ONLY_USER: 'u' } },
 ])
 
 describe('createLaunchEnvironmentSnapshot', () => {
   it('resolves across every layer, most trusted first, and reports the winning source', () => {
     expect(layered.get('SHARED')).toEqual({ value: 'from-process', source: 'process' })
     expect(layered.get('ONLY_PROJECT')).toEqual({ value: 'j', source: 'project-env', path: '/work/.env' })
-    expect(layered.get('ONLY_USER')).toEqual({ value: 'u', source: 'user-env', path: '/home/.qilin/.env' })
+    expect(layered.get('ONLY_USER')).toEqual({ value: 'u', source: 'user-env', path: '/home/.openkylin/.env' })
     expect(layered.get('ABSENT')).toBeUndefined()
   })
 
@@ -53,15 +53,15 @@ describe('createLaunchEnvironmentSnapshot', () => {
 describe('launchEnvironmentOf', () => {
   it('returns the launcher snapshot when the product CLI provided one', () => {
     const ctx = new Context()
-    ctx.provide(QILIN_LAUNCH_ENVIRONMENT_KEY, layered)
+    ctx.provide(OPENKYLIN_LAUNCH_ENVIRONMENT_KEY, layered)
     expect(launchEnvironmentOf(ctx)).toBe(layered)
   })
 
   it('falls back to the inherited environment as the only layer', () => {
-    vi.stubEnv('QILIN_ENV_SPEC_FALLBACK', 'ambient')
+    vi.stubEnv('OPENKYLIN_ENV_SPEC_FALLBACK', 'ambient')
     try {
       const snapshot = launchEnvironmentOf(new Context())
-      expect(snapshot.get('QILIN_ENV_SPEC_FALLBACK')).toEqual({ value: 'ambient', source: 'process' })
+      expect(snapshot.get('OPENKYLIN_ENV_SPEC_FALLBACK')).toEqual({ value: 'ambient', source: 'process' })
     } finally {
       vi.unstubAllEnvs()
     }

@@ -1,6 +1,6 @@
 # scheduler 模块（scheduler module）
 
-> QiLin engine · scheduler subsystem · 双语 / Bilingual
+> OpenKylin engine · scheduler subsystem · 双语 / Bilingual
 
 ---
 
@@ -8,7 +8,7 @@
 
 ### 职责
 
-`qilin.scheduler` 提供调度时间计算的**纯函数原语**：cron 表达式规范化、时区校验，以及根据任务声明（one-shot / cron）计算下一次执行时间。它不持有事件循环、不做轮询、不接触数据库——轮询、派发与 lease 协调分别由服务化调度器（`app/scheduler/service.py`）与 `runtime/runs` 负责。
+`openkylin.scheduler` 提供调度时间计算的**纯函数原语**：cron 表达式规范化、时区校验，以及根据任务声明（one-shot / cron）计算下一次执行时间。它不持有事件循环、不做轮询、不接触数据库——轮询、派发与 lease 协调分别由服务化调度器（`app/scheduler/service.py`）与 `runtime/runs` 负责。
 
 - **`validate_timezone`**：校验时区名（`zoneinfo`），未知时区抛 `ValueError`
 - **`normalize_cron_expression`**：规范化标准 5 字段 cron 表达式（去多余空白、校验字段数）
@@ -50,7 +50,7 @@ scheduler:
 
 ### Responsibility
 
-`qilin.scheduler` provides **pure-function scheduling primitives**: cron normalization, timezone validation, and computing the next run time from a task's declared schedule (`once` / `cron`). It holds no event loop, does no polling, and touches no storage — polling, dispatch, and lease coordination live in the service scheduler (`app/scheduler/service.py`) and `runtime/runs`.
+`openkylin.scheduler` provides **pure-function scheduling primitives**: cron normalization, timezone validation, and computing the next run time from a task's declared schedule (`once` / `cron`). It holds no event loop, does no polling, and touches no storage — polling, dispatch, and lease coordination live in the service scheduler (`app/scheduler/service.py`) and `runtime/runs`.
 
 - **`validate_timezone`** — validates a timezone name via `zoneinfo`; raises `ValueError` on unknown zones
 - **`normalize_cron_expression`** — normalizes a standard 5-field cron expression (collapses whitespace, validates field count)

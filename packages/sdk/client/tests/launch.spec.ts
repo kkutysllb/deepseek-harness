@@ -1,4 +1,4 @@
-/** Public qilin launch resolution for the TypeScript SDK. */
+/** Public openkylin launch resolution for the TypeScript SDK. */
 
 import { existsSync, mkdirSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
@@ -18,12 +18,12 @@ afterEach(() => {
   for (const path of cleanups.splice(0)) rmSync(path, { recursive: true, force: true })
 })
 
-function manifestPair(qilin: object, client: object): { dshUrl: string; clientUrl: string; root: string } {
+function manifestPair(openkylin: object, client: object): { dshUrl: string; clientUrl: string; root: string } {
   const root = mkdtempSync(join(tmpdir(), 'qilin-sdk-manifests-'))
   cleanups.push(root)
   const dshPath = join(root, 'qilin-package.json')
   const clientPath = join(root, 'client-package.json')
-  writeFileSync(dshPath, JSON.stringify(qilin))
+  writeFileSync(dshPath, JSON.stringify(openkylin))
   writeFileSync(clientPath, JSON.stringify(client))
   return {
     dshUrl: pathToFileURL(dshPath).href,
@@ -32,8 +32,8 @@ function manifestPair(qilin: object, client: object): { dshUrl: string; clientUr
   }
 }
 
-describe('SDK qilin launch resolution', () => {
-  it('resolves the same-version installed qilin entry by default', () => {
+describe('SDK openkylin launch resolution', () => {
+  it('resolves the same-version installed openkylin entry by default', () => {
     const bin = installedDshBin()
     expect(bin.endsWith(join('apps', 'cli', 'lib', 'bin.js'))).toBe(true)
     const launch = resolveDshLaunch()
@@ -46,7 +46,7 @@ describe('SDK qilin launch resolution', () => {
         '--patch', resolve(bin, '..', '..', 'src/sdk-source.cordis.patch.yml'),
       ])
     expect(launch.initializeTimeoutMs).toBe(DEFAULT_INITIALIZE_TIMEOUT_MS)
-    expect(launch.description).toBe('qilin profile "sdk"')
+    expect(launch.description).toBe('openkylin profile "sdk"')
   })
 
   it('makes every filesystem input absolute before spawn and preserves patch order', () => {
@@ -57,7 +57,7 @@ describe('SDK qilin launch resolution', () => {
       patches: ['./first.yml', '../second.yml'],
       dshHome: './home',
       processCwd: './worker',
-      env: { PATH: '/bin', QILIN_HOME: '/stale' },
+      env: { PATH: '/bin', OPENKYLIN_HOME: '/stale' },
       initializeTimeoutMs: 123,
       requestTimeoutMs: 456,
       shutdownTimeoutMs: 789,
@@ -73,14 +73,14 @@ describe('SDK qilin launch resolution', () => {
         '--patch', resolve(caller, '../second.yml'),
       ],
       cwd: join(caller, 'worker'),
-      description: 'qilin profile "custom-sdk"',
+      description: 'openkylin profile "custom-sdk"',
       initializeTimeoutMs: 123,
       requestTimeoutMs: 456,
       shutdownTimeoutMs: 789,
       disposeEofGraceMs: 12,
       disposeGraceMs: 34,
     })
-    expect(launch.environment()).toEqual({ PATH: '/bin', QILIN_HOME: join(caller, 'home') })
+    expect(launch.environment()).toEqual({ PATH: '/bin', OPENKYLIN_HOME: join(caller, 'home') })
   })
 
   it('falls back to the same package source entry through an absolute tsx loader', () => {
@@ -136,20 +136,20 @@ describe('SDK qilin launch resolution', () => {
     expect(explicitLaunch.environment().MARKER).toBe('after')
 
     const inheritedLaunch = resolveDshLaunch({ dshBin: '/bin/dsh' })
-    process.env.QILIN_SDK_LATE_ENV_TEST = 'late'
+    process.env.OPENKYLIN_SDK_LATE_ENV_TEST = 'late'
     try {
-      expect(inheritedLaunch.environment().QILIN_SDK_LATE_ENV_TEST).toBe('late')
+      expect(inheritedLaunch.environment().OPENKYLIN_SDK_LATE_ENV_TEST).toBe('late')
     } finally {
-      delete process.env.QILIN_SDK_LATE_ENV_TEST
+      delete process.env.OPENKYLIN_SDK_LATE_ENV_TEST
     }
   })
 
   it.each([2, '2.0.0'])(
-    'rejects a qilin version that differs from the client (%j)',
+    'rejects a openkylin version that differs from the client (%j)',
     (version) => {
       const pair = manifestPair({ version, bin: 'bin.js' }, { version: '1.0.0' })
       expect(() => resolveDshBinFromManifests(pair.dshUrl, pair.clientUrl))
-        .toThrow(`requires the same qilin version, got ${String(version)}`)
+        .toThrow(`requires the same openkylin version, got ${String(version)}`)
     },
   )
 
@@ -159,11 +159,11 @@ describe('SDK qilin launch resolution', () => {
   })
 
   it.each([null, {}, ''])(
-    'rejects a manifest without a usable qilin executable (%j)',
+    'rejects a manifest without a usable openkylin executable (%j)',
     (bin) => {
       const pair = manifestPair({ version: '1.0.0', bin }, { version: '1.0.0' })
       expect(() => resolveDshBinFromManifests(pair.dshUrl, pair.clientUrl))
-        .toThrow('declares no qilin executable')
+        .toThrow('declares no openkylin executable')
     },
   )
 })

@@ -78,15 +78,15 @@ describe('schema creation', () => {
   })
 
   it('defaults to the harness home location when no path is given', () => {
-    expect(defaultAccountsDbPath({ QILIN_HOME: '/tmp/some-home' })).toBe('/tmp/some-home/qilin-accounts/accounts.db')
+    expect(defaultAccountsDbPath({ OPENKYLIN_HOME: '/tmp/some-home' })).toBe('/tmp/some-home/qilin-accounts/accounts.db')
   })
 
   it('defaults to the harness home database when constructed without a path', () => {
     const home = tempDir()
-    const store = new SqliteAccountStore({ env: { QILIN_HOME: home } })
+    const store = new SqliteAccountStore({ env: { OPENKYLIN_HOME: home } })
     const created = store.insertUser({ email: 'a@qilin.dev', passwordHash: 'h', systemRole: 'user' })
     store.close()
-    expect(defaultAccountsDbPath({ QILIN_HOME: home })).toBe(join(home, 'qilin-accounts', 'accounts.db'))
+    expect(defaultAccountsDbPath({ OPENKYLIN_HOME: home })).toBe(join(home, 'qilin-accounts', 'accounts.db'))
     expect(userVersionAt(join(home, 'qilin-accounts', 'accounts.db'))).toBe(ACCOUNTS_SCHEMA_VERSION)
     expect(created.email).toBe('a@qilin.dev')
   })

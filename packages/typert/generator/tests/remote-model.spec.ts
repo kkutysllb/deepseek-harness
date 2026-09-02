@@ -377,11 +377,11 @@ export interface RemainingSchema {
     const root = copyFixture()
     const manifestPath = join(root, 'packages/remote/package.json')
     const manifest = JSON.parse(readFileSync(manifestPath, 'utf8')) as {
-      qilin?: { client?: object }
+      openkylin?: { client?: object }
       exports: Record<string, unknown>
       files: string[]
     }
-    manifest.qilin = { client: {} }
+    manifest.openkylin = { client: {} }
     manifest.exports['./client'] = './src/client.ts'
     manifest.exports['./client/typert'] = {
       types: './lib/typert.client.d.ts',

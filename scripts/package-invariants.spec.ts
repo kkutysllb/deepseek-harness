@@ -56,15 +56,15 @@ function fixture(options: {
       },
     } : {}),
   }
-  const qilin = options.clientDeclaration === true ? { client: {} } : undefined
+  const openkylin = options.clientDeclaration === true ? { client: {} } : undefined
   const developmentOnlyInvariant = usesFlattenedPackageDependencies(
     `${packageDirectory}/package.json`,
     packageName,
-    qilin,
+    openkylin,
   )
   const manifest = {
     name: packageName,
-    ...(qilin === undefined ? {} : { qilin }),
+    ...(openkylin === undefined ? {} : { openkylin }),
     exports,
     files: ['lib/index.js', 'lib/invariant.js'],
     peerDependencies: options.invariantDependency === false || developmentOnlyInvariant ? {} : {
@@ -102,7 +102,7 @@ describe('package invariant gate', () => {
     }))).toEqual([])
   })
 
-  it('accepts development-only invariants for packages with a qilin.client entry', () => {
+  it('accepts development-only invariants for packages with a openkylin.client entry', () => {
     expect(collectPackageInvariantViolations(fixture({ clientDeclaration: true, clientExport: true }))).toEqual([])
   })
 
@@ -110,7 +110,7 @@ describe('package invariant gate', () => {
     expect(collectPackageInvariantViolations(fixture({ clientExport: true }))).toEqual([])
   })
 
-  it('keeps invariant peers for experimental packages with a qilin.client entry', () => {
+  it('keeps invariant peers for experimental packages with a openkylin.client entry', () => {
     expect(collectPackageInvariantViolations(fixture({
       packageDirectory: 'packages/experimental/probe',
       clientDeclaration: true,

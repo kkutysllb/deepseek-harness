@@ -25,7 +25,7 @@ export interface AuthConfigFile {
 /**
  * Resolve the default auth-config location: beside the account database in
  * the accounts directory of the harness home.
- * @param env - environment consulted for `QILIN_HOME`; defaults to `process.env`.
+ * @param env - environment consulted for `OPENKYLIN_HOME`; defaults to `process.env`.
  * @returns the default config file path.
  */
 export function defaultAuthConfigPath(env: NodeJS.ProcessEnv = process.env): string {

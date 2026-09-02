@@ -100,10 +100,10 @@ describe('bash tool through the agent loop', () => {
     const root = mkdtempSync(join(tmpdir(), 'qilin-bash-session-env-'))
     dirs.push(root)
     const dshHome = join(root, 'qilin-home')
-    vi.stubEnv('QILIN_STALE_PARENT', 'stale')
+    vi.stubEnv('OPENKYLIN_STALE_PARENT', 'stale')
     const adapter = new MockAdapter([
       toolCallResponse('call-1', 'bash', {
-        command: 'printf \'%s\\n%s\\n%s\\n%s\\n%s\\n\' "$QILIN_HOME" "$QILIN_SHELL" "$QILIN_SESSION_ID" "$QILIN_SESSION_JSONL" "${QILIN_STALE_PARENT-unset}"; if [ -e "$QILIN_SESSION_JSONL" ]; then printf \'present\\n\'; else printf \'absent\\n\'; fi',
+        command: 'printf \'%s\\n%s\\n%s\\n%s\\n%s\\n\' "$OPENKYLIN_HOME" "$OPENKYLIN_SHELL" "$OPENKYLIN_SESSION_ID" "$OPENKYLIN_SESSION_JSONL" "${OPENKYLIN_STALE_PARENT-unset}"; if [ -e "$OPENKYLIN_SESSION_JSONL" ]; then printf \'present\\n\'; else printf \'absent\\n\'; fi',
         description: 'inspect session environment',
       }),
       textResponse('Session environment inspected.'),

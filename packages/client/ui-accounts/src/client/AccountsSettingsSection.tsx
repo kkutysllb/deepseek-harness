@@ -1,5 +1,6 @@
 import { useEffect, useState, type ReactNode } from 'react'
-import { AuthError, type AccountUpdate, type AccountView, type IAuthClient } from '@qilin/client-connection/client'
+import { isAuthError } from './auth-error.ts'
+import type { AccountUpdate, AccountView, IAuthClient } from '@qilin/client-connection/client'
 import type { PropsLocale } from '@qilin/client-ui-slots'
 import css from './AccountsSettingsSection.module.css'
 
@@ -26,7 +27,7 @@ type ResetTarget = { readonly id: string } | null
 
 /** Wire error code -> localized prose for management actions. */
 function localizeActionError(error: unknown, t: AccountsSettingsSectionProps['t']): string {
-  const code = error instanceof AuthError ? error.code : 'unknown_error'
+  const code = isAuthError(error) ? error.code : 'unknown_error'
   if (code === 'self_protected') return t('errorSelfProtected')
   if (code === 'last_admin_protected') return t('errorLastAdmin')
   if (code === 'weak_password') return t('errorWeakPassword')
@@ -56,7 +57,7 @@ export function AccountsSettingsSection({ auth, t }: AccountsSettingsSectionProp
         if (!cancelled) setState({ phase: 'ready', users })
       } catch (error) {
         if (cancelled) return
-        setState(error instanceof AuthError && error.status === 403 ? { phase: 'forbidden' } : { phase: 'error' })
+        setState(isAuthError(error) && error.status === 403 ? { phase: 'forbidden' } : { phase: 'error' })
       }
     }
     void load()

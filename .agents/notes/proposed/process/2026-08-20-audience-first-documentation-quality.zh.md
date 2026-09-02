@@ -50,7 +50,7 @@ Status: proposed
 
 [qilin-doc skill](../../../skills/dsh-doc/SKILL.md) 负责这些规则的首个可执行版本。`session-persistence-jsonl` README 对以已交付的追加、恢复与编码行为为证据，而不把其旧版正文当作权威。
 
-- 每个撰写型包 README 都以可搜索 YAML 开头。Skill 风格的 `description` 与按机制推导的 `kind` 为必填字段。四种 kind 与四个技能模板一一对应：`package-group`（组地图）、`package-reference`（插件或服务包）、`package-library`（纯模块入口）与 `package-bundle`（`qilin.bundle.patch`）。对照文件路径、哈希与物理行对齐由支持自动合并的 sidecar 及其门禁负责，因此 README frontmatter 不包含 `i18n` 块。名称已由标题或包 manifest 归属，受众已由文档职责表达；在受治理的标签分类与搜索消费方证明其价值超过全文检索之前，不加入标签。
+- 每个撰写型包 README 都以可搜索 YAML 开头。Skill 风格的 `description` 与按机制推导的 `kind` 为必填字段。四种 kind 与四个技能模板一一对应：`package-group`（组地图）、`package-reference`（插件或服务包）、`package-library`（纯模块入口）与 `package-bundle`（`openkylin.bundle.patch`）。对照文件路径、哈希与物理行对齐由支持自动合并的 sidecar 及其门禁负责，因此 README frontmatter 不包含 `i18n` 块。名称已由标题或包 manifest 归属，受众已由文档职责表达；在受治理的标签分类与搜索消费方证明其价值超过全文检索之前，不加入标签。
 - 撰写型页面先写三至五句的 `Summary`，再写带链接的 `Table of Contents`。由格式约束的 Agent Note、事故复盘、生成片段和机器文件保留其必需骨架。
 - 每个实质章节在子章节、表格或代码之前先给出简短引导，页面则从基础用户用法逐步进入高级开发者与维护者细节。
 - 英文技术正文采用受 ASD-STE100 启发但不宣称认证的清晰度评审：明确行动者与动作，稳定使用术语，使用直接动词，拆分指令与条件，并完整保留情态、例外、时序与数值。指令 20 词和描述 25 词的限制仅作评审提示。准确性高于句长。

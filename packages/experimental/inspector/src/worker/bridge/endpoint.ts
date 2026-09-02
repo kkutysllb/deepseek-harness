@@ -226,7 +226,7 @@ export class InspectorEndpoint {
       type: 'page',
       title: 'DeepSeek Harness Host',
       description: 'Experimental cross-realm Inspector target',
-      url: 'qilin://host',
+      url: 'openkylin://host',
       webSocketDebuggerUrl: this.cdpUrl(),
       devtoolsFrontendUrl: `devtools://devtools/bundled/devtools_app.html?ws=${this.config.host}:${this.boundPort()}/devtools/page/${this.config.targetId}&panel=elements&noJavaScriptCompletion=true`,
     }

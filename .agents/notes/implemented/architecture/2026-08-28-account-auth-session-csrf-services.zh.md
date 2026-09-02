@@ -10,7 +10,7 @@ Status: implemented
 
 ## Decision
 
-`packages/accounts/account-auth`(`@qilin/account-auth`)交付四个模块。`SessionService`:签发(单一 7 天默认寿命上的两档;签发时快照账户 `session_version`)、校验(对规范 UUID 形状做格式门,垃圾 cookie 绝不触达存储;经固定 SHA-256 摘要的恒时令牌比对;绝对过期;签发版本对账户版本的比对)、吊销(幂等单会话登出、账户级删除,以及把存储的版本递增与行删除组合起来的 `changePassword`——版本递增在前,两步之间崩溃仍能全灭旧会话)。校验对读到的持久行自带守卫——正整数签发版本、有限且有序的时间戳、布尔标记、在册属主——因为 S1 存储在解码时不复读 session 列;损坏行以类型化的 `SessionCorruptError` 大声失败,而不是继续下流。CSRF 模块是纯函数:每会话一枚铸出的令牌(服务端从不存储)、固定摘要恒时比较器、RFC 安全/写方法矩阵(两清单之外的方法 fail-closed)、Bearer 豁免,以及归调用方所有的路径豁免清单。逃生阀模块保留旧 `QILIN_AUTH_DISABLED=1` 语义与 `QILIN_ENV`/`ENVIRONMENT` 生产标记:`resolveAuthDisabled` 在生产环境绝不放行禁用;`assertAuthDisabledAllowed` 对请求禁用的生产启动抛类型化错误;`authDisabledWarning` 承载运维警示。
+`packages/accounts/account-auth`(`@qilin/account-auth`)交付四个模块。`SessionService`:签发(单一 7 天默认寿命上的两档;签发时快照账户 `session_version`)、校验(对规范 UUID 形状做格式门,垃圾 cookie 绝不触达存储;经固定 SHA-256 摘要的恒时令牌比对;绝对过期;签发版本对账户版本的比对)、吊销(幂等单会话登出、账户级删除,以及把存储的版本递增与行删除组合起来的 `changePassword`——版本递增在前,两步之间崩溃仍能全灭旧会话)。校验对读到的持久行自带守卫——正整数签发版本、有限且有序的时间戳、布尔标记、在册属主——因为 S1 存储在解码时不复读 session 列;损坏行以类型化的 `SessionCorruptError` 大声失败,而不是继续下流。CSRF 模块是纯函数:每会话一枚铸出的令牌(服务端从不存储)、固定摘要恒时比较器、RFC 安全/写方法矩阵(两清单之外的方法 fail-closed)、Bearer 豁免,以及归调用方所有的路径豁免清单。逃生阀模块保留旧 `OPENKYLIN_AUTH_DISABLED=1` 语义与 `OPENKYLIN_ENV`/`ENVIRONMENT` 生产标记:`resolveAuthDisabled` 在生产环境绝不放行禁用;`assertAuthDisabledAllowed` 对请求禁用的生产启动抛类型化错误;`authDisabledWarning` 承载运维警示。
 
 ## Consequences
 

@@ -6,12 +6,12 @@ import { AUTH_CONFIG_FILENAME, defaultAuthConfigPath, readRegistrationEnabled } 
 
 describe('defaultAuthConfigPath', () => {
   it('sits beside the account database in the accounts home directory', () => {
-    expect(defaultAuthConfigPath({ QILIN_HOME: '/home/qilin' })).toBe(
+    expect(defaultAuthConfigPath({ OPENKYLIN_HOME: '/home/qilin' })).toBe(
       join('/home/qilin', 'qilin-accounts', AUTH_CONFIG_FILENAME),
     )
   })
 
-  it('falls back to the harness home when QILIN_HOME is absent', () => {
+  it('falls back to the harness home when OPENKYLIN_HOME is absent', () => {
     expect(defaultAuthConfigPath({})).toContain('qilin-accounts')
   })
 })

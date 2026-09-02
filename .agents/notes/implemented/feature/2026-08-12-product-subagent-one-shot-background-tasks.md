@@ -12,7 +12,7 @@ Exposing background execution must not add a product session, product-specific j
 
 ## Decision
 
-Production `qilin` does not install the optional product providers. A Profile that opts in installs the needed `qilin-subagent-codex` or `qilin-subagent-claude-code` packages and mounts the required provider instances on the host plane. The `standard`, `code`, and `cordis` Agent Presets configure the corresponding dormant tool rows with `backgroundMode: one-shot`; removing a row's `disabled` field exposes the existing optional `run_in_background` argument to agents composed from that preset. Omission or `false` waits in the foreground; explicit `true` returns a parent-owned Job id after synchronous Job preflight and registration, without waiting for provider startup or completion.
+Production `openkylin` does not install the optional product providers. A Profile that opts in installs the needed `qilin-subagent-codex` or `qilin-subagent-claude-code` packages and mounts the required provider instances on the host plane. The `standard`, `code`, and `cordis` Agent Presets configure the corresponding dormant tool rows with `backgroundMode: one-shot`; removing a row's `disabled` field exposes the existing optional `run_in_background` argument to agents composed from that preset. Omission or `false` waits in the foreground; explicit `true` returns a parent-owned Job id after synchronous Job preflight and registration, without waiting for provider startup or completion.
 
 The [named-instance decision](2026-08-18-product-subagent-named-instances.md) allows multiple rows for either product. Each additional host provider row has its own `providerName`, and each exposed preset tool row binds that exact name through `provider` while keeping a unique `toolName`; the foreground/background scheduling choice does not constrain the number of instances.
 
@@ -35,7 +35,7 @@ product tool call
 
 | Fact or resource | Owner | Product-tool responsibility | Observable result |
 | --- | --- | --- | --- |
-| Product provider installation and registration | Explicit Profile | Install the optional provider package and mount the required named instances on the host plane | The provider names are available without adding the package to every production `qilin` install |
+| Product provider installation and registration | Explicit Profile | Install the optional provider package and mount the required named instances on the host plane | The provider names are available without adding the package to every production `openkylin` install |
 | Product selection and exposure | Agent Preset | Bind one fixed tool name to one fixed provider | Enabling one row exposes only that product tool |
 | Foreground or background choice | `qilin-tool-subagent` | Resolve `run_in_background` under `one-shot` policy | Omission is foreground; explicit `true` returns a Job id |
 | Job id, state, output, cancellation, and notice | `ctx.jobs` and `qilin-tool-jobs` | Register and present the existing one-shot run | Generic job tools collect or stop the run for the exact parent |

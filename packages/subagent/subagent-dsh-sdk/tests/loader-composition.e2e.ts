@@ -58,9 +58,9 @@ async function childLaunch(failure = false): Promise<{
   return {
     childHome,
     env: {
-      QILIN_TEST_CHILD_PATCHES: JSON.stringify([childPatch]),
-      QILIN_TEST_CHILD_HOME: childHome,
-      ...(failure ? { QILIN_TEST_CHILD_FAILURE: '1' } : {}),
+      OPENKYLIN_TEST_CHILD_PATCHES: JSON.stringify([childPatch]),
+      OPENKYLIN_TEST_CHILD_HOME: childHome,
+      ...(failure ? { OPENKYLIN_TEST_CHILD_FAILURE: '1' } : {}),
     },
   }
 }
@@ -86,8 +86,8 @@ describe('SDK subagent routing and diagnostics through the production profile', 
         processTimeoutMs: 120_000,
         env: {
           ...child.env,
-          QILIN_TEST_CHILD_DEFAULT_ROUTE: '1',
-          QILIN_TEST_PARENT_MODEL_RECORD: '.parent-model-routes',
+          OPENKYLIN_TEST_CHILD_DEFAULT_ROUTE: '1',
+          OPENKYLIN_TEST_PARENT_MODEL_RECORD: '.parent-model-routes',
         },
         inspect: async (cwd) => {
           // The child reports realpaths; canonicalize the temp workspace to match.

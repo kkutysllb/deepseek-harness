@@ -10,7 +10,7 @@
       config:
         source: primary-github
         repository: deepseek-harness/deepseek-harness
-        workspacePath: !!js process.env.QILIN_GITHUB_REVIEW_WORKSPACE ?? process.cwd()
+        workspacePath: !!js process.env.OPENKYLIN_GITHUB_REVIEW_WORKSPACE ?? process.cwd()
         agentPreset: standard
         permissionPreset: read-only
 
@@ -24,12 +24,12 @@
           name: '@qilin/host-webserver'
           config:
             host: '127.0.0.1'
-            port: !!js Number(process.env.QILIN_GITHUB_WEBHOOK_PORT ?? 3081)
+            port: !!js Number(process.env.OPENKYLIN_GITHUB_WEBHOOK_PORT ?? 3081)
 
         - id: github-webhook-adapter
           name: '@qilin/webhook-github'
           config:
             source: primary-github
             path: /github
-            secretEnv: QILIN_GITHUB_WEBHOOK_SECRET
+            secretEnv: OPENKYLIN_GITHUB_WEBHOOK_SECRET
             maxBodyBytes: 1048576

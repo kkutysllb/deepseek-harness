@@ -76,7 +76,7 @@ describe('verifyRuntimeClosure', () => {
       'packages/preset/agent-presets/presets/standard/agent.cordis.yml': `
 - id: conditional
   name: '@scope/conditional'
-  disabled: !!js process.env.QILIN_DISABLE_CONDITIONAL === '1'
+  disabled: !!js process.env.OPENKYLIN_DISABLE_CONDITIONAL === '1'
 `,
     })
 

@@ -29,7 +29,7 @@ describe.skipIf(!process.env.E2B_API_KEY)('E2B live Loader composition', () => {
     if (apiKey === undefined) throw new Error('E2B_API_KEY disappeared before the PTY environment test')
     const sandbox = await Sandbox.create({
       apiKey,
-      envs: { NPM_TOKEN: 'sentinel-secret', QILIN_STALE: 'sentinel-stale', KEEP: 'visible' },
+      envs: { NPM_TOKEN: 'sentinel-secret', OPENKYLIN_STALE: 'sentinel-stale', KEEP: 'visible' },
       timeoutMs: 60_000,
       secure: true,
       lifecycle: { onTimeout: 'kill' },
@@ -50,7 +50,7 @@ describe.skipIf(!process.env.E2B_API_KEY)('E2B live Loader composition', () => {
       const ctx = new Context()
       ctx.provide('e2b', {
         cwd: '/home/user',
-        runtimeRoot: '/home/user/.qilin-e2b',
+        runtimeRoot: '/home/user/.openkylin-e2b',
         getSandbox: async () => sandbox,
       } as never)
       await ctx.plugin(SessionProjectionRegistry)
@@ -107,7 +107,7 @@ describe.skipIf(!process.env.E2B_API_KEY)('E2B live Loader composition', () => {
       })
       const session = await backend.spawn({ sessionId: TerminalSessionId('env'), owner, type: 'shell' })
       const result = await session.startSend({
-        text: "printf 'NPM=<%s> DSH=<%s> KEEP=<%s>\\n' \"$NPM_TOKEN\" \"$QILIN_STALE\" \"$KEEP\"",
+        text: "printf 'NPM=<%s> DSH=<%s> KEEP=<%s>\\n' \"$NPM_TOKEN\" \"$OPENKYLIN_STALE\" \"$KEEP\"",
         submit: true,
       }).done
       expect(result.viewport).toContain('NPM=<> DSH=<> KEEP=<visible>')
@@ -168,7 +168,7 @@ describe.skipIf(!process.env.E2B_API_KEY)('E2B live Loader composition', () => {
     const terminalMotd = (output.terminal as { motd: string }).motd
     expect(terminalMotd.length).toBeGreaterThan(0)
     expect(terminalMotd).not.toContain('exec /bin/bash')
-    expect(terminalMotd).not.toContain('.qilin-e2b/terminals/')
+    expect(terminalMotd).not.toContain('.openkylin-e2b/terminals/')
     expect((output.terminal as { echo: { viewport: string } }).echo.viewport).toContain('PTY-你好')
     expect((output.terminal as { scrollback: string }).scrollback).toContain('PTY-你好')
     expect((output.terminal as { signal: { targetPgid: number } }).signal.targetPgid).toBeGreaterThan(0)

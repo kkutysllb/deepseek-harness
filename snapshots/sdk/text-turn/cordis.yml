@@ -1,4 +1,4 @@
-# TypeScript SDK snapshot-record patch over `qilin --profile sdk`.
+# TypeScript SDK snapshot-record patch over `openkylin --profile sdk`.
 
 # The fixture corpus must not depend on the developer's personal skill roots.
 # Ordinary product launches retain the sdk profile's default skill discovery.
@@ -17,7 +17,7 @@
   name: '@qilin/session-persistence-jsonl'
   config:
     root: !!js dshHomePath('sessions')
-    compression: !!js "process.env.QILIN_SNAPSHOT === undefined ? 'zstd' : 'none'"
+    compression: !!js "process.env.OPENKYLIN_SNAPSHOT === undefined ? 'zstd' : 'none'"
 
 - id: tool-subagent
   name: '@qilin/tool-subagent'

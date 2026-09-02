@@ -24,7 +24,7 @@ export const PERSISTENT_COOKIE_NAME = 'qilin_session_persistent'
 export { CSRF_COOKIE_NAME }
 
 /** Environment escape allowing an insecure persistent cookie (legacy name). */
-export const INSECURE_PERSISTENT_COOKIE_ENV = 'QILIN_AUTH_ALLOW_INSECURE_PERSISTENT_COOKIE'
+export const INSECURE_PERSISTENT_COOKIE_ENV = 'OPENKYLIN_AUTH_ALLOW_INSECURE_PERSISTENT_COOKIE'
 
 /** Flag values the operator escape accepts (case- and whitespace-insensitive). */
 const TRUTHY_FLAG_VALUES: readonly string[] = ['1', 'true', 'yes', 'on']

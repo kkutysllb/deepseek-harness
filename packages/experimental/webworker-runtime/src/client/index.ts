@@ -24,7 +24,7 @@ export {
 
 /** Transport global the connection plugin reads instead of building an HTTP carrier. */
 interface ClientTransportGlobal {
-  __QILIN_TRANSPORT__?: {
+  __OPENKYLIN_TRANSPORT__?: {
     fetch: TunnelFetch
     openStream: (endpoint: string, payload: unknown, signal: AbortSignal) => AsyncIterable<unknown>
     loadBundle: (url: string) => Promise<void>
@@ -69,11 +69,11 @@ export interface WorkerHostConnection {
 
 /** Boot-readiness deferred shared with the client entry's pre-boot await. */
 interface BootReadyGlobal {
-  __QILIN_BOOT_READY__?: PromiseWithResolvers<void>
+  __OPENKYLIN_BOOT_READY__?: PromiseWithResolvers<void>
 }
 
 function bootReadyGate(): PromiseWithResolvers<void> {
-  return (globalThis as BootReadyGlobal).__QILIN_BOOT_READY__ ??= Promise.withResolvers<void>()
+  return (globalThis as BootReadyGlobal).__OPENKYLIN_BOOT_READY__ ??= Promise.withResolvers<void>()
 }
 
 /**
@@ -122,7 +122,7 @@ export async function chooseWorkerHostSource(
  * before any bundle executes; the injection table then reproduces the served
  * boot rows — the `__ModuleLoader__` registration queue, the parser-preload
  * bundles, `__DSH_BOOT__`, the theme bootstrap — in table order. The
- * boot-readiness deferred (`__QILIN_BOOT_READY__`) is installed before the
+ * boot-readiness deferred (`__OPENKYLIN_BOOT_READY__`) is installed before the
  * first await and settles with the handshake, so a client entry evaluating
  * concurrently in the same document holds at its pre-boot await until every
  * row has taken effect, and surfaces a failed handshake instead of
@@ -143,7 +143,7 @@ export async function connectWorkerHost(worker: Worker, options?: WorkerHostConn
       (options?.overlays ?? []).map(overlay => new URL(overlay, document.baseURI).href),
     )
     const payload = await tunnel.bootPayload()
-    ;(globalThis as ClientTransportGlobal).__QILIN_TRANSPORT__ = {
+    ;(globalThis as ClientTransportGlobal).__OPENKYLIN_TRANSPORT__ = {
       fetch: (input, init) => tunnel.fetch(input, init),
       openStream: (endpoint, payload, signal) => tunnel.open(endpoint, payload, signal),
       loadBundle: (url: string) => tunnel.loadBundle(url),

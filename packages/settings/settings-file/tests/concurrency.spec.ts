@@ -1,5 +1,5 @@
 // Cross-instance and writer-lock behavior: two providers on one document are
-// the in-process equivalent of two qilin processes sharing a harness home —
+// the in-process equivalent of two openkylin processes sharing a harness home —
 // neither knows the other's cache, so only the read-modify-write cycle under
 // the `<file>.lock` sibling keeps both namespaces alive on disk.
 import { afterEach, describe, expect, it } from 'vitest'

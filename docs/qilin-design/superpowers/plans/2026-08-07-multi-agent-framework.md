@@ -1,10 +1,10 @@
-# QiLin v2.0.0 Multi-Agent Framework Implementation Plan
+# OpenKylin v2.0.0 Multi-Agent Framework Implementation Plan
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-**Goal:** 将 QiLin 从 v1.0.0 单智能体框架（lead agent + 工具式子代理）演进为 v2.0.0 多智能体框架：新增编排层、agent 间通信、handoff 协议、治理扩展，并支持配置切换 single / multi 两种运行模式（默认 single 保持 v1 兼容）。
+**Goal:** 将 OpenKylin 从 v1.0.0 单智能体框架（lead agent + 工具式子代理）演进为 v2.0.0 多智能体框架：新增编排层、agent 间通信、handoff 协议、治理扩展，并支持配置切换 single / multi 两种运行模式（默认 single 保持 v1 兼容）。
 
-**Architecture:** 在现有 `SubagentExecutor`（已有结果契约/超时/取消/后台任务）基座上，新增 `qilin/orchestration/` 包承载编排能力：`handoff.py`（协议）、`batch.py`（P0 并行执行层）、`inbox.py`（P2 消息）、`graph.py`（P1 Orchestrator 图）、`patterns.py`（P2 协作模式）。配置在 `AppConfig` 增加 `orchestration` 段（`mode: "single" | "multi"`），`make_lead_agent` 按模式分支。治理复用现有 `authz`/`token_budget_middleware` 并做 agent 维度扩展。
+**Architecture:** 在现有 `SubagentExecutor`（已有结果契约/超时/取消/后台任务）基座上，新增 `openkylin/orchestration/` 包承载编排能力：`handoff.py`（协议）、`batch.py`（P0 并行执行层）、`inbox.py`（P2 消息）、`graph.py`（P1 Orchestrator 图）、`patterns.py`（P2 协作模式）。配置在 `AppConfig` 增加 `orchestration` 段（`mode: "single" | "multi"`），`make_lead_agent` 按模式分支。治理复用现有 `authz`/`token_budget_middleware` 并做 agent 维度扩展。
 
 **Tech Stack:** Python 3.12 / LangGraph / Pydantic v2 / asyncio / pytest / ruff
 
@@ -15,7 +15,7 @@
 ## 文件结构 / File Map
 
 ```
-qilin/
+openkylin/
 ├── subagents/
 │   ├── batch.py                 # 新建 P0：并行批次执行（Semaphore 限流 + 失败隔离）
 │   └── config.py                # 修改：SubagentConfig 增加 agent_id 字段（agent 身份）
@@ -49,7 +49,7 @@ config.example.yaml              # 修改：orchestration 示例段
 - `make_lead_agent`（agents/lead_agent/agent.py:537）：LangGraph Server 兼容图工厂，从 `RunnableConfig` 读 `subagent_enabled` 等 runtime 选项 —— 多 agent 模式开关沿用此模式。
 - `TokenBudgetMiddleware.from_config`：已有 `agent_name` 参数（per-agent 配额 override）。
 - `trace_id` 传播链：executor → subagent（`SubagentResult.trace_id`），P3 复用。
-- `qilin.tools.builtins.task_tool`（task_tool.py:242）：lead → subagent 委派入口，P0 批处理与其并存（batch 是程序化 API，task_tool 是 LLM 触发入口）。
+- `openkylin.tools.builtins.task_tool`（task_tool.py:242）：lead → subagent 委派入口，P0 批处理与其并存（batch 是程序化 API，task_tool 是 LLM 触发入口）。
 
 ---
 
@@ -59,19 +59,19 @@ config.example.yaml              # 修改：orchestration 示例段
 
 **Files:**
 - Create: `tests/test_subagent_batch.py`
-- Create: `qilin/subagents/batch.py`
+- Create: `openkylin/subagents/batch.py`
 
 - [ ] **Step 1: 写失败测试**（fake executor 用 duck typing，仅暴露 `_aexecute`）
 
 ```python
-"""Unit tests for qilin.subagents.batch (parallel batch execution)."""
+"""Unit tests for openkylin.subagents.batch (parallel batch execution)."""
 
 import asyncio
 
 import pytest
 
-from qilin.subagents.batch import BatchTask, run_batch, run_batch_async
-from qilin.subagents.executor import SubagentResult, SubagentStatus
+from openkylin.subagents.batch import BatchTask, run_batch, run_batch_async
+from openkylin.subagents.executor import SubagentResult, SubagentStatus
 
 
 class FakeExecutor:
@@ -95,9 +95,9 @@ class FakeExecutor:
 
 - [ ] **Step 2: 运行确认失败**（模块不存在）
   Run: `.venv/bin/pytest tests/test_subagent_batch.py -v`
-  Expected: `ModuleNotFoundError: No module named 'qilin.subagents.batch'`
+  Expected: `ModuleNotFoundError: No module named 'openkylin.subagents.batch'`
 
-- [ ] **Step 3: 实现 `qilin/subagents/batch.py`**
+- [ ] **Step 3: 实现 `openkylin/subagents/batch.py`**
 
 ```python
 """Parallel batch execution for subagents.
@@ -109,7 +109,7 @@ class FakeExecutor:
 import asyncio
 from dataclasses import dataclass
 
-from qilin.subagents.executor import SubagentResult, SubagentStatus
+from openkylin.subagents.executor import SubagentResult, SubagentStatus
 
 
 @dataclass
@@ -174,7 +174,7 @@ def run_batch(tasks: list[BatchTask], *, max_concurrency: int = 3) -> list[Subag
 - Modify: `tests/test_subagent_batch.py`（追加 TestClass）
 
 - [ ] **Step 1: 追加测试**：并发峰值 ≤ max_concurrency（用共享计数器）、结果顺序一致、失败任务转 FAILED 且不影响其他任务、空列表返回 []、max_concurrency<1 抛 ValueError、异常在 _aexecute 内被吞（FakeExecutor.fail 实际由 batch 兜底）。
-- [ ] **Step 2: 运行全部通过** + `ruff check tests qilin/subagents/batch.py`
+- [ ] **Step 2: 运行全部通过** + `ruff check tests openkylin/subagents/batch.py`
 - [ ] **Step 3: Commit**
 
 ---
@@ -184,9 +184,9 @@ def run_batch(tasks: list[BatchTask], *, max_concurrency: int = 3) -> list[Subag
 ### Task P1-1: 配置段 `orchestration_config.py`
 
 **Files:**
-- Create: `qilin/config/orchestration_config.py`
+- Create: `openkylin/config/orchestration_config.py`
 - Create: `tests/test_orchestration_config.py`
-- Modify: `qilin/config/app_config.py`（AppConfig 增加 `orchestration: OrchestrationConfig` 字段，默认 single）
+- Modify: `openkylin/config/app_config.py`（AppConfig 增加 `orchestration: OrchestrationConfig` 字段，默认 single）
 
 - [ ] **Step 1: 测试先行**：`mode` 枚举校验（single/multi）、`max_concurrency` 默认 3 且 ≥1 校验、`workers` 列表（AgentSpec：name/description/system_prompt/tools/model）round-trip、`enabled` 派生（mode == "multi"）。
 - [ ] **Step 2: 实现**：
@@ -199,7 +199,7 @@ from typing import Literal
 
 from pydantic import BaseModel, Field, field_validator
 
-from qilin.subagents.config import SubagentConfig
+from openkylin.subagents.config import SubagentConfig
 
 
 class OrchestrationMode(StrEnum):
@@ -269,7 +269,7 @@ class OrchestrationConfig(BaseModel):
 ### Task P1-2: handoff 协议 `handoff.py`
 
 **Files:**
-- Create: `qilin/orchestration/handoff.py`
+- Create: `openkylin/orchestration/handoff.py`
 - Create: `tests/test_orchestration_handoff.py`
 
 - [ ] **Step 1: 测试先行**：`AgentHandoff` dataclass（from_agent/to_agent/task/context/result 字段、无 result 时 to_dict 不含 result）、`HandoffError`、`HandoffResult` 类型（success/failure + payload）。
@@ -329,7 +329,7 @@ class HandoffError(RuntimeError):
 ### Task P1-3: OrchestratorGraph `graph.py`
 
 **Files:**
-- Create: `qilin/orchestration/graph.py`
+- Create: `openkylin/orchestration/graph.py`
 - Create: `tests/test_orchestration_graph.py`
 
 - [ ] **Step 1: 测试先行**：`OrchestratorGraph.build` 返回 langgraph `CompiledStateGraph`；图状态 schema 含 messages + handoffs 通道；orchestrator 路由节点按 worker 注册表分派（DAG 拓扑校验：重复/未知 worker 名报错）。
@@ -351,8 +351,8 @@ from langgraph.graph import END, START, StateGraph
 from langgraph.graph.state import CompiledStateGraph
 from typing_extensions import TypedDict
 
-from qilin.orchestration.handoff import AgentHandoff, HandoffResult
-from qilin.orchestration.config import AgentSpec
+from openkylin.orchestration.handoff import AgentHandoff, HandoffResult
+from openkylin.orchestration.config import AgentSpec
 
 
 class OrchestrationState(TypedDict, total=False):
@@ -407,7 +407,7 @@ class OrchestratorGraph:
 ### Task P2-1: AgentInbox `inbox.py`
 
 **Files:**
-- Create: `qilin/orchestration/inbox.py`
+- Create: `openkylin/orchestration/inbox.py`
 - Create: `tests/test_agent_inbox.py`
 
 - [ ] **Step 1: 测试先行**：`AgentInbox` 注册 agent、`send(from,to,message)` → `receive(to)` 队列、`subscribe` 回调（多订阅者广播）、未注册收件人抛 `HandoffError`、`pending(to)` 计数、`close` 后发送抛错。
@@ -417,7 +417,7 @@ class OrchestratorGraph:
 ### Task P2-2: 协作模式 `patterns.py`
 
 **Files:**
-- Create: `qilin/orchestration/patterns.py`
+- Create: `openkylin/orchestration/patterns.py`
 - Create: `tests/test_orchestration_patterns.py`
 
 - [ ] **Step 1: 测试先行**：
@@ -434,8 +434,8 @@ class OrchestratorGraph:
 
 from typing import Callable
 
-from qilin.orchestration.config import AgentSpec
-from qilin.subagents.batch import BatchTask, run_batch_async
+from openkylin.orchestration.config import AgentSpec
+from openkylin.subagents.batch import BatchTask, run_batch_async
 
 
 async def orchestrator_workers(
@@ -468,7 +468,7 @@ async def peer_consensus(
 ### Task P3-1: agent 身份扩展 `principal.py`
 
 **Files:**
-- Modify: `qilin/authz/principal.py`（`normalize_authz_attributes` 接受 `agent_id`/`agent_role`）
+- Modify: `openkylin/authz/principal.py`（`normalize_authz_attributes` 接受 `agent_id`/`agent_role`）
 - Create: `tests/test_agent_identity.py`
 
 - [ ] **Step 1: 测试先行**：attributes 携带 agent_id/agent_role 时保留；非法类型（非 str）报错；缺省时 None。
@@ -478,7 +478,7 @@ async def peer_consensus(
 ### Task P3-2: per-agent token 配额
 
 **Files:**
-- Modify: `qilin/agents/middlewares/token_budget_middleware.py`（读 `agent_name` 已支持——核对 per-agent override 路径）
+- Modify: `openkylin/agents/middlewares/token_budget_middleware.py`（读 `agent_name` 已支持——核对 per-agent override 路径）
 - Modify: `tests/test_agent_identity.py`（追加配额解析测试）
 
 - [ ] **Step 1: 核对现状**：TokenBudgetMiddleware 的 per-agent override 如何配置（agent_name 参数 + config 映射）；若有缺口（无 per-agent 映射）则补 `resolve_agent_token_budget(agent_name, app_config)`。
@@ -488,7 +488,7 @@ async def peer_consensus(
 ### Task P3-3: 跨 agent trace 关联
 
 **Files:**
-- Modify: `qilin/orchestration/handoff.py`（context 强制携带 `trace_id`）
+- Modify: `openkylin/orchestration/handoff.py`（context 强制携带 `trace_id`）
 - Modify: `tests/test_orchestration_handoff.py`
 
 - [ ] **Step 1: 测试**：handoff context 无 trace_id 时由父 trace 继承并写回（`HandoffResult` 携带 trace_id）。
@@ -502,7 +502,7 @@ async def peer_consensus(
 ### Task CFG-1: make_lead_agent 模式分支
 
 **Files:**
-- Modify: `qilin/agents/lead_agent/agent.py`（`_make_lead_agent` 增加 multi 分支）
+- Modify: `openkylin/agents/lead_agent/agent.py`（`_make_lead_agent` 增加 multi 分支）
 - Create: `tests/test_mode_switch.py`
 
 - [ ] **Step 1: 测试**：`orchestration.mode == "multi"` 且配置了 workers 时，`make_lead_agent` 构建 OrchestratorGraph（断言返回 CompiledStateGraph 且包含 orchestrator 节点）；`mode == "single"`（默认）时行为与 v1 完全一致。
@@ -523,7 +523,7 @@ async def peer_consensus(
 
 - [ ] `ruff check .` → All checks passed
 - [ ] `.venv/bin/pytest tests -v` → 全部 PASS（旧 54 + 新增）
-- [ ] `python -m compileall -q qilin app` → OK
+- [ ] `python -m compileall -q openkylin app` → OK
 - [ ] Commit: `chore: 全量验证通过，v2.0.0 多智能体框架改造完成`
 
 ### Task FIN-2: 版本路线文档更新

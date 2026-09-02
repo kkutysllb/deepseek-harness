@@ -45,13 +45,13 @@ Default roots are scanned in this provider's rank order:
 
 | Rank | Source | Path |
 |---|---|---|
-| 100 | `project-dsh` | `<projectRoot>/.qilin/skills` |
+| 100 | `project-dsh` | `<projectRoot>/.openkylin/skills` |
 | 200 | `project-agents` | `<projectRoot>/.agents/skills` |
 | 300 | `custom` | `Config.customSkillDirs` |
 | 400 | `user-dsh` | `<dshHome>/skills` |
 | 500 | `user-agents` | `<agentsHome>/skills` |
 
-The project root is the nearest ancestor containing `.git`; without one, the current cwd is used. The user DSH root skips its `.system` child. `includeDefaultRoots: false` omits the project and user rows plus the `$QILIN_BUNDLED_SKILL_DIR` default so an isolated provider sees only its own configured roots; `bundledSkillDir` adds a bundled root at rank 600.
+The project root is the nearest ancestor containing `.git`; without one, the current cwd is used. The user DSH root skips its `.system` child. `includeDefaultRoots: false` omits the project and user rows plus the `$OPENKYLIN_BUNDLED_SKILL_DIR` default so an isolated provider sees only its own configured roots; `bundledSkillDir` adds a bundled root at rank 600.
 
 ### Mount and configure
 
@@ -66,8 +66,8 @@ Load the plugin alongside the skill registry; it requires `ctx.skills`.
 |---|---|---|
 | `providerName` | `filesystem` | Unique provider name registered on `ctx.skills` |
 | `includeDefaultRoots` | `true` | Include project and user roots around `customSkillDirs` |
-| `dshHome` | `$QILIN_HOME` or `~/.qilin` | Harness config root; its `skills` subdirectory is scanned |
-| `agentsHome` | `$QILIN_AGENTS_HOME` or `~/.agents` | Shared agent config root scanned for compatible skills |
+| `dshHome` | `$OPENKYLIN_HOME` or `~/.openkylin` | Harness config root; its `skills` subdirectory is scanned |
+| `agentsHome` | `$OPENKYLIN_AGENTS_HOME` or `~/.agents` | Shared agent config root scanned for compatible skills |
 | `customSkillDirs` | `[]` | Additional local skill roots, after project roots and before user roots |
 | `watch` | `true` | Watch local roots and invalidate the provider when the catalog may have changed |
 | `bundledSkillDir` | — | Bundled skill root scanned at rank 600 when configured |

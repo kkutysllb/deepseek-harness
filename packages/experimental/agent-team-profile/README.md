@@ -30,11 +30,11 @@ English | [中文](README.zh.md)
 From this repository checkout, add the package to an initialized profile, then run a task that asks the Lead to delegate work:
 
 ```sh
-pnpm qilin plugin --profile headless add ./packages/experimental/agent-team-profile
-pnpm qilin --profile headless "Use Agent Teams to split this task between two teammates, wait, and summarize."
+pnpm openkylin plugin --profile headless add ./packages/experimental/agent-team-profile
+pnpm openkylin --profile headless "Use Agent Teams to split this task between two teammates, wait, and summarize."
 ```
 
-The profile must already contain `@qilin/base`, whose Subagent services and provider rows this layer consumes. Removing the package with `qilin plugin --profile <name> remove @qilin/experimental-agent-team-profile` removes the bundle from the profile's ordered layer list.
+The profile must already contain `@qilin/base`, whose Subagent services and provider rows this layer consumes. Removing the package with `openkylin plugin --profile <name> remove @qilin/experimental-agent-team-profile` removes the bundle from the profile's ordered layer list.
 
 ### What you get
 

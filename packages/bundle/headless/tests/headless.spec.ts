@@ -237,13 +237,13 @@ describe('headless runner', () => {
     const result = await running
     expect(streamed).toEqual({
       out: '',
-      err: 'qilin: reasoning:\nchecking the workspace safely\nsecond pass\n',
+      err: 'openkylin: reasoning:\nchecking the workspace safely\nsecond pass\n',
       order: [],
     })
     expect(result).toEqual({
       code: 0,
       out: 'done\n',
-      err: 'qilin: reasoning:\nchecking the workspace safely\nsecond pass\n',
+      err: 'openkylin: reasoning:\nchecking the workspace safely\nsecond pass\n',
       order: ['flush', 'exit'],
     })
     await test.ctx.fiber.dispose()
@@ -273,7 +273,7 @@ describe('headless runner', () => {
     expect(await test.run()).toMatchObject({
       code: 1,
       out: '\n',
-      err: 'qilin: SERVER: provider unavailable\n',
+      err: 'openkylin: SERVER: provider unavailable\n',
     })
     await test.ctx.fiber.dispose()
   })
@@ -299,7 +299,7 @@ describe('headless runner', () => {
     expect(await test.run()).toMatchObject({
       code: 1,
       out: '\n',
-      err: 'qilin: reasoning:\ntrying recovery\nqilin: SERVER: provider unavailable\n',
+      err: 'openkylin: reasoning:\ntrying recovery\nopenkylin: SERVER: provider unavailable\n',
     })
     await test.ctx.fiber.dispose()
   })
@@ -323,7 +323,7 @@ describe('headless runner', () => {
     ctx.provide('agents', { create: () => Promise.reject(new Error('factory exploded')) } as never)
     apply(ctx, { task: 't' })
     expect(await exited).toBe(1)
-    expect(err).toBe('qilin: factory exploded\n')
+    expect(err).toBe('openkylin: factory exploded\n')
     await ctx.fiber.dispose()
   })
 
@@ -345,7 +345,7 @@ describe('headless runner', () => {
     ctx.provide('agents', { create: () => rejected } as never)
     apply(ctx, { task: 't' })
     expect(await exited).toBe(1)
-    expect(err).toBe('qilin: factory exploded\n')
+    expect(err).toBe('openkylin: factory exploded\n')
     await ctx.fiber.dispose()
   })
 

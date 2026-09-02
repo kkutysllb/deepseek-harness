@@ -1,5 +1,5 @@
 /**
- * Build the qilin executables and development Node carrier for the Python runtime wheel. The fixed
+ * Build the openkylin executables and development Node carrier for the Python runtime wheel. The fixed
  * `@yao-pkg/pkg --sea` route, deploy flags, and artifact layout are owned by
  * .agents/notes/implemented/architecture/2026-07-10-single-file-executable-sdk-runtime-distribution.md.
  * The staged closure is symlink-free, and whole-tree assets cover Cordis's

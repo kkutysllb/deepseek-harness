@@ -1,5 +1,5 @@
 ---
-description: "The managed QILIN_* shell environment for users and maintainers choosing, configuring, or extending the environment every model shell call runs with."
+description: "The managed OPENKYLIN_* shell environment for users and maintainers choosing, configuring, or extending the environment every model shell call runs with."
 kind: "package-reference"
 ---
 
@@ -9,7 +9,7 @@ English | [中文](README.zh.md)
 
 ## Summary
 
-`qilin-shell-env` provides the trusted `QILIN_*` environment that every model shell call — bash or pwsh — runs with: built-in facts such as `QILIN_HOME`, `QILIN_SHELL=1`, and the agent's `QILIN_SESSION_ID`, plus `QILIN_SESSION_JSONL` when the active persistence backend locates a JSONL artifact. Plugin authors can register their own facts with declared keys, collected per execution and disposed with their plugin; duplicate ownership or undeclared runtime keys fail loudly instead of silently overwriting. The registry changes nothing else the model sees — the shell tools own their own schemas and prompts. Choose it in any composition that mounts a model shell tool; configuration only picks the Harness home directory.
+`qilin-shell-env` provides the trusted `OPENKYLIN_*` environment that every model shell call — bash or pwsh — runs with: built-in facts such as `OPENKYLIN_HOME`, `OPENKYLIN_SHELL=1`, and the agent's `OPENKYLIN_SESSION_ID`, plus `OPENKYLIN_SESSION_JSONL` when the active persistence backend locates a JSONL artifact. Plugin authors can register their own facts with declared keys, collected per execution and disposed with their plugin; duplicate ownership or undeclared runtime keys fail loudly instead of silently overwriting. The registry changes nothing else the model sees — the shell tools own their own schemas and prompts. Choose it in any composition that mounts a model shell tool; configuration only picks the Harness home directory.
 
 ## Table of Contents
 
@@ -25,15 +25,15 @@ English | [中文](README.zh.md)
 <a id="use-this-package"></a>
 ## Use this package
 
-Load this plugin in any composition that mounts a model shell tool (`qilin-tool-bash` or `qilin-tool-pwsh`): each foreground or background shell call then runs with a freshly collected managed environment instead of whatever `QILIN_*` values the process inherited.
+Load this plugin in any composition that mounts a model shell tool (`qilin-tool-bash` or `qilin-tool-pwsh`): each foreground or background shell call then runs with a freshly collected managed environment instead of whatever `OPENKYLIN_*` values the process inherited.
 
 ### What every shell call receives
 
-Every call receives `QILIN_HOME` (the absolute Harness home), `QILIN_SHELL=1`, and, for agent calls, `QILIN_SESSION_ID` (the calling session's id). When the active persistence backend locates a JSONL artifact for the session, calls also receive `QILIN_SESSION_JSONL` with its absolute target path — a location hint, not a guarantee: the file may not exist before the first flush and may not contain the current buffered turn, and the value is not an authorization credential.
+Every call receives `OPENKYLIN_HOME` (the absolute Harness home), `OPENKYLIN_SHELL=1`, and, for agent calls, `OPENKYLIN_SESSION_ID` (the calling session's id). When the active persistence backend locates a JSONL artifact for the session, calls also receive `OPENKYLIN_SESSION_JSONL` with its absolute target path — a location hint, not a guarantee: the file may not exist before the first flush and may not contain the current buffered turn, and the value is not an authorization credential.
 
 ### Adding your own environment facts
 
-Other plugins contribute facts by registering a contributor with a stable name, the complete set of `QILIN_*` keys it may return, a description per key, and a resolver that computes values for one execution:
+Other plugins contribute facts by registering a contributor with a stable name, the complete set of `OPENKYLIN_*` keys it may return, a description per key, and a resolver that computes values for one execution:
 
 ```ts
 import type { Context } from '@deepseek-ai/cordis'
@@ -44,8 +44,8 @@ export const inject = ['shellEnv']
 export function apply(ctx: Context): void {
   ctx.shellEnv.register({
     name: 'deployment-region',
-    variables: { QILIN_DEPLOYMENT_REGION: { description: 'Current deployment region.' } },
-    resolve: execution => execution.agent === undefined ? {} : { QILIN_DEPLOYMENT_REGION: 'cn-north' },
+    variables: { OPENKYLIN_DEPLOYMENT_REGION: { description: 'Current deployment region.' } },
+    resolve: execution => execution.agent === undefined ? {} : { OPENKYLIN_DEPLOYMENT_REGION: 'cn-north' },
   })
 }
 ```
@@ -54,17 +54,17 @@ Contributors must declare every key they return; returning an undeclared or non-
 
 ### Choosing the Harness home
 
-The single config field picks the home directory exposed as `QILIN_HOME`; the default resolution order is the `dshHome` config, then ambient `$QILIN_HOME`, then `~/.qilin`.
+The single config field picks the home directory exposed as `OPENKYLIN_HOME`; the default resolution order is the `dshHome` config, then ambient `$OPENKYLIN_HOME`, then `~/.openkylin`.
 
 | Field | Default | Meaning |
 |---|---|---|
-| `dshHome` | `$QILIN_HOME`, then `~/.qilin` | Absolute Harness home exposed as `QILIN_HOME` |
+| `dshHome` | `$OPENKYLIN_HOME`, then `~/.openkylin` | Absolute Harness home exposed as `OPENKYLIN_HOME` |
 
 The generated [configuration catalog](../../../docs/config-catalog.md#deepseek-aidsh-shell-env) is the exhaustive source for every accepted field and its JSDoc.
 
 ### What can go wrong
 
-Two contributors declaring the same key, or a contributor claiming a reserved built-in (`QILIN_HOME`, `QILIN_SHELL`, `QILIN_SESSION_ID`), fails plugin load loudly. A `QILIN_*` key must be all-caps with underscores (for example `QILIN_REGION`), and a missing description fails registration.
+Two contributors declaring the same key, or a contributor claiming a reserved built-in (`OPENKYLIN_HOME`, `OPENKYLIN_SHELL`, `OPENKYLIN_SESSION_ID`), fails plugin load loudly. A `OPENKYLIN_*` key must be all-caps with underscores (for example `OPENKYLIN_REGION`), and a missing description fails registration.
 
 -----
 
@@ -78,9 +78,9 @@ This section explains the design decisions behind the registry and points at the
 
 ### Design philosophy
 
-- **Trusted namespace, rebuilt per call.** The environment is a Harness-owned `QILIN_*` namespace: the shell executor discards inherited `QILIN_*` values and merges the registry's current snapshot for each execution, so nested harnesses and concurrent parent/child agents cannot leak stale identities, and `process.env` is never modified.
+- **Trusted namespace, rebuilt per call.** The environment is a Harness-owned `OPENKYLIN_*` namespace: the shell executor discards inherited `OPENKYLIN_*` values and merges the registry's current snapshot for each execution, so nested harnesses and concurrent parent/child agents cannot leak stale identities, and `process.env` is never modified.
 - **Declared ownership, loud conflicts.** Contributors declare their keys up front so duplicate ownership is detected before the first command; resolvers may only return declared keys.
-- **Built-ins stay here.** `QILIN_HOME`, `QILIN_SHELL`, and `QILIN_SESSION_ID` are reserved for the registry; `QILIN_SESSION_JSONL` is contributed by this plugin's own persistence translator, which reads the backend-neutral `sessionPersistence.locate()` seam.
+- **Built-ins stay here.** `OPENKYLIN_HOME`, `OPENKYLIN_SHELL`, and `OPENKYLIN_SESSION_ID` are reserved for the registry; `OPENKYLIN_SESSION_JSONL` is contributed by this plugin's own persistence translator, which reads the backend-neutral `sessionPersistence.locate()` seam.
 
 ### Source map
 
@@ -106,7 +106,7 @@ Read these pages when the package-level contract is not enough. They move from t
 - [Bash executor subsystem](../../../docs/subsystems/shell.md) — the `ctx.shell` seam the tools execute through.
 - [tool-bash](../tool-bash/README.md) — the bash tool that consumes this environment.
 - [tool-pwsh](../tool-pwsh/README.md) — the pwsh tool that consumes this environment.
-- [home paths package](../../util/home-paths/README.md) — how `QILIN_HOME` is resolved.
+- [home paths package](../../util/home-paths/README.md) — how `OPENKYLIN_HOME` is resolved.
 - [Generated configuration catalog](../../../docs/config-catalog.md#deepseek-aidsh-shell-env) — every accepted config field and its source declaration.
 
 -----
@@ -114,7 +114,7 @@ Read these pages when the package-level contract is not enough. They move from t
 <a id="model-experience"></a>
 ## Model Experience
 
-Indirectly, through the shell tools (`qilin-tool-bash`, `qilin-tool-pwsh`), which expose this registry's managed `QILIN_*` facts in every shell-tool call.
+Indirectly, through the shell tools (`qilin-tool-bash`, `qilin-tool-pwsh`), which expose this registry's managed `OPENKYLIN_*` facts in every shell-tool call.
 
 #### KV Cache effect
 
@@ -127,8 +127,8 @@ The managed environment never enters the request prefix, so it does not invalida
 
 These limits define when the registry is a poor fit or needs care. They are current package constraints, not a task backlog.
 
-- **`list()` enumerates plugin-contributed variables only** — registry-owned built-ins (`QILIN_HOME`, `QILIN_SHELL`, `QILIN_SESSION_ID`) are not included, so diagnostics, prompt, or UI code must not treat `list()` as an exhaustive environment catalog.
-- **`QILIN_SESSION_JSONL` is a location hint, not a guarantee** — the file may not exist before the first flush and may not contain the current buffered turn, and the value is not an authorization credential.
+- **`list()` enumerates plugin-contributed variables only** — registry-owned built-ins (`OPENKYLIN_HOME`, `OPENKYLIN_SHELL`, `OPENKYLIN_SESSION_ID`) are not included, so diagnostics, prompt, or UI code must not treat `list()` as an exhaustive environment catalog.
+- **`OPENKYLIN_SESSION_JSONL` is a location hint, not a guarantee** — the file may not exist before the first flush and may not contain the current buffered turn, and the value is not an authorization credential.
 
 <a id="dev-note"></a>
 ### Dev Note

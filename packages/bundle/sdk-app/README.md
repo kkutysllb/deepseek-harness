@@ -9,7 +9,7 @@ English | [中文](README.zh.md)
 
 ## Summary
 
-The SDK stdio application as a `qilin` profile bundle over [`qilin-base`](../base/README.md). It inherits the base's disabled module-HMR policy; its patch sets the coding-agent persona, mounts an app-owned zero-option command provider, and starts [`qilin-sdk-jsonrpc-server`](../../sdk/server/README.md) only after that provider accepts the invocation. `qilin --profile sdk --help` therefore writes help and exits without claiming stdin or stdout. The standalone [`sdk-minimal`](../sdk-minimal/README.md) bundle reuses the same startup provider with its own profile name.
+The SDK stdio application as a `openkylin` profile bundle over [`qilin-base`](../base/README.md). It inherits the base's disabled module-HMR policy; its patch sets the coding-agent persona, mounts an app-owned zero-option command provider, and starts [`qilin-sdk-jsonrpc-server`](../../sdk/server/README.md) only after that provider accepts the invocation. `openkylin --profile sdk --help` therefore writes help and exits without claiming stdin or stdout. The standalone [`sdk-minimal`](../sdk-minimal/README.md) bundle reuses the same startup provider with its own profile name.
 
 ## Table of Contents
 
@@ -29,7 +29,7 @@ The startup provider binds stdin EOF to the launcher's bounded successful shutdo
 |---|---|---|
 | `profile` | `sdk` | Profile name rendered in command help; a bundle mounting this provider sets its own shipped profile name. |
 
-`QILIN_MAX_TOKENS_AS_SUCCESS` retains the SDK deployment mapping: unset or JSON `true` reports token-limited subagent completion as accepted, while JSON `false` reports it as an error. Provider/model and workspace cwd arrive through the SDK initialization request; the base profile owns adapters, tools, persistence, policy, settings, and credentials.
+`OPENKYLIN_MAX_TOKENS_AS_SUCCESS` retains the SDK deployment mapping: unset or JSON `true` reports token-limited subagent completion as accepted, while JSON `false` reports it as an error. Provider/model and workspace cwd arrive through the SDK initialization request; the base profile owns adapters, tools, persistence, policy, settings, and credentials.
 
 -----
 

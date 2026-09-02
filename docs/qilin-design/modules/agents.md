@@ -1,6 +1,6 @@
 # agents 模块（agents module）
 
-> QiLin engine · agents subsystem · 双语 / Bilingual
+> OpenKylin engine · agents subsystem · 双语 / Bilingual
 
 ---
 
@@ -8,7 +8,7 @@
 
 ### 职责
 
-`qilin.agents` 是 QiLin 的"大脑中枢"，承担所有智能体（Agent）的构造、配置、状态管理及与 LangGraph 的对接。它包含：
+`openkylin.agents` 是 OpenKylin 的"大脑中枢"，承担所有智能体（Agent）的构造、配置、状态管理及与 LangGraph 的对接。它包含：
 
 - **Lead Agent 工厂**：根据用户消息、`AppConfig`、环境变量构造 LangGraph Agent 实例
 - **中间件链组装**：把循环检测、读取前置、Memory、工具进度状态机等中间件按顺序注入
@@ -69,7 +69,7 @@ class MyMiddleware(AgentMiddleware): ...
 
 ### Responsibility
 
-`qilin.agents` is the "brain hub" of QiLin: every agent — construction, configuration, state management, and LangGraph integration — lives here.
+`openkylin.agents` is the "brain hub" of OpenKylin: every agent — construction, configuration, state management, and LangGraph integration — lives here.
 
 - **Lead Agent factory** — Build LangGraph agents from user messages, `AppConfig`, env vars
 - **Middleware chain assembly** — Compose loop-detection, read-before-write, memory, tool-progress, etc.

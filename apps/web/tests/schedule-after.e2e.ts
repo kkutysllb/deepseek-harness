@@ -285,7 +285,7 @@ describe.skipIf(MODE === 'record')('web e2e: conversational reminders', () => {
       locale: 'en-US',
       timezoneId: AT_BROWSER_ZONE,
     })
-    await page.addInitScript(() => { localStorage.setItem('qilin.locale', 'en') })
+    await page.addInitScript(() => { localStorage.setItem('openkylin.locale', 'en') })
     tripwire = watchConsole(page)
     await page.goto(scaffold.authenticatedUrl, { waitUntil: 'load' })
     await page.waitForSelector('[class*="frame"]', { timeout: 30_000 })
@@ -625,7 +625,7 @@ describe.skipIf(MODE === 'record')('web e2e: active Schedule catalog', () => {
       timezoneId: AT_BROWSER_ZONE,
     })
     await page.clock.setFixedTime(new Date(CATALOG_NOW))
-    await page.addInitScript(() => { localStorage.setItem('qilin.locale', 'en') })
+    await page.addInitScript(() => { localStorage.setItem('openkylin.locale', 'en') })
     tripwire = watchConsole(page)
     await page.goto(scaffold.authenticatedUrl, { waitUntil: 'load' })
     await page.waitForSelector('[class*="frame"]', { timeout: 30_000 })

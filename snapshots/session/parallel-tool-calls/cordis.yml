@@ -5,9 +5,9 @@
 - id: spill-local
   name: '@qilin/spill-local'
   config:
-    root: !!js process.env.QILIN_SNAPSHOT_SPILL_ROOT ?? './.spill'
+    root: !!js process.env.OPENKYLIN_SNAPSHOT_SPILL_ROOT ?? './.spill'
 
 - id: spill-policy
   name: '@qilin/spill-policy'
   config:
-    maxInlineBytes: !!js process.env.QILIN_SNAPSHOT && 800 || 50000
+    maxInlineBytes: !!js process.env.OPENKYLIN_SNAPSHOT && 800 || 50000

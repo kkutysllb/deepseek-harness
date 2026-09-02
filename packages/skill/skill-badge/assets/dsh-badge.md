@@ -1,6 +1,6 @@
-# qilin Badge
+# openkylin Badge
 
-Add the official “powered by qilin” badge without recreating or restyling it.
+Add the official “powered by openkylin” badge without recreating or restyling it.
 
 ## Assets
 

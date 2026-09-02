@@ -44,7 +44,7 @@ describe('the shipped shell composition (real bundle layers)', () => {
   it('composes the confined pwsh roster on win32 and the bash roster on POSIX from the same rows', () => {
     home = mkdtempSync(join(tmpdir(), 'qilin-windows-home-'))
     initProfile(join(home, PROFILES_DIR, 'web'), ['@qilin/base', '@qilin/web-app'])
-    const profile = loadProfile('qilin', 'web', anchor, home)
+    const profile = loadProfile('openkylin', 'web', anchor, home)
     const warnings: string[] = []
     const rows = composeEntries(
       profile.layers.map(layer => layer.patches),
@@ -82,7 +82,7 @@ describe('the shipped shell composition (real bundle layers)', () => {
   it('base-only profiles carry both stacks with the same platform gating', () => {
     home = mkdtempSync(join(tmpdir(), 'qilin-windows-home-'))
     initProfile(join(home, PROFILES_DIR, 'base-only'), ['@qilin/base'])
-    const profile = loadProfile('qilin', 'base-only', anchor, home)
+    const profile = loadProfile('openkylin', 'base-only', anchor, home)
     const warnings: string[] = []
     const rows = composeEntries(
       profile.layers.map(layer => layer.patches),

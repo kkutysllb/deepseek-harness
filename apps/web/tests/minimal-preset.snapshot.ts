@@ -87,14 +87,14 @@ describe('minimal agent preset', () => {
       signal,
       callId: ToolCallId('minimal-bash-state-setup'),
       name: 'bash',
-      arguments: { command: `cd ${JSON.stringify(stateDir)} && export QILIN_MINIMAL_STATE=PERSISTED` },
+      arguments: { command: `cd ${JSON.stringify(stateDir)} && export OPENKYLIN_MINIMAL_STATE=PERSISTED` },
       agent: agentHandle.agent,
     })
     const bash = await scaffold.ctx.tools.execute({
       signal,
       callId: ToolCallId('minimal-bash-state-read'),
       name: 'bash',
-      arguments: { command: 'printf \'%s:%s\n\' "$QILIN_MINIMAL_STATE" "$PWD"' },
+      arguments: { command: 'printf \'%s:%s\n\' "$OPENKYLIN_MINIMAL_STATE" "$PWD"' },
       agent: agentHandle.agent,
     })
     const seedPath = join(scaffold.workspaceCwd, 'preset-smoke.txt')

@@ -14,7 +14,7 @@ import css from './ConversationRoot.module.css'
 export type ConversationRootProps = ConversationSlotProps
 
 /** localStorage key for the dragged transcript width preference (px). */
-const WIDTH_PREF_KEY = 'qilin.conversation.contentWidth'
+const WIDTH_PREF_KEY = 'openkylin.conversation.contentWidth'
 /** Floor for a dragged content width; matches the layout center-column minimum. */
 const CONTENT_MIN = 640
 /** Column budget the content must leave free: 88px per side keeps the width

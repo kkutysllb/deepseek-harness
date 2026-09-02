@@ -28,7 +28,7 @@ import { scrubbedParentEnv } from '@qilin/subprocess'
 
 /** Resolved spawn spec for an SDK runtime child process (no defaults — see Config). */
 export interface SdkRunSpec {
-  /** Explicit qilin CLI module; omission resolves the SDK client's same-version dependency. */
+  /** Explicit openkylin CLI module; omission resolves the SDK client's same-version dependency. */
   dshBin?: string
   /** Named child profile. */
   profile: string
@@ -54,7 +54,7 @@ export interface SdkRunSpec {
    * Extra environment variables to ADD for the child (e.g. the child
    * runtime's own `DEEPSEEK_API_KEY`). Merged after
    * the seam's `scrubbedParentEnv()` base, so an explicit credential or
-   * current `QILIN_*` fact survives while ambient namesakes never leak.
+   * current `OPENKYLIN_*` fact survives while ambient namesakes never leak.
    */
   env: Record<string, string>
   /** Bound (ms) on the protocol `shutdown` exchange during dispose. */

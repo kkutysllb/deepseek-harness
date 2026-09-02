@@ -1,6 +1,6 @@
 {
   "name": "qilin-python-runtime-closure",
-  "description": "Dependency-only deploy root defining the qilin executable shipped by the Python runtime wheel.",
+  "description": "Dependency-only deploy root defining the openkylin executable shipped by the Python runtime wheel.",
   "version": "0.0.1",
   "private": true,
   "type": "module",

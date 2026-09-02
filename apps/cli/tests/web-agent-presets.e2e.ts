@@ -52,14 +52,14 @@ async function bootWeb(
 ): Promise<Context> {
   const storageRoot = join(dirname(settingsFile), 'storages')
   const overrides: PatchOptions[] = [
-    // The settings row defaults to `$QILIN_HOME/settings.yaml`. Left alone it
+    // The settings row defaults to `$OPENKYLIN_HOME/settings.yaml`. Left alone it
     // reads the developer's own document — and since the default preset is a
     // setting, a stored `agent-presets.default` would decide this file's
     // outcome. Point it at a temp file for the same reason the roster row
     // below pins `includeUserRoot` off.
     { id: 'settings', config: { path: settingsFile, watch: false } },
-    // storage-json's root is anchored to the real $QILIN_HOME. Unpinned, this
-    // file writes the developer's own `~/.qilin/storages/` — and then reads it
+    // storage-json's root is anchored to the real $OPENKYLIN_HOME. Unpinned, this
+    // file writes the developer's own `~/.openkylin/storages/` — and then reads it
     // back on the next run, so a stored document from any other build decides
     // this test's boot. Same reason the settings row above is pinned.
     { id: 'storage-json', config: { root: storageRoot } },
@@ -98,7 +98,7 @@ async function bootWeb(
       { id: 'ui-directory-picker-browse', name: '@qilin/client-ui-directory-picker-browse' },
     ] },
     // Pin the roster away from the developer's machine: `includeUserRoot`
-    // false keeps `~/.qilin/.agent-presets` from changing a test's outcome.
+    // false keeps `~/.openkylin/.agent-presets` from changing a test's outcome.
     // `default` here is the COMPOSITION default — the base layer the settings
     // document overrides. No `roots` entry: the plugin bundles the shipped
     // presets itself and prepends their root.
@@ -113,7 +113,7 @@ async function bootWeb(
   await healProfilesModuleFallback({ installAnchor: INSTALL_ANCHOR, home })
   const profileDir = join(home, 'profiles', 'spec')
   await mkdir(profileDir, { recursive: true })
-  // Product Bundles are installed into the Profile, not the qilin app. Model
+  // Product Bundles are installed into the Profile, not the openkylin app. Model
   // pnpm's package link for only the selected products; their own production
   // dependencies resolve from the linked workspace packages, while shared
   // peers still resolve through the installation fallback above.
@@ -131,7 +131,7 @@ async function bootWeb(
     await writeFile(join(profileDir, 'package.json'), JSON.stringify({
       private: true,
       dependencies: Object.fromEntries(profileBundles.map(name => [name, 'workspace:*'])),
-      qilin: { profile: { bundles: profileBundles } },
+      openkylin: { profile: { bundles: profileBundles } },
     }, null, 2) + '\n')
     const profile = loadProfile('qilin-test', 'spec', INSTALL_ANCHOR, home, { userLayer: false })
     bundlePatches = profile.layers.flatMap(layer => layer.patches)
@@ -407,8 +407,8 @@ describe('the shipped Web composition', () => {
 
   it('merges the global skill layer into a preset agent\'s catalog, keeping local discovery preset-side', async () => {
     const proj = await mkdtemp(join(tmpdir(), 'qilin-preset-skill-proj-'))
-    await mkdir(join(proj, '.qilin', 'skills', 'project-proof'), { recursive: true })
-    await writeFile(join(proj, '.qilin', 'skills', 'project-proof', 'SKILL.md'), [
+    await mkdir(join(proj, '.openkylin', 'skills', 'project-proof'), { recursive: true })
+    await writeFile(join(proj, '.openkylin', 'skills', 'project-proof', 'SKILL.md'), [
       '---',
       'name: project-proof',
       'description: Proves the preset layer discovers project skills beside global ones.',
@@ -444,7 +444,7 @@ describe('the shipped Web composition', () => {
         agent: handle.agent,
       })
       expect(loaded.isError).toBe(false)
-      expect(JSON.stringify(loaded.content)).toContain('powered by qilin')
+      expect(JSON.stringify(loaded.content)).toContain('powered by openkylin')
     } finally {
       await handle.dispose()
     }
@@ -732,7 +732,7 @@ describe('a launcher that configures no writable root', () => {
   // The claim this default exists for, asserted through the real shipped
   // bundles rather than a hand-built context: `apps/cli` patches in only the
   // system root, and a person's own presets are found anyway because the
-  // roster derives `<dshHome>/.agent-presets` itself. `$QILIN_HOME` is pointed
+  // roster derives `<dshHome>/.agent-presets` itself. `$OPENKYLIN_HOME` is pointed
   // at a temp home BEFORE boot — the derived root is resolved when the plugin
   // is constructed, and an unpinned run would read the developer's own.
   let derivedCtx: Context
@@ -740,8 +740,8 @@ describe('a launcher that configures no writable root', () => {
 
   beforeAll(async () => {
     const home = await mkdtemp(join(tmpdir(), 'qilin-preset-derived-'))
-    previousHome = process.env.QILIN_HOME
-    process.env.QILIN_HOME = home
+    previousHome = process.env.OPENKYLIN_HOME
+    process.env.OPENKYLIN_HOME = home
     await mkdir(join(home, '.agent-presets', 'derived-mine'), { recursive: true })
     await writeFile(
       join(home, '.agent-presets', 'derived-mine', 'agent.cordis.yml'),
@@ -758,8 +758,8 @@ describe('a launcher that configures no writable root', () => {
   }, 120_000)
 
   afterAll(async () => {
-    if (previousHome === undefined) delete process.env.QILIN_HOME
-    else process.env.QILIN_HOME = previousHome
+    if (previousHome === undefined) delete process.env.OPENKYLIN_HOME
+    else process.env.OPENKYLIN_HOME = previousHome
     await derivedCtx.fiber.dispose()
   })
 

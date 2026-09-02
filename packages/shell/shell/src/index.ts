@@ -20,7 +20,7 @@ import type { ShellExecRequest, ShellExecSpec, ShellProcess, ShellRunResult } fr
  */
 export const SHELL_SETTINGS_NAMESPACE = 'shell'
 
-export { QILIN_ENV_PREFIX } from './types.ts'
+export { OPENKYLIN_ENV_PREFIX } from './types.ts'
 export type {
   ShellExecRequest,
   ShellExecSpec,

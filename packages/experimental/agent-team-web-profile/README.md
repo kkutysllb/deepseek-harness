@@ -30,11 +30,11 @@ English | [中文](README.zh.md)
 From this repository checkout, add the Host and Web Agent Teams layers to an initialized `web` profile in this order:
 
 ```sh
-pnpm qilin plugin --profile web add ./packages/experimental/agent-team-profile
-pnpm qilin plugin --profile web add ./packages/experimental/agent-team-web-profile
+pnpm openkylin plugin --profile web add ./packages/experimental/agent-team-profile
+pnpm openkylin plugin --profile web add ./packages/experimental/agent-team-web-profile
 ```
 
-The first command supplies the Team domain, generated Remote methods, and model tools. The second command activates this package's declared patch and its browser presentation. Removing the package with `qilin plugin --profile web remove @qilin/experimental-agent-team-web-profile` removes the Web layer from the profile's ordered bundle list.
+The first command supplies the Team domain, generated Remote methods, and model tools. The second command activates this package's declared patch and its browser presentation. Removing the package with `openkylin plugin --profile web remove @qilin/experimental-agent-team-web-profile` removes the Web layer from the profile's ordered bundle list.
 
 ### What you get
 

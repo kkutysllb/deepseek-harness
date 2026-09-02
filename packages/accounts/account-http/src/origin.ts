@@ -13,7 +13,7 @@
 import type { IncomingHttpHeaders } from 'node:http'
 
 /** Environment variable listing extra browser origins allowed at auth POSTs. */
-export const CORS_ORIGINS_ENV_VAR = 'QILIN_CORS_ORIGINS'
+export const CORS_ORIGINS_ENV_VAR = 'OPENKYLIN_CORS_ORIGINS'
 
 /** The schemes a browser Origin may carry for the comparison. */
 const ALLOWED_SCHEMES: readonly string[] = ['http:', 'https:']

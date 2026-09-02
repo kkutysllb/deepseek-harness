@@ -1,5 +1,5 @@
 ---
-description: "One-shot task mode for qilin: run a single task from the command line and get the final answer printed, for users scripting or automating qilin."
+description: "One-shot task mode for openkylin: run a single task from the command line and get the final answer printed, for users scripting or automating openkylin."
 kind: "package-bundle"
 ---
 
@@ -9,7 +9,7 @@ English | [中文](README.zh.md)
 
 ## Summary
 
-`qilin-headless` runs one qilin task from the command line and prints the final answer, then exits — no GUI, no server, no browser. Type `qilin --profile headless "run the tests"` and the agent works through the task with the same model, tools, and safety defaults as every other surface. It is ideal for scripts, CI, and one-off jobs: the process opens no ports and leaves nothing running behind. The exit code tells you the outcome — 0 when the task completed, 1 when it aborted or errored. The main boundary: one task per invocation, with no interactive follow-up.
+`qilin-headless` runs one openkylin task from the command line and prints the final answer, then exits — no GUI, no server, no browser. Type `openkylin --profile headless "run the tests"` and the agent works through the task with the same model, tools, and safety defaults as every other surface. It is ideal for scripts, CI, and one-off jobs: the process opens no ports and leaves nothing running behind. The exit code tells you the outcome — 0 when the task completed, 1 when it aborted or errored. The main boundary: one task per invocation, with no interactive follow-up.
 
 ## Table of Contents
 
@@ -30,10 +30,10 @@ Run one task, get the final answer, and exit. The task is the command line itsel
 ### Running a one-shot task
 
 ```sh
-qilin --profile headless "run the tests"
+openkylin --profile headless "run the tests"
 ```
 
-The agent works through the task, streams each non-empty provider reasoning delta to stderr under a `qilin: reasoning:` heading, then prints the final answer on stdout and exits. Consecutive reasoning deltas stay in one section, and the runner closes that section before later output when the provider supplied no trailing newline. A successful run without reasoning keeps stderr empty; a failure exits 1 and prints `qilin: <code>: <message>` to stderr. A missing or blank task is rejected before anything runs. The task text is supplied through the single `task` setting:
+The agent works through the task, streams each non-empty provider reasoning delta to stderr under a `openkylin: reasoning:` heading, then prints the final answer on stdout and exits. Consecutive reasoning deltas stay in one section, and the runner closes that section before later output when the provider supplied no trailing newline. A successful run without reasoning keeps stderr empty; a failure exits 1 and prints `openkylin: <code>: <message>` to stderr. A missing or blank task is rejected before anything runs. The task text is supplied through the single `task` setting:
 
 | Field | Default | Meaning |
 |---|---|---|
@@ -43,11 +43,11 @@ The generated [configuration catalog](../../../docs/config-catalog.md#deepseek-a
 
 ### When to use it
 
-Use headless for scripted or automated qilin runs — CI steps, batch jobs, quick answers from a terminal. Avoid it when you need a multi-turn interactive session or a GUI; the browser surface ([qilin-web-app](../web-app/README.md)) serves that. The process stays alive only for the run, opens no listening port, and exits on its own, so it fits pipelines that wait on the process.
+Use headless for scripted or automated openkylin runs — CI steps, batch jobs, quick answers from a terminal. Avoid it when you need a multi-turn interactive session or a GUI; the browser surface ([qilin-web-app](../web-app/README.md)) serves that. The process stays alive only for the run, opens no listening port, and exits on its own, so it fits pipelines that wait on the process.
 
 ### Help and task errors
 
-`qilin --profile headless --help` prints the command's help text and exits without running anything. A missing or whitespace-only task is a usage error: nothing runs and the process exits 1.
+`openkylin --profile headless --help` prints the command's help text and exits without running anything. A missing or whitespace-only task is a usage error: nothing runs and the process exits 1.
 
 -----
 
@@ -65,11 +65,11 @@ The runner awaits the complete application (`ctx.get('loader')?.await()`) so the
 
 ### Patch surface over base
 
-The patch rides over `qilin-base`: it inherits the projection cache, sets the coding persona on the base `system-prompt` row, keeps the same temporary process-wide PTC mode opt-in (`QILIN_TOOLS_MODE`) as the Web surface, disables the shared HMR row, inserts PTC mode's worker as a core execution capability, and mounts the startup provider and the runner. The cache checkpoints each persisted one-shot session for later consumers; its durability barrier flushes each covered log prefix before publishing the cache row and may split otherwise coalesced JSONL runs. The startup provider ([`src/startup.ts`](src/startup.ts)) injects `ctx.cmdlineArgs` ([`qilin-cmdline`](../../boot/cmdline/README.md)), reads the positional argument, prints the app's `--help`, and provides `headlessStartup`; the runner injects that service and reads its task from lazy config.
+The patch rides over `qilin-base`: it inherits the projection cache, sets the coding persona on the base `system-prompt` row, keeps the same temporary process-wide PTC mode opt-in (`OPENKYLIN_TOOLS_MODE`) as the Web surface, disables the shared HMR row, inserts PTC mode's worker as a core execution capability, and mounts the startup provider and the runner. The cache checkpoints each persisted one-shot session for later consumers; its durability barrier flushes each covered log prefix before publishing the cache row and may split otherwise coalesced JSONL runs. The startup provider ([`src/startup.ts`](src/startup.ts)) injects `ctx.cmdlineArgs` ([`qilin-cmdline`](../../boot/cmdline/README.md)), reads the positional argument, prints the app's `--help`, and provides `headlessStartup`; the runner injects that service and reads its task from lazy config.
 
 ### Exit mapping
 
-A completed final `turn/end` exits 0; any other outcome — aborted, error, or no turn in the owned interval — exits 1. An `error` reason also writes `qilin: <code>: <message>` to stderr. A direct driver failure (for example, Agent creation) writes `qilin: <message>` to stderr and exits 1.
+A completed final `turn/end` exits 0; any other outcome — aborted, error, or no turn in the owned interval — exits 1. An `error` reason also writes `openkylin: <code>: <message>` to stderr. A direct driver failure (for example, Agent creation) writes `openkylin: <message>` to stderr and exits 1.
 
 ### Source map
 
@@ -117,10 +117,10 @@ The runner adds nothing to the request prefix; it only drives one user message t
 <a id="known-limitations-and-deferred-work"></a>
 
 
-These limits tell you when headless does not fit and what it needs from the `qilin` launcher. They are current package constraints, not a general CLI comparison or a task backlog.
+These limits tell you when headless does not fit and what it needs from the `openkylin` launcher. They are current package constraints, not a general CLI comparison or a task backlog.
 
 - **One task per run** — after the task is answered the process exits; there is no interactive follow-up, so split multi-step work into separate runs.
-- **Runs through the `qilin` launcher** — starting the headless profile another way fails at startup, because only the launcher can request the process exit.
+- **Runs through the `openkylin` launcher** — starting the headless profile another way fails at startup, because only the launcher can request the process exit.
 - **No pre-token heartbeat** — stderr stays silent until the provider emits a non-empty reasoning delta; a delayed first token exposes no earlier progress signal.
 - **Reasoning enters stderr logs** — redirection and supervisors may retain substantially more and potentially sensitive model output; route stderr to a controlled sink when needed.
 - **Only reasoning and the final answer are printed** — a run without an assistant message prints an empty stdout line and exits 1; intermediate tool output is not printed.

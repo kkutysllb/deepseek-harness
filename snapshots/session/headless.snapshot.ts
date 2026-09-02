@@ -1,4 +1,4 @@
-/** Recorded-session replay through the shipped headless `qilin` profile. */
+/** Recorded-session replay through the shipped headless `openkylin` profile. */
 
 import { cp, copyFile, mkdir, readFile, readdir, rm, utimes, writeFile } from 'node:fs/promises'
 import { existsSync } from 'node:fs'
@@ -59,12 +59,12 @@ function snapshotMode(value: string | undefined): SnapshotMode {
     case 'replay': return 'replay'
     case 'record': return 'record'
     case 'refresh': return 'refresh'
-    default: throw new Error(`unknown QILIN_SNAPSHOT mode: ${value}`)
+    default: throw new Error(`unknown OPENKYLIN_SNAPSHOT mode: ${value}`)
   }
 }
 
-const mode = snapshotMode(process.env.QILIN_SNAPSHOT)
-const RUNTIME_WORKSPACE_ENTRIES = ['.agents', '.qilin', '.snapshot-patches'] as const
+const mode = snapshotMode(process.env.OPENKYLIN_SNAPSHOT)
+const RUNTIME_WORKSPACE_ENTRIES = ['.agents', '.openkylin', '.snapshot-patches'] as const
 
 interface JsonObject {
   [key: string]: unknown
@@ -156,7 +156,7 @@ function contextOf(logs: readonly string[]): NormalizeContext {
 }
 
 async function persistedSessions(cwd: string): Promise<SessionLog[]> {
-  const root = join(cwd, '.qilin', 'sessions')
+  const root = join(cwd, '.openkylin', 'sessions')
   const files = (await readdir(root, { recursive: true }))
     .filter(file => file.endsWith('session.jsonl'))
   const logs = await Promise.all(files.map(async (file): Promise<SessionLog> => {
@@ -309,7 +309,7 @@ function stderrFromSession(log: string): string {
   const appendReasoning = (text: string): void => {
     if (text === '') return
     if (!open) {
-      output += 'qilin: reasoning:\n'
+      output += 'openkylin: reasoning:\n'
       open = true
     }
     output += text
@@ -371,7 +371,7 @@ function stderrFromSession(log: string): string {
   if (typeof error?.code !== 'string' || typeof error.message !== 'string') {
     throw new Error('headless snapshot error reason has no code and message')
   }
-  return `${output}qilin: ${error.code}: ${error.message}\n`
+  return `${output}openkylin: ${error.code}: ${error.message}\n`
 }
 
 function modelFromSession(log: string): { provider: string; model: string } {
@@ -403,7 +403,7 @@ async function seedWorkspace(scenario: HeadlessScenario, cwd: string): Promise<v
 
 const workspaceSetups: Record<string, (cwd: string) => Promise<void>> = {
   async 'editing-cordis-skill'(cwd) {
-    const target = join(cwd, '.qilin', 'skills', 'editing-cordis-compositions', 'SKILL.md')
+    const target = join(cwd, '.openkylin', 'skills', 'editing-cordis-compositions', 'SKILL.md')
     await mkdir(dirname(target), { recursive: true })
     await copyFile(editingCordisSkill, target)
   },
@@ -630,11 +630,11 @@ describe('headless recorded-session snapshots', () => {
     ].map(record => JSON.stringify(record)).join('\n')
 
     expect(stderrFromSession(log)).toBe([
-      'qilin: reasoning:',
+      'openkylin: reasoning:',
       'first',
-      'qilin: reasoning:',
+      'openkylin: reasoning:',
       'second',
-      'qilin: reasoning:',
+      'openkylin: reasoning:',
       'third',
       '',
     ].join('\n'))
@@ -645,7 +645,7 @@ describe('headless recorded-session snapshots', () => {
       || scenario.manifest.platform === 'pwsh' && !hasPwsh
       || mode === 'record' && scenario.manifest.recording === 'authored'
     const scenarioTest = skipped ? it.skip : mode === 'replay' ? it.concurrent : it
-    scenarioTest(`${mode}s ${scenario.name} through qilin --profile headless`, async () => {
+    scenarioTest(`${mode}s ${scenario.name} through openkylin --profile headless`, async () => {
       let fixtures = await fixtureSessions(scenario)
       const primaryFixture = fixtures[0]
       if (primaryFixture === undefined) throw new Error(`${scenario.name}: missing primary session fixture`)
@@ -698,23 +698,23 @@ describe('headless recorded-session snapshots', () => {
             ? 0
             : 1,
           env: {
-            QILIN_SNAPSHOT: replaying ? 'replay' : 'record',
-            QILIN_SNAPSHOT_PROVIDER: model.provider,
-            QILIN_SNAPSHOT_MODEL: model.model,
-            QILIN_SNAPSHOT_SPILL_ROOT: spillRoot,
-            QILIN_SNAPSHOT_FILE: join(scenario.dir, 'session.jsonl'),
+            OPENKYLIN_SNAPSHOT: replaying ? 'replay' : 'record',
+            OPENKYLIN_SNAPSHOT_PROVIDER: model.provider,
+            OPENKYLIN_SNAPSHOT_MODEL: model.model,
+            OPENKYLIN_SNAPSHOT_SPILL_ROOT: spillRoot,
+            OPENKYLIN_SNAPSHOT_FILE: join(scenario.dir, 'session.jsonl'),
             ...(replaying && fixtureFiles.length > 1
-              ? { QILIN_SNAPSHOT_CHILD_FILES: fixtureFiles.slice(1).map(file => join(scenario.dir, file)).join(delimiter) }
+              ? { OPENKYLIN_SNAPSHOT_CHILD_FILES: fixtureFiles.slice(1).map(file => join(scenario.dir, file)).join(delimiter) }
               : {}),
             ...(replaying && scenario.manifest.replay?.override === true
-              ? { QILIN_SNAPSHOT_OVERRIDE: join(scenario.dir, 'replay.override.json') }
+              ? { OPENKYLIN_SNAPSHOT_OVERRIDE: join(scenario.dir, 'replay.override.json') }
               : {}),
             ...(scenario.manifest.permission === undefined
               ? {}
-              : { QILIN_PERMISSION_MODE: scenario.manifest.permission }),
+              : { OPENKYLIN_PERMISSION_MODE: scenario.manifest.permission }),
             ...scenario.manifest.environment,
             NODE_OPTIONS: [process.env.NODE_OPTIONS, '--disable-warning=ExperimentalWarning'].filter(Boolean).join(' '),
-            QILIN_TELEMETRY_DISABLED: '1',
+            OPENKYLIN_TELEMETRY_DISABLED: '1',
           },
           prepare: async (cwd) => {
             await mkdir(join(cwd, patchRoot), { recursive: true })

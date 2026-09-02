@@ -1,9 +1,9 @@
 /** Deterministic in-memory PTY backend for transcript snapshots. */
 
 class SnapshotSession {
-  motd = 'qilin> '
+  motd = 'openkylin> '
   statusValue = { kind: 'running' }
-  scrollback = 'qilin> '
+  scrollback = 'openkylin> '
 
   startSend(request) {
     const viewport = `${request.text}\nPTY_OK\ndsh> `

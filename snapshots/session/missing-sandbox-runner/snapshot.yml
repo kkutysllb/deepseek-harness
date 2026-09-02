@@ -8,4 +8,4 @@ header:
 platform: posix
 permission: read-only
 environment:
-  QILIN_SNAPSHOT_MISSING_SANDBOX_RUNNER: '1'
+  OPENKYLIN_SNAPSHOT_MISSING_SANDBOX_RUNNER: '1'

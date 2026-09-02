@@ -568,7 +568,7 @@ Changes to this decision use `qilin-pre-push-checks` to select commands for the 
 - affected Host and Client TypeScript faces;
 - lint and duplication;
 - per-file 100% coverage for affected source files;
-- `QILIN_SNAPSHOT=replay pnpm run test:web`, without refreshing existing presentation goldens;
+- `OPENKYLIN_SNAPSHOT=replay pnpm run test:web`, without refreshing existing presentation goldens;
 - authored Remote type and TypeScript checks;
 - `pnpm run doc-sync`;
 - `git diff --check`.

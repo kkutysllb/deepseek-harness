@@ -47,7 +47,7 @@ The plugin provides an optional cordis service named `apiAuth` with `checkReques
 <a id="defense-in-depth"></a>
 ## Defense in depth
 
-The legacy Origin whitelist guards exactly the credential POSTs (`login/local`, `register`, `logout`, `initialize`) — a cross-site origin is denied outright. The credential endpoints share one per-IP fixed-window budget (default 10 attempts / 300s, injectable clock, bounded table with sweep-and-evict), answering 429 with `Retry-After`. `QILIN_AUTH_DISABLED=1` (outside production) passes every chain with the synthetic `default` admin and disables password changes, CSRF, and the whitelist — with the boot-time production refusal and operator warning from `account-auth`.
+The legacy Origin whitelist guards exactly the credential POSTs (`login/local`, `register`, `logout`, `initialize`) — a cross-site origin is denied outright. The credential endpoints share one per-IP fixed-window budget (default 10 attempts / 300s, injectable clock, bounded table with sweep-and-evict), answering 429 with `Retry-After`. `OPENKYLIN_AUTH_DISABLED=1` (outside production) passes every chain with the synthetic `default` admin and disables password changes, CSRF, and the whitelist — with the boot-time production refusal and operator warning from `account-auth`.
 
 -----
 

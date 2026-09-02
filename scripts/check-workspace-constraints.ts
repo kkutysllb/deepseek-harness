@@ -89,7 +89,7 @@ export interface PackageManifest {
   devDependencies?: Record<string, string>
   dependencies?: Record<string, string>
   optionalDependencies?: Record<string, string>
-  qilin?: {
+  openkylin?: {
     bundle?: {
       patch?: string
     }
@@ -173,7 +173,7 @@ function sameStringList(actual: readonly string[] | undefined, expected: readonl
 }
 
 export function expectedDshPackageFiles(manifest: PackageManifest): readonly string[] {
-  const declaredPatch = manifest.qilin?.bundle?.patch
+  const declaredPatch = manifest.openkylin?.bundle?.patch
   const bundleFiles = declaredPatch === undefined ? [] : [declaredPatch.replace(/^\.\//, '')]
   const extras = [
     ...bundleFiles,
@@ -295,7 +295,7 @@ export function checkWorkspaceManifest({ dir, manifest }: WorkspaceManifest): st
     //
     // Access is per release sequence, not per scope: the vendored framework and
     // the Landlock packages publish publicly because outside consumers install
-    // them, while the qilin family stays restricted until its own sequence goes
+    // them, while the openkylin family stays restricted until its own sequence goes
     // public. A mixed scope is why no publish path passes `--access` — one flag
     // cannot serve both, so each packed manifest decides
     // ([rationale](../.agents/notes/implemented/process/2026-08-13-public-vendor-and-native-sequences.md)).
@@ -421,8 +421,8 @@ function checkHierarchyShape(): string[] {
 }
 
 function checkRepositoryVersion(): string[] {
-  // The root carries the qilin release family's version, so a prerelease such as
-  // 0.0.1-rc.1 is a valid state between `release:qilin` and its publication.
+  // The root carries the openkylin release family's version, so a prerelease such as
+  // 0.0.1-rc.1 is a valid state between `release:openkylin` and its publication.
   if (repositoryVersion && /^\d+\.\d+\.\d+(?:-[0-9A-Za-z.-]+)?$/.test(repositoryVersion)) return []
   return ['package.json: version must be X.Y.Z with an optional prerelease segment']
 }

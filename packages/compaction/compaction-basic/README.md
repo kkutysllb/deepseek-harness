@@ -25,7 +25,7 @@ English | [中文](README.zh.md)
 <a id="use-this-package"></a>
 ## Use this package
 
-Mount this package to get automatic conversation condensation in a composition that already provides an LLM, session storage, and token measurement. The shipped `qilin` base enables it by default; mount it explicitly to control when condensation starts.
+Mount this package to get automatic conversation condensation in a composition that already provides an LLM, session storage, and token measurement. The shipped `openkylin` base enables it by default; mount it explicitly to control when condensation starts.
 
 ### What you get
 

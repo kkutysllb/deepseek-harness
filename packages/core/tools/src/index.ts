@@ -1855,7 +1855,7 @@ export class ToolRuntime extends Service {
 
 /** Mint a same-process correlation token whose identity is its value. */
 function createExecutionToken(): ToolExecutionToken {
-  return Symbol('qilin.tool.execution') as ToolExecutionToken
+  return Symbol('openkylin.tool.execution') as ToolExecutionToken
 }
 
 function toolErrorResult(error: unknown): ToolExecutionResult {

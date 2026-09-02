@@ -1,6 +1,6 @@
 {
   "name": "@qilin/acp-app",
-  "description": "The qilin ACP profile bundle: automation-only JSON-RPC stdio and process lifecycle over qilin-base",
+  "description": "The openkylin ACP profile bundle: automation-only JSON-RPC stdio and process lifecycle over qilin-base",
   "version": "0.1.2-alpha.3",
   "publishConfig": {
     "access": "public"
@@ -33,7 +33,7 @@
     "lib/types/**/*.d.ts"
   ],
   "license": "MIT",
-  "qilin": {
+  "openkylin": {
     "bundle": {
       "patch": "./cordis.patch.yml"
     }

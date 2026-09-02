@@ -57,7 +57,7 @@ export interface AgentUnderTest {
   libBinScript?: string | undefined
   /** Base config or profile patch loaded by the bin. */
   configPath: string
-  /** Named qilin profile; omitted only for test-only fake bins with their own config grammar. */
+  /** Named openkylin profile; omitted only for test-only fake bins with their own config grammar. */
   profile?: string
   /** The repo tsconfig whose paths resolve unbuilt workspace imports. */
   tsconfigPath: string
@@ -124,13 +124,13 @@ export function launchAcpTestAgent(options: AcpTestLaunchOptions): LaunchedAcpTe
     libBin: agent.libBinScript,
     configArgs: agent.profile === undefined
       ? ['--config', selectedConfig]
-      : profileArgs(agent.profile, agent.configPath, selectedConfig, options.env?.QILIN_SNAPSHOT, cwd),
+      : profileArgs(agent.profile, agent.configPath, selectedConfig, options.env?.OPENKYLIN_SNAPSHOT, cwd),
     tsconfigPath: agent.tsconfigPath,
     ...agent.profile === undefined ? {} : { sourceImport: 'tsx/esm' },
     env: {
       ...options.env,
-      QILIN_HOME: join(cwd, '.qilin'),
-      QILIN_AGENTS_HOME: join(cwd, '.agents'),
+      OPENKYLIN_HOME: join(cwd, '.openkylin'),
+      OPENKYLIN_AGENTS_HOME: join(cwd, '.agents'),
     },
   })
   const child = spawn(
@@ -340,7 +340,7 @@ export function launchAcpTestAgent(options: AcpTestLaunchOptions): LaunchedAcpTe
   }
 }
 
-/** Build one qilin profile invocation from the base and optional scenario patches. */
+/** Build one openkylin profile invocation from the base and optional scenario patches. */
 function profileArgs(
   profile: string,
   basePatch: string,
@@ -355,7 +355,7 @@ function profileArgs(
   const patches = snapshotMode === 'replay'
     ? [base, replayPatchPath(selected)]
     : [...new Set([base, selected])]
-  const materializedRoot = join(cwd, '.qilin-profile-patches')
+  const materializedRoot = join(cwd, '.openkylin-profile-patches')
   mkdirSync(materializedRoot, { recursive: true })
   const materializedDir = mkdtempSync(join(materializedRoot, 'launch-'))
   const materialized = patches.map((file, index) => materializeProfilePatch(file, cwd, materializedDir, index))
@@ -386,14 +386,14 @@ function packageDirFromPatch(source: string, packageName: string): string | unde
 
 /**
  * Install an authored patch's resolvable bare package into the temporary
- * profile fallback. This mirrors `qilin plugin` while retaining the bare entry
+ * profile fallback. This mirrors `openkylin plugin` while retaining the bare entry
  * name and package provenance used by request metadata.
  */
 function linkProfilePackage(source: string, cwd: string, packageName: string): void {
   const packageDir = packageDirFromPatch(source, packageName)
-  // The package may instead belong to the qilin installation; profile boot heals those links.
+  // The package may instead belong to the openkylin installation; profile boot heals those links.
   if (packageDir === undefined) return
-  const link = join(cwd, '.qilin', 'profiles', 'node_modules', packageName)
+  const link = join(cwd, '.openkylin', 'profiles', 'node_modules', packageName)
   mkdirSync(dirname(link), { recursive: true })
   if (existsSync(link)) {
     if (realpathSync(link) !== packageDir) {

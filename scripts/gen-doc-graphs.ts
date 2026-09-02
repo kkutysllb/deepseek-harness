@@ -472,7 +472,7 @@ const SERVICE_ROLES: ServiceRole[] = [
     title: 'Managed bash environment registry',
     mode: 'core',
     consumers: ['tool-bash', 'tool-pwsh'],
-    note: 'Plugins declare effect-scoped QILIN_* facts; each shell tool collects one trusted snapshot per execution and its executor rebuilds the namespace.',
+    note: 'Plugins declare effect-scoped OPENKYLIN_* facts; each shell tool collects one trusted snapshot per execution and its executor rebuilds the namespace.',
   },
   {
     key: 'terminals',
@@ -620,7 +620,7 @@ const SERVICE_ROLES: ServiceRole[] = [
     title: 'Client plugin graph host',
     mode: 'core',
     consumers: ['client-hmr'],
-    note: 'Composes the __DSH_BOOT__ entry graph from an incremental qilin.client scan, serves plugin bundles, and notifies rebuilt/graph-changed subscribers.',
+    note: 'Composes the __DSH_BOOT__ entry graph from an incremental openkylin.client scan, serves plugin bundles, and notifies rebuilt/graph-changed subscribers.',
   },
   {
     key: 'workflowEngine',
@@ -802,7 +802,7 @@ const APP_EXAMPLES = [
   {
     id: 'qilin_base',
     rel: 'apps/cli/composition.md',
-    title: 'QiLin Base Composition',
+    title: 'OpenKylin Base Composition',
     label: 'packages/bundle/base/cordis.patch.yml',
     config: 'packages/bundle/base/cordis.patch.yml',
     summary: 'The qilin-base bundle patch shared by the web, headless, sdk, and acp profiles; their mode bundles and user layers patch over it, while sdk-minimal owns a separate standalone tree.',
@@ -1455,7 +1455,7 @@ function renderDocs(): GraphDoc[] {
 function renderIndex(docs: GraphDoc[]): string {
   const labels: Record<string, string> = {
     'docs/capability-seams.md': 'capability seams and core services',
-    'apps/cli/composition.md': 'qilin shared base composition',
+    'apps/cli/composition.md': 'openkylin shared base composition',
     'docs/event-producer-consumer.md': 'event producer/consumer matrix',
     'docs/agent-lifecycle.md': 'agent turn and step lifecycle',
     'docs/tool-execution-pipeline.md': 'tool execution pipeline',

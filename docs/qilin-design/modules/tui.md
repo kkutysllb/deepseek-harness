@@ -1,6 +1,6 @@
 # tui 模块（tui module）
 
-> QiLin engine · tui subsystem · 双语 / Bilingual
+> OpenKylin engine · tui subsystem · 双语 / Bilingual
 
 ---
 
@@ -8,11 +8,11 @@
 
 ### 职责
 
-`qilin.tui` 是一个基于 [Textual](https://github.com/Textualize/textual) 的终端工作台。它是 QiLin 默认的人机交互入口之一（另一种是嵌入式 `QiLinClient`，另一种是 Gateway HTTP API）。
+`openkylin.tui` 是一个基于 [Textual](https://github.com/Textualize/textual) 的终端工作台。它是 OpenKylin 默认的人机交互入口之一（另一种是嵌入式 `OpenKylinClient`，另一种是 Gateway HTTP API）。
 
 - **CLI 入口**：`cli.py: main()` —— 启动 TUI 或一次性 headless 模式
 - **App**：`app.py` 是 Textual 应用主体
-- **Runtime**：`runtime.py` 调度 TUI ↔ QiLin client 的事件
+- **Runtime**：`runtime.py` 调度 TUI ↔ OpenKylin client 的事件
 - **Session 抽象**：`session.py` 维持 thread 状态、resume / continue、user / thread 解析
 - **视图层**：
   - `render.py` / `theme.py`：文本渲染与主题
@@ -26,8 +26,8 @@
 
 | 文件 | 作用 |
 |------|------|
-| `tui/cli.py` | CLI 入口（`qilin`） |
-| `tui/__main__.py` | `python -m qilin.tui` |
+| `tui/cli.py` | CLI 入口（`openkylin`） |
+| `tui/__main__.py` | `python -m openkylin.tui` |
 | `tui/app.py` | Textual App |
 | `tui/runtime.py` | TUI ↔ Client 桥 |
 | `tui/session.py` | 会话生命周期 |
@@ -41,9 +41,9 @@
 
 ### 设计要点
 
-1. **Headless-friendly**：`qilin --print` / `--json` 可在没有 TTY 的环境运行（如 CI）
+1. **Headless-friendly**：`openkylin --print` / `--json` 可在没有 TTY 的环境运行（如 CI）
 2. **可恢复**：`persistence.py` 支持会话断线后 `--continue` / `--resume THREAD`
-3. **Textual 解耦**：`import textual` 仅在 TUI 实际启动时才发生，可作为 `pip install qilin[tui]` 选装
+3. **Textual 解耦**：`import textual` 仅在 TUI 实际启动时才发生，可作为 `pip install openkylin[tui]` 选装
 4. **统一命令**：通过 `command_registry.py` 注入 `/help`、`/resume`、`/clear` 等斜杠命令
 5. **可观察**：所有用户消息与 Run event 都通过 `runtime.py` 上传 `tracing`
 
@@ -51,17 +51,17 @@
 
 ```bash
 # 启动交互
-qilin
+openkylin
 
 # 一次性回答
-qilin --print "What is 2+2?"
+openkylin --print "What is 2+2?"
 
 # JSON 流式
-echo "What's the weather?" | qilin --json
+echo "What's the weather?" | openkylin --json
 
 # 恢复上次对话
-qilin --continue
-qilin --resume THREAD_ID
+openkylin --continue
+openkylin --resume THREAD_ID
 ```
 
 ### 关联模块
@@ -75,11 +75,11 @@ qilin --resume THREAD_ID
 
 ### Responsibility
 
-`qilin.tui` is a Textual-based terminal workbench. It is one of three default human-interaction surfaces for QiLin (alongside the embedded `QiLinClient` and the Gateway HTTP API).
+`openkylin.tui` is a Textual-based terminal workbench. It is one of three default human-interaction surfaces for OpenKylin (alongside the embedded `OpenKylinClient` and the Gateway HTTP API).
 
 - **CLI entry** — `cli.py: main()`
 - **App** — `app.py` (Textual app)
-- **Runtime** — `runtime.py` schedules TUI ↔ QiLin client events
+- **Runtime** — `runtime.py` schedules TUI ↔ OpenKylin client events
 - **Session** — `session.py` holds thread state; resume / continue
 - **Views**:
   - `render.py` / `theme.py` — rendering + theme
@@ -93,8 +93,8 @@ qilin --resume THREAD_ID
 
 | File | Purpose |
 |------|---------|
-| `tui/cli.py` | CLI entry (`qilin`) |
-| `tui/__main__.py` | `python -m qilin.tui` |
+| `tui/cli.py` | CLI entry (`openkylin`) |
+| `tui/__main__.py` | `python -m openkylin.tui` |
 | `tui/app.py` | Textual App |
 | `tui/runtime.py` | TUI ↔ Client bridge |
 | `tui/session.py` | Session lifecycle |
@@ -108,20 +108,20 @@ qilin --resume THREAD_ID
 
 ### Design Highlights
 
-1. **Headless-friendly** — `qilin --print` / `--json` work without TTY (CI, webhooks).
+1. **Headless-friendly** — `openkylin --print` / `--json` work without TTY (CI, webhooks).
 2. **Resumable** — `persistence.py` supports `--continue` / `--resume THREAD_ID` after disconnect.
-3. **Textual-deferred** — `import textual` only at TUI launch; installable via `pip install qilin[tui]`.
+3. **Textual-deferred** — `import textual` only at TUI launch; installable via `pip install openkylin[tui]`.
 4. **Unified commands** — `/help`, `/resume`, `/clear` via `command_registry.py`.
 5. **Observable** — User messages and Run events emitted via `runtime.py` to `tracing`.
 
 ### Usage
 
 ```bash
-qilin
-qilin --print "What is 2+2?"
-echo "What's the weather?" | qilin --json
-qilin --continue
-qilin --resume THREAD_ID
+openkylin
+openkylin --print "What is 2+2?"
+echo "What's the weather?" | openkylin --json
+openkylin --continue
+openkylin --resume THREAD_ID
 ```
 
 ### Related Modules

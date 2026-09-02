@@ -22,7 +22,7 @@ import { deepEqualJson } from '@qilin/util-values'
 export interface Config {
   /** Settings document path; defaults to `settings.yaml` under the harness home. */
   path?: string
-  /** Harness home used when `path` is omitted; defaults to `$QILIN_HOME` or `~/.qilin`. */
+  /** Harness home used when `path` is omitted; defaults to `$OPENKYLIN_HOME` or `~/.openkylin`. */
   dshHome?: string
   /** Watch the document and hot-publish external edits; defaults to true. */
   watch?: boolean

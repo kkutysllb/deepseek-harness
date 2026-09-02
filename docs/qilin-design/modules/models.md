@@ -1,6 +1,6 @@
 # models 模块（models module）
 
-> QiLin engine · models subsystem · 双语 / Bilingual
+> OpenKylin engine · models subsystem · 双语 / Bilingual
 
 ---
 
@@ -8,7 +8,7 @@
 
 ### 职责
 
-`qilin.models` 是统一的聊天模型工厂层。它把多家 LLM provider（OpenAI / Anthropic / DeepSeek / Google GenAI / Ollama / 自定义）抽象为统一接口 `BaseChatModel`，并使上层 Agent 代码无需关心底层细节。
+`openkylin.models` 是统一的聊天模型工厂层。它把多家 LLM provider（OpenAI / Anthropic / DeepSeek / Google GenAI / Ollama / 自定义）抽象为统一接口 `BaseChatModel`，并使上层 Agent 代码无需关心底层细节。
 
 - **工厂入口**：`__init__.py` 的 `create_chat_model()` 根据 `ModelConfig.provider` 实例化正确的 chat model
 - **Provider 实现**：
@@ -61,7 +61,7 @@ models:
 
 ### Responsibility
 
-`qilin.models` is the unified chat-model factory. It abstracts LLM providers (OpenAI / Anthropic / DeepSeek / Google GenAI / Ollama / custom) behind a uniform `BaseChatModel` interface so upstream agent code is provider-agnostic.
+`openkylin.models` is the unified chat-model factory. It abstracts LLM providers (OpenAI / Anthropic / DeepSeek / Google GenAI / Ollama / custom) behind a uniform `BaseChatModel` interface so upstream agent code is provider-agnostic.
 
 - **Factory entry** — `__init__.py`'s `create_chat_model()` instantiates the right chat model from `ModelConfig.provider`
 - **Provider implementations**:

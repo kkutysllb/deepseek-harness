@@ -30,7 +30,7 @@ interface AssembledBootOptions {
 interface ClientPackageManifest {
   name?: string
   exports?: Record<string, string | { default?: string }>
-  qilin?: {
+  openkylin?: {
     client?: {
       platform?: string
       inject?: string[]
@@ -80,7 +80,7 @@ function resolveClientExport(packagePath: string, pkg: ClientPackageManifest): s
   const declared = pkg.exports?.['./client']
   const relative = typeof declared === 'string' ? declared : declared?.default
   if (relative === undefined) {
-    throw new Error(`assembled boot: ${pkg.name ?? packagePath} declares qilin.client without a ./client export`)
+    throw new Error(`assembled boot: ${pkg.name ?? packagePath} declares openkylin.client without a ./client export`)
   }
   return resolve(dirname(packagePath), relative)
 }
@@ -88,7 +88,7 @@ function resolveClientExport(packagePath: string, pkg: ClientPackageManifest): s
 const comboUrl = (ids: readonly string[], rev: string): string =>
   `/plugins/??${ids.map(id => `${id}/client.js`).join(',')}&rev=${rev}`
 
-/** Derive the assembled browser graph from the same bundle patches and package declarations as `qilin web`. */
+/** Derive the assembled browser graph from the same bundle patches and package declarations as `openkylin web`. */
 function loadAssembledPlugins(): readonly AssembledPlugin[] {
   const entries = appBoot.composeEntries(BUNDLE_LAYERS.map(layer =>
     appBoot.loadOverlayPatches('assembled boot', layer.patch)))
@@ -98,7 +98,7 @@ function loadAssembledPlugins(): readonly AssembledPlugin[] {
     const packagePath = resolvePackageManifest(entry.name)
     if (packagePath === undefined) continue
     const pkg = JSON.parse(readFileSync(packagePath, 'utf8')) as ClientPackageManifest
-    const declaration = pkg.qilin?.client
+    const declaration = pkg.openkylin?.client
     if (declaration?.platform !== 'web') continue
     if (pkg.name !== entry.name) {
       throw new Error(`assembled boot: ${entry.name} resolved package ${pkg.name ?? '<unnamed>'}`)
@@ -299,7 +299,7 @@ export function hasClass(el: Element, name: string): boolean {
 
 /**
  * Whether this run rewrites its golden instead of comparing against it, set by
- * the snapshot gate's `QILIN_SNAPSHOT` mode (`record` re-runs the scenarios from
+ * the snapshot gate's `OPENKYLIN_SNAPSHOT` mode (`record` re-runs the scenarios from
  * scratch, `refresh` re-derives the expected text from the existing ones).
  */
-export const REFRESHING_GOLDEN = process.env.QILIN_SNAPSHOT === 'record' || process.env.QILIN_SNAPSHOT === 'refresh'
+export const REFRESHING_GOLDEN = process.env.OPENKYLIN_SNAPSHOT === 'record' || process.env.OPENKYLIN_SNAPSHOT === 'refresh'

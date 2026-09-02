@@ -1,6 +1,6 @@
 # gateway 模块（gateway module）
 
-> QiLin engine · HTTP Agent Server subsystem · 双语 / Bilingual
+> OpenKylin engine · HTTP Agent Server subsystem · 双语 / Bilingual
 
 ---
 
@@ -8,12 +8,12 @@
 
 ### 职责
 
-`app.gateway` 是 QiLin 的 **HTTP Agent Server**：把内核能力（agents / threads / runs /
+`app.gateway` 是 OpenKylin 的 **HTTP Agent Server**：把内核能力（agents / threads / runs /
 memory / skills / mcp / uploads / artifacts / scheduled_tasks / channels …）以 REST API
-形式对外暴露，并内置完整的认证与安全面。与嵌入式 `QiLinClient` 互补：同一份内核代码，
+形式对外暴露，并内置完整的认证与安全面。与嵌入式 `OpenKylinClient` 互补：同一份内核代码，
 进程内调用走 client，跨进程 / 跨语言调用走 gateway。
 
-实现基于 FastAPI + uvicorn，代码随 `qilin` wheel 一并分发，运行依赖通过 `gateway` extras 安装。
+实现基于 FastAPI + uvicorn，代码随 `openkylin` wheel 一并分发，运行依赖通过 `gateway` extras 安装。
 
 ### 路由面（REST API）
 
@@ -42,7 +42,7 @@ memory / skills / mcp / uploads / artifacts / scheduled_tasks / channels …）�
 - **CSRF / CORS**（`csrf_middleware.py`）：可配置的 CORS 白名单与暴露头；CSRF 防护默认开启
 - **TraceMiddleware**（`trace_middleware.py`）：校验 `X-Trace-Id` 并写入 ContextVar，
   与日志 / RunEvent / Langfuse metadata 贯穿
-- **内部认证**（`internal_auth.py`）：受信内部调用方的共享令牌认证（`X-QiLin-Internal-Token` 头，`QILIN_INTERNAL_AUTH_TOKEN` 环境变量）
+- **内部认证**（`internal_auth.py`）：受信内部调用方的共享令牌认证（`X-OpenKylin-Internal-Token` 头，`OPENKYLIN_INTERNAL_AUTH_TOKEN` 环境变量）
 - **开发模式**（`auth_disabled.py`）：`auth.disabled` 或环境变量可关闭认证并注入测试用户，
   启动时打印警示日志
 - **用户预置**（`auth/user_provisioning.py`）：首次启动自动创建管理员（`reset_admin.py`
@@ -68,12 +68,12 @@ memory / skills / mcp / uploads / artifacts / scheduled_tasks / channels …）�
 
 ### 设计要点
 
-1. **双模运行**：gateway 与嵌入式 client 共用 `qilin.runtime` / `persistence` 内核，
+1. **双模运行**：gateway 与嵌入式 client 共用 `openkylin.runtime` / `persistence` 内核，
    HTTP 只是新的传输面；同一 DB 可同时被 client 与 gateway 访问。
 2. **协议兼容**：`assistants_compat` 提供 OpenAI Assistants API 兼容面，
    `langgraph_auth` 保持 LangGraph Server 协议互通。
 3. **认证分层**：认证（Authentication，谁）与授权（Authorization，能否）分离——
-   前者由 AuthMiddleware 完成，后者委托 `qilin.authz` RBAC 执行。
+   前者由 AuthMiddleware 完成，后者委托 `openkylin.authz` RBAC 执行。
 4. **Webhook 安全**：GitHub webhook 必须携带 App 签名，未验证来源的事件直接拒绝。
 5. **可观测**：所有请求经 TraceMiddleware 注入 trace_id，链路与嵌入式运行一致。
 
@@ -81,7 +81,7 @@ memory / skills / mcp / uploads / artifacts / scheduled_tasks / channels …）�
 
 ```bash
 # 安装服务端依赖（gateway + channels extras）
-pip install "qilin[gateway,channels]"
+pip install "openkylin[gateway,channels]"
 
 # 启动 HTTP Agent Server
 uvicorn app.gateway.app:app --port 8001
@@ -101,8 +101,8 @@ auth:
 
 ### 关联模块
 
-- **上游**：`qilin.runtime`（运行执行）、`qilin.persistence`（存储）、
-  `qilin.config`（配置热重载）、`qilin.authz`（授权执行）、`qilin.trace_context`
+- **上游**：`openkylin.runtime`（运行执行）、`openkylin.persistence`（存储）、
+  `openkylin.config`（配置热重载）、`openkylin.authz`（授权执行）、`openkylin.trace_context`
 - **下游**：`app.channels`（渠道 REST 端点）、`app.scheduler`（任务 API）、
   `app.gateway.github`（webhook → 运行时触发）
 - **测试**：`tests/` 下 gateway 路由与认证测试（JWT / OIDC / CSRF 覆盖）
@@ -113,13 +113,13 @@ auth:
 
 ### Responsibility
 
-`app.gateway` is QiLin's **HTTP Agent Server**: it exposes the engine capabilities
+`app.gateway` is OpenKylin's **HTTP Agent Server**: it exposes the engine capabilities
 (agents / threads / runs / memory / skills / mcp / uploads / artifacts /
 scheduled_tasks / channels …) as REST APIs with a complete auth and security
-surface. It complements the embedded `QiLinClient`: same kernel, in-process calls
+surface. It complements the embedded `OpenKylinClient`: same kernel, in-process calls
 go through the client, cross-process / cross-language calls go through the gateway.
 
-Built on FastAPI + uvicorn, shipped in the `qilin` wheel; runtime dependencies
+Built on FastAPI + uvicorn, shipped in the `openkylin` wheel; runtime dependencies
 come from the `gateway` extra.
 
 ### REST Surface
@@ -151,7 +151,7 @@ come from the `gateway` extra.
   headers; CSRF protection enabled by default
 - **TraceMiddleware** (`trace_middleware.py`) — validates `X-Trace-Id` and stores it
   in a ContextVar, consistent across logs / RunEvents / Langfuse metadata
-- **Internal auth** (`internal_auth.py`) — shared-token auth for trusted internal callers (`X-QiLin-Internal-Token` header, `QILIN_INTERNAL_AUTH_TOKEN` env var)
+- **Internal auth** (`internal_auth.py`) — shared-token auth for trusted internal callers (`X-OpenKylin-Internal-Token` header, `OPENKYLIN_INTERNAL_AUTH_TOKEN` env var)
 - **Dev mode** (`auth_disabled.py`) — `auth.disabled` or env vars disable auth and
   inject a test user, with a startup warning
 - **User provisioning** (`auth/user_provisioning.py`) — auto-creates the admin on
@@ -179,12 +179,12 @@ come from the `gateway` extra.
 ### Design Points
 
 1. **Dual-mode runtime** — gateway and the embedded client share the
-   `qilin.runtime` / `persistence` kernel; HTTP is just another transport. The same
+   `openkylin.runtime` / `persistence` kernel; HTTP is just another transport. The same
    DB can be accessed by both client and gateway.
 2. **Protocol compatibility** — `assistants_compat` offers an OpenAI Assistants API
    surface; `langgraph_auth` keeps LangGraph Server protocol interop.
 3. **Auth separation** — authentication (who) lives in AuthMiddleware;
-   authorization (can they) is delegated to the `qilin.authz` RBAC engine.
+   authorization (can they) is delegated to the `openkylin.authz` RBAC engine.
 4. **Webhook security** — GitHub webhooks must carry the App signature; events from
    unverified sources are rejected outright.
 5. **Observability** — every request gets a trace_id via TraceMiddleware, matching
@@ -194,7 +194,7 @@ come from the `gateway` extra.
 
 ```bash
 # Install server dependencies (gateway + channels extras)
-pip install "qilin[gateway,channels]"
+pip install "openkylin[gateway,channels]"
 
 # Start the HTTP Agent Server
 uvicorn app.gateway.app:app --port 8001
@@ -214,8 +214,8 @@ Env var: `GATEWAY_PORT` (default `8001`).
 
 ### Related Modules
 
-- **Upstream**: `qilin.runtime` (run execution), `qilin.persistence` (storage),
-  `qilin.config` (hot reload), `qilin.authz` (enforcement), `qilin.trace_context`
+- **Upstream**: `openkylin.runtime` (run execution), `openkylin.persistence` (storage),
+  `openkylin.config` (hot reload), `openkylin.authz` (enforcement), `openkylin.trace_context`
 - **Downstream**: `app.channels` (channel REST endpoints), `app.scheduler` (task API),
   `app.gateway.github` (webhook → runtime triggers)
 - **Tests**: gateway routes and auth tests under `tests/` (JWT / OIDC / CSRF coverage)

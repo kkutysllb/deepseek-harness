@@ -33,7 +33,7 @@ afterEach(() => {
 /** Create a resolvable package whose client export points at the returned path. */
 function writePackage(
   packageName: string,
-  metadata: Record<string, unknown> = { qilin: { client: { platform: 'web' } } },
+  metadata: Record<string, unknown> = { openkylin: { client: { platform: 'web' } } },
 ): string {
   root ??= realpathSync(mkdtempSync(join(tmpdir(), 'qilin-client-modules-')))
   const pkgRoot = join(root, 'node_modules', ...packageName.split('/'))
@@ -52,7 +52,7 @@ function writePackage(
 
 /** Create a built package with the supplied client declaration. */
 function writeBuiltPackage(packageName: string, client: Record<string, unknown>): void {
-  const clientPath = writePackage(packageName, { qilin: { client: { platform: 'web', ...client } } })
+  const clientPath = writePackage(packageName, { openkylin: { client: { platform: 'web', ...client } } })
   mkdirSync(dirname(clientPath), { recursive: true })
   writeFileSync(clientPath, 'module.exports = {}\n')
 }
@@ -405,10 +405,10 @@ describe('client bundle activation', () => {
     expect(service.graph().entries.map(entry => entry.id)).toEqual([packageName])
   })
 
-  it('allows sibling qilin roles', () => {
+  it('allows sibling openkylin roles', () => {
     const currentName = '@fixture/current-client-field'
     const clientPath = writePackage(currentName, {
-      qilin: {
+      openkylin: {
         bundle: { patch: './cordis.patch.yml' },
         client: { platform: 'web' },
         profile: { bundles: [] },
@@ -771,7 +771,7 @@ describe('shared module declarations', () => {
     const packageName = '@fixture/external-not-array'
     writeBuiltPackage(packageName, { external: 'react' })
     expect(() => construct([packageName]))
-      .toThrow(`client-modules: ${packageName} qilin.client.external must be a string array`)
+      .toThrow(`client-modules: ${packageName} openkylin.client.external must be a string array`)
   })
 })
 

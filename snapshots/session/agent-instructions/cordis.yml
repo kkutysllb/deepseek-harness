@@ -10,15 +10,15 @@
   name: '@qilin/session-persistence-jsonl'
   config:
     root: !!js dshHomePath('sessions')
-    compression: !!js 'process.env.QILIN_SNAPSHOT === undefined ? ''zstd'' : ''none'''
+    compression: !!js 'process.env.OPENKYLIN_SNAPSHOT === undefined ? ''zstd'' : ''none'''
 
 - id: agent-instructions
   name: '@qilin/agent-instructions'
   config:
     maxBytes: 65536
-    dshHome: !!js process.cwd() + '/.qilin'
+    dshHome: !!js process.cwd() + '/.openkylin'
     projectRootMarkers:
-      - .qilin-project
+      - .openkylin-project
 
 - id: system-prompt
   name: '@qilin/system-prompt'

@@ -1,5 +1,5 @@
 ---
-description: "Shared React UI atoms for the qilin web client: controls, icons, markdown and math rendering, and the terminal/read/diff/search/web output cards (zero cordis)."
+description: "Shared React UI atoms for the openkylin web client: controls, icons, markdown and math rendering, and the terminal/read/diff/search/web output cards (zero cordis)."
 kind: "package-library"
 ---
 

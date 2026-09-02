@@ -14,7 +14,7 @@ export function apply(ctx: Context): void {
   ctx.on('tools/execute', async (exec, next) => {
     const delegated = next()
     if (exec.name === 'job_output') {
-      writeFileSync('.qilin-sdk-background-release', 'release\n')
+      writeFileSync('.openkylin-sdk-background-release', 'release\n')
     }
     return delegated
   }, { prepend: true })

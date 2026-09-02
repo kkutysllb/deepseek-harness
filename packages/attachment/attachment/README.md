@@ -9,7 +9,7 @@ English | [中文](README.zh.md)
 
 ## Summary
 
-You can attach images to prompts and commands, and the harness keeps provider-independent normalized versions durably: each source image is admitted and normalized before your message is processed, reappears in conversation history, and is projected to the selected model route in later turns of the same session. The shipped `qilin` composition enables this with no setup. Attached images survive restarts, while browser paths, provider URLs, local storage paths, and base64 never enter durable session events. Only raster formats (PNG, JPEG, WebP, GIF) are accepted, and unsent composer drafts stay in the browser until you submit. Stored images are never deleted automatically, and non-image files, audio, and video are not supported yet.
+You can attach images to prompts and commands, and the harness keeps provider-independent normalized versions durably: each source image is admitted and normalized before your message is processed, reappears in conversation history, and is projected to the selected model route in later turns of the same session. The shipped `openkylin` composition enables this with no setup. Attached images survive restarts, while browser paths, provider URLs, local storage paths, and base64 never enter durable session events. Only raster formats (PNG, JPEG, WebP, GIF) are accepted, and unsent composer drafts stay in the browser until you submit. Stored images are never deleted automatically, and non-image files, audio, and video are not supported yet.
 
 ## Table of Contents
 
@@ -25,7 +25,7 @@ You can attach images to prompts and commands, and the harness keeps provider-in
 <a id="use-this-package"></a>
 ## Use this package
 
-Image attachments work end to end: attach an image to a prompt or a command, and it is saved, shown in history, and sent to the model without any further action from you. In the default `qilin` composition everything is already wired; when you compose your own setup, one plugin enables the capability.
+Image attachments work end to end: attach an image to a prompt or a command, and it is saved, shown in history, and sent to the model without any further action from you. In the default `openkylin` composition everything is already wired; when you compose your own setup, one plugin enables the capability.
 
 ### Attach images to a prompt
 

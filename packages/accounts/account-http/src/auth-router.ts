@@ -298,7 +298,7 @@ async function changePassword(
     return
   }
   if (resolution.kind === 'auth-disabled') {
-    badRequest(res, AUTH_ROUTER_ERROR_CODES.invalidCredentials, 'Password changes are not available when QILIN_AUTH_DISABLED=1.')
+    badRequest(res, AUTH_ROUTER_ERROR_CODES.invalidCredentials, 'Password changes are not available when OPENKYLIN_AUTH_DISABLED=1.')
     return
   }
   const decision = evaluateCsrfRequest(csrfFacts({

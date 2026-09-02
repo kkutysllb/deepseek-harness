@@ -1,12 +1,12 @@
 /**
- * `qilin plugin --profile <name> <args...>` — profile plugin management as a
+ * `openkylin plugin --profile <name> <args...>` — profile plugin management as a
  * thin pnpm forwarder: initialize the profile on first use, run
  * `pnpm <args...>` in the profile directory, then reconcile the
- * `qilin.profile.bundles` layer list against the installed state (a dependency
- * resolving to a package that declares `qilin.bundle` joins the layer stack; a
+ * `openkylin.profile.bundles` layer list against the installed state (a dependency
+ * resolving to a package that declares `openkylin.bundle` joins the layer stack; a
  * removed or bundle-less dependency leaves it). Reconciling by installed
  * state, not by dependency diff, means `update` activates a package that
- * gained its `qilin.bundle` declaration in a newer version.
+ * gained its `openkylin.bundle` declaration in a newer version.
  * @module @qilin/cli/plugin
  */
 
@@ -25,13 +25,13 @@ import {
 } from '@qilin/app-boot'
 import { INSTALL_ANCHOR } from './profile-boot.ts'
 
-const NAME = 'qilin'
+const NAME = 'openkylin'
 
 /**
  * Whether a resolved dependency exports a profile patch, i.e. is a bundle.
  * @param packageName - the dependency's package name.
  * @param profileDir - the profile directory (resolution anchor).
- * @returns true when the package manifest declares `qilin.bundle`.
+ * @returns true when the package manifest declares `openkylin.bundle`.
  */
 function exportsPatch(packageName: string, profileDir: string): boolean {
   let dir: string
@@ -41,14 +41,14 @@ function exportsPatch(packageName: string, profileDir: string): boolean {
     return false // pnpm reported success yet the package is unresolvable — treat as plain
   }
   const manifest = readProfileManifest(NAME, dir)
-  return manifest.qilin?.bundle?.patch !== undefined
+  return manifest.openkylin?.bundle?.patch !== undefined
 }
 
 /**
- * Reconcile `qilin.profile.bundles` against the installed state: pnpm has
+ * Reconcile `openkylin.profile.bundles` against the installed state: pnpm has
  * already written the real installed names (so a git/path/tarball/alias spec
  * on the command line reconciles by its true package name) and materialized
- * the packages. A dependency that resolves to a `qilin.bundle`-declaring
+ * the packages. A dependency that resolves to a `openkylin.bundle`-declaring
  * package joins the layer stack (appended in dependency order); a
  * dependency-listed name that no longer does — removed, or the installed
  * version dropped the declaration — leaves it. In-box bundles from the
@@ -60,7 +60,7 @@ function reconcilePlugins(before: ProfileManifest, profileDir: string): void {
   const after = readProfileManifest(NAME, profileDir)
   const beforeDeps = new Set(Object.keys(before.dependencies ?? {}))
   const dependencies = Object.keys(after.dependencies ?? {})
-  const plugins = after.qilin?.profile?.bundles ?? []
+  const plugins = after.openkylin?.profile?.bundles ?? []
   let changed = false
   for (const packageName of dependencies) {
     const isBundle = exportsPatch(packageName, profileDir)
@@ -69,7 +69,7 @@ function reconcilePlugins(before: ProfileManifest, profileDir: string): void {
       changed = true
     } else if (!isBundle && !beforeDeps.has(packageName)) {
       process.stderr.write(
-        `${NAME}: warning: ${packageName} declares no qilin.bundle — installed as a plain dependency, not a profile layer `
+        `${NAME}: warning: ${packageName} declares no openkylin.bundle — installed as a plain dependency, not a profile layer `
         + '(a later update that gains one activates it automatically)\n',
       )
     }
@@ -86,7 +86,7 @@ function reconcilePlugins(before: ProfileManifest, profileDir: string): void {
     }
   }
   if (!changed) return
-  after.qilin = { ...after.qilin, profile: { ...after.qilin?.profile, bundles: plugins } }
+  after.openkylin = { ...after.openkylin, profile: { ...after.openkylin?.profile, bundles: plugins } }
   writeProfileManifest(profileDir, after)
 }
 
@@ -98,7 +98,7 @@ function reconcilePlugins(before: ProfileManifest, profileDir: string): void {
  * specs, registry names, and every other pnpm argument pass through
  * untouched.
  * @param argument - one pnpm argument, verbatim from argv.
- * @param cwd - the directory `qilin` was invoked from.
+ * @param cwd - the directory `openkylin` was invoked from.
  * @returns the argument with a relative path spec anchored to `cwd`.
  */
 function anchorPathSpec(argument: string, cwd: string): string {
@@ -112,7 +112,7 @@ function anchorPathSpec(argument: string, cwd: string): string {
 }
 
 /**
- * Run one `qilin plugin` invocation: init if needed, forward to pnpm, reconcile.
+ * Run one `openkylin plugin` invocation: init if needed, forward to pnpm, reconcile.
  * @param profile - the profile name.
  * @param args - pnpm arguments with relative path specs anchored to the invoking directory.
  * @returns the pnpm exit code.

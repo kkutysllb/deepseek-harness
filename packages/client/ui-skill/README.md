@@ -1,5 +1,5 @@
 ---
-description: "Web skill references and the dedicated skill tool row for the qilin web client: the /-triggered skill source and the skill call card."
+description: "Web skill references and the dedicated skill tool row for the openkylin web client: the /-triggered skill source and the skill call card."
 kind: "package-reference"
 ---
 

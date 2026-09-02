@@ -46,18 +46,18 @@ kind: "package-reference"
 
 生成的[配置目录](../../../docs/config-catalog.zh.md#deepseek-aidsh-subagent-acp)是每个受支持字段及其 JSDoc 的穷尽式真源。
 
-DeepSeek Harness 子进程使用产品启动器和一个显式的绝对路径 `QILIN_HOME`。隔离 home 可防止嵌套 runtime 发现启动者个人的 profile 或凭据；通用 ACP provider 不会把这一要求强加给非 DSH agent。
+DeepSeek Harness 子进程使用产品启动器和一个显式的绝对路径 `OPENKYLIN_HOME`。隔离 home 可防止嵌套 runtime 发现启动者个人的 profile 或凭据；通用 ACP provider 不会把这一要求强加给非 DSH agent。
 
 ```yaml
 - id: subagent-acp
   name: '@qilin/subagent-acp'
   config:
     providerName: acp
-    command: qilin
+    command: openkylin
     args: ['--profile', 'acp', '--patch', '/absolute/path/to/acp.patch.yml']
     permission: reject
     env:
-      QILIN_HOME: /absolute/path/to/isolated-child-home
+      OPENKYLIN_HOME: /absolute/path/to/isolated-child-home
       DEEPSEEK_API_KEY: !!js process.env.DEEPSEEK_API_KEY
 ```
 

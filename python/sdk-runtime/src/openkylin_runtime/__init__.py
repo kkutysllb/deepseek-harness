@@ -1,4 +1,4 @@
-"""Locate and execute the bundled qilin CLI shipped with the Python SDK runtime.
+"""Locate and execute the bundled openkylin CLI shipped with the Python SDK runtime.
 
 Two runtime carriers coexist under ``runtime/``, both injected by the repo's
 ``scripts/build-exe-for-python-sdk.ts`` build (neither is checked into git):
@@ -14,9 +14,9 @@ Two runtime carriers coexist under ``runtime/``, both injected by the repo's
   system Node >= 22.19. It is the current checkout's source build, never
   selected automatically, and excluded from wheel/sdist distributions.
 
-Both carriers execute the same qilin command grammar. The Python SDK selects the
-``sdk`` profile and requires an explicit Harness home; the installed ``qilin``
-console command requires ``QILIN_HOME`` for the same reason.
+Both carriers execute the same openkylin command grammar. The Python SDK selects the
+``sdk`` profile and requires an explicit Harness home; the installed ``openkylin``
+console command requires ``OPENKYLIN_HOME`` for the same reason.
 """
 
 from __future__ import annotations
@@ -29,7 +29,7 @@ from pathlib import Path
 
 PACKAGE_METADATA_FILENAME = "openkylin-runtime.json"
 
-RUNTIME_MODE_ENV_VAR = "QILIN_RUNTIME_MODE"
+RUNTIME_MODE_ENV_VAR = "OPENKYLIN_RUNTIME_MODE"
 
 _PLATFORM_TAGS = {"linux": "linux", "darwin": "macos", "win32": "win"}
 _ARCH_TAGS = {"x86_64": "x64", "amd64": "x64", "arm64": "arm64", "aarch64": "arm64"}
@@ -94,7 +94,7 @@ def resolve_bundled_launch_args(mode: str | None = None) -> tuple[str, ...]:
     """The argv tuple that launches the bundled runtime.
 
     Mode selection: the explicit ``mode`` argument wins, then the
-    ``QILIN_RUNTIME_MODE`` environment variable (``exe`` | ``node``), then
+    ``OPENKYLIN_RUNTIME_MODE`` environment variable (``exe`` | ``node``), then
     automatic resolution. Automatic resolution finds the production exe ONLY —
     the dev-only node carrier must be selected explicitly so a production
     deployment can never silently ride on a source build. Returns
@@ -136,7 +136,7 @@ def _node_launch_args() -> tuple[str, str]:
         node_root
         / "node_modules"
         / "@deepseek-ai"
-        / "qilin"
+        / "openkylin"
         / "lib"
         / "bin.js"
     )
@@ -157,11 +157,11 @@ def _node_launch_args() -> tuple[str, str]:
 
 
 def main() -> None:
-    """Execute the bundled qilin CLI with an explicitly selected Harness home."""
-    if not os.environ.get("QILIN_HOME", "").strip():
+    """Execute the bundled openkylin CLI with an explicitly selected Harness home."""
+    if not os.environ.get("OPENKYLIN_HOME", "").strip():
         print(
-            "qilin: the Python runtime command requires an explicit QILIN_HOME; "
-            "it never uses ~/.qilin implicitly",
+            "openkylin: the Python runtime command requires an explicit OPENKYLIN_HOME; "
+            "it never uses ~/.openkylin implicitly",
             file=sys.stderr,
         )
         raise SystemExit(2)

@@ -13,7 +13,7 @@ const PROVIDER_CLIENT_ID = 'provider/client'
 const RUNTIME_CLIENT_ID = 'runtime/client'
 const win = globalThis as QilinWindow
 const transportGlobal = globalThis as {
-  __QILIN_TRANSPORT__?: { loadBundle(url: string): Promise<void> }
+  __OPENKYLIN_TRANSPORT__?: { loadBundle(url: string): Promise<void> }
 }
 const moduleFace = modulesClient as unknown as Record<string, unknown>
 
@@ -21,7 +21,7 @@ afterEach(() => {
   vi.restoreAllMocks()
   delete win.__DSH_BOOT__
   delete win.__ModuleLoader__
-  delete transportGlobal.__QILIN_TRANSPORT__
+  delete transportGlobal.__OPENKYLIN_TRANSPORT__
   document.body.innerHTML = ''
 })
 
@@ -142,7 +142,7 @@ describe('plugin activation', () => {
         }),
       },
     ]
-    transportGlobal.__QILIN_TRANSPORT__ = {
+    transportGlobal.__OPENKYLIN_TRANSPORT__ = {
       loadBundle: async (url) => {
         loaded.push(url)
         if (url !== applicationUrl) throw new Error(`missing fixture batch ${url}`)

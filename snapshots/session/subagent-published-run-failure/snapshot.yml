@@ -11,4 +11,4 @@ header:
 replay:
   override: true
 environment:
-  QILIN_SUBAGENT_PUBLISHED_FAILURE: '1'
+  OPENKYLIN_SUBAGENT_PUBLISHED_FAILURE: '1'

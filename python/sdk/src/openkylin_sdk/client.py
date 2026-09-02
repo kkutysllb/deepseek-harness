@@ -157,7 +157,7 @@ class HarnessClient:
             )
         except TimeoutError as error:
             self.close()
-            raise TimeoutError(f"{error}\nselected qilin profile {self.config.profile!r}") from error
+            raise TimeoutError(f"{error}\nselected openkylin profile {self.config.profile!r}") from error
         except BaseException as error:
             self.close()
             diagnostics = self._runtime_diagnostics()
@@ -461,7 +461,7 @@ class HarnessClient:
                 from openkylin_runtime import resolve_bundled_launch_args
             except ImportError as exc:
                 raise FileNotFoundError(
-                    "Unable to locate the bundled DeepSeek Harness qilin runtime. "
+                    "Unable to locate the bundled DeepSeek Harness openkylin runtime. "
                     "Install openkylin-runtime-bin."
                 ) from exc
             base = resolve_bundled_launch_args()
@@ -471,11 +471,11 @@ class HarnessClient:
         if self.config.dsh_home is not None:
             if not self.config.dsh_home.strip():
                 raise ValueError("HarnessConfig requires a non-empty dsh_home")
-            env["QILIN_HOME"] = str(Path(self.config.dsh_home).expanduser().resolve())
-        elif not env.get("QILIN_HOME", "").strip():
+            env["OPENKYLIN_HOME"] = str(Path(self.config.dsh_home).expanduser().resolve())
+        elif not env.get("OPENKYLIN_HOME", "").strip():
             raise ValueError(
-                "HarnessConfig requires an explicit dsh_home or non-empty QILIN_HOME; "
-                "the Python SDK never uses ~/.qilin implicitly"
+                "HarnessConfig requires an explicit dsh_home or non-empty OPENKYLIN_HOME; "
+                "the Python SDK never uses ~/.openkylin implicitly"
             )
 
         patches = tuple(

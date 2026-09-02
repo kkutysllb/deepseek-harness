@@ -44,17 +44,17 @@ interface OtlpLogsRequest {
 const servers: Server[] = []
 
 // The backend resolves the harness home's anonymous user id at construction;
-// pin QILIN_HOME to a temp dir so the suite never touches the ambient ~/.qilin.
+// pin OPENKYLIN_HOME to a temp dir so the suite never touches the ambient ~/.openkylin.
 let tempHome: string
 let previousDshHome: string | undefined
 beforeAll(() => {
   tempHome = mkdtempSync(join(tmpdir(), 'qilin-otel-home-'))
-  previousDshHome = process.env.QILIN_HOME
-  process.env.QILIN_HOME = tempHome
+  previousDshHome = process.env.OPENKYLIN_HOME
+  process.env.OPENKYLIN_HOME = tempHome
 })
 afterAll(() => {
-  if (previousDshHome === undefined) delete process.env.QILIN_HOME
-  else process.env.QILIN_HOME = previousDshHome
+  if (previousDshHome === undefined) delete process.env.OPENKYLIN_HOME
+  else process.env.OPENKYLIN_HOME = previousDshHome
   rmSync(tempHome, { recursive: true, force: true })
 })
 

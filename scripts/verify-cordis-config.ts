@@ -5,7 +5,7 @@
  * activate, against that plugin context) and the entry `disabled` field (at
  * every mount decision, against the loader context). Every other entry
  * metadata field stays static, so an expression there remains truthy data and
- * silently changes composition. Shipped and test-only qilin overlays resolve
+ * silently changes composition. Shipped and test-only openkylin overlays resolve
  * named plugins from the CLI application's owning manifest; package-owned
  * Loader fixtures resolve from their package manifest.
  */
@@ -22,7 +22,7 @@ export interface PackageManifest {
   dependencies?: Record<string, string>
   devDependencies?: Record<string, string>
   optionalDependencies?: Record<string, string>
-  qilin?: { bundle?: { patch?: string } }
+  openkylin?: { bundle?: { patch?: string } }
 }
 
 export interface PluginReference {
@@ -31,7 +31,7 @@ export interface PluginReference {
 }
 
 const root = resolve(import.meta.dirname, '..')
-// These overlays are consumed by the built qilin app, so their bare specifiers
+// These overlays are consumed by the built openkylin app, so their bare specifiers
 // resolve from apps/cli.
 const appOverlayFiles = new Set([
   ...globSync('apps/cli/config/examples/**/*.yml', { cwd: root }),
@@ -91,7 +91,7 @@ if (import.meta.main) {
  * A browser plugin must declare the browser half it ships.
  *
  * The browser roster is discovered by scanning composed packages for a
- * `qilin.client` block, and the node half of a surface plugin is an empty
+ * `openkylin.client` block, and the node half of a surface plugin is an empty
  * `apply`. A `packages/client` package that exports `./client` without that
  * block therefore composes, activates, and contributes nothing — its bundle is
  * never served and no error is raised anywhere. The mismatch is invisible in
@@ -99,20 +99,20 @@ if (import.meta.main) {
  * this group is checked: a Host package's `./client` export is the typed wire
  * face its browser consumers import, not a plugin the roster serves.
  * @returns one violation per client package whose `./client` export and
- * `qilin.client` declaration disagree.
+ * `openkylin.client` declaration disagree.
  */
 function validateClientHalvesDeclared(): string[] {
   return globSync('packages/client/*/package.json', { cwd: root }).flatMap((manifestPath) => {
     const manifest = readManifest(manifestPath) as PackageManifest & {
       exports?: Record<string, unknown>
-      qilin?: { client?: unknown }
+      openkylin?: { client?: unknown }
     }
     const shipsClient = manifest.exports !== undefined && Object.hasOwn(manifest.exports, './client')
-    const declaresClient = manifest.qilin?.client !== undefined
+    const declaresClient = manifest.openkylin?.client !== undefined
     if (shipsClient === declaresClient) return []
     return [shipsClient
-      ? `${manifestPath}: exports "./client" but declares no qilin.client, so its browser half is never served`
-      : `${manifestPath}: declares qilin.client but exports no "./client" entry to serve`]
+      ? `${manifestPath}: exports "./client" but declares no openkylin.client, so its browser half is never served`
+      : `${manifestPath}: declares openkylin.client but exports no "./client" entry to serve`]
   })
 }
 
@@ -126,7 +126,7 @@ function validateClientHalvesDeclared(): string[] {
  * contributor to that service reaches nobody; a row that registers into a host
  * singleton registers once per live session, so the second one collides.
  *
- * Both have happened. `shell-env` in a preset realm left `QILIN_WEB_URL` reaching
+ * Both have happened. `shell-env` in a preset realm left `OPENKYLIN_WEB_URL` reaching
  * no shell, and `tool-subagent-report` handed every child `report` once per live
  * session until the second registration threw. Neither changes a tool catalog,
  * so no catalog assertion can see them — and the shipped presets are near-copies
@@ -227,7 +227,7 @@ function validateAppResolution(): string[] {
   const violations: string[] = []
   const bundleManifests = bundleManifestPaths()
   // App overlays (and any config left under apps/cli/config) resolve from the
-  // qilin app's own dependency surface — the profile module fallback mirrors it.
+  // openkylin app's own dependency surface — the profile module fallback mirrors it.
   const appManifest = readManifest('apps/cli/package.json')
   const appDependencies = {
     ...appManifest.dependencies,
@@ -256,7 +256,7 @@ function validateAppResolution(): string[] {
   for (const manifestPath of bundleManifests) {
     const bundleDir = manifestPath.replace(/\/package\.json$/, '')
     const manifest = readManifest(manifestPath)
-    const patch = manifest.qilin?.bundle?.patch
+    const patch = manifest.openkylin?.bundle?.patch
     if (typeof patch !== 'string') continue
     const patchFile = relative(root, resolve(root, bundleDir, patch)).replaceAll('\\', '/')
     const references = pluginReferences.filter(reference => reference.file === patchFile)
@@ -361,7 +361,7 @@ function packageTestManifestPath(file: string): string | undefined {
  */
 export function bundleManifestPaths(repoRoot: string = root): string[] {
   return globSync('packages/*/*/package.json', { cwd: repoRoot })
-    .filter(path => typeof readManifest(path, repoRoot).qilin?.bundle?.patch === 'string')
+    .filter(path => typeof readManifest(path, repoRoot).openkylin?.bundle?.patch === 'string')
     .map(path => path.replaceAll('\\', '/'))
     .sort()
 }
@@ -388,7 +388,7 @@ export function bundlePluginDependencyErrors(
 
 /**
  * Every configured specifier of a local workspace package must resolve through
- * the tsconfig `paths` facade to a `.ts`/`.tsx` source file. The `qilin` source
+ * the tsconfig `paths` facade to a `.ts`/`.tsx` source file. The `openkylin` source
  * launch (tsx) and vitest resolve in the source plane; without a `paths` match
  * they fall back to package `exports`, which reach built `lib/` — present on a
  * built dev tree, absent on a clean one — so a missing mapping boots locally

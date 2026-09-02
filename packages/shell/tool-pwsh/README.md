@@ -9,7 +9,7 @@ English | [中文](README.zh.md)
 
 ## Summary
 
-`qilin-tool-pwsh` gives the agent a `pwsh` tool that runs PowerShell commands through the mounted shell executor — the Windows counterpart of `qilin-tool-bash`, mirroring it call-for-call. Each call runs in a fresh pwsh process, so no state survives; `run_in_background` turns long-running commands into background jobs. Commands are PowerShell-dialect: native `C:\...` paths and `$env:NAME` variables, with no dialect translation. Every call runs with the managed `QILIN_*` environment, and under a sandboxing executor the tool teaches and enforces the Windows-specific language-mode and named-pipe contracts. Mount it with a PowerShell executor such as `qilin-pwsh-local` and the `qilin-shell-env` plugin.
+`qilin-tool-pwsh` gives the agent a `pwsh` tool that runs PowerShell commands through the mounted shell executor — the Windows counterpart of `qilin-tool-bash`, mirroring it call-for-call. Each call runs in a fresh pwsh process, so no state survives; `run_in_background` turns long-running commands into background jobs. Commands are PowerShell-dialect: native `C:\...` paths and `$env:NAME` variables, with no dialect translation. Every call runs with the managed `OPENKYLIN_*` environment, and under a sandboxing executor the tool teaches and enforces the Windows-specific language-mode and named-pipe contracts. Mount it with a PowerShell executor such as `qilin-pwsh-local` and the `qilin-shell-env` plugin.
 
 ## Table of Contents
 
@@ -102,7 +102,7 @@ Read these pages when the package-level contract is not enough. They move from t
 
 - [shell package map](../README.md) — the bash capability family and its roles.
 - [Bash executor subsystem](../../../docs/subsystems/shell.md) — request/spec vocabulary, results, and background processes.
-- [shell-env](../shell-env/README.md) — the managed `QILIN_*` environment every call receives.
+- [shell-env](../shell-env/README.md) — the managed `OPENKYLIN_*` environment every call receives.
 - [tool-jobs](../../jobs/tool-jobs/README.md) — `job_output`, `job_list`, and `job_kill` controls for background runs.
 - [pwsh tool and executor Agent Note](../../../.agents/notes/implemented/feature/2026-08-01-pwsh-tool-and-executor.md) — why the tool mirrors the bash tool and how the Windows sandbox gates its description.
 - [Windows ACL restricted-token sandbox Agent Note](../../../.agents/notes/implemented/feature/2026-08-08-windows-acl-restricted-token-sandbox.md) — the language-mode and named-pipe contracts.

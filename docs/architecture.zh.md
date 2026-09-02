@@ -8,19 +8,19 @@
 
 ## Cordis
 
-[Cordis](cordis-primer.zh.md) 是 qilin 底层的框架：插件向共享上下文贡献服务、类型化事件和可逆的副作用。产品的每一部分都是插件，包括模型适配器、工具注册表、会话日志，以及 agent loop（智能体循环）本身，因此每个都可以从配置替换。
+[Cordis](cordis-primer.zh.md) 是 openkylin 底层的框架：插件向共享上下文贡献服务、类型化事件和可逆的副作用。产品的每一部分都是插件，包括模型适配器、工具注册表、会话日志，以及 agent loop（智能体循环）本身，因此每个都可以从配置替换。
 
-不存在需要打补丁的特权内核：扩展 qilin 的方式是把插件挂载到其他插件旁边，而各项注册都是副作用，会在其插件卸载时撤销。
+不存在需要打补丁的特权内核：扩展 openkylin 的方式是把插件挂载到其他插件旁边，而各项注册都是副作用，会在其插件卸载时撤销。
 
 ## Profile 与组合包
 
-运行中的 `qilin` 是一棵插件树，由启动时按序叠加的各层组合而成。
+运行中的 `openkylin` 是一棵插件树，由启动时按序叠加的各层组合而成。
 
 **profile** 是存放在 Harness home 中的具名组装。它列出自己叠放的组合包，存放自己安装的树外插件，并保存用户自己的 `cordis.patch.yml`。`web`、`headless`、`sdk`、`sdk-minimal` 和 `acp` 作为模板随发行版交付。
 
 **组合包**是 Cordis 配置项及其挂载代码的分发格式，因此它插入的内容始终可被其上各层 patch。
 
-两者都在各自的 `package.json` 中通过 `qilin` 字段声明自己：`qilin.profile` 列出一个 profile 的组合包，`qilin.bundle` 指向一个组合包的 patch 文件。
+两者都在各自的 `package.json` 中通过 `openkylin` 字段声明自己：`openkylin.profile` 列出一个 profile 的组合包，`openkylin.bundle` 指向一个组合包的 patch 文件。
 
 [`qilin-base`](../packages/bundle/base/README.zh.md) 是 `web`、`headless`、`sdk` 与 `acp` profile 的共享第一层：模型适配器、工具、持久化、沙箱与审批策略、设置、凭据、遥测。[`qilin-web-app`](../packages/bundle/web-app/README.zh.md) 增加浏览器应用，[`qilin-headless`](../packages/bundle/headless/README.zh.md) 增加不带服务器的一次性运行器，[`qilin-sdk-app`](../packages/bundle/sdk-app/README.zh.md) 增加 SDK JSON-RPC 服务器，[`qilin-acp-app`](../packages/bundle/acp-app/README.zh.md) 增加仅用于自动化的 ACP 服务器。[`qilin-sdk-minimal`](../packages/bundle/sdk-minimal/README.zh.md) 是刻意保留的例外：一个组合包拥有完整的显式 SDK 配置树，不应用 `qilin-base`。
 
@@ -31,7 +31,7 @@
 要查看你的机器启动的配置树：
 
 ```sh
-qilin --profile web --dump-config
+openkylin --profile web --dump-config
 ```
 
 它打印出的任何条目，都可以由你自己的 patch 替换。
@@ -40,11 +40,11 @@ qilin --profile web --dump-config
 
 ## 应用启动
 
-所有受支持的 Node 应用都从 `qilin` CLI 与具名 profile 启动。随附应用是 `qilin web`（刻意为 `--profile web` 保留的别名）、`qilin --profile headless`、`qilin --profile sdk`、`qilin --profile sdk-minimal` 与 `qilin --profile acp`。TypeScript SDK 会解析其同版本 `qilin` 依赖并选择 `sdk`；自定义插件组合继续由 profile 与有序 patch 文件表达，而不是另一个可执行文件或内联应用树。`sdk-minimal` 是位于同一 launcher 后的仓库自有独立组合包，而不是由调用方提供的 Cordis 配置树。
+所有受支持的 Node 应用都从 `openkylin` CLI 与具名 profile 启动。随附应用是 `openkylin web`（刻意为 `--profile web` 保留的别名）、`openkylin --profile headless`、`openkylin --profile sdk`、`openkylin --profile sdk-minimal` 与 `openkylin --profile acp`。TypeScript SDK 会解析其同版本 `openkylin` 依赖并选择 `sdk`；自定义插件组合继续由 profile 与有序 patch 文件表达，而不是另一个可执行文件或内联应用树。`sdk-minimal` 是位于同一 launcher 后的仓库自有独立组合包，而不是由调用方提供的 Cordis 配置树。
 
-Vendored CLI、仅用于构建和测试的可执行文件、进程内直接挂载插件以及私有浏览器 WebWorker 预览都不属于 Harness 应用启动器。[`verify-application-entrypoints`](../scripts/verify-application-entrypoints.ts)将每个包 bin、可执行源码与根 demo 归入显式类别，并拒绝任何绕过 `qilin` 的 Node 应用路径。
+Vendored CLI、仅用于构建和测试的可执行文件、进程内直接挂载插件以及私有浏览器 WebWorker 预览都不属于 Harness 应用启动器。[`verify-application-entrypoints`](../scripts/verify-application-entrypoints.ts)将每个包 bin、可执行源码与根 demo 归入显式类别，并拒绝任何绕过 `openkylin` 的 Node 应用路径。
 
-Python SDK 遵循相同的应用架构。其运行时 wheel 把普通 `qilin` CLI 打包为 `deepseek-harness-sdk-runtime-<platform>-<arch>`，客户端默认以显式 Harness home 启动 `qilin --profile sdk`。极简示例选择随附的 `sdk-minimal` profile。Python 暴露 profile 选择与有序 patch 文件，而不是完整 Cordis 树；持久外部插件通过 `qilin plugin` 安装。已删除的私有直读配置载体没有兼容 bin 或回退 parser。
+Python SDK 遵循相同的应用架构。其运行时 wheel 把普通 `openkylin` CLI 打包为 `deepseek-harness-sdk-runtime-<platform>-<arch>`，客户端默认以显式 Harness home 启动 `openkylin --profile sdk`。极简示例选择随附的 `sdk-minimal` profile。Python 暴露 profile 选择与有序 patch 文件，而不是完整 Cordis 树；持久外部插件通过 `openkylin plugin` 安装。已删除的私有直读配置载体没有兼容 bin 或回退 parser。
 
 ## 核心包
 

@@ -7,10 +7,10 @@
  */
 
 /** The environment variable that requests the escape valve; exactly `1` opts in. */
-export const AUTH_DISABLED_ENV_VAR = 'QILIN_AUTH_DISABLED'
+export const AUTH_DISABLED_ENV_VAR = 'OPENKYLIN_AUTH_DISABLED'
 
 /** Environment variables whose value can mark the deployment as production. */
-export const PRODUCTION_ENV_VARS: readonly string[] = ['QILIN_ENV', 'ENVIRONMENT']
+export const PRODUCTION_ENV_VARS: readonly string[] = ['OPENKYLIN_ENV', 'ENVIRONMENT']
 
 /** The values (case- and whitespace-insensitive) that mark production. */
 export const PRODUCTION_ENV_VALUES: readonly string[] = ['prod', 'production']

@@ -114,8 +114,8 @@ it('pins native DeepSeek Files offload and inline fallback in assembled requests
       fixtureFile: join(SNAPSHOTS_DIR, 'image-offload-request', 'session.jsonl'),
       workspaceDir: READ_IMAGE_WORKSPACE,
       env: {
-        QILIN_SNAPSHOT_API_KEY: 'snapshot-key',
-        QILIN_SNAPSHOT_BASE_URL: `http://127.0.0.1:${address.port}`,
+        OPENKYLIN_SNAPSHOT_API_KEY: 'snapshot-key',
+        OPENKYLIN_SNAPSHOT_BASE_URL: `http://127.0.0.1:${address.port}`,
       },
     })
     expect(result.stderr).toBe('')
@@ -126,7 +126,7 @@ it('pins native DeepSeek Files offload and inline fallback in assembled requests
     const accessText = (cwd: string): string => {
       const attachmentPath = join(
         cwd,
-        '.qilin',
+        '.openkylin',
         'attachments',
         'v1',
         'objects',
@@ -210,8 +210,8 @@ it('pins native DeepSeek Files offload and inline fallback in assembled requests
       fixtureFile: join(SNAPSHOTS_DIR, 'image-offload-request', 'session.jsonl'),
       workspaceDir: READ_IMAGE_WORKSPACE,
       env: {
-        QILIN_SNAPSHOT_API_KEY: 'snapshot-fallback-key',
-        QILIN_SNAPSHOT_BASE_URL: `http://127.0.0.1:${address.port}`,
+        OPENKYLIN_SNAPSHOT_API_KEY: 'snapshot-fallback-key',
+        OPENKYLIN_SNAPSHOT_BASE_URL: `http://127.0.0.1:${address.port}`,
       },
     })
     expect(fallback.stderr).toBe('')

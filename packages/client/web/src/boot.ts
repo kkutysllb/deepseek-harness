@@ -51,7 +51,7 @@ export class AppWebEntry {
       // next microtask; an asynchronous bootstrap resolves it after its last
       // row, or rejects it into the failure rendering below. An absent global
       // means no bootstrap owns the document and there is nothing to wait for.
-      await (globalThis as { __QILIN_BOOT_READY__?: { promise: Promise<void> } }).__QILIN_BOOT_READY__?.promise
+      await (globalThis as { __OPENKYLIN_BOOT_READY__?: { promise: Promise<void> } }).__OPENKYLIN_BOOT_READY__?.promise
       const win = globalThis as QilinWindow
       const moduleLoader = win.__ModuleLoader__
       if (moduleLoader === undefined) {
@@ -63,8 +63,8 @@ export class AppWebEntry {
       // this structural slice reads one optional member without adding a
       // package edge.
       const transport = (globalThis as {
-        __QILIN_TRANSPORT__?: { loadBundle?: ClientModuleCreateOptions['loadBundle'] }
-      }).__QILIN_TRANSPORT__
+        __OPENKYLIN_TRANSPORT__?: { loadBundle?: ClientModuleCreateOptions['loadBundle'] }
+      }).__OPENKYLIN_TRANSPORT__
       this.modules = moduleLoader.create({
         boot: win.__DSH_BOOT__,
         staticModules: getStaticModules(),

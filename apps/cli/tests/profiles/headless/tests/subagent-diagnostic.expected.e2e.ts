@@ -23,7 +23,7 @@ const binScript = fileURLToPath(new URL('../../../../../../packages/test-support
 const tsconfigPath = fileURLToPath(new URL('../../../../../../tsconfig.json', import.meta.url))
 const parentId = SessionId('subagent-diagnostic-parent')
 const childId = SessionId('subagent-diagnostic-child')
-const refreshing = process.env.QILIN_SNAPSHOT === 'refresh'
+const refreshing = process.env.OPENKYLIN_SNAPSHOT === 'refresh'
 const task = 'Call list_agents once and report what it shows.'
 
 /**
@@ -82,8 +82,8 @@ describe('descriptor-less cold child diagnostic snapshot', () => {
       binArgs: [configPath, task],
       tsconfigPath,
       env: {
-        QILIN_SNAPSHOT_FILE: replayOverride,
-        QILIN_SNAPSHOT_OVERRIDE: replayOverride,
+        OPENKYLIN_SNAPSHOT_FILE: replayOverride,
+        OPENKYLIN_SNAPSHOT_OVERRIDE: replayOverride,
       },
       prepare: async (runCwd) => {
         cwd = runCwd

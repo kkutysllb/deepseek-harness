@@ -27,7 +27,7 @@ function createWorkspace(): string {
   return root
 }
 
-describe('QiLin package license gate', () => {
+describe('OpenKylin package license gate', () => {
   it('checks root, unhyphenated CLI, and qilin-prefixed package names while ignoring other families', () => {
     const root = createWorkspace()
     writeManifest(root, 'apps/cli/package.json', { name: '@qilin/cli', license: 'MIT' })

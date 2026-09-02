@@ -1,6 +1,6 @@
 {
   "name": "@qilin/skill-badge",
-  "description": "Bundled qilin badge skill provider for DeepSeek Harness",
+  "description": "Bundled openkylin badge skill provider for DeepSeek Harness",
   "version": "0.1.2-alpha.3",
   "publishConfig": {
     "access": "public"

@@ -1,6 +1,6 @@
 // PTC mode browser round trip with nested sub-calls and details selection.
-// Record: QILIN_SNAPSHOT=record rewrites session.jsonl, then a keyless
-// QILIN_SNAPSHOT=refresh regenerates ui.expected.md.
+// Record: OPENKYLIN_SNAPSHOT=record rewrites session.jsonl, then a keyless
+// OPENKYLIN_SNAPSHOT=refresh regenerates ui.expected.md.
 import { readFile } from 'node:fs/promises'
 import { fileURLToPath } from 'node:url'
 import type { Browser, Page } from 'playwright'

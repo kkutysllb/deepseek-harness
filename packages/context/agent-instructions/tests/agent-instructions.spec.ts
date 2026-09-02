@@ -329,7 +329,7 @@ describe('workspace context instruction discovery', () => {
       const files = await discoverBaselineInstructionFiles({ cwd, dshHome: home })
 
       expect(files.map(file => file.displayPath)).toEqual([
-        '$QILIN_HOME/AGENTS.md',
+        '$OPENKYLIN_HOME/AGENTS.md',
         'AGENTS.md',
         'CLAUDE.md',
         join('packages', 'CLAUDE.md'),
@@ -586,11 +586,11 @@ describe('workspace context instruction discovery', () => {
   it('defaults dshHome and uses cwd itself as root when no project marker exists', async () => {
     const root = await tempRepo()
     const emptyHome = await tempRepo()
-    // Isolate the default-home fallback: blank QILIN_HOME is treated as unset, and
-    // the home dirs point at an empty dir so the default ~/.qilin holds no global
+    // Isolate the default-home fallback: blank OPENKYLIN_HOME is treated as unset, and
+    // the home dirs point at an empty dir so the default ~/.openkylin holds no global
     // scope. Windows homedir() reads USERPROFILE (not HOME), so both must be
-    // stubbed or a real ~/.qilin/AGENTS.md would otherwise leak in.
-    vi.stubEnv('QILIN_HOME', '')
+    // stubbed or a real ~/.openkylin/AGENTS.md would otherwise leak in.
+    vi.stubEnv('OPENKYLIN_HOME', '')
     vi.stubEnv('HOME', emptyHome)
     if (process.platform === 'win32') vi.stubEnv('USERPROFILE', emptyHome)
     try {
@@ -610,16 +610,16 @@ describe('workspace context instruction discovery', () => {
     }
   })
 
-  it('honors QILIN_HOME when dshHome is not configured explicitly', async () => {
+  it('honors OPENKYLIN_HOME when dshHome is not configured explicitly', async () => {
     const root = await tempRepo()
     const envHome = await tempRepo()
     try {
       await write(join(envHome, 'AGENTS.md'), 'env global rule')
-      vi.stubEnv('QILIN_HOME', envHome)
+      vi.stubEnv('OPENKYLIN_HOME', envHome)
 
       const files = await discoverBaselineInstructionFiles({ cwd: root })
 
-      expect(files).toEqual([{ absolutePath: join(envHome, 'AGENTS.md'), displayPath: '$QILIN_HOME/AGENTS.md' }])
+      expect(files).toEqual([{ absolutePath: join(envHome, 'AGENTS.md'), displayPath: '$OPENKYLIN_HOME/AGENTS.md' }])
     } finally {
       vi.unstubAllEnvs()
       await rm(root, { recursive: true, force: true })
@@ -627,20 +627,20 @@ describe('workspace context instruction discovery', () => {
     }
   })
 
-  it('labels the default DSH home as ~/.qilin when HOME points at the configured default', async () => {
+  it('labels the default DSH home as ~/.openkylin when HOME points at the configured default', async () => {
     const root = await tempRepo()
     const home = await tempRepo()
     try {
-      await write(join(home, '.qilin/AGENTS.md'), 'global default rule')
+      await write(join(home, '.openkylin/AGENTS.md'), 'global default rule')
 
-      // A set QILIN_HOME would override the homedir default and relabel the home.
-      vi.stubEnv('QILIN_HOME', '')
+      // A set OPENKYLIN_HOME would override the homedir default and relabel the home.
+      vi.stubEnv('OPENKYLIN_HOME', '')
       vi.resetModules()
       vi.doMock('node:os', () => ({ homedir: () => home }))
       const isolated = await import('@qilin/agent-instructions')
       const files = await isolated.discoverBaselineInstructionFiles({ cwd: root })
 
-      expect(files.map(file => file.displayPath)).toEqual(['~/.qilin/AGENTS.md'])
+      expect(files.map(file => file.displayPath)).toEqual(['~/.openkylin/AGENTS.md'])
     } finally {
       vi.unstubAllEnvs()
       vi.doUnmock('node:os')
@@ -650,18 +650,18 @@ describe('workspace context instruction discovery', () => {
     }
   })
 
-  it('expands a configured ~/.qilin home to the operating-system home directory', async () => {
+  it('expands a configured ~/.openkylin home to the operating-system home directory', async () => {
     const root = await tempRepo()
     const home = await tempRepo()
     try {
-      await write(join(home, '.qilin/AGENTS.md'), 'global tilde rule')
+      await write(join(home, '.openkylin/AGENTS.md'), 'global tilde rule')
 
       vi.resetModules()
       vi.doMock('node:os', () => ({ homedir: () => home }))
       const isolated = await import('@qilin/agent-instructions')
-      const files = await isolated.discoverBaselineInstructionFiles({ cwd: root, dshHome: '~/.qilin' })
+      const files = await isolated.discoverBaselineInstructionFiles({ cwd: root, dshHome: '~/.openkylin' })
 
-      expect(files).toEqual([{ absolutePath: join(home, '.qilin/AGENTS.md'), displayPath: '~/.qilin/AGENTS.md' }])
+      expect(files).toEqual([{ absolutePath: join(home, '.openkylin/AGENTS.md'), displayPath: '~/.openkylin/AGENTS.md' }])
     } finally {
       vi.doUnmock('node:os')
       vi.resetModules()
@@ -678,7 +678,7 @@ describe('workspace context instruction discovery', () => {
 
       const files = await discoverBaselineInstructionFiles({ cwd: root, dshHome: root })
 
-      expect(files).toEqual([{ absolutePath: join(root, 'AGENTS.md'), displayPath: '$QILIN_HOME/AGENTS.md' }])
+      expect(files).toEqual([{ absolutePath: join(root, 'AGENTS.md'), displayPath: '$OPENKYLIN_HOME/AGENTS.md' }])
     } finally {
       await rm(root, { recursive: true, force: true })
     }
@@ -2436,14 +2436,14 @@ describe('workspace context request injection', () => {
     }
   })
 
-  it('labels a custom dshHome as QILIN_HOME instead of pretending it is ~/.qilin', async () => {
+  it('labels a custom dshHome as OPENKYLIN_HOME instead of pretending it is ~/.openkylin', async () => {
     const root = await tempRepo()
     const home = await tempRepo()
     try {
       await write(join(home, 'AGENTS.md'), 'global custom rule')
       const files = await discoverBaselineInstructionFiles({ cwd: root, dshHome: home })
 
-      expect(files.map(file => file.displayPath)).toEqual(['$QILIN_HOME/AGENTS.md'])
+      expect(files.map(file => file.displayPath)).toEqual(['$OPENKYLIN_HOME/AGENTS.md'])
     } finally {
       await rm(root, { recursive: true, force: true })
       await rm(home, { recursive: true, force: true })

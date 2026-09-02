@@ -28,7 +28,7 @@ function runScript(script: string, environment: NodeJS.ProcessEnv): void {
   }
 }
 
-/** Run the full build selected by `--profile` or `QILIN_BUILD_CLIENT_PROFILE`. */
+/** Run the full build selected by `--profile` or `OPENKYLIN_BUILD_CLIENT_PROFILE`. */
 function main(): void {
   const { values } = parseArgs({
     options: { profile: { type: 'string' } },

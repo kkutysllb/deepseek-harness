@@ -136,15 +136,15 @@ describe('LocalBashExecutor.run', () => {
   it('resolve() carries stdin/env/dshEnv onto the spec, and run() threads them to the command', async () => {
     const { bash } = await setup()
     const spec = bash.resolve({
-      command: 'cat; echo "[$SEAM_VAR][$QILIN_SEAM_VAR]"',
+      command: 'cat; echo "[$SEAM_VAR][$OPENKYLIN_SEAM_VAR]"',
       stdin: 'piped\n',
       env: { SEAM_VAR: 'env-ok' },
-      dshEnv: { QILIN_SEAM_VAR: 'qilin-ok' },
+      dshEnv: { OPENKYLIN_SEAM_VAR: 'qilin-ok' },
     })
     // resolve() keeps the optional input/environment fields verbatim.
     expect(spec.stdin).toBe('piped\n')
     expect(spec.env).toEqual({ SEAM_VAR: 'env-ok' })
-    expect(spec.dshEnv).toEqual({ QILIN_SEAM_VAR: 'qilin-ok' })
+    expect(spec.dshEnv).toEqual({ OPENKYLIN_SEAM_VAR: 'qilin-ok' })
     const result = await bash.run(spec)
     expect(result.stdout.text).toBe('piped\n[env-ok][qilin-ok]\n')
   })
@@ -173,10 +173,10 @@ describe('LocalBashExecutor.start (background process handles)', () => {
   it('threads stdin and extra env into a background process', async () => {
     const { bash } = await setup()
     const proc = bash.start(bash.resolve({
-      command: 'cat; echo "[$BG_VAR][$QILIN_BG_VAR]"',
+      command: 'cat; echo "[$BG_VAR][$OPENKYLIN_BG_VAR]"',
       stdin: 'bg-stdin\n',
       env: { BG_VAR: 'bg-env' },
-      dshEnv: { QILIN_BG_VAR: 'bg-dsh-env' },
+      dshEnv: { OPENKYLIN_BG_VAR: 'bg-dsh-env' },
     }))
     const output = await readUntil(proc, '[bg-env][bg-dsh-env]')
     expect(output).toContain('bg-stdin')

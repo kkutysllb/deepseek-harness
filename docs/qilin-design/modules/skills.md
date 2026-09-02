@@ -1,6 +1,6 @@
 # skills 模块（skills module）
 
-> QiLin engine · skills subsystem · 双语 / Bilingual
+> OpenKylin engine · skills subsystem · 双语 / Bilingual
 
 ---
 
@@ -8,7 +8,7 @@
 
 ### 职责
 
-`qilin.skills` 是 QiLin 的"技能市场"。技能是结构化的 Markdown 包 + 描述 + 可选脚本，可被 LLM 加载到系统 prompt 中，并在运行时通过 `skill_manage_tool` 进行 CRUD。其安全是 QiLin 最重要的设计点之一。
+`openkylin.skills` 是 OpenKylin 的"技能市场"。技能是结构化的 Markdown 包 + 描述 + 可选脚本，可被 LLM 加载到系统 prompt 中，并在运行时通过 `skill_manage_tool` 进行 CRUD。其安全是 OpenKylin 最重要的设计点之一。
 
 - **技能目录（catalog）**：`catalog.py` 维护用户/全局两层技能索引
 - **描述生成**：`describe.py` 自动从 `SKILL.md` 生成机器可读的 metadata
@@ -71,7 +71,7 @@
 
 ### Responsibility
 
-`qilin.skills` is QiLin's "skill marketplace". A skill is a structured Markdown bundle + descriptor + optional scripts; it can be loaded into the LLM system prompt and managed at runtime via `skill_manage_tool`. Skill safety is among QiLin's most important design concerns.
+`openkylin.skills` is OpenKylin's "skill marketplace". A skill is a structured Markdown bundle + descriptor + optional scripts; it can be loaded into the LLM system prompt and managed at runtime via `skill_manage_tool`. Skill safety is among OpenKylin's most important design concerns.
 
 - **Catalog** — `catalog.py` indexes global + per-user skills
 - **Descriptor** — `describe.py` generates machine-readable metadata from `SKILL.md`

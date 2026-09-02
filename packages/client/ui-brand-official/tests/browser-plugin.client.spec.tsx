@@ -36,14 +36,14 @@ describe('official browser-brand plugin', () => {
   })
 
   it('leaves every slot empty outside the official build profile', async () => {
-    vi.stubEnv('QILIN_CLIENT_BUILD_PROFILE', 'local')
+    vi.stubEnv('OPENKYLIN_CLIENT_BUILD_PROFILE', 'local')
     const subject = await bench()
     await subject.ctx.plugin({ inject: [...inject], apply }).await()
     for (const hole of HOLES) expect(subject.slots.entries(hole)).toHaveLength(0)
   })
 
   it('fills declarations before or after apply and removes every occupant on teardown', async () => {
-    vi.stubEnv('QILIN_CLIENT_BUILD_PROFILE', 'official')
+    vi.stubEnv('OPENKYLIN_CLIENT_BUILD_PROFILE', 'official')
     const before = await bench()
     const fiber = before.ctx.plugin({ inject: [...inject], apply })
     await fiber.await()
@@ -67,7 +67,7 @@ describe('official browser-brand plugin', () => {
   })
 
   it('leaves the conversation hero on its declaring fallback even in official builds', async () => {
-    vi.stubEnv('QILIN_CLIENT_BUILD_PROFILE', 'official')
+    vi.stubEnv('OPENKYLIN_CLIENT_BUILD_PROFILE', 'official')
     const subject = await bench()
     await subject.ctx.plugin({ inject: [...inject], apply }).await()
     expect(subject.slots.entries(HERO_HOLE)).toHaveLength(0)

@@ -45,7 +45,7 @@ const KIND_TEMPLATES: Readonly<Record<string, string>> = {
 /**
  * Audited packages whose entry is a plain module API rather than a Cordis
  * plugin (`apply` export or a default service export) or an installable
- * bundle (`qilin.bundle.patch`). Each entry names why the package is a
+ * bundle (`openkylin.bundle.patch`). Each entry names why the package is a
  * library; the check re-derives the entry shape so a stale entry fails loud.
  */
 const PACKAGE_LIBRARIES: Readonly<Record<string, string>> = {
@@ -103,12 +103,12 @@ function packageDir(file: string): string {
   return file.replaceAll('\\', '/').replace(/\/README\.zh\.md$/, '').replace(/\/README\.md$/, '')
 }
 
-/** Whether the package manifest declares `qilin.bundle.patch`. */
+/** Whether the package manifest declares `openkylin.bundle.patch`. */
 function declaresBundle(dir: string): boolean {
   const manifest = resolve(root, dir, 'package.json')
   if (!existsSync(manifest)) return false
-  const metadata = JSON.parse(readFileSync(manifest, 'utf8')) as { qilin?: { bundle?: { patch?: string } } }
-  return metadata.qilin?.bundle?.patch !== undefined
+  const metadata = JSON.parse(readFileSync(manifest, 'utf8')) as { openkylin?: { bundle?: { patch?: string } } }
+  return metadata.openkylin?.bundle?.patch !== undefined
 }
 
 /** The expected kind for one package README, from the facts the skill documents. */

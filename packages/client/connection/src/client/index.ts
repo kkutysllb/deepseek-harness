@@ -112,7 +112,7 @@ export interface ClientTransportHooks {
 
 /** Page global carrying {@link ClientTransportHooks}; absent in the served web app. */
 interface ClientTransportGlobal {
-  __QILIN_TRANSPORT__?: ClientTransportHooks
+  __OPENKYLIN_TRANSPORT__?: ClientTransportHooks
 }
 
 /**
@@ -203,7 +203,7 @@ export function apply(ctx: Context): void {
   const pageLocation = typeof location === 'undefined' ? undefined : location
   const fixture = pageLocation !== undefined && new URLSearchParams(pageLocation.search).has('fixture')
   const fixtureRpc = fixture ? createFixtureConnectionRpc() : undefined
-  const transport = (globalThis as ClientTransportGlobal).__QILIN_TRANSPORT__
+  const transport = (globalThis as ClientTransportGlobal).__OPENKYLIN_TRANSPORT__
   const rpc = fixtureRpc ?? createWebConnectionRpc(transport?.fetch, transport?.openStream)
   // One shared 401 signal for the whole handle: account/auth failures (real
   // client or fixture stub) land in one channel, so consumers subscribe once.

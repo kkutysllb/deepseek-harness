@@ -180,12 +180,12 @@ describe('qilin-subagent-dsh-sdk provider', () => {
   })
 
   it('resolves relative launch files at load and forwards absolute paths', async () => {
-    const ctx = await setup({ FAKE_TEXT: 'explicit qilin child' }, {
+    const ctx = await setup({ FAKE_TEXT: 'explicit openkylin child' }, {
       dshBin: relative(process.cwd(), fakeRuntime),
       patches: [relative(process.cwd(), existingPatch)],
     })
     const run = await ctx.subagents.start('qilin-sdk', request())
-    expect(text((await run.result).output)).toBe('explicit qilin child')
+    expect(text((await run.result).output)).toBe('explicit openkylin child')
     expect(createdHarnessOptions[0]).toMatchObject({
       dshBin: fakeRuntime,
       patches: [existingPatch],
@@ -288,22 +288,22 @@ describe('qilin-subagent-dsh-sdk provider', () => {
   })
 
   it('scrubs ambient credentials but forwards explicit config env', async () => {
-    process.env.QILIN_TEST_AMBIENT_SECRET_KEY = 'leak-me-not'
+    process.env.OPENKYLIN_TEST_AMBIENT_SECRET_KEY = 'leak-me-not'
     try {
       const ctx = await setup({
-        FAKE_ECHO_ENV: 'QILIN_TEST_AMBIENT_SECRET_KEY,DEEPSEEK_API_KEY',
+        FAKE_ECHO_ENV: 'OPENKYLIN_TEST_AMBIENT_SECRET_KEY,DEEPSEEK_API_KEY',
         DEEPSEEK_API_KEY: 'explicit-child-key',
         FAKE_TEXT: 'done',
       })
       const run = await ctx.subagents.start('qilin-sdk', request())
       const result = await run.result
       const answer = text(result.output)
-      expect(answer).toContain('QILIN_TEST_AMBIENT_SECRET_KEY=\n')
+      expect(answer).toContain('OPENKYLIN_TEST_AMBIENT_SECRET_KEY=\n')
       expect(answer).toContain('DEEPSEEK_API_KEY=explicit-child-key')
       await run.dispose()
       await ctx.fiber.dispose()
     } finally {
-      delete process.env.QILIN_TEST_AMBIENT_SECRET_KEY
+      delete process.env.OPENKYLIN_TEST_AMBIENT_SECRET_KEY
     }
   })
 
@@ -836,7 +836,7 @@ describe('qilin-subagent-dsh-sdk provider', () => {
     await ctx.fiber.dispose()
   })
 
-  it('requires an explicit absolute Harness home for nested qilin runtimes', async () => {
+  it('requires an explicit absolute Harness home for nested openkylin runtimes', async () => {
     const ctx = new Context()
     await ctx.plugin(SubagentRuntime)
     await expect(ctx.plugin(sdk, {

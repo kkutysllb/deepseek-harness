@@ -57,7 +57,7 @@ describe('workspace Bundle discovery and product dependency closures', () => {
       mkdirSync(plainDir, { recursive: true })
       writeFileSync(join(bundleDir, 'package.json'), JSON.stringify({
         name: '@qilin/subagent-example',
-        qilin: { bundle: { patch: './cordis.patch.yml' } },
+        openkylin: { bundle: { patch: './cordis.patch.yml' } },
       }))
       writeFileSync(join(plainDir, 'package.json'), JSON.stringify({
         name: '@qilin/plain',

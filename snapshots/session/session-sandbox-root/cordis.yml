@@ -5,5 +5,5 @@
 - id: sandbox-policy
   name: '@qilin/sandbox-policy'
   config:
-    mode: !!js "process.env.QILIN_PERMISSION_MODE ?? (process.env.QILIN_SNAPSHOT === undefined ? 'workspace-write' : 'danger-full-access')"
+    mode: !!js "process.env.OPENKYLIN_PERMISSION_MODE ?? (process.env.OPENKYLIN_SNAPSHOT === undefined ? 'workspace-write' : 'danger-full-access')"
     workspaceRoot: /tmp

@@ -37,12 +37,12 @@ export const Config: z<Config> = z.object({
  */
 function sdkCommand(profile: string): Command {
   return new Command()
-    .name(`qilin --profile ${profile}`)
+    .name(`openkylin --profile ${profile}`)
     .description('Serve DeepSeek Harness SDK clients over stdio JSON-RPC.')
     .helpOption('-h, --help', 'show this help')
     .addHelpText('after', `
 Example:
-  qilin --profile ${profile}     serve one SDK runtime until its client disconnects
+  openkylin --profile ${profile}     serve one SDK runtime until its client disconnects
 `)
 }
 

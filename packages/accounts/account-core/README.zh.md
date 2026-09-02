@@ -26,7 +26,7 @@ kind: "package-reference"
 <a id="storage-contract"></a>
 ## 存储契约
 
-一个 store 持有一个 SQLite 数据库文件,默认位于 harness home 内的 `qilin-accounts/accounts.db`(`QILIN_HOME`,回退 `~/.qilin`),也可注入路径或 `:memory:`。构造器创建父目录、打开数据库并执行幂等 DDL:users 的 email 唯一索引与非空 OAuth 身份的部分唯一索引均以 `CREATE ... IF NOT EXISTS` 建立。模式版本存于 `user_version` pragma;新建库在建表后写入版本号,来自更新构建的数据库会被拒绝而非静默服务。唯一性冲突以 `AccountConflictError` 呈现并携带 `email` 或 `oauth` 类别;每次读取都会校验解码的持久行,被手工改坏的角色或标记列会大声失败,而不是流入 RBAC。
+一个 store 持有一个 SQLite 数据库文件,默认位于 harness home 内的 `qilin-accounts/accounts.db`(`OPENKYLIN_HOME`,回退 `~/.openkylin`),也可注入路径或 `:memory:`。构造器创建父目录、打开数据库并执行幂等 DDL:users 的 email 唯一索引与非空 OAuth 身份的部分唯一索引均以 `CREATE ... IF NOT EXISTS` 建立。模式版本存于 `user_version` pragma;新建库在建表后写入版本号,来自更新构建的数据库会被拒绝而非静默服务。唯一性冲突以 `AccountConflictError` 呈现并携带 `email` 或 `oauth` 类别;每次读取都会校验解码的持久行,被手工改坏的角色或标记列会大声失败,而不是流入 RBAC。
 
 -----
 

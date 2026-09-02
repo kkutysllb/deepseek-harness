@@ -1,4 +1,4 @@
-"""Drive the repo-source qilin SDK profile through the SDK and a keyless mock SSE server.
+"""Drive the repo-source openkylin SDK profile through the SDK and a keyless mock SSE server.
 
 Requires ``pnpm install`` but no build. This manual test is not collected by
 pytest; run ``python tests/manual_sdk_agent_smoke.py``.
@@ -68,9 +68,9 @@ def run_smoke(repo_root: Path, keep_sessions: bool) -> None:
                 "sdk",
             ),
             env={
-                "QILIN_HOME": str(dsh_home),
-                "QILIN_PERMISSION_MODE": "danger-full-access",
-                "QILIN_TELEMETRY_DISABLED": "1",
+                "OPENKYLIN_HOME": str(dsh_home),
+                "OPENKYLIN_PERMISSION_MODE": "danger-full-access",
+                "OPENKYLIN_TELEMETRY_DISABLED": "1",
                 "DEEPSEEK_BASE_URL": base_url,
                 "DEEPSEEK_API_KEY": "sdk-smoke-key",
             },
@@ -103,7 +103,7 @@ def run_smoke(repo_root: Path, keep_sessions: bool) -> None:
         print(f"kept_dsh_home={dsh_home}")
     else:
         shutil.rmtree(dsh_home)
-        print("removed temporary qilin home")
+        print("removed temporary openkylin home")
 
 
 def main() -> None:

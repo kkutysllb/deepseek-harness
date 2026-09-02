@@ -127,7 +127,7 @@ describe('WorkspaceFileSearch', () => {
       { path: `${absoluteSrc}tui.spec.ts`, kind: 'file' },
       { path: `${absoluteSrc}terminal-view.ts`, kind: 'file' },
     ])
-    expect(await files.list('~/.qilin-file-autocomplete-missing/', signal)).toEqual([])
+    expect(await files.list('~/.openkylin-file-autocomplete-missing/', signal)).toEqual([])
     expect(await files.list('../', signal)).toEqual([])
     expect(await files.list('README.md/', signal)).toEqual([])
   })

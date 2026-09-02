@@ -1,4 +1,4 @@
-/** Local durable attachment backend rooted below `QILIN_HOME`. @module @qilin/attachment-local */
+/** Local durable attachment backend rooted below `OPENKYLIN_HOME`. @module @qilin/attachment-local */
 
 import { join, resolve } from 'node:path'
 import { Context } from '@deepseek-ai/cordis'
@@ -53,7 +53,7 @@ export const MAX_IMAGE_COMPRESSION_CONCURRENCY = 8
 
 /** Local attachment backend configuration. */
 export interface Config {
-  /** Explicit harness home; omitted follows `QILIN_HOME`, then `~/.qilin`. */
+  /** Explicit harness home; omitted follows `OPENKYLIN_HOME`, then `~/.openkylin`. */
   dshHome?: string
   /** Maximum encoded bytes accepted for one submitted image. Default: 20 MiB. */
   maxImageBytes?: number

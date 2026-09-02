@@ -8,19 +8,19 @@ We recommend using an agent to explore the codebase and understand its architect
 
 ## Cordis
 
-[Cordis](cordis-primer.md) is the framework under qilin: plugins contribute services, typed events, and reversible effects to a shared context. Every part of the product is a plugin, including the model adapter, the tool registry, the session log, and the agent loop itself, so each is replaceable from configuration.
+[Cordis](cordis-primer.md) is the framework under openkylin: plugins contribute services, typed events, and reversible effects to a shared context. Every part of the product is a plugin, including the model adapter, the tool registry, the session log, and the agent loop itself, so each is replaceable from configuration.
 
-There is no privileged core to patch: you extend qilin by mounting a plugin beside the others, and registrations are effects that unwind when their plugin unloads.
+There is no privileged core to patch: you extend openkylin by mounting a plugin beside the others, and registrations are effects that unwind when their plugin unloads.
 
 ## Profiles and bundles
 
-A running `qilin` is a plugin tree composed at boot from ordered layers.
+A running `openkylin` is a plugin tree composed at boot from ordered layers.
 
 A **profile** is a named composition stored in the Harness home. It lists the bundles it stacks, holds any out-of-tree plugins it installs, and keeps the user's own `cordis.patch.yml`. `web`, `headless`, `sdk`, `sdk-minimal`, and `acp` ship as templates.
 
 A **bundle** is a distribution format for Cordis config rows and the code they mount, so whatever it inserts stays patchable by the layers above it.
 
-Each declares itself in its own `package.json` under a `qilin` field: `qilin.profile` lists a profile's bundles, and `qilin.bundle` points at a bundle's patch file.
+Each declares itself in its own `package.json` under a `openkylin` field: `openkylin.profile` lists a profile's bundles, and `openkylin.bundle` points at a bundle's patch file.
 
 [`qilin-base`](../packages/bundle/base/README.md) is the shared first layer of the `web`, `headless`, `sdk`, and `acp` profiles: model adapters, tools, persistence, sandbox and approval policy, settings, credentials, telemetry. [`qilin-web-app`](../packages/bundle/web-app/README.md) adds the browser application, [`qilin-headless`](../packages/bundle/headless/README.md) adds a one-shot runner with no server, [`qilin-sdk-app`](../packages/bundle/sdk-app/README.md) adds the SDK JSON-RPC server, and [`qilin-acp-app`](../packages/bundle/acp-app/README.md) adds the automation-only ACP server. [`qilin-sdk-minimal`](../packages/bundle/sdk-minimal/README.md) is the deliberate exception: one bundle owns its complete explicit SDK tree and does not apply `qilin-base`.
 
@@ -31,7 +31,7 @@ Custom profiles default to live patch reload. The shipped `web` profile is live;
 To see the tree your machine boots:
 
 ```sh
-qilin --profile web --dump-config
+openkylin --profile web --dump-config
 ```
 
 Any row it prints can be replaced by a patch of your own.
@@ -40,11 +40,11 @@ Composition mechanics are in [app-boot](../packages/boot/app-boot/README.md#prof
 
 ## Application launch
 
-Every supported Node application starts at the `qilin` CLI with a named profile. The shipped applications are `qilin web` (the deliberate alias for `--profile web`), `qilin --profile headless`, `qilin --profile sdk`, `qilin --profile sdk-minimal`, and `qilin --profile acp`. The TypeScript SDK resolves its same-version `qilin` dependency and selects `sdk`; custom plugin composition remains a profile plus ordered patch files, not another executable or inline application tree. `sdk-minimal` is a repository-owned standalone bundle behind the same launcher, not a caller-supplied Cordis tree.
+Every supported Node application starts at the `openkylin` CLI with a named profile. The shipped applications are `openkylin web` (the deliberate alias for `--profile web`), `openkylin --profile headless`, `openkylin --profile sdk`, `openkylin --profile sdk-minimal`, and `openkylin --profile acp`. The TypeScript SDK resolves its same-version `openkylin` dependency and selects `sdk`; custom plugin composition remains a profile plus ordered patch files, not another executable or inline application tree. `sdk-minimal` is a repository-owned standalone bundle behind the same launcher, not a caller-supplied Cordis tree.
 
-Vendored CLIs, build-only and test-only executables, direct in-process plugin mounting, and the private browser WebWorker preview are not Harness application launchers. [`verify-application-entrypoints`](../scripts/verify-application-entrypoints.ts) keeps every package bin, executable source, and root demo in an explicit class and rejects a Node application path that bypasses `qilin`.
+Vendored CLIs, build-only and test-only executables, direct in-process plugin mounting, and the private browser WebWorker preview are not Harness application launchers. [`verify-application-entrypoints`](../scripts/verify-application-entrypoints.ts) keeps every package bin, executable source, and root demo in an explicit class and rejects a Node application path that bypasses `openkylin`.
 
-The Python SDK follows the same application architecture. Its runtime wheel packages the normal `qilin` CLI as `deepseek-harness-sdk-runtime-<platform>-<arch>`, and the client launches `qilin --profile sdk` with an explicit Harness home by default. The minimal example selects the shipped `sdk-minimal` profile. Python exposes profile selection and ordered patch files rather than a complete Cordis tree; persistent external plugins are installed through `qilin plugin`. The removed private direct-config carrier has no compatibility bin or fallback parser.
+The Python SDK follows the same application architecture. Its runtime wheel packages the normal `openkylin` CLI as `deepseek-harness-sdk-runtime-<platform>-<arch>`, and the client launches `openkylin --profile sdk` with an explicit Harness home by default. The minimal example selects the shipped `sdk-minimal` profile. Python exposes profile selection and ordered patch files rather than a complete Cordis tree; persistent external plugins are installed through `openkylin plugin`. The removed private direct-config carrier has no compatibility bin or fallback parser.
 
 ## Core packages
 
