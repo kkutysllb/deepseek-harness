@@ -390,3 +390,87 @@ it('rejects a reset body without a string newPassword and an unknown reset id', 
   expect(unknown.status).toBe(404)
   deps.store.close()
 })
+
+it('treats a request without a method as GET', async () => {
+  const deps = rig()
+  const handler = valveHandler(deps)
+  const request = req('GET', PREFIX)
+  ;(request as { method?: string | undefined }).method = undefined
+  const out = await call(handler, request)
+  expect(out.status).toBe(200)
+  expect(out.body.users).toHaveLength(2)
+  deps.store.close()
+})
+
+it('answers 405 for PATCH on a reset-password path and POST on an item path', async () => {
+  const deps = rig()
+  const handler = valveHandler(deps)
+  const patchReset = await call(handler, req('PATCH', PREFIX + '/' + deps.user.id + '/reset-password'))
+  expect(patchReset.status).toBe(405)
+  const postItem = await call(handler, req('POST', PREFIX + '/' + deps.user.id))
+  expect(postItem.status).toBe(405)
+  deps.store.close()
+})
+
+it('rethrows an unknown session fault into the 500 handler', async () => {
+  const deps = rig()
+  const warnings: unknown[] = []
+  const handler = createAdminUsersRouteHandler({
+    store: deps.store,
+    sessions: { validateSession: () => { throw new Error('session store down') } } as never,
+    env: {},
+    authDisabled: false,
+    warn: (error: unknown) => { warnings.push(error) },
+  })
+  const out = await call(handler, req('GET', PREFIX, { cookie: 'access_token=anything' }))
+  expect(out.status).toBe(500)
+  expect((out.body.error as Record<string, unknown>).code).toBe('internal_error')
+  expect(warnings).toHaveLength(1)
+  deps.store.close()
+})
+
+it('updates enabled administrators while a second enabled administrator remains', async () => {
+  const deps = rig()
+  const second = deps.store.insertUser({ email: 'second@example.com', passwordHash: hashPassword('password-123'), systemRole: 'admin' })
+  const handler = valveHandler(deps)
+  const demote = await call(handler, req('PATCH', PREFIX + '/' + deps.admin.id, {}, { systemRole: 'user' }))
+  expect(demote.status).toBe(200)
+  expect(deps.store.findUserById(deps.admin.id)?.systemRole).toBe('user')
+  const disable = await call(handler, req('PATCH', PREFIX + '/' + deps.admin.id, {}, { disabled: true }))
+  expect(disable.status).toBe(200)
+  expect(deps.store.findUserById(deps.admin.id)?.disabledAt).not.toBeNull()
+  const noOpDisable = await call(handler, req('PATCH', PREFIX + '/' + second.id, {}, { disabled: false }))
+  expect(noOpDisable.status).toBe(200)
+  expect(deps.store.findUserById(second.id)?.disabledAt).toBeNull()
+  const reenable = await call(handler, req('PATCH', PREFIX + '/' + deps.admin.id, {}, { disabled: false }))
+  expect(reenable.status).toBe(200)
+  expect(deps.store.findUserById(deps.admin.id)?.disabledAt).toBeNull()
+  deps.store.close()
+})
+
+it('refuses resetting the calling administrator password', async () => {
+  const deps = rig()
+  const issued = deps.sessions.issueSession({ userId: deps.admin.id, persistent: false })
+  const handler = cookieHandler(deps)
+  const out = await call(handler, req('POST', PREFIX + '/' + deps.admin.id + '/reset-password', { authorization: 'Bearer ' + issued.session.id }, { newPassword: 'fresh-pass-99' }))
+  expect(out.status).toBe(400)
+  expect((out.body.error as Record<string, unknown>).code).toBe('self_protected')
+  deps.store.close()
+})
+
+it('answers 500 for a PATCH whose body is empty', async () => {
+  const deps = rig()
+  const warnings: unknown[] = []
+  const handler = createAdminUsersRouteHandler({
+    store: deps.store,
+    sessions: deps.sessions,
+    env: {},
+    authDisabled: true,
+    warn: (error: unknown) => { warnings.push(error) },
+  })
+  const out = await call(handler, req('PATCH', PREFIX + '/' + deps.user.id))
+  expect(out.status).toBe(500)
+  expect((out.body.error as Record<string, unknown>).code).toBe('internal_error')
+  expect(warnings).toHaveLength(1)
+  deps.store.close()
+})

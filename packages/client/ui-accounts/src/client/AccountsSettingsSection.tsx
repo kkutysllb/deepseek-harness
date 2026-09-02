@@ -67,6 +67,7 @@ export function AccountsSettingsSection({ auth, t }: AccountsSettingsSectionProp
   }, [auth, attempt])
 
   const apply = async (id: string, update: AccountUpdate): Promise<void> => {
+    /* v8 ignore next -- both invoking buttons are disabled while busy and browsers never deliver clicks to disabled controls */
     if (busy) return
     setBusy(true)
     setErrorText(null)
@@ -83,6 +84,7 @@ export function AccountsSettingsSection({ auth, t }: AccountsSettingsSectionProp
   }
 
   const reset = async (id: string): Promise<void> => {
+    /* v8 ignore next -- the confirm button is disabled while busy or empty, so the browser never dispatches that click */
     if (busy || resetValue === '') return
     setBusy(true)
     setErrorText(null)

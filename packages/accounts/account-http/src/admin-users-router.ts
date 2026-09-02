@@ -131,12 +131,9 @@ async function dispatch(req: IncomingMessage, res: ServerResponse, deps: AdminUs
     methodNotAllowed(res)
     return
   }
-  const match = suffix.match(/^\/([^/]+)(?:\/reset-password)?$/)
-  if (match === null) {
-    notFound(res)
-    return
-  }
-  const id = match[1] as string
+  // The suffix gate above admits exactly /:id and /:id/reset-password, so
+  // the id is the first segment with an optional reset-password tail.
+  const id = suffix.slice(1).replace(/\/reset-password$/, '')
   if (method === 'PATCH' && suffix === `/${id}`) {
     await patch(req, res, deps, id, verdict.userId)
     return
@@ -145,11 +142,7 @@ async function dispatch(req: IncomingMessage, res: ServerResponse, deps: AdminUs
     await reset(req, res, deps, id, verdict.userId)
     return
   }
-  if (suffix === `/${id}` || suffix === `/${id}/reset-password`) {
-    methodNotAllowed(res)
-    return
-  }
-  notFound(res)
+  methodNotAllowed(res)
 }
 
 /**

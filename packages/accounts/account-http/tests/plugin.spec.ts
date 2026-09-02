@@ -46,6 +46,7 @@ describe('plugin apply', () => {
     Object.assign(request, { url: '/api/v1/auth/me', method: 'GET', headers: {} })
     const verdict = gate.checkRequest(request) as { allowed: boolean; status: number }
     expect(verdict).toMatchObject({ allowed: false, status: 401 })
+    expect(gate.checkUpgrade(request)).toBe(false)
     await ctx.fiber.dispose()
     expect(routes).toHaveLength(0)
   })

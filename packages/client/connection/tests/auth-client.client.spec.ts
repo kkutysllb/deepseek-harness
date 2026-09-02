@@ -173,6 +173,36 @@ describe('AuthClient', () => {
   })
 })
 
+describe('AuthClient environment resolution', () => {
+  it('bases requests on the page origin and keeps the fake authority for an opaque origin', async () => {
+    const holder = globalThis as { location?: { origin: string } }
+    const { fetch, calls } = fetchStub([{ status: 200, body: { users: [] } }, { status: 200, body: { users: [] } }])
+    const client = new AuthClient({ fetch })
+    holder.location = { origin: 'https://console.example' }
+    try {
+      await client.listUsers()
+      expect(calls[0]?.input.origin).toBe('https://console.example')
+      holder.location = { origin: 'null' }
+      await client.listUsers()
+      expect(calls[1]?.input.origin).toBe('http://localhost.invalid')
+    } finally {
+      delete holder.location
+    }
+  })
+
+  it('parses empty and unparseable success bodies as an empty record', async () => {
+    const bodies = ['', 'not-json']
+    const rawFetch = (async (): Promise<Response> => ({
+      ok: true,
+      status: 200,
+      text: async () => bodies.shift() ?? '',
+    }) as unknown as Response) as unknown as typeof fetch
+    const client = new AuthClient({ fetch: rawFetch })
+    await expect(client.logout()).resolves.toBeUndefined()
+    await expect(client.changePassword('old-pass-1', 'new-pass-9')).resolves.toBeUndefined()
+  })
+})
+
 describe('FixtureAuthClient', () => {
   it('starts signed out, signs in, and answers the account surface', async () => {
     const fixture: IAuthClient = new FixtureAuthClient()

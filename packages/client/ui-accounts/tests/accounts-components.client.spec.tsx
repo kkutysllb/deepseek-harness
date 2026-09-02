@@ -132,7 +132,7 @@ describe('AccountOverlay', () => {
     view.unmount()
     await act(async () => {
       deferred.resolve({ needsSetup: true, registrationEnabled: false })
-      listeners.forEach(listener => listener(new AuthError(401, 'not_authenticated', 'late')))
+      listeners.forEach((listener) => { listener(new AuthError(401, 'not_authenticated', 'late')) })
     })
     expect(view.container.querySelector('[data-account-overlay]')).toBeNull()
   })
@@ -177,6 +177,41 @@ describe('AccountOverlay', () => {
     await act(async () => { deferred.resolve({ user: user('a1', 'admin@qilin.dev', 'admin'), accessToken: 'tok' }) })
     expect(login).toHaveBeenCalledTimes(1)
     expect(auth.login).toHaveBeenCalledTimes(1)
+  })
+
+  it('stays quiet when a session probe answer lands after unmount', async () => {
+    const status = Promise.withResolvers<{ needsSetup: boolean; registrationEnabled: boolean }>()
+    const me = Promise.withResolvers<AccountView>()
+    const auth = fakeAuth({ setupStatus: () => status.promise, me: () => me.promise })
+    const view = render(<AccountOverlay auth={auth} onUnauthorized={listener => auth.signal.subscribe(listener)} t={t} />)
+    await act(async () => { status.resolve({ needsSetup: false, registrationEnabled: false }) })
+    view.unmount()
+    await act(async () => { me.resolve(user('a1', 'admin@qilin.dev', 'admin')) })
+    expect(view.container.querySelector('[data-account-overlay]')).toBeNull()
+  })
+
+  it('stays quiet when a failed session probe lands after unmount', async () => {
+    const status = Promise.withResolvers<{ needsSetup: boolean; registrationEnabled: boolean }>()
+    const me = Promise.withResolvers<AccountView>()
+    const auth = fakeAuth({ setupStatus: () => status.promise, me: () => me.promise })
+    const view = render(<AccountOverlay auth={auth} onUnauthorized={listener => auth.signal.subscribe(listener)} t={t} />)
+    await act(async () => { status.resolve({ needsSetup: false, registrationEnabled: false }) })
+    view.unmount()
+    await act(async () => { me.reject(new Error('transport down')) })
+    expect(view.container.querySelector('[data-account-overlay]')).toBeNull()
+  })
+
+  it('maps a non-auth sign-in failure to the generic overlay error', async () => {
+    const auth = fakeAuth({
+      me: vi.fn(async () => { throw new AuthError(401, 'not_authenticated', 'no') }),
+      login: vi.fn(async () => { throw new Error('transport down') }),
+    })
+    render(<AccountOverlay auth={auth} onUnauthorized={listener => auth.signal.subscribe(listener)} t={t} />)
+    await screen.findByRole('heading', { name: en.overlayTitle })
+    fireEvent.input(screen.getByLabelText(en.email), { target: { value: 'admin@qilin.dev' } })
+    fireEvent.input(screen.getByLabelText(en.password), { target: { value: 'password-1' } })
+    fireEvent.click(screen.getByRole('button', { name: en.signIn }))
+    expect(await screen.findByText(en.overlayError)).toBeTruthy()
   })
 })
 
@@ -295,5 +330,74 @@ describe('AccountsSettingsSection', () => {
     fireEvent.click(screen.getByRole('button', { name: en.confirmReset }))
     await act(async () => { deferred.resolve(users[0]!) })
     expect(resetPassword).toHaveBeenCalledTimes(1)
+  })
+
+  it('localizes self-protection and administrator-required update failures', async () => {
+    const users = [user('a1', 'admin@qilin.dev', 'admin')]
+    const updateUser = vi.fn()
+      .mockRejectedValueOnce(new AuthError(400, 'self_protected', 'no'))
+      .mockRejectedValueOnce(new AuthError(403, 'forbidden', 'no'))
+    const auth = fakeAuth({ listUsers: vi.fn(async () => users), updateUser })
+    render(<AccountsSettingsSection auth={auth} t={sectionT} />)
+    await screen.findByText('admin@qilin.dev')
+    fireEvent.click(screen.getByRole('button', { name: en.demote }))
+    expect(await screen.findByText(en.errorSelfProtected)).toBeTruthy()
+    fireEvent.click(screen.getByRole('button', { name: en.disable }))
+    expect(await screen.findByText(en.adminRequired)).toBeTruthy()
+  })
+
+  it('maps a non-auth update failure to the generic error', async () => {
+    const users = [user('u1', 'user@qilin.dev', 'user')]
+    const auth = fakeAuth({
+      listUsers: vi.fn(async () => users),
+      updateUser: vi.fn(async () => { throw new Error('transport down') }),
+    })
+    render(<AccountsSettingsSection auth={auth} t={sectionT} />)
+    await screen.findByText('user@qilin.dev')
+    fireEvent.click(screen.getByRole('button', { name: en.promote }))
+    expect(await screen.findByText(en.errorGeneric)).toBeTruthy()
+  })
+
+  it('demotes an administrator and closes the reset row by clicking reset again', async () => {
+    const users = [user('a1', 'admin@qilin.dev', 'admin')]
+    const auth = fakeAuth({
+      listUsers: vi.fn(async () => users),
+      updateUser: vi.fn(async () => user('a1', 'admin@qilin.dev', 'user')),
+    })
+    render(<AccountsSettingsSection auth={auth} t={sectionT} />)
+    await screen.findByText('admin@qilin.dev')
+    fireEvent.click(screen.getByRole('button', { name: en.demote }))
+    await waitFor(() => { expect(auth.updateUser).toHaveBeenCalledWith('a1', { systemRole: 'user' }) })
+    fireEvent.click(screen.getByRole('button', { name: en.resetPassword }))
+    expect(screen.getByPlaceholderText(en.newPassword)).toBeTruthy()
+    fireEvent.click(screen.getByRole('button', { name: en.resetPassword }))
+    expect(screen.queryByPlaceholderText(en.newPassword)).toBeNull()
+  })
+
+  it('keeps the loading state when a stale management answer lands during a reload', async () => {
+    const pending = Promise.withResolvers<AccountView>()
+    const reloaded = Promise.withResolvers<AccountView[]>()
+    const auth1 = fakeAuth({ listUsers: vi.fn(async () => [user('u1', 'first@qilin.dev', 'user')]), updateUser: () => pending.promise })
+    const auth2 = fakeAuth({ listUsers: () => reloaded.promise })
+    const view = render(<AccountsSettingsSection auth={auth1} t={sectionT} />)
+    await screen.findByText('first@qilin.dev')
+    fireEvent.click(screen.getByRole('button', { name: en.promote }))
+    view.rerender(<AccountsSettingsSection auth={auth2} t={sectionT} />)
+    expect(screen.getByText(en.loading)).toBeTruthy()
+    await act(async () => { pending.resolve(user('u1', 'first@qilin.dev', 'admin')) })
+    expect(screen.getByText(en.loading)).toBeTruthy()
+    await act(async () => { reloaded.resolve([user('u2', 'second@qilin.dev', 'user')]) })
+    expect(screen.getByText('second@qilin.dev')).toBeTruthy()
+  })
+
+  it('ignores a stale user list that lands after the auth client changes', async () => {
+    const stale = Promise.withResolvers<AccountView[]>()
+    const auth1 = fakeAuth({ listUsers: () => stale.promise })
+    const auth2 = fakeAuth({ listUsers: vi.fn(async () => [user('u2', 'second@qilin.dev', 'user')]) })
+    const view = render(<AccountsSettingsSection auth={auth1} t={sectionT} />)
+    view.rerender(<AccountsSettingsSection auth={auth2} t={sectionT} />)
+    await screen.findByText('second@qilin.dev')
+    await act(async () => { stale.resolve([user('u1', 'first@qilin.dev', 'user')]) })
+    expect(screen.getByText('second@qilin.dev')).toBeTruthy()
   })
 })
