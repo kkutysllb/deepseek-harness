@@ -9,8 +9,8 @@ overrides:
   '@deepseek-ai/schemastery': link:vendor/schemastery
 
 patchedDependencies:
+  '@earendil-works/pi-ai@0.84.4': 4e4bd7a9145339e274cce53c46d9234db1d793c346efe6a7514341522c0f8f63
   '@yao-pkg/pkg@6.21.0': 28edd2180c36691c481522ef81f6f6614505f45e491aad542ac4663d4e6b3ff8
-  '@earendil-works/pi-ai@0.84.3': 4e4bd7a9145339e274cce53c46d9234db1d793c346efe6a7514341522c0f8f63
   node-pty@1.2.0-beta.15: b40ae545608897914bd25fb009c97eeac478c34e8a910298ddcb01b746534bb0
 
 importers:
@@ -6244,8 +6244,8 @@ importers:
         specifier: link:../../../vendor/schemastery
         version: link:../../../vendor/schemastery
       '@earendil-works/pi-ai':
-        specifier: '>=0.84.3 <1.0.0'
-        version: 0.84.3(patch_hash=4e4bd7a9145339e274cce53c46d9234db1d793c346efe6a7514341522c0f8f63)(@modelcontextprotocol/sdk@1.29.0(zod@4.4.3))(ws@8.21.0)(zod@4.4.3)
+        specifier: ^0.84.4
+        version: 0.84.4(patch_hash=4e4bd7a9145339e274cce53c46d9234db1d793c346efe6a7514341522c0f8f63)(@modelcontextprotocol/sdk@1.29.0(zod@4.4.3))(ws@8.21.0)(zod@4.4.3)
     devDependencies:
       '@deepseek-ai/cordis':
         specifier: workspace:^
@@ -10880,13 +10880,13 @@ packages:
       search-insights:
         optional: true
 
-  '@earendil-works/pi-ai@0.84.3':
-    resolution: {integrity: sha512-M0YUV8vNO3y2WwWSyY8ijKJV5W4gkSUixuvk+Z00ZBjsyMfsdXfITsHEwP1UIf09YRWXT6oGn0GlCamt+P32XQ==}
+  '@earendil-works/pi-ai@0.84.4':
+    resolution: {integrity: sha512-AClAZxf5+c4RRu44NJPS6wyQy+Nmq+Mzyyrdvm4ZVMNuixelO02RZX4G4Aq1F145Yzp43wnM5S+hLlSI7ypfVw==}
     engines: {node: '>=22.19.0'}
     hasBin: true
 
-  '@earendil-works/pi-telemetry@0.84.3':
-    resolution: {integrity: sha512-sgEkWoKrvSGaKn+YfLLFZmn+/A7B/w62eLwTD57nI+C9to8ITlFFVbgC2OtwvPnT3NFGHdCd53qhBEMIlptD1g==}
+  '@earendil-works/pi-telemetry@0.84.4':
+    resolution: {integrity: sha512-8e2CuxM+ht+hedQXTZmi5JVl6/xDK9RpSDL2+MbITevKYQhMZ/z6lJOTFgox3HQyGxO8mOZEtYGVeQNaD4OzqA==}
     engines: {node: '>=22.19.0'}
 
   '@emnapi/core@1.10.0':
@@ -17003,11 +17003,11 @@ snapshots:
     transitivePeerDependencies:
       - '@algolia/client-search'
 
-  '@earendil-works/pi-ai@0.84.3(patch_hash=4e4bd7a9145339e274cce53c46d9234db1d793c346efe6a7514341522c0f8f63)(@modelcontextprotocol/sdk@1.29.0(zod@4.4.3))(ws@8.21.0)(zod@4.4.3)':
+  '@earendil-works/pi-ai@0.84.4(patch_hash=4e4bd7a9145339e274cce53c46d9234db1d793c346efe6a7514341522c0f8f63)(@modelcontextprotocol/sdk@1.29.0(zod@4.4.3))(ws@8.21.0)(zod@4.4.3)':
     dependencies:
       '@anthropic-ai/sdk': 0.91.1(zod@4.4.3)
       '@aws-sdk/client-bedrock-runtime': 3.1048.0
-      '@earendil-works/pi-telemetry': 0.84.3
+      '@earendil-works/pi-telemetry': 0.84.4
       '@google/genai': 1.52.0(@modelcontextprotocol/sdk@1.29.0(zod@4.4.3))
       '@smithy/node-http-handler': 4.7.3
       http-proxy-agent: 7.0.2
@@ -17023,7 +17023,7 @@ snapshots:
       - ws
       - zod
 
-  '@earendil-works/pi-telemetry@0.84.3': {}
+  '@earendil-works/pi-telemetry@0.84.4': {}
 
   '@emnapi/core@1.10.0':
     dependencies:
