@@ -491,7 +491,7 @@ export class PiAiAdapter extends LlmAdapter {
         const events = attemptIndex === 0
           ? snapshot.models.streamSimple(model, context, streamOptions)
           : openAIResponsesApi().streamSimple(attemptModel, context, streamOptions)
-        const iterator = toStreamChunks(events, model.contextWindow, options.signal)[Symbol.asyncIterator]()
+        const iterator = toStreamChunks(events, model.contextWindow, options.signal, model.id)[Symbol.asyncIterator]()
         let settled = false
         try {
           while (true) {
@@ -530,6 +530,7 @@ export class PiAiAdapter extends LlmAdapter {
               settled = true
               return
             }
+
           }
         } finally {
           if (!settled) {
