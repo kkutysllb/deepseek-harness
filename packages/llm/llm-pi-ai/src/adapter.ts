@@ -26,6 +26,7 @@
  * @module dsh-llm-pi-ai/adapter
  */
 
+import { randomUUID } from 'node:crypto'
 import { createModels, getSupportedThinkingLevels } from '@earendil-works/pi-ai'
 import { openAIResponsesApi } from '@earendil-works/pi-ai/api/openai-responses.lazy'
 import type {
@@ -213,6 +214,38 @@ function requestHeaders(headers: Readonly<Record<string, string>> | undefined): 
 }
 
 /**
+ * OpenCode Go/Zen gateways route one conversation's requests to the same
+ * upstream so prompt caches hit, and now require the routing id up front: a
+ * request without `x-opencode-session` is answered 400 MissingSessionID.
+ * pi-ai never sends the header — the pi client injects it in its coding-agent
+ * SDK layer, which the pi-ai library path does not go through — so the
+ * adapter supplies one: the Harness conversation id when the seam stamped it
+ * on this call, otherwise a stable per-adapter fallback. A header the
+ * deployment or harness already set wins over this default.
+ * @param model - the resolved descriptor of the route this call streams over.
+ * @param sessionId - the seam's conversation session id for this call, if any.
+ * @param fallbackSessionId - stable id used when the seam provided none.
+ * @param headers - the deployment and attribution headers for this call.
+ * @returns `headers`, plus `x-opencode-session` when the route is an OpenCode
+ * endpoint and no case-insensitive spelling of that header is present yet.
+ */
+export function withOpencodeSessionHeader(
+  model: Pick<Model<Api>, 'provider' | 'baseUrl'>,
+  sessionId: string | undefined,
+  fallbackSessionId: string,
+  headers: Record<string, string>,
+): Record<string, string> {
+  const opencodeEndpoint = model.provider === 'opencode'
+    || model.provider === 'opencode-go'
+    || model.provider === 'ln'
+    || model.baseUrl.includes('opencode.ai')
+  if (!opencodeEndpoint) return headers
+  const hasSessionHeader = Object.keys(headers).some(name => name.toLowerCase() === 'x-opencode-session')
+  if (hasSessionHeader) return headers
+  return { ...headers, 'x-opencode-session': sessionId ?? fallbackSessionId }
+}
+
+/**
  * Error-finish signatures of an endpoint that does not speak the Codex wire
  * protocol. Gateways without a Codex channel (translation relays, new-api-style
  * gateways) answer the codex path with their HTML front page — zero SSE events,
@@ -269,6 +302,8 @@ function codexProtocolFallbacks(model: Model<Api>): readonly Model<Api>[] {
  */
 export class PiAiAdapter extends LlmAdapter {
   private snapshot: PiAiSnapshot | undefined
+  /** Stable OpenCode routing id used when the seam provides no session id. */
+  private readonly opencodeSessionFallback: string = randomUUID()
 
   constructor(private readonly config: PiAiAdapterOptions) {
     super()
@@ -423,15 +458,22 @@ export class PiAiAdapter extends LlmAdapter {
             maxBytes: profile.requestImageMaxBytes,
           },
         }, onReplayDegrade)
+      const transportSessionId = options.sessionId === undefined ? undefined : String(options.sessionId)
       const streamOptions = {
         ...profileOptions(profile, reasoning, apiKey),
         ...options.temperature === undefined ? {} : { temperature: options.temperature },
         ...options.maxTokens === undefined ? {} : { maxTokens: options.maxTokens },
-        ...options.sessionId === undefined ? {} : { sessionId: String(options.sessionId) },
+        ...transportSessionId === undefined ? {} : { sessionId: transportSessionId },
         signal: watchdog.signal,
         // Profile headers are deployment-owned; attribution names are
-        // Harness-owned and therefore win collisions.
-        headers: requestHeaders(profile.headers),
+        // Harness-owned and therefore win collisions. OpenCode routes then
+        // get their required routing id when nothing above supplied one.
+        headers: withOpencodeSessionHeader(
+          model,
+          transportSessionId,
+          this.opencodeSessionFallback,
+          requestHeaders(profile.headers),
+        ),
       }
       // One attempt per candidate model: the configured protocol first, then —
       // for a Codex-protocol route whose endpoint betrays no Codex channel —
