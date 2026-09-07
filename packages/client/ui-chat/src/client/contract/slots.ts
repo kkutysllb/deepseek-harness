@@ -77,6 +77,13 @@ export interface ChatNodeOwnerProps {
   inspectCall: (callId: ToolCallId) => void
   forkAt: (seq: number) => void
   /**
+   * Revise one sent user message: replace the composer draft with its text
+   * (the user edits the bubble and resends a new turn). User bubbles only;
+   * absent for owners that do not provide the wiring.
+   * @param text - the user message's plain text.
+   */
+  editUserMessage?: ((text: string) => void) | undefined
+  /**
    * Session-authorized image loader, down-threaded from the Chat view so a
    * chat-node renderer can render the attachment presentation slot directly
    * with only the durable references plus this loader, instead of receiving a
@@ -149,6 +156,12 @@ export interface ChatViewInjected {
     read: () => ChatScrollPosition | null
   }
   forkAt: (seq: number) => void
+  /**
+   * Revise one sent user message: replace the composer draft with its text.
+   * Implemented by the composition wiring over the conversation service.
+   * @param text - the user message's plain text.
+   */
+  editUserMessage?: ((text: string) => void) | undefined
   fileMentions: (owner: TurnTailOwnerProps) => MarkdownFileMentions | undefined
 }
 
