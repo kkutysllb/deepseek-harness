@@ -156,6 +156,11 @@ export function apply(ctx: Context): void {
                 // Fork or child-title failure leaves the source view unchanged.
               })
           },
+          editUserMessage: (text) => {
+            // SessionId-explicit conversation route (like imageUrl): avoids a
+            // scope-addressed service inject that cordis would reject here.
+            ctx.uiConversation.fillDraft(sessionId, text)
+          },
         }
       },
     }, ChatView)

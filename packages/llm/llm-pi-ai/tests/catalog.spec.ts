@@ -917,6 +917,7 @@ describe('compat switches', () => {
     const onResponses = models.get(responses.id)?.compat as { supportsDeveloperRole?: boolean; thinkingFormat?: string }
     expect(onResponses.supportsDeveloperRole).toBe(false)
     expect(onResponses.thinkingFormat).toBeUndefined()
+
   })
 
   it('carries chat-template kwargs beside the thinking format that dispatches through them', () => {
