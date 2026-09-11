@@ -3,7 +3,7 @@
 
 import { useCallback, useEffect, useId, useRef, useState, type ReactNode } from 'react'
 import {
-  IconBranchOutline16, IconCheckOutline16, IconCopyOutline16, Tooltip, writeClipboard,
+  IconBranchOutline16, IconCheckOutline16, IconCopyOutline16, IconEditOutline16, Tooltip, writeClipboard,
 } from '@deepseek-ai/dsh-client-ui-primitives'
 import type { ChatViewSlotProps } from '../contract/slots.ts'
 import { formatMessageClock } from './message-chrome.ts'
@@ -19,6 +19,8 @@ export interface MessageIconActionsProps {
   clock: 'start' | 'end'
   /** Fork the session at this message; omission hides the branch action. */
   onBranch?: (() => void) | undefined
+  /** Revise this message: replace the composer draft with its text; omission hides the edit action. */
+  onEdit?: (() => void) | undefined
   /** The message is not a completed transcript tail, so branch stays visible but unavailable. */
   branchUnavailable?: boolean | undefined
   /** Parent layout class composed onto the actions row. */
@@ -43,7 +45,7 @@ export interface MessageIconActionsProps {
  * @returns The actions row element.
  */
 export function MessageIconActions({
-  text, time, clock, onBranch, branchUnavailable = false, className,
+  text, time, clock, onBranch, onEdit, branchUnavailable = false, className,
   extraActions, usageAction, t,
 }: MessageIconActionsProps) {
   const day = useCalendarDay()
@@ -82,6 +84,13 @@ export function MessageIconActions({
   return (
     <div className={className === undefined ? css.actions : `${css.actions} ${className}`}>
       {clock === 'start' ? clockEl : null}
+      {onEdit !== undefined && (
+        <Tooltip label={t('message.edit')} side="bottom">
+          <button type="button" className={css.action} aria-label={t('message.edit')} onClick={onEdit}>
+            <IconEditOutline16 />
+          </button>
+        </Tooltip>
+      )}
       <Tooltip label={copied ? t('copied') : t('copy')} side="bottom">
         <button type="button" className={css.action} aria-label={copied ? t('copied') : t('copy')} onClick={onCopy}>
           {copied ? <IconCheckOutline16 /> : <IconCopyOutline16 />}

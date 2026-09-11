@@ -85,4 +85,5 @@ minimumReleaseAgeExclude:
 
 patchedDependencies:
   '@yao-pkg/pkg@6.21.0': patches/@yao-pkg__pkg@6.21.0.patch
+  '@earendil-works/pi-ai@0.85.1': patches/@earendil-works__pi-ai@0.85.1.patch
   node-pty@1.2.0-beta.15: patches/node-pty@1.2.0-beta.15.patch
