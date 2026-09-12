@@ -516,6 +516,7 @@ function validatePythonBin(bin: string): void {
       encoding: 'utf8',
       env: pythonEnvironment(),
       timeout: PYTHON_PROBE_TIMEOUT_MS,
+      windowsHide: true,
       // The configured executable is outside our control. Force-kill it at the
       // deadline so a wrapper that ignores SIGTERM cannot block plugin load.
       killSignal: 'SIGKILL',
@@ -1187,6 +1188,7 @@ export class PythonCodeRuntime extends CodeRuntime {
         // and other host state remain unavailable to model code.
         env: pythonEnvironment(),
         detached: true, // Own process group — kill(-pid, sig) reaches subprocesses the model program spawns.
+        windowsHide: true,
         stdio: ['pipe', 'pipe', 'pipe', 'pipe'],
       })
       // Fd 3 is a duplex pipe carrying protocol frames. Node types extra stdio
