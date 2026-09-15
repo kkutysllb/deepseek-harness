@@ -12,6 +12,11 @@ export const WAIT_TIMEOUT = 258
 export const CREATE_SUSPENDED = 0x4
 /** CreateProcess flag selecting a UTF-16 environment block. */
 export const CREATE_UNICODE_ENVIRONMENT = 0x400
+/** CreateProcess flag giving a console child a never-visible console. Hosts
+ * whose engine runs console-less (Electron RUN_AS_NODE, GUI subsystem) have
+ * no console for children to inherit, so a console child without this flag
+ * allocates a fresh visible console window per spawn. */
+export const CREATE_NO_WINDOW = 0x08000000
 /** GetStdHandle selector for standard input. */
 export const STD_INPUT_HANDLE = -10
 /** GetStdHandle selector for standard output. */

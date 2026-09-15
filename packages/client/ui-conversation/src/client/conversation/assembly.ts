@@ -22,6 +22,7 @@ import { ConversationNodeAssembler } from './assembler.ts'
 import { ConversationEventRegistry } from './event-registry.ts'
 import { HistoricalImageCache } from './historical-images.ts'
 import { ConversationViewRegistry } from './view-registry.ts'
+import type { SessionInputResolver } from '../contract/input.ts'
 
 /** Observable faces published for one Session's Conversation assembly. */
 export interface ConversationBinding {
@@ -236,6 +237,24 @@ export class UiConversation extends Service {
     )
     record.disposeScope = () => { void disposeScope() }
     return binding
+  }
+
+  /**
+   * Replace one Session's composer draft with `text` — the transcript
+   * "edit this message and resend" entry. Resolves the Session's resident
+   * input shell through the conversation service's input registry; no-op
+   * when the session has no shell. SessionId-explicit, like {@link imageUrl},
+   * so a call from any package needs no scope-addressed service inject.
+   * @param sessionId - target Session.
+   * @param text - full draft text.
+   */
+  fillDraft(sessionId: SessionId, text: string): void {
+    const owner = this.sessions.binding(sessionId)
+    if (owner === undefined) return
+    const conversation = this.ctx.get('conversation') as
+      | { readonly input: SessionInputResolver }
+      | undefined
+    conversation?.input.for(owner.ctx).setDraft(text)
   }
 
   /**
