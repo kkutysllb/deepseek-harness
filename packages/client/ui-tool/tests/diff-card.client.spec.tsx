@@ -247,7 +247,8 @@ describe('FileMutationRow diff card', () => {
     expect(view.getByText('+1 -0')).toBeTruthy()
     // The footer counts live inside the collapsed diff card.
     toggleRow(view)
-    expect(view.getByText('└ +1 -0 · 1 个文件')).toBeTruthy()
+    /* KCoder fork: footer 计数为着色 span，读 footer 元素全量文本 */
+    expect(view.container.textContent?.replace(/\s+/g, ' ')).toContain('└ +1 -0 · 1 个文件')
   })
 
   it('reflects the run state on its leading slot', () => {

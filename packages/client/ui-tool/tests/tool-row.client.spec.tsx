@@ -310,7 +310,8 @@ describe('ToolRow', () => {
     expect(view.getByText('+1 -1')).toBeTruthy()
     expect(view.container.querySelector('[data-diff]')).toBeNull()
     fireEvent.click(view.getByRole('button'))
-    expect(view.getByText(/└ \+1 -1/)).toBeTruthy()
+    /* KCoder fork: footer 计数为着色 span，读 footer 元素全量文本 */
+    expect(view.container.textContent?.replace(/\s+/g, ' ')).toMatch(/└ \+1 -1/)
     expect(view.getAllByText('start')).toHaveLength(1)
     expect(view.getAllByText('end')).toHaveLength(1)
     expect(view.getByText('old', { exact: true })).toBeTruthy()

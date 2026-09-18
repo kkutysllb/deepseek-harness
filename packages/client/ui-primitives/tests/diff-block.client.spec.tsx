@@ -25,6 +25,13 @@ function changeRows(container: HTMLElement): string[] {
   return [...container.querySelectorAll('[class*="_del_"], [class*="_add_"]')].map(row => row.textContent ?? '')
 }
 
+/* KCoder fork: the footer's +added/-removed counts render as colored spans, so
+   getByText cannot match the split text; read the footer element's full text. */
+function footerText(): string {
+  const el = document.querySelector<HTMLElement>('[class*="footer"]')
+  return el === null ? '' : (el.textContent ?? '').replace(/\s+/g, ' ').trim()
+}
+
 function added(count: number): string {
   return Array.from({ length: count }, (_v, i) => `line ${i + 1}`).join('\n')
 }
@@ -79,14 +86,14 @@ describe('DiffBlock structure', () => {
     // the footer counts one — the phantom `+ ` empty line the naive split drew.
     const { container } = render(<DiffBlock diffs={[{ path: 'n.txt', oldText: null, newText: 'hello\n' }]} />)
     expect(changeRows(container)).toEqual(['hello'])
-    expect(screen.getByText('└ +1 -0 · 1 file')).toBeTruthy()
+    expect(footerText()).toBe('└ +1 -0 · 1 file')
   })
 
   it('renders a full deletion as removed-only with no phantom added line', () => {
     // newText '' is zero added lines: an empty string must contribute nothing.
     const { container } = render(<DiffBlock diffs={[{ path: 'gone.ts', oldText: 'a\nb', newText: '' }]} />)
     expect(container.querySelectorAll('[class*="_add_"]').length).toBe(0)
-    expect(screen.getByText('└ +0 -2 · 1 file')).toBeTruthy()
+    expect(footerText()).toBe('└ +0 -2 · 1 file')
   })
 
   it('keeps a genuine interior blank line', () => {
@@ -105,7 +112,7 @@ describe('DiffBlock local changes', () => {
     const total = count === 128 ? count : count + 1
     render(<DiffBlock diffs={diffs} maxLines={1000} />)
     expect(diffTotals(diffs)).toEqual({ added: total, removed: total })
-    expect(screen.getByText(`└ +${total} -${total} · 1 file`)).toBeTruthy()
+    expect(footerText()).toBe(`└ +${total} -${total} · 1 file`)
     await act(async () => { fireEvent.click(screen.getByRole('button', { name: '复制' })) })
     expect(writeText).toHaveBeenCalledWith(count === 128
       ? ['large.txt', '  shared context', ...oldLines.slice(1).map(line => `- ${line}`), ...newLines.slice(1).map(line => `+ ${line}`)].join('\n')
@@ -132,7 +139,7 @@ describe('DiffBlock local changes', () => {
     render(<DiffBlock diffs={diffs} />)
     expect(screen.getAllByText('start')).toHaveLength(1)
     expect(screen.getAllByText('end')).toHaveLength(1)
-    expect(screen.getByText('└ +1 -1 · 1 file')).toBeTruthy()
+    expect(footerText()).toBe('└ +1 -1 · 1 file')
     expect(diffTotals(diffs)).toEqual({ added: 1, removed: 1 })
     await act(async () => { fireEvent.click(screen.getByRole('button', { name: '复制' })) })
     expect(writeText).toHaveBeenCalledWith('settings.ts\n  start\n- mode = 1\n+ mode = 2\n  end')
@@ -150,7 +157,7 @@ describe('DiffBlock local changes', () => {
       'item 40', 'changed 40', 'item 41', 'item 42', 'item 43',
     ])
     expect(changeRows(container)).toEqual(['item 10', 'changed 10', 'item 40', 'changed 40'])
-    expect(screen.getByText('└ +2 -2 · 1 file')).toBeTruthy()
+    expect(footerText()).toBe('└ +2 -2 · 1 file')
   })
 
   it.each([
@@ -165,7 +172,7 @@ describe('DiffBlock local changes', () => {
     const diffs = [{ path: 'a.txt', oldText, newText }]
     render(<DiffBlock diffs={diffs} />)
     expect(diffTotals(diffs)).toEqual({ added, removed })
-    expect(screen.getByText(`└ +${added} -${removed} · 1 file`)).toBeTruthy()
+    expect(footerText()).toBe(`└ +${added} -${removed} · 1 file`)
   })
 })
 
@@ -173,7 +180,7 @@ describe('DiffBlock footer', () => {
   it('counts added and removed lines and one file', () => {
     const diffs: DiffHunk[] = [{ path: 'a.ts', oldText: 'a\nb', newText: 'c' }]
     render(<DiffBlock diffs={diffs} />)
-    expect(screen.getByText('└ +1 -2 · 1 file')).toBeTruthy()
+    expect(footerText()).toBe('└ +1 -2 · 1 file')
   })
 
   it('pluralizes the distinct-file count', () => {
@@ -182,7 +189,7 @@ describe('DiffBlock footer', () => {
       { path: 'b.ts', oldText: null, newText: 'y' },
     ]
     render(<DiffBlock diffs={diffs} />)
-    expect(screen.getByText('└ +2 -0 · 2 files')).toBeTruthy()
+    expect(footerText()).toBe('└ +2 -0 · 2 files')
   })
 })
 

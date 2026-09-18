@@ -107,3 +107,14 @@
   font: var(--dsw-font-markdown-code-block);
   color: var(--dsw-alias-label-tertiary);
 }
+
+/* KCoder fork: the footer's +added / -removed counts take the diff's own
+   meaning-carrying tokens (the .add/.del rows above already use them); the
+   rest of the footer stays tertiary. */
+.footerAdd {
+  color: var(--dsw-alias-state-success-primary);
+}
+
+.footerDel {
+  color: var(--dsw-alias-state-error-primary);
+}
