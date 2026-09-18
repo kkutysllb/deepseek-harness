@@ -515,6 +515,7 @@ function validatePythonBin(bin: string): void {
       encoding: 'utf8',
       env: pythonEnvironment(),
       timeout: PYTHON_PROBE_TIMEOUT_MS,
+      windowsHide: true,
       // The configured executable is outside our control. Force-kill it at the
       // deadline so a wrapper that ignores SIGTERM cannot block plugin load.
       killSignal: 'SIGKILL',
@@ -1200,6 +1201,7 @@ export class PythonPtcRuntime extends PtcRuntime {
         // and other host state remain unavailable to model code.
         env: pythonEnvironment(),
         detached: true, // Own process group — kill(-pid, sig) reaches subprocesses the model program spawns.
+        windowsHide: true,
         stdio: ['pipe', 'pipe', 'pipe', 'pipe'],
       })
       // Fd 3 is a duplex pipe carrying protocol frames. Node types extra stdio
@@ -1945,13 +1947,8 @@ export class PythonPtcRuntime extends PtcRuntime {
                 // before `sendReply` peeks at `settled`. Dropping the framed
                 // reply early spares the host heap and time for a run whose
                 // outcome is already fixed.
-                // (oxlint block-disable so both `v8 ignore next` and the rule
-                // suppression land on the `if`: `settled` flips true mid-wait,
-                // invisible to the type-aware lint, which narrows it to false.)
-                /* oxlint-disable typescript/no-unnecessary-condition */
                 /* v8 ignore next -- a rejection arriving after settlement is not schedulable from a test. */
                 if (settled) return
-                /* oxlint-enable typescript/no-unnecessary-condition */
                 sendReply({ type: 'reply', id: message.id, ok: false, message: messageOf(error) })
               } finally {
                 // Release the in-flight slot on every exit — reply written,
