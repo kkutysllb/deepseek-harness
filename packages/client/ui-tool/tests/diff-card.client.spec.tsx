@@ -244,7 +244,8 @@ describe('FileMutationRow diff card', () => {
       meta: { diffs: [] },
     }), 'write')} />)
     // The collapsed row already carries the card's +/- totals beside the path.
-    expect(view.getByText('+1 -0')).toBeTruthy()
+    /* KCoder fork: the row's +N/-N render as colored spans; read the full text. */
+    expect(view.container.textContent?.replace(/\s+/g, ' ')).toContain('+1 -0')
     // The footer counts live inside the collapsed diff card.
     toggleRow(view)
     /* KCoder fork: footer 计数为着色 span，读 footer 元素全量文本 */
