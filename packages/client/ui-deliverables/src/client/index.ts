@@ -9,6 +9,7 @@
  * surface; the owning view renders an empty list and inert prose at zero cost.
  */
 import type { Context as ClientContext } from '@deepseek-ai/cordis'
+import z, { type z as zType } from '@deepseek-ai/schemastery'
 import type {} from '@deepseek-ai/dsh-api-remotes/client'
 import type {} from '@deepseek-ai/dsh-client-connection/client'
 import type { ChatFileMentions } from '@deepseek-ai/dsh-client-ui-chat/client'
@@ -41,10 +42,23 @@ declare module '@deepseek-ai/dsh-client-ui-slots' {
 export const inject = ['slots', 'locale', 'uiConversation', 'remote', 'remote.session', 'sidebarRightTabs', 'sidebarRight']
 
 /**
+ * KCoder fork: plugin config — `tailCard` (default true) suppresses ONLY the
+ * turn-tail card entry (deployment setups whose enhanced review card replaces
+ * it; the deliverables turn-data Definition, delivery cards' controller, and
+ * every other registration stay live so downstream probes keep their inputs).
+ */
+export interface Config {
+  readonly tailCard: boolean
+}
+
+/** Runtime schema for {@link Config}. */
+export const Config = z.object({ tailCard: z.boolean().default(true) }) as unknown as zType<Config>
+
+/**
  * Client plugin body: register the dictionaries, the turn-tail entry, and the comparison tab type.
  * @param ctx - client root context.
  */
-export function apply(ctx: ClientContext): void {
+export function apply(ctx: ClientContext, config: Config = { tailCard: true }): void {
   const opener = new PresentedOpenController()
   const summaries = new ChangesSummaryStore()
   const diffs = new ChangesDiffStore()
@@ -56,7 +70,9 @@ export function apply(ctx: ClientContext): void {
   })
   ctx.uiConversation.events.register(deliverablesDefinition)
   ctx.effect(() => ctx.locale.register(NS, { zh, en }), 'ui-deliverables: dictionaries')
-  ctx.slots.inject(
+  // KCoder fork: tailCard=false suppresses only this card entry (config docs
+  // above) — the Definition above and every registration below stay live.
+  if (config.tailCard) ctx.slots.inject(
     'conversation.chat.turnTail',
     () => ctx.slots.register({
       name: 'conversation.chat.turnTail',
