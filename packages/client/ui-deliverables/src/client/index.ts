@@ -9,7 +9,7 @@
  * surface; the owning view renders an empty list and inert prose at zero cost.
  */
 import type { Context as ClientContext } from '@deepseek-ai/cordis'
-import z, { type z as zType } from '@deepseek-ai/schemastery'
+import z from '@deepseek-ai/schemastery'
 import type {} from '@deepseek-ai/dsh-api-remotes/client'
 import type {} from '@deepseek-ai/dsh-client-connection/client'
 import type { ChatFileMentions } from '@deepseek-ai/dsh-client-ui-chat/client'
@@ -52,7 +52,7 @@ export interface Config {
 }
 
 /** Runtime schema for {@link Config}. */
-export const Config = z.object({ tailCard: z.boolean().default(true) }) as unknown as zType<Config>
+export const Config = z.object({ tailCard: z.boolean().default(true) })
 
 /**
  * Client plugin body: register the dictionaries, the turn-tail entry, and the comparison tab type.
