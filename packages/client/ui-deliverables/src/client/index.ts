@@ -9,7 +9,6 @@
  * surface; the owning view renders an empty list and inert prose at zero cost.
  */
 import type { Context as ClientContext } from '@deepseek-ai/cordis'
-import z from '@deepseek-ai/schemastery'
 import type {} from '@deepseek-ai/dsh-api-remotes/client'
 import type {} from '@deepseek-ai/dsh-client-connection/client'
 import type { ChatFileMentions } from '@deepseek-ai/dsh-client-ui-chat/client'
@@ -48,17 +47,18 @@ export const inject = ['slots', 'locale', 'uiConversation', 'remote', 'remote.se
  * every other registration stay live so downstream probes keep their inputs).
  */
 export interface Config {
-  readonly tailCard: boolean
+  readonly tailCard?: boolean
 }
-
-/** Runtime schema for {@link Config}. */
-export const Config = z.object({ tailCard: z.boolean().default(true) })
 
 /**
  * Client plugin body: register the dictionaries, the turn-tail entry, and the comparison tab type.
  * @param ctx - client root context.
+ * @param config - patch-layer config; the browser half keeps no runtime schema
+ * (schemastery is a Node-only dependency the client bundle must not import),
+ * so the one boolean is read defensively.
  */
-export function apply(ctx: ClientContext, config: Config = { tailCard: true }): void {
+export function apply(ctx: ClientContext, config: { tailCard?: boolean } = {}): void {
+  const tailCard = config.tailCard !== false
   const opener = new PresentedOpenController()
   const summaries = new ChangesSummaryStore()
   const diffs = new ChangesDiffStore()
@@ -72,7 +72,7 @@ export function apply(ctx: ClientContext, config: Config = { tailCard: true }): 
   ctx.effect(() => ctx.locale.register(NS, { zh, en }), 'ui-deliverables: dictionaries')
   // KCoder fork: tailCard=false suppresses only this card entry (config docs
   // above) — the Definition above and every registration below stay live.
-  if (config.tailCard) ctx.slots.inject(
+  if (tailCard) ctx.slots.inject(
     'conversation.chat.turnTail',
     () => ctx.slots.register({
       name: 'conversation.chat.turnTail',
