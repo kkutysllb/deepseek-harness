@@ -219,7 +219,13 @@ export function DiffBlock({ diffs, labels, maxLines = DEFAULT_DIFF_MAX_LINES, cl
           <div key={index} className={clsx(css.line, ROW_CLASS[row.kind])}>{row.text}</div>
         ))}
       </div>
-      <div className={css.footer}>└ +{added} -{removed} · {labels.files(files)}</div>
+      {/* KCoder fork: color the footer counts with the diff's own meaning-carrying
+          tokens instead of the dim tertiary label (the body rows already color
+          this way; the summary counts now agree). Upstream parity: revertible
+          one-for-one if upstream adopts colored totals. */}
+      <div className={css.footer}>
+        └ <span className={css.footerAdd}>+{added}</span> <span className={css.footerDel}>-{removed}</span> · {labels.files(files)}
+      </div>
     </div>
   )
 }

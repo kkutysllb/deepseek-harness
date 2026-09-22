@@ -351,3 +351,13 @@
   clip: rect(0 0 0 0);
   white-space: nowrap;
 }
+
+/* KCoder fork: the collapsed diff row's +N / -N take the diff's own
+   meaning-carrying tokens; the suffix container keeps its layout role. */
+.statAdded {
+  color: var(--dsw-alias-state-success-primary);
+}
+
+.statRemoved {
+  color: var(--dsw-alias-state-error-primary);
+}

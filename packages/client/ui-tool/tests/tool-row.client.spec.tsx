@@ -309,10 +309,12 @@ describe('ToolRow', () => {
         newText: 'start\nsecond\nthird\nnew\nfourth\nfifth\nend',
       }] },
     }} />)
-    expect(view.getByText('+1 -1')).toBeTruthy()
+    /* KCoder fork: the row's +N/-N render as colored spans; read the row's full text. */
+    expect(view.container.textContent?.replace(/\s+/g, ' ')).toContain('+1 -1')
     expect(view.container.querySelector('[data-diff]')).toBeNull()
     fireEvent.click(view.getByRole('button'))
-    expect(view.getByText(/└ \+1 -1/)).toBeTruthy()
+    /* KCoder fork: footer 计数为着色 span，读 footer 元素全量文本 */
+    expect(view.container.textContent?.replace(/\s+/g, ' ')).toMatch(/└ \+1 -1/)
     expect(view.getAllByText('start')).toHaveLength(1)
     expect(view.getAllByText('end')).toHaveLength(1)
     expect(view.getByText('old', { exact: true })).toBeTruthy()
