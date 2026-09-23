@@ -176,7 +176,16 @@ export const ToolRow = memo(function ToolRow({
   const diffStat = useMemo(() => {
     if (diffBody === null) return null
     const { added, removed } = diffTotals(diffBody.card.diffs)
-    return `+${added} -${removed}`
+    // KCoder fork: color the collapsed row's +/- totals with the diff's own
+    // meaning-carrying tokens (the expanded footer's rows already use them),
+    // instead of the dim monochrome suffix. Identity with `suffix` is still
+    // what the diffStat class check relies on; `summarySuffix` stays a string
+    // and renders unchanged.
+    return <>
+      <span className={css.statAdded}>+{added}</span>
+      {' '}
+      <span className={css.statRemoved}>-{removed}</span>
+    </>
   }, [diffBody])
   const settledWithCue = state === 'error' || state === 'stopped'
   const suffix = settledWithCue ? null : summarySuffix ?? diffStat
@@ -222,9 +231,9 @@ export const ToolRow = memo(function ToolRow({
           <TextShimmer active={running}>{summaryText}</TextShimmer>
         </span>
       )}
-      {suffix !== null && (
-        <TextShimmer className={clsx(css.summarySuffix, suffix === diffStat && css.diffStat)} active={running}>{suffix}</TextShimmer>
-      )}
+      {suffix !== null && (typeof suffix === 'string'
+        ? <TextShimmer className={css.summarySuffix} active={running}>{suffix}</TextShimmer>
+        : <span className={clsx(css.summarySuffix, css.diffStat)}>{suffix}</span>)}
     </>
   ), [diffStat, fileLinkKeyDown, openFile, running, state, suffix, summaryText])
   const expandedContent = useMemo(() => open ? (
