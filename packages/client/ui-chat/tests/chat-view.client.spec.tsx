@@ -1966,6 +1966,8 @@ describe('ChatView', () => {
     expect(toggle.getAttribute('data-turn-process-tool-calls')).toBe('1')
     expect(toggle.getAttribute('data-turn-process-messages')).toBe('1')
     expect(toggle.getAttribute('data-turn-process-subagents')).toBe('1')
+    // KCoder fork: a settled Turn keeps the plain label (no running sweep).
+    expect(toggle.getAttribute('data-turn-running')).toBe(null)
     const members = [...view.container.querySelectorAll<HTMLElement>('[data-turn-process-member]')]
     expect(members).toHaveLength(3)
     expect(members.map(member => member.getAttribute('hidden')))
@@ -2969,6 +2971,9 @@ describe('ChatView', () => {
     const toggle = view.getByRole('button', { name: 'KCoder...，用时2秒' }) as HTMLButtonElement
     expect(toggle.disabled).toBe(true)
     expect(toggle.getAttribute('aria-expanded')).toBe('true')
+    // KCoder fork: the running label keeps the 0.1.6 deep-blue sweep, and the
+    // row carries the only styling hook for it (the text is localized).
+    expect(toggle.getAttribute('data-turn-running')).toBe('true')
   }))
 
   it('keeps the Tool renderer mounted when a running call settles into log order', () => {
