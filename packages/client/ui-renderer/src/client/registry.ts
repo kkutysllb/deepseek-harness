@@ -84,6 +84,8 @@ interface FactoryStoreAxis {
 interface ErasedRegisterOptions {
   name: string
   children?: Record<string, SlotSpec<SlotEntryDef>>
+  /** KCoder: render the table without claiming keys another entry declared. */
+  rendersExistingChildren?: boolean
   store?: StoreDecl
   inject?: (...args: never[]) => Record<string, unknown>
   key?: string

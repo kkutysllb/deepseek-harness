@@ -4,6 +4,7 @@
 export const zh = {
   panel: '插件',
   title: '插件',
+  settingsTab: '插件管理',
   intro: '添加和管理插件',
   loading: '正在读取插件…',
   error: '可能由于网络问题，无法读取全部插件',
@@ -195,6 +196,7 @@ export type PluginManagerLocaleKey = keyof typeof zh
 export const en = {
   panel: 'Plugins',
   title: 'Plugins',
+  settingsTab: 'Manage plugins',
   intro: 'Add and manage plugins',
   loading: 'Reading plugins…',
   error: 'Could not read all plugins, possibly due to a network problem',

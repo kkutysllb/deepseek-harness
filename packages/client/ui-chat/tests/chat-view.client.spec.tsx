@@ -1619,7 +1619,7 @@ describe('ChatView', () => {
     fireEvent.click(within(pendingBubble as HTMLElement).getByRole('button', { name: '复制' }))
     expect(writeText).toHaveBeenCalledWith('interrupt now')
     expect(within(pendingBubble as HTMLElement).queryByRole('button', { name: '在新对话中分支' })).toBeNull()
-    expect(turnProcessControl(view.container)?.textContent).toBe('深度求索中，用时2秒')
+    expect(turnProcessControl(view.container)?.textContent).toBe('KCoder...，用时2秒')
     expect(view.getByRole('status').compareDocumentPosition(view.getByText('interrupt now'))
       & Node.DOCUMENT_POSITION_FOLLOWING).not.toBe(0)
 
@@ -2195,6 +2195,8 @@ describe('ChatView', () => {
     expect(toggle.getAttribute('data-turn-process-tool-calls')).toBe('1')
     expect(toggle.getAttribute('data-turn-process-messages')).toBe('1')
     expect(toggle.getAttribute('data-turn-process-subagents')).toBe('1')
+    // KCoder fork: a settled Turn keeps the plain label (no running sweep).
+    expect(toggle.getAttribute('data-turn-running')).toBe(null)
     const members = [...view.container.querySelectorAll<HTMLElement>('[data-turn-process-member]')]
     expect(members).toHaveLength(3)
     expect(members.map(member => member.getAttribute('hidden')))
@@ -2262,7 +2264,7 @@ describe('ChatView', () => {
     const h = makeHarness({ chat: initial }, { running: true })
     const view = render(<h.ChatView {...h.props} />)
     expect(renderedFlowKinds(view.container)).toEqual(['user', 'turn-process'])
-    expect(turnProcessControl(view.container)?.textContent).toBe('深度求索中，用时4秒')
+    expect(turnProcessControl(view.container)?.textContent).toBe('KCoder...，用时4秒')
     expect(view.container.querySelector('[data-chat-flow-kind="system-prompt"]')).toBeNull()
 
     act(() => {
@@ -2444,7 +2446,7 @@ describe('ChatView', () => {
       turnTimings: new Map([[1, { startTime: 0 }]]),
     })
     const view = render(<h.ChatView {...h.props} />)
-    const liveToggle = view.getByRole('button', { name: '深度求索中，用时3秒' }) as HTMLButtonElement
+    const liveToggle = view.getByRole('button', { name: 'KCoder...，用时3秒' }) as HTMLButtonElement
     expect(liveToggle.disabled).toBe(true)
     expect(liveToggle.getAttribute('aria-expanded')).toBe('true')
     const processRow = view.getByText('inspect').closest('[data-chat-flow-kind="assistant-step"]') as HTMLElement
@@ -3194,10 +3196,13 @@ describe('ChatView', () => {
     const view = render(<h.ChatView {...h.props} />)
     expect(view.getByTestId('tool-seat-r1')).toBeTruthy()
     expect(h.toolOwners[0]?.block).toMatchObject({ callId: 'r1', argsRaw: '{"command":"cmd-r1"}' })
-    expect(view.getByRole('status').textContent).toBe('深度求索中')
-    const toggle = view.getByRole('button', { name: '深度求索中，用时2秒' }) as HTMLButtonElement
+    expect(view.getByRole('status').textContent).toBe('KCoder...')
+    const toggle = view.getByRole('button', { name: 'KCoder...，用时2秒' }) as HTMLButtonElement
     expect(toggle.disabled).toBe(true)
     expect(toggle.getAttribute('aria-expanded')).toBe('true')
+    // KCoder fork: the running label keeps the 0.1.6 deep-blue sweep, and the
+    // row carries the only styling hook for it (the text is localized).
+    expect(toggle.getAttribute('data-turn-running')).toBe('true')
   }))
 
   it('keeps the Tool renderer mounted when a running call settles into log order', () => {
@@ -3256,10 +3261,10 @@ describe('ChatView', () => {
     )
     const view = render(<h.ChatView {...h.props} />)
     const status = view.getByRole('status')
-    const toggle = view.getByRole('button', { name: '深度求索中，用时2分5秒' }) as HTMLButtonElement
+    const toggle = view.getByRole('button', { name: 'KCoder...，用时2分5秒' }) as HTMLButtonElement
     expect(toggle).toBe(turnProcessControl(view.container))
     expect(toggle.disabled).toBe(true)
-    expect(status.textContent).toBe('深度求索中')
+    expect(status.textContent).toBe('KCoder...')
     expect(status.getAttribute('aria-live')).toBe('polite')
     expect(status.getAttribute('aria-atomic')).toBe('true')
     expect(toggle.closest('[aria-live]')).toBeNull()
@@ -3272,21 +3277,21 @@ describe('ChatView', () => {
         role: 'user', source: { kind: 'user' },
       }] } })
     })
-    expect(toggle.textContent).toBe('深度求索中，用时2分5秒')
+    expect(toggle.textContent).toBe('KCoder...，用时2分5秒')
     act(() => { vi.advanceTimersByTime(2_000) })
-    expect(toggle.textContent).toBe('深度求索中，用时2分7秒')
+    expect(toggle.textContent).toBe('KCoder...，用时2分7秒')
     expect(view.getByRole('status')).toBe(status)
-    expect(status.textContent).toBe('深度求索中')
+    expect(status.textContent).toBe('KCoder...')
     act(() => {
       h.setSession({ testInbox: { 'next-turn': [], 'next-step': [] } })
       h.setChat({ nodes: [trigger, { ...steering(2, 'also', 1), time: 128_000 }] })
     })
     expect(turnProcessControl(view.container)).toBe(toggle)
-    expect(toggle.textContent).toBe('深度求索中，用时2分7秒')
+    expect(toggle.textContent).toBe('KCoder...，用时2分7秒')
     expect(view.getByText('also').closest('[data-pending-steering]')).toBeNull()
     act(() => { vi.advanceTimersByTime(1_000) })
-    expect(toggle.textContent).toBe('深度求索中，用时2分8秒')
-    expect(status.textContent).toBe('深度求索中')
+    expect(toggle.textContent).toBe('KCoder...，用时2分8秒')
+    expect(status.textContent).toBe('KCoder...')
     view.unmount()
     expect(vi.getTimerCount()).toBe(0)
   }))
@@ -3299,12 +3304,12 @@ describe('ChatView', () => {
       { running: true },
     )
     const view = render(<h.ChatView {...h.props} />)
-    const toggle = view.getByRole('button', { name: '深度求索中，用时59分59秒' })
+    const toggle = view.getByRole('button', { name: 'KCoder...，用时59分59秒' })
     act(() => { vi.advanceTimersByTime(1_000) })
-    expect(toggle.textContent).toBe('深度求索中，用时1小时00分0秒')
+    expect(toggle.textContent).toBe('KCoder...，用时1小时00分0秒')
     act(() => { vi.advanceTimersByTime(303_000) })
-    expect(toggle.textContent).toBe('深度求索中，用时1小时05分3秒')
-    expect(view.getByRole('status').textContent).toBe('深度求索中')
+    expect(toggle.textContent).toBe('KCoder...，用时1小时05分3秒')
+    expect(view.getByRole('status').textContent).toBe('KCoder...')
     view.unmount()
     expect(vi.getTimerCount()).toBe(0)
   }))
