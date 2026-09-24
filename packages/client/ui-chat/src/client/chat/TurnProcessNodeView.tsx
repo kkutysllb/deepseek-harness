@@ -49,6 +49,10 @@ export const TurnProcessNodeView = memo(function TurnProcessNodeView({
         type="button"
         className={css.root}
         data-open={open || undefined}
+        /* KCoder fork: running-state styling hook for the label's blue sweep
+           (0.1.6 parity — see TurnProcessNodeView.module.css). The label text
+           itself is localized, so state must ride an attribute. */
+        data-turn-running={running || undefined}
         data-turn-process={node.data.turn}
         data-turn-process-messages={node.data.messageCount}
         data-turn-process-tool-calls={node.data.toolCallCount}

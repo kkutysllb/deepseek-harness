@@ -43,10 +43,24 @@ declare module '@deepseek-ai/dsh-client-ui-slots' {
 export const inject = ['slots', 'locale', 'uiConversation', 'remote', 'remote.session', 'sidebarRightTabs', 'sidebarRight', 'configForms']
 
 /**
+ * KCoder fork: plugin config — `tailCard` (default true) suppresses ONLY the
+ * turn-tail card entry (deployment setups whose enhanced review card replaces
+ * it; the deliverables turn-data Definition, delivery cards' controller, and
+ * every other registration stay live so downstream probes keep their inputs).
+ */
+export interface Config {
+  readonly tailCard?: boolean
+}
+
+/**
  * Client plugin body: register the dictionaries, the turn-tail entry, and the comparison tab type.
  * @param ctx - client root context.
+ * @param config - patch-layer config; the browser half keeps no runtime schema
+ * (schemastery is a Node-only dependency the client bundle must not import),
+ * so the one boolean is read defensively.
  */
-export function apply(ctx: ClientContext): void {
+export function apply(ctx: ClientContext, config: { tailCard?: boolean } = {}): void {
+  const tailCard = config.tailCard !== false
   const opener = new PresentedOpenController()
   const summaries = new ChangesSummaryStore()
   const diffs = new ChangesDiffStore()
@@ -58,7 +72,9 @@ export function apply(ctx: ClientContext): void {
   })
   ctx.uiConversation.events.register(deliverablesDefinition)
   ctx.effect(() => ctx.locale.register(NS, { zh, en }), 'ui-deliverables: dictionaries')
-  ctx.slots.inject(
+  // KCoder fork: tailCard=false suppresses only this card entry (config docs
+  // above) — the Definition above and every registration below stay live.
+  if (tailCard) ctx.slots.inject(
     'conversation.chat.turnTail',
     () => ctx.slots.register({
       name: 'conversation.chat.turnTail',

@@ -282,6 +282,7 @@ const ANTHROPIC_COMPAT_GATE = {
   sendSessionAffinityHeaders: 'withhold',
   supportsToolReferences: 'withhold',
   supportsMidConvoEffort: 'withhold',
+
   allowedFallbackModels: 'withhold',
 } as const satisfies Record<keyof AnthropicMessagesCompat, CompatDisposition>
 
