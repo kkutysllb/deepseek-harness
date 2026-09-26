@@ -339,26 +339,37 @@ export default class BrowseDirectoryPicker extends DirectoryPicker {
     if (existing !== undefined) {
       throw new DirectoryPickerError('directory-exists', target, `${target} already exists`)
     }
-    const shell = this.ctx.get('shell') as ShellExecutor | undefined
-    if (shell === undefined) {
-      throw new DirectoryPickerError(
-        'directory-create-failed', target,
-        `cannot create ${target}: the mounted world provides no directory creation and no shell executor is available`,
-      )
+    // Create with this process's own filesystem first: for a host-backed world
+    // that is the accurate answer, and it keeps the sandboxed shell out of the
+    // path (a shell `mkdir` is confined to the sandbox workspace root, so a
+    // parent outside that root is denied regardless of it being creatable).
+    // A remote world is unreachable from here, so its failure is the signal to
+    // create in the world instead.
+    try {
+      await mkdir(target)
+      return target
+    } catch (error: unknown) {
+      if (typeof error === 'object' && error !== null && 'code' in error && error.code === 'EEXIST') {
+        throw new DirectoryPickerError('directory-exists', target, `${target} already exists`)
+      }
+      const shell = this.ctx.get('shell') as ShellExecutor | undefined
+      if (shell === undefined) {
+        throw new DirectoryPickerError('directory-create-failed', target, `cannot create ${target}: ${messageOf(error)}`)
+      }
+      // The command runs in the mounted world: its working directory must be a
+      // path that exists there, and the parent the browser is showing is exactly
+      // that. (Omitting it falls back to this process's cwd, which a remote
+      // world does not have — a spawn against a missing cwd reports ENOENT.)
+      const execution = await shell.execute(shell.resolve({ command: `mkdir -- ${posixQuote(target)}`, workdir: parent }))
+      const result = await execution.result()
+      if (result.exitCode !== 0) {
+        throw new DirectoryPickerError(
+          'directory-create-failed', target,
+          `cannot create ${target}: ${messageOf(error)}`,
+        )
+      }
+      return target
     }
-    // The command runs in the mounted world: its working directory must be a
-    // path that exists there, and the parent the browser is showing is exactly
-    // that. (Omitting it falls back to this process's cwd, which a remote
-    // world does not have — a spawn against a missing cwd reports ENOENT.)
-    const execution = await shell.execute(shell.resolve({ command: `mkdir -- ${posixQuote(target)}`, workdir: parent }))
-    const result = await execution.result()
-    if (result.exitCode !== 0) {
-      throw new DirectoryPickerError(
-        'directory-create-failed', target,
-        `cannot create ${target}: the world's shell exited ${String(result.exitCode)}`,
-      )
-    }
-    return target
   }
 
   private async listOnHost(path?: string, signal?: AbortSignal): Promise<DirectoryListing> {

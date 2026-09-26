@@ -104,30 +104,41 @@ export async function ensureDirectoryInWorld(
   path: string,
   signal?: AbortSignal,
 ): Promise<void> {
-  const fs = worldFs(ctx)
-  if (fs === undefined) {
+  // Already there: the common case, and the only one a remote world can
+  // satisfy without a directory-creation primitive. Checking first also keeps
+  // the sandboxed shell out of the ordinary path.
+  if (await isDirectoryInWorld(ctx, path, signal)) return
+
+  // Create with this process's own filesystem first. That is the accurate
+  // answer for a host-backed world, and it matters beyond speed: running
+  // `mkdir` through the world's shell would be confined by the sandbox policy
+  // to its workspace root, so any workspace outside that root is denied — a
+  // failure that has nothing to do with the directory being creatable.
+  try {
     await mkdir(path, { recursive: true })
     return
-  }
-  const shell = ctx.get('shell') as ShellExecutor | undefined
-  if (shell === undefined) {
-    throw new Error(
-      `cannot create the Workspace directory '${path}': the mounted filesystem provides no `
-      + 'directory creation and no shell executor is available in this world',
-    )
-  }
-  const execution = await shell.execute(shell.resolve({
-    command: `mkdir -p -- ${posixQuote(path)}`,
-    // The command runs IN the mounted world, so its working directory must be
-    // a path that exists there. Omitting `workdir` falls back to the
-    // executor's configured default — this process's own cwd — which the
-    // remote world does not have, and a spawn against a missing cwd fails
-    // with ENOENT naming the command rather than the directory.
-    workdir: fs.processPath(await fs.resolve('.', signal === undefined ? undefined : { signal })),
-    signal,
-  }))
-  const result = await execution.result()
-  if (result.exitCode !== 0) {
-    throw new Error(`cannot create the Workspace directory '${path}': the world's shell exited ${String(result.exitCode)}`)
+  } catch (hostFailure: unknown) {
+    // A remote world is unreachable from this process, so the host's failure is
+    // the signal to create in the world instead.
+    const fs = worldFs(ctx)
+    const shell = ctx.get('shell') as ShellExecutor | undefined
+    if (fs === undefined || shell === undefined) throw hostFailure
+    const execution = await shell.execute(shell.resolve({
+      command: `mkdir -p -- ${posixQuote(path)}`,
+      // The command runs IN the mounted world, so its working directory must be
+      // a path that exists there. Omitting `workdir` falls back to the
+      // executor's configured default — this process's own cwd — which a remote
+      // world does not have, and a spawn against a missing cwd fails with
+      // ENOENT naming the command rather than the directory.
+      workdir: fs.processPath(await fs.resolve('.', signal === undefined ? undefined : { signal })),
+      signal,
+    }))
+    const result = await execution.result()
+    if (result.exitCode !== 0) {
+      throw new Error(
+        `cannot create the directory '${path}' in the mounted world: the world's shell exited ${String(result.exitCode)}`,
+        { cause: hostFailure },
+      )
+    }
   }
 }

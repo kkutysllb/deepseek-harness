@@ -9,6 +9,9 @@
  * the world returned.
  */
 
+import { mkdtemp, rm, stat } from 'node:fs/promises'
+import { tmpdir } from 'node:os'
+import { join } from 'node:path'
 import { afterAll, beforeAll, describe, expect, it } from 'vitest'
 import { Context } from '@deepseek-ai/cordis'
 import { FileSystem, FsError, FsTargetKey, FsVersion } from '@deepseek-ai/dsh-fs'
@@ -119,6 +122,25 @@ describe('BrowseDirectoryPicker over a mounted execution world', () => {
     const exact = await capability.list('/home/kkutys/exact')
     expect(exact.entries.map(entry => entry.name)).toEqual(['a', 'b'])
     expect(exact.truncated).toBe(false)
+  })
+
+  it('creates through this host when the world is host-backed, with no shell mounted', async () => {
+    // Regression: a mounted `fs` is NOT evidence of a remote world — every real
+    // deployment mounts one. Routing creation through the world's shell in that
+    // case is both unnecessary and wrong: the shell is sandbox-confined to its
+    // workspace root, so a parent outside that root is denied even though the
+    // host could create it. With a host-backed world and no shell at all, the
+    // host filesystem must still serve creation.
+    const base = await mkdtemp(join(tmpdir(), 'dsh-world-create-'))
+    try {
+      const created = await capability.createDirectory(base, 'fresh')
+      expect(created).toBe(join(base, 'fresh'))
+      expect((await stat(join(base, 'fresh'))).isDirectory()).toBe(true)
+      const again = await capability.createDirectory(base, 'fresh').catch((error: unknown) => error)
+      expect(again).toMatchObject({ code: 'directory-exists' })
+    } finally {
+      await rm(base, { recursive: true, force: true })
+    }
   })
 
   it('reports the world\'s ancestry as crumbs', async () => {
