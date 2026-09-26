@@ -6,7 +6,6 @@
  */
 
 import { randomUUID } from 'node:crypto'
-import { mkdir, stat } from 'node:fs/promises'
 import { Context, Service } from '@deepseek-ai/cordis'
 import type { SessionHeader, SessionId } from '@deepseek-ai/dsh-session'
 import type {} from '@deepseek-ai/dsh-session-persistence'
@@ -15,7 +14,8 @@ import { WorkspaceEntity } from './entity.ts'
 import type { WorkspaceEntityHost } from './entity.ts'
 
 export { WorkspaceMoveInvalidError } from './entity.ts'
-import { defaultWorkspaceTitle, fullyQualifiedWorkspacePath, realpathNormalize } from './paths.ts'
+import { defaultWorkspaceTitle, fullyQualifiedWorkspacePath } from './paths.ts'
+import { canonicalizeInWorld, ensureDirectoryInWorld, isDirectoryInWorld } from './world.ts'
 import { workspaceDomainSpec } from './spec.ts'
 import type { WorkspaceDomainState, WorkspaceRecord } from './spec.ts'
 import type { SessionActivity, Workspace, WorkspaceId as WorkspaceIdBrand } from './types.ts'
@@ -26,6 +26,11 @@ export type {
 export { workspaceDomainState, workspaceRecord, workspaceDomainSpec } from './spec.ts'
 export type { WorkspaceDomainState, WorkspaceRecord } from './spec.ts'
 export { realpathNormalize } from './paths.ts'
+// The execution-world helpers are shared: any consumer that must touch the
+// directory backing a session (the Session controller ensures its cwd before
+// creating an agent) has to resolve it in the mounted world too, rather than
+// running `node:fs` against a path that only exists remotely.
+export { canonicalizeInWorld, ensureDirectoryInWorld, isDirectoryInWorld } from './world.ts'
 
 /** Identifies one workspace record (see `src/types.ts` for the brand rationale). */
 export type WorkspaceId = WorkspaceIdBrand
@@ -37,6 +42,18 @@ export type WorkspaceId = WorkspaceIdBrand
  */
 export function WorkspaceId(id: string): WorkspaceId {
   return id as WorkspaceId
+}
+
+/**
+ * One header cwd resolved against the mounted execution world: the canonical
+ * directory when it can back membership, otherwise why it cannot. Memoized per
+ * indexing pass, so a shared project directory costs one world round-trip.
+ */
+interface HeaderCwdResolution {
+  /** Canonical directory in the mounted world; absent when unusable. */
+  readonly path?: string
+  /** Operator-facing reason the cwd cannot back membership; empty when usable. */
+  readonly reason: string
 }
 
 /**
@@ -187,6 +204,10 @@ export class WorkspaceRegistry extends Service {
       this.sessionPaths.set(id, path)
       this.invalidSessionPaths.delete(id)
     },
+    // Both resolve against the mounted execution world on every call, so a
+    // deployment that swaps the world (an SSH profile) needs no registry change.
+    canonicalize: path => canonicalizeInWorld(this.ctx, path),
+    isDirectory: path => isDirectoryInWorld(this.ctx, path),
   }
 
   constructor(ctx: Context) {
@@ -219,9 +240,11 @@ export class WorkspaceRegistry extends Service {
 
   /**
    * Create or reuse a workspace for an existing directory. The fully qualified
-   * path is canonicalized through `fs.realpath`; a relative, nonexistent, or
-   * non-directory path rejects. Repeated calls for the same canonical path
-   * return the existing entity without changing its title.
+   * path is canonicalized in the **mounted execution world** (this process's
+   * `fs.realpath` locally, the remote helper's equivalent under a remote
+   * world); a relative, nonexistent, or non-directory path rejects. Repeated
+   * calls for the same canonical path return the existing entity without
+   * changing its title.
    * A newly created workspace is prepended to the durable registry order.
    * Different canonical paths may share a display title.
    * @param path - Existing directory to own, in a fully qualified path spelling.
@@ -234,8 +257,8 @@ export class WorkspaceRegistry extends Service {
   // drop the parameter with its @param clause and the `create(path, title?)`
   // lines in this package's README pair.
   async create(path: string, title?: string): Promise<Workspace> {
-    const canonical = await realpathNormalize(path)
-    if (!(await stat(canonical)).isDirectory()) {
+    const canonical = await this.host.canonicalize(path)
+    if (!(await this.host.isDirectory(canonical))) {
       throw new Error(`cannot create a workspace at '${canonical}': path is not a directory`)
     }
     return await this.enqueueOperation(() => this.createCanonical(canonical, title))
@@ -264,8 +287,8 @@ export class WorkspaceRegistry extends Service {
 
       const path = await resolveDirectory()
       if (!fullyQualifiedWorkspacePath(path)) throw new TypeError(`Workspace path is not fully qualified: '${path}'`)
-      await mkdir(path, { recursive: true })
-      const canonical = await realpathNormalize(path)
+      await ensureDirectoryInWorld(this.ctx, path)
+      const canonical = await this.host.canonicalize(path)
       // A Session can start outside the registry queue while directory preparation awaits I/O.
       if ((await this.listStoredHeaders()).length > 0 || sessions.list().length > 0) return undefined
       return this.createCanonical(canonical, defaultWorkspaceTitle(path), true)
@@ -492,13 +515,13 @@ export class WorkspaceRegistry extends Service {
 
   /**
    * Resolve by canonical directory path without creating or mutating a
-   * workspace. A missing path rejects during `realpath`; an existing unowned
-   * directory returns `undefined`.
+   * workspace. A missing path rejects during canonicalization; an existing
+   * unowned directory returns `undefined`.
    * @param path - Existing directory path in a fully qualified spelling.
    * @returns the workspace owning the canonical path, when one exists.
    */
   async resolveByPath(path: string): Promise<Workspace | undefined> {
-    const canonical = await realpathNormalize(path)
+    const canonical = await this.host.canonicalize(path)
     for (const entity of this.entities.values()) {
       if (entity.path === canonical) return entity
     }
@@ -798,27 +821,61 @@ export class WorkspaceRegistry extends Service {
   }
 
   private async indexHeaders(headers: readonly SessionHeader[]): Promise<void> {
-    for (const header of headers) await this.indexHeader(header)
+    // One world round-trip per DISTINCT cwd, never per session: a remote world
+    // answers every canonicalize/stat over the network, and a long session
+    // history shares a handful of project directories (a real profile here
+    // holds ~1.4k headers over ~33 directories — resolving each header
+    // separately turned boot into a 1.4k-request serial walk).
+    const resolutions = new Map<string, HeaderCwdResolution>()
+    for (const header of headers) {
+      if (header.cwd === undefined) {
+        await this.indexHeader(header)
+        continue
+      }
+      let resolution = resolutions.get(header.cwd)
+      if (resolution === undefined) {
+        resolution = await this.resolveHeaderCwd(header.cwd)
+        resolutions.set(header.cwd, resolution)
+      }
+      await this.indexHeader(header, resolution)
+    }
   }
 
-  private async indexHeader(header: SessionHeader): Promise<void> {
+  /**
+   * Canonicalize one header cwd in the mounted execution world and decide
+   * whether it can back session membership.
+   * @param cwd - the header's stored cwd.
+   * @returns the canonical directory, or the reason it is unusable.
+   */
+  private async resolveHeaderCwd(cwd: string): Promise<HeaderCwdResolution> {
+    try {
+      const path = await this.host.canonicalize(cwd)
+      if (!(await this.host.isDirectory(path))) {
+        return { reason: `cwd '${cwd}' is not a directory` }
+      }
+      return { path, reason: '' }
+    } catch {
+      return { reason: `cwd '${cwd}' does not resolve` }
+    }
+  }
+
+  private async indexHeader(header: SessionHeader, resolved?: HeaderCwdResolution): Promise<void> {
     this.headers.set(header.id, header)
     this.sessionPaths.delete(header.id)
     if (header.cwd === undefined) {
       this.invalidSessionPaths.set(header.id, 'header has no cwd')
       return
     }
-    try {
-      const path = await realpathNormalize(header.cwd)
-      if (!(await stat(path)).isDirectory()) {
-        this.invalidSessionPaths.set(header.id, `cwd '${header.cwd}' is not a directory`)
-        return
-      }
-      this.sessionPaths.set(header.id, path)
-      this.invalidSessionPaths.delete(header.id)
-    } catch {
+    if (resolved === undefined) {
       this.invalidSessionPaths.set(header.id, `cwd '${header.cwd}' does not resolve`)
+      return
     }
+    if (resolved.path === undefined) {
+      this.invalidSessionPaths.set(header.id, resolved.reason)
+      return
+    }
+    this.sessionPaths.set(header.id, resolved.path)
+    this.invalidSessionPaths.delete(header.id)
   }
 
   /** Every stored session's header, projected from the persistence snapshot listing. */
