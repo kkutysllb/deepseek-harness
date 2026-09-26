@@ -116,7 +116,7 @@ describe('opencode session header on the wire', () => {
   it('does not touch non-opencode routes', async () => {
     const server = await mockServer([{ events: textEvents }])
     const ctx = await harness({ deepseek: { apiKeyEnv: 'PI_TEST_KEY', baseURL: server.url } })
-    await assemble(ctx, { provider: 'deepseek', model: 'deepseek-v4-flash', messages: [userMessage()] })
+    await assemble(ctx, { provider: 'deepseek', model: 'deepseek-flash', messages: [userMessage()] })
     expect(server.headers[0]?.['x-opencode-session']).toBeUndefined()
   })
 })
