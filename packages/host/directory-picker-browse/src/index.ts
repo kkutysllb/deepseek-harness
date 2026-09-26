@@ -1,11 +1,15 @@
 /**
  * Browse backend of the directory-picker seam: registers `ctx.directoryPicker`
  * with the `browse` capability — one-level directory listing and child-directory
- * creation over the host filesystem via Node's stdlib (which already carries
- * the per-OS adaptation). Nothing renders on the host display, so this backend
- * serves remote clients the dialog backend cannot. Policy decisions (hidden
- * entries flagged but returned, symlinks followed, whole-filesystem scope) are
- * recorded in the directory-picker seam Agent Note.
+ * creation for the **mounted execution world**. With no `fs` service mounted
+ * (standalone use, unit tests) that world is the host filesystem, served by
+ * Node's stdlib as before. When a world IS mounted — an SSH profile, for
+ * instance — every listing, probe and creation addresses that world instead,
+ * so the dialog browses the machine the tools actually run on rather than this
+ * one. Nothing renders on the host display, so this backend serves remote
+ * clients the dialog backend cannot. Policy decisions (hidden entries flagged
+ * but returned, symlinks followed, whole-filesystem scope) are recorded in the
+ * directory-picker seam Agent Note.
  * @module @deepseek-ai/dsh-host-directory-picker-browse
  */
 
@@ -13,6 +17,8 @@ import { mkdir, opendir, stat } from 'node:fs/promises'
 import { homedir } from 'node:os'
 import { basename, dirname, join, posix, resolve, win32 } from 'node:path'
 import type { Context } from '@deepseek-ai/cordis'
+import type { FsDirEntry, FileSystem } from '@deepseek-ai/dsh-fs'
+import type { ShellExecutor } from '@deepseek-ai/dsh-shell'
 import z from '@deepseek-ai/schemastery'
 import {
   DirectoryPicker, DirectoryPickerError,
@@ -150,6 +156,17 @@ function messageOf(error: unknown): string {
 }
 
 /**
+ * Quote one path as a single POSIX shell word, for the world-shell commands
+ * this backend runs. Every world that reaches this arm is POSIX: the host
+ * non-POSIX platforms are served by the host path above.
+ * @param value - the literal path.
+ * @returns the path wrapped so a POSIX shell reproduces it verbatim.
+ */
+function posixQuote(value: string): string {
+  return `'${value.replaceAll("'", '\'\\\'\'')}'`
+}
+
+/**
  * One listing row for a dirent, following symlinks to directories; null for
  * non-directories and broken/cyclic links (skipped silently — the browser
  * shows what can be entered, and a broken link cannot).
@@ -214,7 +231,137 @@ export default class BrowseDirectoryPicker extends DirectoryPicker {
     return this.browseCapability
   }
 
+  /**
+   * The mounted execution world's filesystem, or undefined when this process's
+   * own filesystem is the world. Read per call: a deployment composes the
+   * world's `fs` row independently of this backend, so the answer can change
+   * between activation and the first listing.
+   * @returns the mounted `ctx.fs`, when there is one.
+   */
+  private get world(): FileSystem | undefined {
+    return this.ctx.get('fs') as FileSystem | undefined
+  }
+
   private async list(path?: string, signal?: AbortSignal): Promise<DirectoryListing> {
+    const world = this.world
+    return world === undefined ? await this.listOnHost(path, signal) : await this.listInWorld(world, path, signal)
+  }
+
+  private async createDirectory(path: string, name: string): Promise<string> {
+    const world = this.world
+    return world === undefined
+      ? await this.createDirectoryOnHost(path, name)
+      : await this.createDirectoryInWorld(world, path, name)
+  }
+
+  /**
+   * The world's notion of the account's home, for the breadcrumb's "Home"
+   * root. This process's home directory is only the account's home when the
+   * world can actually see it; a remote world cannot, and answers with its own
+   * default directory (the remote helper's cwd, which is the login account's
+   * home on that machine).
+   * @param world - the mounted filesystem.
+   * @param signal - caller lifetime.
+   * @returns the home path in that world.
+   */
+  private async worldHome(world: FileSystem, signal?: AbortSignal): Promise<string> {
+    const hostHome = homedir()
+    const opts = signal === undefined ? undefined : { signal }
+    const info = await world.stat(await world.resolve(hostHome, opts), signal).catch(() => undefined)
+    if (info?.type === 'directory') return hostHome
+    return world.processPath(await world.resolve('.', opts))
+  }
+
+  /**
+   * One listing level in the mounted execution world. `listDir` already
+   * answers name-sorted with symlinks followed and a type per row, so the
+   * world path needs none of the host path's streaming window: the seam's
+   * complete-result bound is applied to the resolved rows instead.
+   * @param world - the mounted filesystem.
+   * @param path - absolute directory in that world; absent lists its home.
+   * @param signal - caller lifetime.
+   * @returns the level's listing with ancestry.
+   */
+  private async listInWorld(world: FileSystem, path?: string, signal?: AbortSignal): Promise<DirectoryListing> {
+    const opts = signal === undefined ? undefined : { signal }
+    const home = await this.worldHome(world, signal)
+    if (path !== undefined && !fullyQualified(path)) {
+      throw new DirectoryPickerError('directory-unreadable', path, `cannot list "${path}": not a fully qualified path`)
+    }
+    const target = await world.resolve(path ?? home, opts)
+    const listed = world.processPath(target)
+    let level: FsDirEntry[]
+    try {
+      level = await world.listDir(target, signal)
+    } catch (error: unknown) {
+      // An abort is the caller's own reason, not an unreadable directory.
+      signal?.throwIfAborted()
+      throw new DirectoryPickerError('directory-unreadable', listed, `cannot list ${listed}: ${messageOf(error)}`)
+    }
+    signal?.throwIfAborted()
+    const rows = level.filter(entry => entry.type === 'directory')
+    const truncated = rows.length > this.config.maxEntries
+    return {
+      path: listed,
+      home,
+      crumbs: ancestryCrumbs(listed),
+      entries: rows.slice(0, this.config.maxEntries).map(entry => ({
+        name: entry.name,
+        path: world.processPath(entry.target),
+        hidden: entry.name.startsWith('.'),
+      })),
+      truncated,
+    }
+  }
+
+  /**
+   * Create one child directory in the mounted execution world. `FileSystem`
+   * carries no directory creation, so the world's own shell performs it —
+   * the same seam `bash` uses, already pointed at that world.
+   * @param world - the mounted filesystem.
+   * @param path - absolute existing parent in that world.
+   * @param name - single non-blank path segment.
+   * @returns the created directory's absolute path in that world.
+   */
+  private async createDirectoryInWorld(world: FileSystem, path: string, name: string): Promise<string> {
+    if (!fullyQualified(path)) {
+      throw new DirectoryPickerError('directory-create-failed', path, `cannot create under "${path}": not a fully qualified parent path`)
+    }
+    if (name.trim() === '' || name === '.' || name === '..' || /[/\\]/.test(name)) {
+      throw new DirectoryPickerError('directory-create-failed', join(path, name), `"${name}" is not a single path segment`)
+    }
+    const parent = world.processPath(await world.resolve(path))
+    const target = join(parent, name)
+    // Same existence fence as the host path: the child either was not there
+    // (create) or already is (directory-exists); a missing parent must fail
+    // rather than be invented, which is why the command below is not `-p`.
+    const existing = await world.stat(await world.resolve(target)).catch(() => undefined)
+    if (existing !== undefined) {
+      throw new DirectoryPickerError('directory-exists', target, `${target} already exists`)
+    }
+    const shell = this.ctx.get('shell') as ShellExecutor | undefined
+    if (shell === undefined) {
+      throw new DirectoryPickerError(
+        'directory-create-failed', target,
+        `cannot create ${target}: the mounted world provides no directory creation and no shell executor is available`,
+      )
+    }
+    // The command runs in the mounted world: its working directory must be a
+    // path that exists there, and the parent the browser is showing is exactly
+    // that. (Omitting it falls back to this process's cwd, which a remote
+    // world does not have — a spawn against a missing cwd reports ENOENT.)
+    const execution = await shell.execute(shell.resolve({ command: `mkdir -- ${posixQuote(target)}`, workdir: parent }))
+    const result = await execution.result()
+    if (result.exitCode !== 0) {
+      throw new DirectoryPickerError(
+        'directory-create-failed', target,
+        `cannot create ${target}: the world's shell exited ${String(result.exitCode)}`,
+      )
+    }
+    return target
+  }
+
+  private async listOnHost(path?: string, signal?: AbortSignal): Promise<DirectoryListing> {
     const home = homedir()
     // The seam contract takes fully qualified paths only; resolve() would
     // silently rebase a relative or empty wire value under the host process
@@ -296,7 +443,7 @@ export default class BrowseDirectoryPicker extends DirectoryPicker {
     return { path: target, home, crumbs: ancestryCrumbs(target), entries, truncated }
   }
 
-  private async createDirectory(path: string, name: string): Promise<string> {
+  private async createDirectoryOnHost(path: string, name: string): Promise<string> {
     // Same fully-qualified fence as list: never rebase a parent under the
     // cwd or the current drive.
     if (!fullyQualified(path)) {

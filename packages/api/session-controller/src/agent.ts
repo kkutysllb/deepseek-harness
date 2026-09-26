@@ -1,6 +1,6 @@
 /** Agent activation, composition, and model-selection policy owned by API Session. */
 
-import { mkdir } from 'node:fs/promises'
+import { ensureDirectoryInWorld } from '@deepseek-ai/dsh-workspace'
 import type { Context } from '@deepseek-ai/cordis'
 import { installModelSelection } from '@deepseek-ai/dsh-agent'
 import type {
@@ -478,7 +478,10 @@ export class ApiSessionAgentController {
     }
 
     try {
-      await mkdir(cwd, { recursive: true })
+      // The session's project directory lives in the mounted execution world,
+      // not on this host: under an SSH profile `cwd` names a remote path that
+      // this process's own filesystem cannot create.
+      await ensureDirectoryInWorld(this.ctx, cwd)
     } catch (error: unknown) {
       throw new Error(`failed to ensure project directory "${cwd}": ${String(error)}`, { cause: error })
     }

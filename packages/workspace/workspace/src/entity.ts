@@ -8,12 +8,10 @@
  * @module @deepseek-ai/dsh-workspace/src/entity
  */
 
-import { stat } from 'node:fs/promises'
 import type { SessionHeader, SessionId } from '@deepseek-ai/dsh-session'
 import type { KvTable } from '@deepseek-ai/dsh-storage-domain'
 import type { WorkspaceRecord } from './spec.ts'
 import type { Workspace, WorkspaceId } from './types.ts'
-import { realpathNormalize } from './paths.ts'
 
 /** An insertSessionBefore request named a session or anchor not on the account (storage failures stay plain errors). */
 export class WorkspaceMoveInvalidError extends Error {
@@ -60,6 +58,23 @@ export interface WorkspaceEntityHost {
    * @param path - Canonical existing directory from the immutable header cwd.
    */
   rememberSessionPath(id: SessionId, path: string): void
+
+  /**
+   * Canonicalize one path in the mounted execution world. The entity owns no
+   * filesystem access of its own: a remote world's paths must be canonicalized
+   * by that world, not by this process.
+   * @param path - The path to canonicalize.
+   * @returns the canonical spelling in the mounted world.
+   */
+  canonicalize(path: string): Promise<string>
+
+  /**
+   * Whether a canonical path names an existing directory in the mounted
+   * execution world. An absent path is `false`, never a throw.
+   * @param path - The canonical path to probe.
+   * @returns whether the world holds a directory there.
+   */
+  isDirectory(path: string): Promise<boolean>
 }
 
 /** Chain-slot abort sentinel thrown by the update fn when the record needs no change; only `mutate` observes it. */
@@ -121,7 +136,7 @@ export class WorkspaceEntity implements Workspace {
       }
       let cwd: string
       try {
-        cwd = await realpathNormalize(header.cwd)
+        cwd = await this.host.canonicalize(header.cwd)
       } catch (error) {
         throw new Error(
           `cannot attach session '${sessionId}' to workspace '${this.record.path}': `
@@ -129,7 +144,7 @@ export class WorkspaceEntity implements Workspace {
           { cause: error },
         )
       }
-      if (!(await stat(cwd)).isDirectory()) {
+      if (!(await this.host.isDirectory(cwd))) {
         throw new Error(
           `cannot attach session '${sessionId}' to workspace '${this.record.path}': `
           + `its cwd '${header.cwd}' is not a directory`,
@@ -179,10 +194,11 @@ export class WorkspaceEntity implements Workspace {
 
   async status(): Promise<'ok' | 'missing-dir'> {
     try {
-      return (await stat(this.record.path)).isDirectory() ? 'ok' : 'missing-dir'
+      return (await this.host.isDirectory(this.record.path)) ? 'ok' : 'missing-dir'
     } catch {
-      // Any stat failure (ENOENT, dangling parent, permission loss) means the
-      // directory is not usable right now; the record itself never mutates.
+      // Any world failure (absent, dangling parent, permission loss, a dropped
+      // remote connection) means the directory is not usable right now; the
+      // record itself never mutates.
       return 'missing-dir'
     }
   }
