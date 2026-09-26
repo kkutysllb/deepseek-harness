@@ -40,6 +40,7 @@ import type {
   SimpleStreamOptions,
   ThinkingLevel,
 } from '@earendil-works/pi-ai'
+import { normalizeContext } from '@earendil-works/pi-ai'
 import {
   attributionHeaders,
   contentHasImage,
@@ -465,6 +466,11 @@ export class PiAiAdapter extends LlmAdapter {
           },
         }, onReplayDegrade)
       const transportSessionId = options.sessionId === undefined ? undefined : String(options.sessionId)
+      // pi-ai 0.87 hands API implementations a branded TranscriptContext; the
+      // collection normalizes a plain Context itself, but the protocol-fallback
+      // attempt calls the Responses API directly, so normalize once here and
+      // hand both paths the same transcript.
+      const transcript = normalizeContext(context)
       const streamOptions = {
         ...profileOptions(profile, reasoning, apiKey),
         ...options.temperature === undefined ? {} : { temperature: options.temperature },
@@ -495,8 +501,8 @@ export class PiAiAdapter extends LlmAdapter {
         if (attemptModel === undefined) return
         const lastAttempt = attemptIndex === attempts.length - 1
         const events = attemptIndex === 0
-          ? snapshot.models.streamSimple(model, context, streamOptions)
-          : openAIResponsesApi().streamSimple(attemptModel, context, streamOptions)
+          ? snapshot.models.streamSimple(model, transcript, streamOptions)
+          : openAIResponsesApi().streamSimple(attemptModel, transcript, streamOptions)
         const iterator = toStreamChunks(events, model.contextWindow, options.signal, model.id)[Symbol.asyncIterator]()
         let settled = false
         try {

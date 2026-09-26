@@ -129,7 +129,7 @@ describe('codex route protocol fallback', () => {
   it('never falls back on non-codex routes', async () => {
     const relay = await relayServer()
     const ctx = await harness({ deepseek: { apiKeyEnv: 'PI_TEST_KEY', baseURL: relay.url } })
-    const result = await assemble(ctx, { provider: 'deepseek', model: 'deepseek-v4-flash', messages: [userMessage()] })
+    const result = await assemble(ctx, { provider: 'deepseek', model: 'deepseek-flash', messages: [userMessage()] })
     expect(result.finish.kind).toBe('error')
     expect(relay.paths).toEqual(['/chat/completions'])
   })
