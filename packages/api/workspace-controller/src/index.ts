@@ -6,6 +6,9 @@ import { Remote, TypertRemoteService } from '@deepseek-ai/dsh-typert-protocol'
 import { WorkspaceCommands } from './commands.ts'
 import { DirectoryPickerController } from './directory-picker.ts'
 import { WorkspaceFeed, workspaceView } from './feed.ts'
+import type { FileSystem } from '@deepseek-ai/dsh-fs'
+// Type-only: pulls the `ctx.fs` Context merge used below.
+import type {} from '@deepseek-ai/dsh-fs'
 import { defaultWorkspaceDirectory, validateDocumentsDirectory } from './default-directory.ts'
 import type {
   WorkspaceArchiveSessionRequest,
@@ -97,13 +100,35 @@ export class WorkspaceController extends TypertRemoteService {
    */
   @Remote('initializeDefault')
   async initializeDefault(signal: AbortSignal): Promise<WorkspaceValue | undefined> {
-    const workspace = await this.ctx.workspaceRegistry.initializeDefault(async () => {
-      const timeout = AbortSignal.timeout(this.config.documentsLookupTimeoutMs)
-      return await defaultWorkspaceDirectory(
-        this.config.documentsDirectory, AbortSignal.any([signal, timeout]),
-      )
-    })
+    const workspace = await this.ctx.workspaceRegistry.initializeDefault(
+      async () => await this.defaultDirectory(signal),
+    )
     return workspace === undefined ? undefined : { workspace: workspaceView(workspace) }
+  }
+
+  /**
+   * The directory the first-use Workspace should own, resolved in the mounted
+   * execution world.
+   *
+   * A remote world carries its own default: this host's Documents directory
+   * does not exist on that machine, so reusing it produces a host-shaped path
+   * (`/Users/…`) that the world then creates remotely — a workspace whose
+   * spelling belongs to a different machine (2026-09-26, observed on a WSL2
+   * target). The world's own default directory is the equivalent answer there,
+   * just as VS Code opens a remote folder rather than a local one.
+   * @param signal - caller lifetime.
+   * @returns an absolute directory in the mounted world.
+   */
+  private async defaultDirectory(signal: AbortSignal): Promise<string> {
+    const world: FileSystem | undefined = this.ctx.get('fs')
+    const remote = this.ctx.get('ssh') !== undefined
+    if (world !== undefined && remote) {
+      return world.processPath(await world.resolve('.', { signal }))
+    }
+    const timeout = AbortSignal.timeout(this.config.documentsLookupTimeoutMs)
+    return await defaultWorkspaceDirectory(
+      this.config.documentsDirectory, AbortSignal.any([signal, timeout]),
+    )
   }
 
   /**
