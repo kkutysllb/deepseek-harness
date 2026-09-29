@@ -96,6 +96,23 @@ describe('ui-settings-models apply', () => {
     }
   })
 
+  it('skips the preview notice in the Electron desktop shell (KCoder fork)', async () => {
+    // KCoder 的 shell 窗口刻意不注入 preload，上游的 `dshDesktop` 判定会把它
+    // 当成浏览器；fork 以 UA 的 Electron 标记补判（见 apply.ts 内注释）。
+    vi.stubGlobal('navigator', {
+      userAgent: 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) KCoder/0.6.19 Chrome/140.0.0.0 Electron/39.0.0 Safari/537.36',
+    })
+    const { ctx, slots } = await bench()
+    declare(slots)
+    try {
+      const plugin = ctx.plugin({ inject: [...inject], apply })
+      await plugin.await()
+      expect(slots.entries('settings.onboarding').map(entry => entry.options.id)).toEqual(['deepseek-official'])
+    } finally {
+      await ctx.fiber.dispose()
+    }
+  })
+
   it('defaults to browser onboarding and rejects malformed bootstrap options', async () => {
     expect(hostPlugin.Config({})).toEqual({ credentialOnboarding: true })
     expect(hostPlugin.Config['~standard'].validate({ credentialOnboarding: 'false' })).toHaveProperty('issues')
