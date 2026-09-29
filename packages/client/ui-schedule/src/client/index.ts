@@ -186,6 +186,35 @@ export function apply(ctx: ClientContext): void {
   // Definition publishes the settled result and this tail list entry renders
   // the card beneath the closing prose.
   ctx.uiConversation.events.register(scheduleTurnDefinition)
+  /**
+   * Open one task's detail.
+   *
+   * A deployment that mounts the Coding Sidebar workbench (KCoder) publishes a
+   * `betterSidebar` service, and there the detail belongs in that panel's task
+   * tab: expanding the right column costs the conversation a whole column of
+   * width beside the transcript, and the panel is the surface the user already
+   * works in. Only navigation travels — the panel reads the task's own records
+   * through the schedule Remote, so nothing here depends on it. Without that
+   * service the shipped right-sidebar tab stays the destination.
+   * @param sessionId - Session the task was created in.
+   * @param id - Task to show.
+   */
+  const openTaskDetail = (sessionId: SessionId, id: ScheduleId): void => {
+    const sidebar = (ctx as unknown as { get(key: string): unknown }).get('betterSidebar') as {
+      openTab?: (seed: Record<string, unknown>, scope?: unknown) => void
+      updateTab?: (tabId: string, patch: Record<string, unknown>) => void
+    } | undefined
+    if (sidebar?.openTab === undefined) {
+      ctx.sidebarRight.openTab(SCHEDULE_TASK_KIND, { params: { sessionId, id } })
+      return
+    }
+    const meta = { kcScheduleTask: { sessionId, taskId: id } }
+    sidebar.openTab({ type: 'plans', id: 'plans', meta }, { sessionId })
+    // Its tab dedupes by type, and a deduping open only focuses the tab it
+    // finds — so the meta comes second, or the second task opened would still
+    // show the first one.
+    sidebar.updateTab?.('plans', { meta })
+  }
   ctx.slots.inject('conversation.chat.turnTail', () => ctx.slots.register({
     name: 'conversation.chat.turnTail',
     id: 'schedule-created',
@@ -194,9 +223,7 @@ export function apply(ctx: ClientContext): void {
     inject: (sessionId: SessionId): ScheduleTurnCardInjected => ({
       hooks: { catalog: manager.hooks.catalog },
       onRetry: manager.onRetry,
-      openTaskDetail: (id) => {
-        ctx.sidebarRight.openTab(SCHEDULE_TASK_KIND, { params: { sessionId, id } })
-      },
+      openTaskDetail: (id) => { openTaskDetail(sessionId, id) },
     }),
   }, ScheduleTurnCard))
   // The Session header keeps one per-Session source: it lists the open
@@ -221,9 +248,7 @@ export function apply(ctx: ClientContext): void {
           // The header's deletions settle through the same app-wide toast as the
           // Tasks page and the task tab.
           onDelete: reportedDelete(source.onDelete),
-          openTaskDetail: (id: ScheduleId) => {
-            ctx.sidebarRight.openTab(SCHEDULE_TASK_KIND, { params: { sessionId, id } })
-          },
+          openTaskDetail: (id: ScheduleId) => { openTaskDetail(sessionId, id) },
         }
       },
     }, ScheduleCatalogAction),

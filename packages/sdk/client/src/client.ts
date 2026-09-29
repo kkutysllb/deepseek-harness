@@ -215,6 +215,9 @@ export class HarnessClient {
       cwd: this.runtime.cwd,
       env: this.runtime.environment(),
       stdio: ['pipe', 'pipe', 'pipe'],
+      // Console-less hosts (Electron RUN_AS_NODE engine) give a console child
+      // a fresh visible console per spawn unless it is hidden.
+      windowsHide: true,
     })
     this.child = child
     child.once('error', (error) => {
