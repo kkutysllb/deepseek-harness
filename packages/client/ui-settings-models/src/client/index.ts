@@ -146,7 +146,15 @@ export function apply(ctx: ClientContext): void {
       'settings.models.footer': { kind: 'list', scope: 'root' },
     },
   }, ModelsSection))
-  if (!('dshDesktop' in globalThis)) ctx.slots.inject('settings.onboarding', () => ctx.slots.register({
+  // KCoder fork: 上游把这条「预览版说明」产品公告限定给**浏览器端**，桌面端靠
+  // `dshDesktop` preload 标记豁免。KCoder 的 shell 窗口刻意不注入 preload
+  // （纯浏览器载体设计，见 desktop/main/windows.ts），于是被判成浏览器、每次
+  // 版本号变更后启动即弹公告。这里补一条 Electron 判定以兑现上游本意：
+  // 桌面壳（UA 含 Electron 标记；宿主未自定义 UA）不注册公告，普通浏览器
+  // （LAN / 远程访问 KCoder 服务）维持上游行为不变。
+  const desktopShell = 'dshDesktop' in globalThis
+    || (typeof navigator !== 'undefined' && navigator.userAgent.includes('Electron'))
+  if (!desktopShell) ctx.slots.inject('settings.onboarding', () => ctx.slots.register({
     name: 'settings.onboarding',
     id: 'welcome-notice',
     order: -100,

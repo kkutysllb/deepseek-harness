@@ -121,7 +121,7 @@ afterEach(async () => {
 function ask(text: string): Message[] {
   return [createUserMessage({
     content: [{ type: 'text', text }],
-    source: { kind: 'model', provider: 'deepseek-official', model: 'deepseek-v4-flash' },
+    source: { kind: 'model', provider: 'deepseek-official', model: 'deepseek-flash' },
   })]
 }
 
@@ -249,7 +249,7 @@ for (const profile of providerCases) {
                 },
                 { type: 'image', attachment: ref },
               ],
-              source: { kind: 'model', provider: 'deepseek-official', model: 'deepseek-v4-flash' },
+              source: { kind: 'model', provider: 'deepseek-official', model: 'deepseek-flash' },
             })],
             maxTokens: 256,
           })
