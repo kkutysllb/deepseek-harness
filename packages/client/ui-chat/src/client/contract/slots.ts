@@ -215,6 +215,13 @@ export interface ChatNodeOwnerProps {
   inspectCall: ((callId: ToolCallId) => void) | undefined
   forkAt: (seq: number) => void
   /**
+   * Revise one sent user message: replace the composer draft with its text
+   * (the user edits the bubble and resends a new turn). User bubbles only;
+   * absent for owners that do not provide the wiring.
+   * @param text - the user message's plain text.
+   */
+  editUserMessage?: ((text: string) => void) | undefined
+  /**
    * Session-authorized image loader, down-threaded from the Chat view so a
    * chat-node renderer can render the attachment presentation slot directly
    * with only the durable references plus this loader, instead of receiving a
@@ -306,6 +313,12 @@ export interface ChatViewInjected {
     read: () => ChatScrollPosition | null
   }
   forkAt: (seq: number) => void
+  /**
+   * Revise one sent user message: replace the composer draft with its text.
+   * Implemented by the composition wiring over the conversation service.
+   * @param text - the user message's plain text.
+   */
+  editUserMessage?: ((text: string) => void) | undefined
   fileMentions: (owner: TurnTailOwnerProps) => MarkdownFileMentions | undefined
 }
 
@@ -314,7 +327,7 @@ export type ChatFlowDataInjected = Pick<ChatViewInjected, 'hooks' | 'keyedHooks'
 
 /** Ordered rows and reconciled local echoes rendered inside one Chat viewport. */
 export interface ChatFlowOwnerProps extends Pick<ChatNodeOwnerProps,
-  'cwd' | 'openSkill' | 'openFile' | 'inspectCall' | 'forkAt' | 'loadImage' | 'fileMentions'> {
+  'cwd' | 'openSkill' | 'openFile' | 'inspectCall' | 'forkAt' | 'editUserMessage' | 'loadImage' | 'fileMentions'> {
   readonly entries: readonly RenderEntry[]
   readonly pendingInputs: readonly (PendingSubmission | InboxState['next-step'][number])[]
   readonly lastInputTurn: number | undefined

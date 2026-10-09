@@ -847,6 +847,12 @@ export interface StoredEntry {
   inject?: ((...args: never[]) => Record<string, unknown>) | undefined
   /** Child-slot declaration table (declaration + authorization + runtime spec in one). */
   children?: Readonly<Record<string, SlotSpec<SlotEntryDef>>> | undefined
+  /**
+   * KCoder: the subset of `children` this entry actually declared. Present only
+   * when it differs from the whole table — i.e. an entry rendering keys another
+   * entry declared (`rendersExistingChildren`). Absent means "owns the table".
+   */
+  ownedChildren?: ReadonlySet<string> | undefined
   /** Declared store seat (instance resolution and lifecycle live with the host machinery). */
   store?: StoreDecl | undefined
   /** Declared dictionary namespace (the render machinery synthesizes the `t` seat from it). */
@@ -881,6 +887,8 @@ interface ErasedOptions {
   select?: ((owner: never) => unknown) | undefined
   priority?: number | undefined
   children?: Record<string, SlotSpec<SlotEntryDef>> | undefined
+  /** KCoder: render the table without claiming keys another entry declared. */
+  rendersExistingChildren?: boolean | undefined
   store?: StoreDecl | undefined
   locale?: string | undefined
   /* oxlint-disable-next-line typescript/no-explicit-any --
@@ -1238,10 +1246,22 @@ export class SlotCore {
         if (options.select === undefined) throw new Error(`chain slot "${options.name}" requires options.select`)
         break
     }
+    // KCoder: `rendersExistingChildren` lets an entry RENDER a child table that
+    // another entry already declared — the second host a shared page needs when
+    // one component renders in two places (the sidebar panel and a Settings
+    // tab). It shares the render face only: keys already declared keep their
+    // first declarer as the lifecycle owner (`declaredBy`/`parent` stay put and
+    // the entry's disposer must not release them), while this entry's own
+    // `children` still authorizes its `renderSlot` face. Keys it declares that
+    // nobody claimed are declared as usual, so a mixed table stays coherent.
+    // Opt-in and inert by default: without the flag a repeat declaration still
+    // throws, and no existing caller changes behavior.
+    const rendersExisting = options.rendersExistingChildren === true
     if (options.children) {
       for (const childKey of Object.keys(options.children)) {
         const childRec = this.records.get(childKey)
         if (childRec?.spec) {
+          if (rendersExisting) continue
           throw new Error(`slot "${childKey}" is already declared (by ${childRec.declaredBy ?? 'an unknown entry'})`)
         }
       }
@@ -1258,6 +1278,9 @@ export class SlotCore {
       else this.handleScopes.set(options.store, { scope: spec.scope, count: 1 })
     }
 
+    // KCoder: which of this entry's child keys it declares itself (set below);
+    // a shared render face owns only the keys nobody had claimed, so its
+    // disposal leaves the first declarer's slots and contributions intact.
     const entry: StoredEntry = {
       component,
       options: {
@@ -1286,14 +1309,22 @@ export class SlotCore {
     this.markDirty(options.name, rec)
     if (options.children) {
       const declarations: [key: string, record: SlotRecord][] = []
+      const owned = new Set<string>()
       for (const [childKey, childSpec] of Object.entries(options.children)) {
         const childRec = this.record(childKey)
+        // KCoder: an already-declared key keeps its declarer (and therefore its
+        // lifecycle parent) when this entry only renders it; the shared table
+        // must not transfer ownership, or the first host's disposal would
+        // collapse a slot the second host still renders.
+        if (rendersExisting && childRec.spec !== undefined) continue
         childRec.spec = childSpec
         childRec.declaredBy = `an entry in "${options.name}"${options.registrant ? ` (${options.registrant})` : ''}`
         childRec.parent = options.name
         childRec.declarationEpoch += 1
         declarations.push([childKey, childRec])
+        owned.add(childKey)
       }
+      if (rendersExisting) entry.ownedChildren = owned
       // Synchronous listeners may register into or try to redeclare a sibling;
       // publish only after the whole children table owns its declarations.
       for (const [childKey, childRec] of declarations) {
@@ -1588,12 +1619,18 @@ export class SlotCore {
       const pinned = this.handleScopes.get(entry.store)
       if (pinned && --pinned.count === 0) this.handleScopes.delete(entry.store)
     }
-    this.releaseChildren(entry.children)
+    this.releaseChildren(entry.children, entry.ownedChildren)
   }
 
-  private releaseChildren(children: Readonly<Record<string, SlotSpec<SlotEntryDef>>> | undefined): void {
+  private releaseChildren(
+    children: Readonly<Record<string, SlotSpec<SlotEntryDef>>> | undefined,
+    ownedChildren?: ReadonlySet<string>,
+  ): void {
     if (children === undefined) return
     for (const childKey of Object.keys(children)) {
+      // KCoder: a shared render face releases only what it declared itself;
+      // keys it merely renders belong to the first declarer.
+      if (ownedChildren !== undefined && !ownedChildren.has(childKey)) continue
       const childRec = this.records.get(childKey)
       /* v8 ignore next -- defensive: declaring always creates the record */
       if (!childRec) continue

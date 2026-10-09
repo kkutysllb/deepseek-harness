@@ -59,7 +59,8 @@ const MOTION_TAIL_MS = 800
  */
 export function ChatView({
   useSession, useChat, useConversation, useSessions, renderSlot,
-  sessionId, openFile, openSkill, openExternalLink, loadOlder, loadThrough, loadImage, inspectCall, chatScroll, forkAt, fileMentions,
+  sessionId, openFile, openSkill, openExternalLink, loadOlder, loadThrough, loadImage, inspectCall, chatScroll, forkAt,
+  editUserMessage, fileMentions,
   usePresentation, useProjection, t,
 }: ChatViewSlotProps) {
   const order = useChat(s => s.order)
@@ -227,8 +228,8 @@ export function ChatView({
               {renderSlot('conversation.chat.flow', {
                 entries, pendingInputs, lastInputTurn, deferCollapse,
                 cwd, openFile: requestOpenFile, openSkill, inspectCall, forkAt, loadImage, fileMentions,
-              }, { hookContext: flowContext })}
-            </MarkdownDelegateProvider>
+                editUserMessage,
+              }, { hookContext: flowContext })}            </MarkdownDelegateProvider>
             {/* No pending placeholders: questions (ui-user-questions) and approvals
                 (ApprovalPanel) both take over the composer, so a flow card would
                 double-render the same wait. */}

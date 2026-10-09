@@ -107,6 +107,19 @@ export function apply(ctx: ClientContext): void {
       dismissNotice: face.dismissNotice,
     }),
   }, PluginRefreshToast))
+  // KCoder: the page renders in two places (the sidebar panel and the Plugins
+  // settings tab registered at the end of this file), so its child table is
+  // declared once here and reused by both registrations.
+  const pageChildren = {
+    'plugins.add.actions': { kind: 'list', scope: 'root' },
+    'plugins.item': { kind: 'list', scope: 'root' },
+    'plugins.bundle.activation': { kind: 'keyed', scope: 'root' },
+    'plugins.bundle.config': { kind: 'keyed', scope: 'root' },
+    'plugins.row.config': { kind: 'keyed', scope: 'root' },
+    'plugins.detail.actions': { kind: 'list', scope: 'root' },
+    'plugins.detail.badge': { kind: 'list', scope: 'root' },
+    'plugins.detail.section': { kind: 'list', scope: 'root' },
+  } as const
   ctx.slots.inject('main', function* () {
     const handle = createNavigationStore(), instance = handle.create()
     const store: typeof handle = { ...handle, create: () => instance }
@@ -116,16 +129,7 @@ export function apply(ctx: ClientContext): void {
       locale: NS,
       store,
       inject: () => face,
-      children: {
-        'plugins.add.actions': { kind: 'list', scope: 'root' },
-        'plugins.item': { kind: 'list', scope: 'root' },
-        'plugins.bundle.activation': { kind: 'keyed', scope: 'root' },
-        'plugins.bundle.config': { kind: 'keyed', scope: 'root' },
-        'plugins.row.config': { kind: 'keyed', scope: 'root' },
-        'plugins.detail.actions': { kind: 'list', scope: 'root' },
-        'plugins.detail.badge': { kind: 'list', scope: 'root' },
-        'plugins.detail.section': { kind: 'list', scope: 'root' },
-      },
+      children: pageChildren,
     }, PluginManagerPage)
     yield ctx.layout.panelInfo.subscribe(() => {
       if (ctx.layout.panelInfo.getSnapshot().activePanelId !== PANEL_ID) instance.actions.setView({ kind: 'list' })
@@ -145,5 +149,41 @@ export function apply(ctx: ClientContext): void {
     label: () => t('panel'),
     locale: NS,
   }, PluginsPanelIcon))
-
+  // KCoder product decision (2026-09-18): the Plugins settings section carries
+  // two tabs — the read-only inventory and this management page. The page is
+  // the component the sidebar panel above renders, so the official-plugin
+  // configuration cards appear in Settings exactly as they do in the panel.
+  //
+  // The settings tab SHARES the panel's child table rather than declaring its
+  // own: `rendersExistingChildren` grants this entry the render face for the
+  // same keys while the panel's entry stays their lifecycle owner — one slot,
+  // one declarer, the invariant ui-slots keeps. Repeating the table without
+  // that option throws "already declared"; omitting the table leaves the
+  // component without its `renderSlot` share, which is why the type layer
+  // insists on it. The cast below only erases the children-tuple identity the
+  // type layer derives from the literal: the options and the component are
+  // exactly what the sidebar entry registers.
+  //
+  // RC.2 (2026-09-24): the page's view state moved out of component-local
+  // `useState` into an injected slot `store` (see the merge note above), and a
+  // store is owned per registration — so this entry must create its own, or the
+  // page renders with an undefined `useStore`/`actions`.
+  ctx.slots.inject('settings.plugins.tab', () => {
+    const handle = createNavigationStore(), instance = handle.create()
+    const store: typeof handle = { ...handle, create: () => instance }
+    return ctx.slots.register(
+      {
+        name: 'settings.plugins.tab',
+        id: 'manage',
+        order: 20,
+        label: () => t('settingsTab'),
+        locale: NS,
+        inject: () => controller.inject(configLedger, text => ctx.locale.resolveText(text)),
+        store,
+        children: pageChildren,
+        rendersExistingChildren: true,
+      } as never,
+      PluginManagerPage as never,
+    )
+  })
 }
